@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace open3mod
 {
-    class Scene
+    public class Scene
     {
     }
 }

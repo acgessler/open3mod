@@ -42,6 +42,9 @@ namespace open3mod
         private void OnGlLoad(object sender, EventArgs e)
         {
             _renderer = new Renderer(this);
+
+            // register Idle event so we get regular callbacks for drawing
+            Application.Idle += ApplicationIdle;
         }
 
         private void OnGlResize(object sender, EventArgs e)
@@ -50,6 +53,8 @@ namespace open3mod
             {
                 return;
             }
+
+            _renderer.Resize();
         }
 
         private void GlPaint(object sender, PaintEventArgs e)
@@ -59,6 +64,22 @@ namespace open3mod
                 return;
             }
 
+            Render();
+        }
+
+
+        private void ApplicationIdle(object sender, EventArgs e)
+        {
+            // no guard needed -- we hooked into the event in Load handler
+            while (glControl1.IsIdle)
+            {
+                Render();
+            }
+        }
+
+
+        private void Render()
+        {
             _renderer.Draw();
             glControl1.SwapBuffers();
         }
