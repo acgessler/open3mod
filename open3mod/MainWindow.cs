@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
@@ -16,6 +16,7 @@ namespace open3mod
     public partial class MainWindow : Form
     {
         private Renderer _renderer;
+        public GLControl GLControl { get { return glControl1; } } 
 
 
         public MainWindow()
