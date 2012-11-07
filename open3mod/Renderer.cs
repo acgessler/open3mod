@@ -116,7 +116,7 @@ namespace open3mod
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadMatrix(ref perspective);
 
-            scene.Render();
+            scene.Render(Window.UiState);
         }
 
 

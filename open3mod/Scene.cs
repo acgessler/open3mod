@@ -77,7 +77,7 @@ namespace open3mod
         }
 
 
-        public void Render()
+        public void Render(UiState state)
         {
             GL.Enable(EnableCap.Texture2D);
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
@@ -86,6 +86,12 @@ namespace open3mod
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.Normalize);
             GL.FrontFace(FrontFaceDirection.Ccw);
+
+            if (state.RenderWireframe)
+            {
+                GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+            }
+      
 
             GL.MatrixMode(MatrixMode.Modelview);
             Matrix4 lookat = Matrix4.LookAt(0, 10, 5, 0, 0, 0, 0, 1, 0);
@@ -108,6 +114,9 @@ namespace open3mod
             }
 
             GL.CallList(_displayList);
+
+            // always switch back to FILL
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
         }
 
 
