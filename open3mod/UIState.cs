@@ -28,7 +28,7 @@ namespace open3mod
 
         public CameraMode CamMode = CameraMode.Orbit;
 
-
+        public Scene ActiveScene = new Scene("../../../testdata/scenes/COLLADA.dae");
 
 
         /// <summary>

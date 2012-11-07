@@ -100,6 +100,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libs\assimp-net\AssimpNet\AssimpNet.csproj">
+      <Project>{3415ff29-c0be-44fc-ad34-94796118e690}</Project>
+      <Name>AssimpNet</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
