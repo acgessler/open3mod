@@ -50,12 +50,21 @@ namespace open3mod
             }
             else
             {
-                _lastFrameDelta = _sw.Elapsed.TotalMilliseconds;
+                _lastFrameDelta = _sw.Elapsed.TotalMilliseconds / 1000.0;
                 _sw.Reset();
             }
 
             _sw.Start();
-            _lastFps = 1/_lastFrameDelta;
+
+            // prevent divide by zero
+            if (_lastFrameDelta < 1e-8)
+            {
+                _lastFps = 0.0;
+            }
+            else
+            {
+                _lastFps = 1/_lastFrameDelta;
+            }
         }
     }
 }
