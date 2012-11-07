@@ -96,7 +96,10 @@ namespace open3mod
             GL.Vertex2(100, 50);
             GL.End();
 
-            DrawFps();
+            if (Window.UiState.ShowFps)
+            {
+                DrawFps();
+            }
 
             _textOverlay.Draw();
         }

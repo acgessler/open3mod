@@ -41,6 +41,12 @@ namespace open3mod
             _fps = new FpsTracker();
 
             InitializeComponent();
+
+            // sync UI
+            toolStripButtonShowFPS.CheckState = _ui.ShowFps ? CheckState.Checked : CheckState.Unchecked;
+            toolStripButtonShowShaded.CheckState = _ui.RenderLit ? CheckState.Checked : CheckState.Unchecked;
+            toolStripButtonShowTextures.CheckState = _ui.RenderTextured ? CheckState.Checked : CheckState.Unchecked;
+            toolStripButtonWireframe.CheckState = _ui.RenderWireframe ? CheckState.Checked : CheckState.Unchecked;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -111,6 +117,28 @@ namespace open3mod
         {
             _renderer.Draw();
             glControl1.SwapBuffers();
+        }
+
+
+
+        private void ToggleFps(object sender, EventArgs e)
+        {
+            _ui.ShowFps = !_ui.ShowFps;
+        }
+
+        private void ToggleShading(object sender, EventArgs e)
+        {
+            _ui.RenderLit = !_ui.RenderLit;
+        }
+
+        private void ToggleTextures(object sender, EventArgs e)
+        {
+            _ui.RenderTextured = !_ui.RenderTextured;
+        }
+
+        private void ToggleWireframe(object sender, EventArgs e)
+        {
+            _ui.RenderWireframe = !_ui.RenderWireframe;
         }
     }
 }
