@@ -115,7 +115,7 @@ namespace open3mod
 
         private void FrameRender()
         {
-            _renderer.Draw();
+            _renderer.Draw(_ui.ActiveScene);
             glControl1.SwapBuffers();
         }
 

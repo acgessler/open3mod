@@ -66,7 +66,12 @@ namespace open3mod
         /// <param name="activeScene">Active scene or a null to show the "drag file here" screen</param>
         public void Draw(Scene activeScene = null)
         {
-            if(activeScene == null)
+                   
+            GL.ClearColor(Color.DarkGray);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+
+            if (activeScene == null)
             {
                 DrawNoSceneSplash();
             }
@@ -74,27 +79,6 @@ namespace open3mod
             {
                 DrawScene(activeScene);
             }
-
-          
-            GL.ClearColor(Color.DarkGray);
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
-
-            int w = Window.Width;
-            int h = Window.Height;
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Ortho(0, w, 0, h, -1, 1); // Bottom-left corner pixel has coordinate (0, 0)
-            GL.Viewport(0, 0, w, h); // Use all of the glControl painting area
-
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
-            GL.Color3(Color.Yellow);
-            GL.Begin(BeginMode.Triangles);
-            GL.Vertex2(10, 20);
-            GL.Vertex2(100, 20);
-            GL.Vertex2(100, 50);
-            GL.End();
 
             if (Window.UiState.ShowFps)
             {
@@ -118,6 +102,7 @@ namespace open3mod
         /// </summary>
         public void Resize()
         {
+            GL.Viewport(0, 0, RenderResolution.Width, RenderResolution.Height);
             _textOverlay.Resize();
         }
 
@@ -125,8 +110,15 @@ namespace open3mod
         private void DrawScene(Scene scene)
         {
             Debug.Assert(scene != null);
-            
+            float aspectRatio = RenderResolution.Width/(float) RenderResolution.Height;
+
+            Matrix4 perspective = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspectRatio, 1, 64);
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadMatrix(ref perspective);
+
+            scene.Render();
         }
+
 
         private void DrawNoSceneSplash()
         {
@@ -150,7 +142,7 @@ namespace open3mod
             _accTime = 0.0;
 
             var graphics = _textOverlay.GetDrawableGraphicsContext();
-            graphics.DrawString("FPS: " + Window.Fps.LastFps.ToString("0.0"), Window.UiState.DefaultFont12, new SolidBrush(Color.Red), 5,120);
+            graphics.DrawString("FPS: " + Window.Fps.LastFps.ToString("0.0"), Window.UiState.DefaultFont12, new SolidBrush(Color.Red), 5,5);
         }
     }
 }

@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Assimp;
 using Assimp.Configs;
 using OpenTK;
+using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
 
 namespace open3mod
 {
@@ -18,12 +20,13 @@ namespace open3mod
     /// only a viewer, we ignore the recommendation of the assimp docs and use
     /// its data structures (almost) directly for rendering.
     /// </summary>
-    public class Scene
+    public class Scene : IDisposable
     {
         private readonly Assimp.Scene _raw;
         private Vector3 _sceneCenter;
         private Vector3 _sceneMin;
         private Vector3 _sceneMax;
+        private int _displayList;
 
         /// <summary>
         /// Obtain the "raw" scene data as imported by Assimp
@@ -76,8 +79,175 @@ namespace open3mod
 
         public void Render()
         {
-            
+            GL.Enable(EnableCap.Texture2D);
+            GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
+            GL.Enable(EnableCap.Lighting);
+            GL.Enable(EnableCap.Light0);
+            GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.Normalize);
+            GL.FrontFace(FrontFaceDirection.Ccw);
+
+            GL.MatrixMode(MatrixMode.Modelview);
+            Matrix4 lookat = Matrix4.LookAt(0, 10, 5, 0, 0, 0, 0, 1, 0);
+            GL.LoadMatrix(ref lookat);
+
+            float tmp = _sceneMax.X - _sceneMin.X;
+            tmp = Math.Max(_sceneMax.Y - _sceneMin.Y, tmp);
+            tmp = Math.Max(_sceneMax.Z - _sceneMin.Z, tmp);
+            tmp = 1.0f / tmp;
+            GL.Scale(tmp * 2, tmp * 2, tmp * 2);
+
+            GL.Translate(-_sceneCenter);
+
+            if (_displayList == 0)
+            {
+                _displayList = GL.GenLists(1);
+                GL.NewList(_displayList, ListMode.Compile);
+                RecursiveRender(_raw.RootNode);
+                GL.EndList();
+            }
+
+            GL.CallList(_displayList);
         }
+
+
+        private void RecursiveRender(Node node)
+        {
+            Matrix4 m = AssimpToOpenTk.FromMatrix(node.Transform);
+            m.Transpose();
+            GL.PushMatrix();
+            GL.MultMatrix(ref m);
+
+            if (node.HasMeshes)
+            {
+                foreach (int index in node.MeshIndices)
+                {
+                    Mesh mesh = _raw.Meshes[index];
+                    ApplyMaterial(_raw.Materials[mesh.MaterialIndex]);
+
+                    if (mesh.HasNormals)
+                    {
+                        GL.Enable(EnableCap.Lighting);
+                    }
+                    else
+                    {
+                        GL.Disable(EnableCap.Lighting);
+                    }
+
+                    bool hasColors = mesh.HasVertexColors(0);
+                    if (hasColors)
+                    {
+                        GL.Enable(EnableCap.ColorMaterial);
+                    }
+                    else
+                    {
+                        GL.Disable(EnableCap.ColorMaterial);
+                    }
+
+                    bool hasTexCoords = mesh.HasTextureCoords(0);
+
+                    foreach (Face face in mesh.Faces)
+                    {
+                        BeginMode faceMode;
+                        switch (face.IndexCount)
+                        {
+                            case 1:
+                                faceMode = BeginMode.Points;
+                                break;
+                            case 2:
+                                faceMode = BeginMode.Lines;
+                                break;
+                            case 3:
+                                faceMode = BeginMode.Triangles;
+                                break;
+                            default:
+                                faceMode = BeginMode.Polygon;
+                                break;
+                        }
+
+                        GL.Begin(faceMode);
+                        for (int i = 0; i < face.IndexCount; i++)
+                        {
+                            uint indice = face.Indices[i];
+                            if (hasColors)
+                            {
+                                Color4 vertColor = AssimpToOpenTk.FromColor(mesh.GetVertexColors(0)[indice]);
+                            }
+                            if (mesh.HasNormals)
+                            {
+                                Vector3 normal = AssimpToOpenTk.FromVector(mesh.Normals[indice]);
+                                GL.Normal3(normal);
+                            }
+                            if (hasTexCoords)
+                            {
+                                Vector3 uvw = AssimpToOpenTk.FromVector(mesh.GetTextureCoords(0)[indice]);
+                                GL.TexCoord2(uvw.X, 1 - uvw.Y);
+                            }
+                            Vector3 pos = AssimpToOpenTk.FromVector(mesh.Vertices[indice]);
+                            GL.Vertex3(pos);
+                        }
+                        GL.End();
+                    }
+                }
+            }
+
+            for (int i = 0; i < node.ChildCount; i++)
+            {
+                RecursiveRender(node.Children[i]);
+            }
+        }
+
+
+        private void ApplyMaterial(Material mat)
+        {
+            if (mat.GetTextureCount(TextureType.Diffuse) > 0)
+            {
+                TextureSlot tex = mat.GetTexture(TextureType.Diffuse, 0);
+               // LoadTexture(tex.FilePath);
+            }
+
+            Color4 color = new Color4(.8f, .8f, .8f, 1.0f);
+            if (mat.HasColorDiffuse)
+            {
+                // color = FromColor(mat.ColorDiffuse);
+            }
+            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, color);
+
+            color = new Color4(0, 0, 0, 1.0f);
+            if (mat.HasColorSpecular)
+            {
+                color = AssimpToOpenTk.FromColor(mat.ColorSpecular);
+            }
+            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Specular, color);
+
+            color = new Color4(.2f, .2f, .2f, 1.0f);
+            if (mat.HasColorAmbient)
+            {
+                color = AssimpToOpenTk.FromColor(mat.ColorAmbient);
+            }
+            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, color);
+
+            color = new Color4(0, 0, 0, 1.0f);
+            if (mat.HasColorEmissive)
+            {
+                color = AssimpToOpenTk.FromColor(mat.ColorEmissive);
+            }
+            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, color);
+
+            float shininess = 1;
+            float strength = 1;
+            if (mat.HasShininess)
+            {
+                shininess = mat.Shininess;
+            }
+            if (mat.HasShininessStrength)
+            {
+                strength = mat.ShininessStrength;
+            }
+
+            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Shininess, shininess * strength);
+        }
+
 
 
 
@@ -126,6 +296,12 @@ namespace open3mod
                 ComputeBoundingBox(node.Children[i], ref min, ref max, ref trafo);
             }
             trafo = prev;
-        }       
+        }
+
+
+        public void Dispose()
+        {
+            //GL.DeleteTexture(_texID);
+        }
     }
 }
