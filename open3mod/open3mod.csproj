@@ -56,6 +56,7 @@
     <Compile Include="About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
+    <Compile Include="AssimpToOpenTk.cs" />
     <Compile Include="FpsTracker.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
