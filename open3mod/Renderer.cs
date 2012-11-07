@@ -19,7 +19,7 @@ namespace open3mod
         /// <summary>
         /// The gl context which is being rendered to
         /// </summary>
-        public GLControl GlControl { get { return _window.GLControl; }} 
+        public GLControl GlControl { get { return _window.GlControl; }} 
 
         /// <summary>
         /// Host window
@@ -47,6 +47,16 @@ namespace open3mod
         {
             _window = window;
             _textOverlay = new TextOverlay(this);
+        }
+
+
+        /// <summary>
+        /// Perform any non-drawing operations that need to be executed
+        /// once per frame and whose implementation reides in Renderer.
+        /// </summary>
+        public void Update()
+        {
+            
         }
 
 
@@ -115,8 +125,8 @@ namespace open3mod
         {
             var graphics = _textOverlay.GetDrawableGraphicsContext();
 
-            graphics.DrawString("Drag file here", new Font(FontFamily.GenericSansSerif, 12), new SolidBrush(Color.Black), 199, 199);
-            graphics.DrawString("Drag file here",new Font(FontFamily.GenericSansSerif,12), new SolidBrush(Color.Red), 200, 200);
+            graphics.DrawString("Drag file here", Window.UiState.DefaultFont12, new SolidBrush(Color.Black), 199, 199);
+            graphics.DrawString("Drag file here", Window.UiState.DefaultFont16, new SolidBrush(Color.Red), 200, 200);
         }
     }
 }

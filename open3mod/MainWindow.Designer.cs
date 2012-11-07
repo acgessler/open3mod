@@ -53,11 +53,16 @@ namespace open3mod
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.glControl1 = new RenderControl();
             this.tabControlInfoViewPicker = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.glControl1 = new open3mod.RenderControl();
+            this.toolStripButtonWireframe = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonShowTextures = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonShowShaded = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -75,6 +80,7 @@ namespace open3mod
             this.menuStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Visible;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
+            this.toolStripMenuItem2,
             this.toolsToolStripMenuItem,
             this.toolStripMenuItem1});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -167,6 +173,9 @@ namespace open3mod
             this.openToolStripButton,
             this.saveToolStripButton,
             this.toolStripSeparator,
+            this.toolStripButtonWireframe,
+            this.toolStripButtonShowTextures,
+            this.toolStripButtonShowShaded,
             this.toolStripSeparator1,
             this.helpToolStripButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
@@ -262,21 +271,6 @@ namespace open3mod
             this.splitContainer1.SplitterDistance = 741;
             this.splitContainer1.TabIndex = 0;
             // 
-            // glControl1
-            // 
-            this.glControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.glControl1.BackColor = System.Drawing.Color.Black;
-            this.glControl1.Location = new System.Drawing.Point(0, 0);
-            this.glControl1.Name = "glControl1";
-            this.glControl1.Size = new System.Drawing.Size(742, 626);
-            this.glControl1.TabIndex = 0;
-            this.glControl1.VSync = false;
-            this.glControl1.Load += new System.EventHandler(this.OnGlLoad);
-            this.glControl1.Paint += new System.Windows.Forms.PaintEventHandler(this.GlPaint);
-            this.glControl1.Resize += new System.EventHandler(this.OnGlResize);
-            // 
             // tabControlInfoViewPicker
             // 
             this.tabControlInfoViewPicker.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -321,6 +315,66 @@ namespace open3mod
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "Textures";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem3});
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(44, 20);
+            this.toolStripMenuItem2.Text = "View";
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.CheckOnClick = true;
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(129, 22);
+            this.toolStripMenuItem3.Text = "Wireframe";
+            // 
+            // glControl1
+            // 
+            this.glControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.glControl1.BackColor = System.Drawing.Color.Black;
+            this.glControl1.Location = new System.Drawing.Point(0, 0);
+            this.glControl1.Name = "glControl1";
+            this.glControl1.Size = new System.Drawing.Size(742, 626);
+            this.glControl1.TabIndex = 0;
+            this.glControl1.VSync = false;
+            this.glControl1.Load += new System.EventHandler(this.OnGlLoad);
+            this.glControl1.Paint += new System.Windows.Forms.PaintEventHandler(this.GlPaint);
+            this.glControl1.Resize += new System.EventHandler(this.OnGlResize);
+            // 
+            // toolStripButtonWireframe
+            // 
+            this.toolStripButtonWireframe.CheckOnClick = true;
+            this.toolStripButtonWireframe.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonWireframe.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWireframe.Image")));
+            this.toolStripButtonWireframe.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonWireframe.Name = "toolStripButtonWireframe";
+            this.toolStripButtonWireframe.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonWireframe.Text = "Enable Wireframe Mode";
+            // 
+            // toolStripButtonShowTextures
+            // 
+            this.toolStripButtonShowTextures.CheckOnClick = true;
+            this.toolStripButtonShowTextures.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonShowTextures.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowTextures.Image")));
+            this.toolStripButtonShowTextures.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonShowTextures.Name = "toolStripButtonShowTextures";
+            this.toolStripButtonShowTextures.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonShowTextures.Text = "Enable Textures";
+            // 
+            // toolStripButtonShowShaded
+            // 
+            this.toolStripButtonShowShaded.CheckOnClick = true;
+            this.toolStripButtonShowShaded.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonShowShaded.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowShaded.Image")));
+            this.toolStripButtonShowShaded.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonShowShaded.Name = "toolStripButtonShowShaded";
+            this.toolStripButtonShowShaded.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonShowShaded.Text = "Enable Shading";
             // 
             // MainWindow
             // 
@@ -381,6 +435,11 @@ namespace open3mod
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
         private RenderControl glControl1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripButton toolStripButtonWireframe;
+        private System.Windows.Forms.ToolStripButton toolStripButtonShowTextures;
+        private System.Windows.Forms.ToolStripButton toolStripButtonShowShaded;
     }
 }
 

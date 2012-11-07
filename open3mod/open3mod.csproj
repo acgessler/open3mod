@@ -56,6 +56,7 @@
     <Compile Include="About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
+    <Compile Include="FpsTracker.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -70,6 +71,7 @@
     <Compile Include="Renderer.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="TextOverlay.cs" />
+    <Compile Include="UIState.cs" />
     <EmbeddedResource Include="About.resx">
       <DependentUpon>About.cs</DependentUpon>
     </EmbeddedResource>

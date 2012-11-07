@@ -15,12 +15,31 @@ namespace open3mod
 {
     public partial class MainWindow : Form
     {
+        private UiState _ui;
         private Renderer _renderer;
-        public GLControl GLControl { get { return glControl1; } } 
+        private FpsTracker _fps;
+
+        public GLControl GlControl
+        {
+            get { return glControl1; }
+        }
+
+        public UiState UiState
+        {
+            get { return _ui; }
+        }
+
+        public FpsTracker Fps
+        {
+            get { return _fps; }
+        }
 
 
         public MainWindow()
         {
+            _ui = new UiState();
+            _fps = new FpsTracker();
+
             InitializeComponent();
         }
 
@@ -48,6 +67,7 @@ namespace open3mod
             Application.Idle += ApplicationIdle;
         }
 
+
         private void OnGlResize(object sender, EventArgs e)
         {
             if (_renderer == null) // safeguard in case glControl's Load() wasn't fired yet
@@ -65,7 +85,7 @@ namespace open3mod
                 return;
             }
 
-            Render();
+            FrameRender();
         }
 
 
@@ -74,12 +94,20 @@ namespace open3mod
             // no guard needed -- we hooked into the event in Load handler
             while (glControl1.IsIdle)
             {
-                Render();
+                FrameUpdate();
+                FrameRender();
             }
         }
 
 
-        private void Render()
+        private void FrameUpdate()
+        {
+            _fps.Update();
+            _renderer.Update();
+        }
+
+
+        private void FrameRender()
         {
             _renderer.Draw();
             glControl1.SwapBuffers();
