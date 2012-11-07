@@ -39,6 +39,8 @@ namespace open3mod
             this.recentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -48,6 +50,10 @@ namespace open3mod
             this.openToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.saveToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonWireframe = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonShowTextures = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonShowShaded = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonShowFPS = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.helpToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -57,13 +63,7 @@ namespace open3mod
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripButtonWireframe = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonShowTextures = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonShowShaded = new System.Windows.Forms.ToolStripButton();
             this.glControl1 = new open3mod.RenderControl();
-            this.toolStripButtonShowFPS = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -136,6 +136,21 @@ namespace open3mod
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
             this.quitToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
             this.quitToolStripMenuItem.Text = "Quit";
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem3});
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(44, 20);
+            this.toolStripMenuItem2.Text = "View";
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.CheckOnClick = true;
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(129, 22);
+            this.toolStripMenuItem3.Text = "Wireframe";
             // 
             // toolsToolStripMenuItem
             // 
@@ -217,6 +232,50 @@ namespace open3mod
             // 
             this.toolStripSeparator.Name = "toolStripSeparator";
             this.toolStripSeparator.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonWireframe
+            // 
+            this.toolStripButtonWireframe.CheckOnClick = true;
+            this.toolStripButtonWireframe.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonWireframe.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWireframe.Image")));
+            this.toolStripButtonWireframe.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonWireframe.Name = "toolStripButtonWireframe";
+            this.toolStripButtonWireframe.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonWireframe.Text = "Enable Wireframe Mode";
+            this.toolStripButtonWireframe.Click += new System.EventHandler(this.ToggleWireframe);
+            // 
+            // toolStripButtonShowTextures
+            // 
+            this.toolStripButtonShowTextures.CheckOnClick = true;
+            this.toolStripButtonShowTextures.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonShowTextures.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowTextures.Image")));
+            this.toolStripButtonShowTextures.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonShowTextures.Name = "toolStripButtonShowTextures";
+            this.toolStripButtonShowTextures.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonShowTextures.Text = "Enable Textures";
+            this.toolStripButtonShowTextures.Click += new System.EventHandler(this.ToggleTextures);
+            // 
+            // toolStripButtonShowShaded
+            // 
+            this.toolStripButtonShowShaded.CheckOnClick = true;
+            this.toolStripButtonShowShaded.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonShowShaded.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowShaded.Image")));
+            this.toolStripButtonShowShaded.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonShowShaded.Name = "toolStripButtonShowShaded";
+            this.toolStripButtonShowShaded.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonShowShaded.Text = "Enable Shading";
+            this.toolStripButtonShowShaded.Click += new System.EventHandler(this.ToggleShading);
+            // 
+            // toolStripButtonShowFPS
+            // 
+            this.toolStripButtonShowFPS.CheckOnClick = true;
+            this.toolStripButtonShowFPS.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonShowFPS.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowFPS.Image")));
+            this.toolStripButtonShowFPS.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonShowFPS.Name = "toolStripButtonShowFPS";
+            this.toolStripButtonShowFPS.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonShowFPS.Text = "Show Frames per Second (FPS)";
+            this.toolStripButtonShowFPS.Click += new System.EventHandler(this.ToggleFps);
             // 
             // toolStripSeparator1
             // 
@@ -318,54 +377,6 @@ namespace open3mod
             this.tabPage4.Text = "Textures";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem3});
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(44, 20);
-            this.toolStripMenuItem2.Text = "View";
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.CheckOnClick = true;
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(129, 22);
-            this.toolStripMenuItem3.Text = "Wireframe";
-            // 
-            // toolStripButtonWireframe
-            // 
-            this.toolStripButtonWireframe.CheckOnClick = true;
-            this.toolStripButtonWireframe.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonWireframe.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWireframe.Image")));
-            this.toolStripButtonWireframe.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonWireframe.Name = "toolStripButtonWireframe";
-            this.toolStripButtonWireframe.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonWireframe.Text = "Enable Wireframe Mode";
-            this.toolStripButtonWireframe.Click += new System.EventHandler(this.ToggleWireframe);
-            // 
-            // toolStripButtonShowTextures
-            // 
-            this.toolStripButtonShowTextures.CheckOnClick = true;
-            this.toolStripButtonShowTextures.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonShowTextures.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowTextures.Image")));
-            this.toolStripButtonShowTextures.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonShowTextures.Name = "toolStripButtonShowTextures";
-            this.toolStripButtonShowTextures.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonShowTextures.Text = "Enable Textures";
-            this.toolStripButtonShowTextures.Click += new System.EventHandler(this.ToggleTextures);
-            // 
-            // toolStripButtonShowShaded
-            // 
-            this.toolStripButtonShowShaded.CheckOnClick = true;
-            this.toolStripButtonShowShaded.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonShowShaded.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowShaded.Image")));
-            this.toolStripButtonShowShaded.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonShowShaded.Name = "toolStripButtonShowShaded";
-            this.toolStripButtonShowShaded.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonShowShaded.Text = "Enable Shading";
-            this.toolStripButtonShowShaded.Click += new System.EventHandler(this.ToggleShading);
-            // 
             // glControl1
             // 
             this.glControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -376,20 +387,10 @@ namespace open3mod
             this.glControl1.Name = "glControl1";
             this.glControl1.Size = new System.Drawing.Size(742, 626);
             this.glControl1.TabIndex = 0;
-            this.glControl1.VSync = false;
+            this.glControl1.VSync = true;
             this.glControl1.Load += new System.EventHandler(this.OnGlLoad);
             this.glControl1.Paint += new System.Windows.Forms.PaintEventHandler(this.GlPaint);
             this.glControl1.Resize += new System.EventHandler(this.OnGlResize);
-            // 
-            // toolStripButtonShowFPS
-            // 
-            this.toolStripButtonShowFPS.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonShowFPS.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowFPS.Image")));
-            this.toolStripButtonShowFPS.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonShowFPS.Name = "toolStripButtonShowFPS";
-            this.toolStripButtonShowFPS.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonShowFPS.Text = "Show Frames per Second (FPS)";
-            this.toolStripButtonShowFPS.Click += new System.EventHandler(this.ToggleFps);
             // 
             // MainWindow
             // 
