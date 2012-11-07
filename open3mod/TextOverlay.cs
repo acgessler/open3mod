@@ -27,6 +27,13 @@ namespace open3mod
 
         private Graphics _tempContext;
 
+
+        public bool WantRedraw
+        {
+            get { return _tempContext != null; }
+        }
+
+
         public TextOverlay(Renderer renderer)
         {
             _renderer = renderer;
@@ -57,7 +64,7 @@ namespace open3mod
             _textBmp = new Bitmap(cs.Width, cs.Height);
 
             GL.BindTexture(TextureTarget.Texture2D, _textTexture);
-            GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, _textBmp.Width, _textBmp.Height,
+            GL.TexImage2D(TextureTarget.Texture2D, 0, 0, 0, _textBmp.Width, _textBmp.Height,
                 PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
 
             GetDrawableGraphicsContext();
@@ -103,6 +110,7 @@ namespace open3mod
                 _tempContext.Dispose();
                 _tempContext = null;
             }
+     
 
             GL.MatrixMode(MatrixMode.Modelview);
             GL.PushMatrix();
@@ -152,6 +160,6 @@ namespace open3mod
                 PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
 
             _textBmp.UnlockBits(data);
-        }
+        }        
     }
 }

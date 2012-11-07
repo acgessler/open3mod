@@ -52,7 +52,7 @@ namespace open3mod
 
         /// <summary>
         /// Perform any non-drawing operations that need to be executed
-        /// once per frame and whose implementation reides in Renderer.
+        /// once per frame and whose implementation resides in Renderer.
         /// </summary>
         public void Update()
         {
@@ -96,8 +96,12 @@ namespace open3mod
             GL.Vertex2(100, 50);
             GL.End();
 
+            DrawFps();
+
             _textOverlay.Draw();
         }
+
+
 
 
         public void Dispose()
@@ -127,6 +131,23 @@ namespace open3mod
 
             graphics.DrawString("Drag file here", Window.UiState.DefaultFont12, new SolidBrush(Color.Black), 199, 199);
             graphics.DrawString("Drag file here", Window.UiState.DefaultFont16, new SolidBrush(Color.Red), 200, 200);
+        }
+
+
+        private double _accTime;
+        private void DrawFps()
+        {
+            // only update every 1/3rd of a second
+            _accTime += Window.Fps.LastFrameDelta;
+            if (_accTime < 0.3333 && !_textOverlay.WantRedraw)
+            {
+                return;
+            }
+
+            _accTime = 0.0;
+
+            var graphics = _textOverlay.GetDrawableGraphicsContext();
+            graphics.DrawString("FPS: " + Window.Fps.LastFps.ToString("0.0"), Window.UiState.DefaultFont12, new SolidBrush(Color.Red), 5,120);
         }
     }
 }
