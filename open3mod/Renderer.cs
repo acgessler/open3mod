@@ -70,15 +70,26 @@ namespace open3mod
             GL.ClearColor(Color.DarkGray);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
+            switch(Window.UiState.ActiveViewMode)
+            {
+                case UiState.ViewMode.Single:
+                    DrawViewport(activeScene,0.0,0.0,1.0,1.0);
+                    break;
+                case UiState.ViewMode.Two:
+                    DrawViewport(activeScene, 0.0, 0.0, 0.5, 1.0);
+                    DrawViewport(activeScene, 0.5, 0.0, 1.0, 1.0);
+                    break;
+                case UiState.ViewMode.Four:
+                    DrawViewport(activeScene, 0.0, 0.0, 0.5, 0.5);
+                    DrawViewport(activeScene, 0.5, 0.0, 1.0, 0.5);
+                    DrawViewport(activeScene, 0.0, 0.5, 0.5, 1.0);
+                    DrawViewport(activeScene, 0.5, 0.5, 1.0, 1.0);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
-            if (activeScene == null)
-            {
-                DrawNoSceneSplash();
-            }
-            else
-            {
-                DrawScene(activeScene);
-            }
+
 
             if (Window.UiState.ShowFps)
             {
@@ -87,8 +98,6 @@ namespace open3mod
 
             _textOverlay.Draw();
         }
-
-
 
 
         public void Dispose()
@@ -102,20 +111,38 @@ namespace open3mod
         /// </summary>
         public void Resize()
         {
-            GL.Viewport(0, 0, RenderResolution.Width, RenderResolution.Height);
+            
             _textOverlay.Resize();
+        }
+
+
+        private void DrawViewport(Scene activeScene, double xs, double ys, double xe, double ye)
+        {
+            var w = (double)RenderResolution.Width;
+            var h = (double)RenderResolution.Height;
+            GL.Viewport((int)(xs * w), (int)(ys * w), (int)((xe-xs) * w), (int)((ye-ys) * w));
+
+            var aspectRatio = (float) ((xe - xs) / (ye - ys));
+
+            Matrix4 perspective = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspectRatio, 0.1f, 1000f);
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadMatrix(ref perspective);
+
+
+            if (activeScene == null)
+            {
+                DrawNoSceneSplash();
+            }
+            else
+            {
+                DrawScene(activeScene);
+            }
         }
 
 
         private void DrawScene(Scene scene)
         {
             Debug.Assert(scene != null);
-            float aspectRatio = RenderResolution.Width/(float) RenderResolution.Height;
-
-            Matrix4 perspective = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspectRatio, 1, 64);
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadMatrix(ref perspective);
-
             scene.Render(Window.UiState);
         }
 
@@ -144,5 +171,8 @@ namespace open3mod
             var graphics = _textOverlay.GetDrawableGraphicsContext();
             graphics.DrawString("FPS: " + Window.Fps.LastFps.ToString("0.0"), Window.UiState.DefaultFont12, new SolidBrush(Color.Red), 5,5);
         }
+
+
+        
     }
 }

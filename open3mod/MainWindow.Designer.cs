@@ -64,6 +64,10 @@ namespace open3mod
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.glControl1 = new open3mod.RenderControl();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonFullView = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonTwoViews = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonFourViews = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -188,6 +192,10 @@ namespace open3mod
             this.toolStripButton1,
             this.openToolStripButton,
             this.saveToolStripButton,
+            this.toolStripSeparator4,
+            this.toolStripButtonFullView,
+            this.toolStripButtonTwoViews,
+            this.toolStripButtonFourViews,
             this.toolStripSeparator,
             this.toolStripButtonWireframe,
             this.toolStripButtonShowTextures,
@@ -392,6 +400,41 @@ namespace open3mod
             this.glControl1.Paint += new System.Windows.Forms.PaintEventHandler(this.GlPaint);
             this.glControl1.Resize += new System.EventHandler(this.OnGlResize);
             // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonFullView
+            // 
+            this.toolStripButtonFullView.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonFullView.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonFullView.Image")));
+            this.toolStripButtonFullView.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonFullView.Name = "toolStripButtonFullView";
+            this.toolStripButtonFullView.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonFullView.Text = "Full View";
+            this.toolStripButtonFullView.Click += new System.EventHandler(this.ToggleFullView);
+            // 
+            // toolStripButtonTwoViews
+            // 
+            this.toolStripButtonTwoViews.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonTwoViews.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonTwoViews.Image")));
+            this.toolStripButtonTwoViews.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonTwoViews.Name = "toolStripButtonTwoViews";
+            this.toolStripButtonTwoViews.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonTwoViews.Text = "Two Views";
+            this.toolStripButtonTwoViews.Click += new System.EventHandler(this.ToggleTwoViews);
+            // 
+            // toolStripButtonFourViews
+            // 
+            this.toolStripButtonFourViews.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonFourViews.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonFourViews.Image")));
+            this.toolStripButtonFourViews.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonFourViews.Name = "toolStripButtonFourViews";
+            this.toolStripButtonFourViews.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonFourViews.Text = "Four Views";
+            this.toolStripButtonFourViews.Click += new System.EventHandler(this.ToggleFourViews);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -457,6 +500,10 @@ namespace open3mod
         private System.Windows.Forms.ToolStripButton toolStripButtonShowTextures;
         private System.Windows.Forms.ToolStripButton toolStripButtonShowShaded;
         private System.Windows.Forms.ToolStripButton toolStripButtonShowFPS;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripButton toolStripButtonFullView;
+        private System.Windows.Forms.ToolStripButton toolStripButtonTwoViews;
+        private System.Windows.Forms.ToolStripButton toolStripButtonFourViews;
     }
 }
 

@@ -42,11 +42,15 @@ namespace open3mod
 
             InitializeComponent();
 
-            // sync UI
+            // sync UI with UIState
             toolStripButtonShowFPS.CheckState = _ui.ShowFps ? CheckState.Checked : CheckState.Unchecked;
             toolStripButtonShowShaded.CheckState = _ui.RenderLit ? CheckState.Checked : CheckState.Unchecked;
             toolStripButtonShowTextures.CheckState = _ui.RenderTextured ? CheckState.Checked : CheckState.Unchecked;
             toolStripButtonWireframe.CheckState = _ui.RenderWireframe ? CheckState.Checked : CheckState.Unchecked;
+
+            toolStripButtonFullView.CheckState = _ui.ActiveViewMode == UiState.ViewMode.Single ? CheckState.Checked : CheckState.Unchecked;
+            toolStripButtonTwoViews.CheckState = _ui.ActiveViewMode == UiState.ViewMode.Two ? CheckState.Checked : CheckState.Unchecked;
+            toolStripButtonFourViews.CheckState = _ui.ActiveViewMode == UiState.ViewMode.Four ? CheckState.Checked : CheckState.Unchecked;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -139,6 +143,36 @@ namespace open3mod
         private void ToggleWireframe(object sender, EventArgs e)
         {
             _ui.RenderWireframe = !_ui.RenderWireframe;
+        }
+
+        private void ToggleFullView(object sender, EventArgs e)
+        {
+            if (UiState.ActiveViewMode == UiState.ViewMode.Single) return;
+            UiState.ActiveViewMode = UiState.ViewMode.Single;
+
+            toolStripButtonFullView.CheckState = CheckState.Checked;
+            toolStripButtonTwoViews.CheckState = CheckState.Unchecked;
+            toolStripButtonFourViews.CheckState = CheckState.Unchecked;
+        }
+
+        private void ToggleTwoViews(object sender, EventArgs e)
+        {
+            if (UiState.ActiveViewMode == UiState.ViewMode.Two) return;
+            UiState.ActiveViewMode = UiState.ViewMode.Two;
+
+            toolStripButtonFullView.CheckState = CheckState.Unchecked;
+            toolStripButtonTwoViews.CheckState = CheckState.Checked;
+            toolStripButtonFourViews.CheckState = CheckState.Unchecked;
+        }
+
+        private void ToggleFourViews(object sender, EventArgs e)
+        {
+            if (UiState.ActiveViewMode == UiState.ViewMode.Four) return;
+            UiState.ActiveViewMode = UiState.ViewMode.Four;
+
+            toolStripButtonFullView.CheckState = CheckState.Unchecked;
+            toolStripButtonTwoViews.CheckState = CheckState.Unchecked;
+            toolStripButtonFourViews.CheckState = CheckState.Checked;
         }
     }
 }

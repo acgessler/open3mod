@@ -58,6 +58,7 @@
     </Compile>
     <Compile Include="AssimpToOpenTk.cs" />
     <Compile Include="FpsTracker.cs" />
+    <Compile Include="ICameraController.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
