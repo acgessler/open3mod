@@ -186,6 +186,7 @@ namespace open3mod
             {
                 if (view == null)
                 {
+                    ++index;
                     continue;
                 }
 

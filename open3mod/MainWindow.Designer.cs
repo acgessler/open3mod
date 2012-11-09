@@ -49,6 +49,10 @@ namespace open3mod
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.openToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.saveToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonFullView = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonTwoViews = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonFourViews = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonWireframe = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonShowTextures = new System.Windows.Forms.ToolStripButton();
@@ -59,15 +63,12 @@ namespace open3mod
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.glControl1 = new open3mod.RenderControl();
             this.tabControlInfoViewPicker = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.treeViewNodeGraph = new System.Windows.Forms.TreeView();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButtonFullView = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonTwoViews = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonFourViews = new System.Windows.Forms.ToolStripButton();
-            this.glControl1 = new open3mod.RenderControl();
+            this.logViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -153,11 +154,13 @@ namespace open3mod
             // 
             this.toolStripMenuItem3.CheckOnClick = true;
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(129, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(152, 22);
             this.toolStripMenuItem3.Text = "Wireframe";
             // 
             // toolsToolStripMenuItem
             // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.logViewerToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -235,6 +238,41 @@ namespace open3mod
             this.saveToolStripButton.Name = "saveToolStripButton";
             this.saveToolStripButton.Size = new System.Drawing.Size(23, 22);
             this.saveToolStripButton.Text = "&Save";
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonFullView
+            // 
+            this.toolStripButtonFullView.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonFullView.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonFullView.Image")));
+            this.toolStripButtonFullView.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonFullView.Name = "toolStripButtonFullView";
+            this.toolStripButtonFullView.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonFullView.Text = "Full View";
+            this.toolStripButtonFullView.Click += new System.EventHandler(this.ToggleFullView);
+            // 
+            // toolStripButtonTwoViews
+            // 
+            this.toolStripButtonTwoViews.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonTwoViews.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonTwoViews.Image")));
+            this.toolStripButtonTwoViews.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonTwoViews.Name = "toolStripButtonTwoViews";
+            this.toolStripButtonTwoViews.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonTwoViews.Text = "Two Views";
+            this.toolStripButtonTwoViews.Click += new System.EventHandler(this.ToggleTwoViews);
+            // 
+            // toolStripButtonFourViews
+            // 
+            this.toolStripButtonFourViews.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonFourViews.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonFourViews.Image")));
+            this.toolStripButtonFourViews.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonFourViews.Name = "toolStripButtonFourViews";
+            this.toolStripButtonFourViews.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonFourViews.Text = "Four Views";
+            this.toolStripButtonFourViews.Click += new System.EventHandler(this.ToggleFourViews);
             // 
             // toolStripSeparator
             // 
@@ -340,6 +378,22 @@ namespace open3mod
             this.splitContainer1.SplitterDistance = 741;
             this.splitContainer1.TabIndex = 0;
             // 
+            // glControl1
+            // 
+            this.glControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.glControl1.BackColor = System.Drawing.Color.Black;
+            this.glControl1.Location = new System.Drawing.Point(0, 0);
+            this.glControl1.Name = "glControl1";
+            this.glControl1.Size = new System.Drawing.Size(742, 626);
+            this.glControl1.TabIndex = 0;
+            this.glControl1.VSync = true;
+            this.glControl1.Load += new System.EventHandler(this.OnGlLoad);
+            this.glControl1.Click += new System.EventHandler(this.OnPick);
+            this.glControl1.Paint += new System.Windows.Forms.PaintEventHandler(this.GlPaint);
+            this.glControl1.Resize += new System.EventHandler(this.OnGlResize);
+            // 
             // tabControlInfoViewPicker
             // 
             this.tabControlInfoViewPicker.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -356,7 +410,7 @@ namespace open3mod
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.treeView1);
+            this.tabPage3.Controls.Add(this.treeViewNodeGraph);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
@@ -365,15 +419,15 @@ namespace open3mod
             this.tabPage3.Text = "Tree";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // treeView1
+            // treeViewNodeGraph
             // 
-            this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.treeViewNodeGraph.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.treeView1.Location = new System.Drawing.Point(0, 0);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(288, 606);
-            this.treeView1.TabIndex = 0;
+            this.treeViewNodeGraph.Location = new System.Drawing.Point(0, 0);
+            this.treeViewNodeGraph.Name = "treeViewNodeGraph";
+            this.treeViewNodeGraph.Size = new System.Drawing.Size(288, 606);
+            this.treeViewNodeGraph.TabIndex = 0;
             // 
             // tabPage4
             // 
@@ -385,56 +439,11 @@ namespace open3mod
             this.tabPage4.Text = "Textures";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // toolStripSeparator4
+            // logViewerToolStripMenuItem
             // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripButtonFullView
-            // 
-            this.toolStripButtonFullView.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonFullView.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonFullView.Image")));
-            this.toolStripButtonFullView.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonFullView.Name = "toolStripButtonFullView";
-            this.toolStripButtonFullView.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonFullView.Text = "Full View";
-            this.toolStripButtonFullView.Click += new System.EventHandler(this.ToggleFullView);
-            // 
-            // toolStripButtonTwoViews
-            // 
-            this.toolStripButtonTwoViews.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonTwoViews.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonTwoViews.Image")));
-            this.toolStripButtonTwoViews.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonTwoViews.Name = "toolStripButtonTwoViews";
-            this.toolStripButtonTwoViews.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonTwoViews.Text = "Two Views";
-            this.toolStripButtonTwoViews.Click += new System.EventHandler(this.ToggleTwoViews);
-            // 
-            // toolStripButtonFourViews
-            // 
-            this.toolStripButtonFourViews.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonFourViews.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonFourViews.Image")));
-            this.toolStripButtonFourViews.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonFourViews.Name = "toolStripButtonFourViews";
-            this.toolStripButtonFourViews.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonFourViews.Text = "Four Views";
-            this.toolStripButtonFourViews.Click += new System.EventHandler(this.ToggleFourViews);
-            // 
-            // glControl1
-            // 
-            this.glControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.glControl1.BackColor = System.Drawing.Color.Black;
-            this.glControl1.Location = new System.Drawing.Point(0, 0);
-            this.glControl1.Name = "glControl1";
-            this.glControl1.Size = new System.Drawing.Size(742, 626);
-            this.glControl1.TabIndex = 0;
-            this.glControl1.VSync = true;
-            this.glControl1.Load += new System.EventHandler(this.OnGlLoad);
-            this.glControl1.Click += new System.EventHandler(this.OnPick);
-            this.glControl1.Paint += new System.Windows.Forms.PaintEventHandler(this.GlPaint);
-            this.glControl1.Resize += new System.EventHandler(this.OnGlResize);
+            this.logViewerToolStripMenuItem.Name = "logViewerToolStripMenuItem";
+            this.logViewerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.logViewerToolStripMenuItem.Text = "Log Viewer";
             // 
             // MainWindow
             // 
@@ -478,7 +487,7 @@ namespace open3mod
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.TreeView treeViewNodeGraph;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.TabControl tabControlInfoViewPicker;
         private System.Windows.Forms.TabPage tabPage3;
@@ -505,6 +514,7 @@ namespace open3mod
         private System.Windows.Forms.ToolStripButton toolStripButtonFullView;
         private System.Windows.Forms.ToolStripButton toolStripButtonTwoViews;
         private System.Windows.Forms.ToolStripButton toolStripButtonFourViews;
+        private System.Windows.Forms.ToolStripMenuItem logViewerToolStripMenuItem;
     }
 }
 

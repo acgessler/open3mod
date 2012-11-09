@@ -72,14 +72,10 @@ namespace open3mod
             var index = UiState.ViewIndex.Index0;
             foreach (var view in Window.UiState.ActiveViews)
             {
-                if (view == null)
-                {
-                    continue;
-                }
-
                 // draw the active viewport last (to make sure its contour line is on top)
-                if (Window.UiState.ActiveViewIndex == index)
+                if (view == null || Window.UiState.ActiveViewIndex == index)
                 {
+                    ++index;
                     continue;
                 }
 
@@ -158,10 +154,8 @@ namespace open3mod
         private void DrawViewportColors(bool active)
         {         
             GL.MatrixMode(MatrixMode.Modelview);
-            GL.PushMatrix();
             GL.LoadIdentity();
             GL.MatrixMode(MatrixMode.Projection);
-            GL.PushMatrix();
             GL.LoadIdentity();
 
             // paint the active viewport in a slightly different shade of gray,
@@ -184,10 +178,7 @@ namespace open3mod
             GL.End();
 
             GL.LineWidth(1);
-
-            GL.PopMatrix();
             GL.MatrixMode(MatrixMode.Modelview);
-            GL.PopMatrix();
         }
 
 
