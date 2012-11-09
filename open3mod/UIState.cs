@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OpenTK;
 
 namespace open3mod
 {
@@ -58,7 +60,67 @@ namespace open3mod
         public CameraMode CamMode = CameraMode.Orbit;
         public ViewIndex ActiveViewIndex = 0;
 
-        public ViewMode ActiveViewMode = ViewMode.Single;
+        private ViewMode _activeViewMode = ViewMode.Single;
+
+        /// <summary>
+        /// For each viewport the bottom-left and upper-right corners or null
+        /// if the viewport is not currently active.
+        /// </summary>
+        public Vector4?[] ActiveViews = new Vector4?[(int) ViewIndex._Max];
+
+
+        /// <summary>
+        /// Current view mode
+        /// </summary>
+        public ViewMode ActiveViewMode
+        {
+            get { return _activeViewMode; }
+            set
+            { 
+     
+                // hardcoded table of viewport sizes. This is the only location
+                // so changing these constants will suffice to adjust viewports
+                _activeViewMode = value;
+                switch(_activeViewMode)
+                {
+                    case ViewMode.Single:
+                        ActiveViews = new Vector4?[]
+                        {
+                            new Vector4(0.0f, 0.0f, 1.0f, 1.0f), 
+                            null,
+                            null,
+                            null
+                        };
+                        break;
+                    case ViewMode.Two:
+                        ActiveViews = new Vector4?[]
+                        {
+                            new Vector4(0.0f, 0.0f, 0.5f, 1.0f), 
+                            null,
+                            new Vector4(0.5f, 0.0f, 1.0f, 1.0f), 
+                            null
+                        };            
+                        break;
+                    case ViewMode.Four:
+                        ActiveViews = new Vector4?[]
+                        {
+                            new Vector4(0.0f, 0.0f, 0.5f, 0.5f), 
+                            new Vector4(0.5f, 0.0f, 1.0f, 0.5f),
+                            new Vector4(0.0f, 0.5f, 0.5f, 1.0f),
+                            new Vector4(0.5f, 0.5f, 1.0f, 1.0f),
+                        };
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                Debug.Assert(ActiveViews[0] != null);
+                if (ActiveViews[(int)ActiveViewIndex] == null)
+                {
+                    ActiveViewIndex = ViewIndex.Index0;
+                }
+            }
+        }
 
 
         /// <summary>
@@ -91,6 +153,8 @@ namespace open3mod
         {
             DefaultFont12 = new Font(FontFamily.GenericSansSerif, 12);
             DefaultFont16 = new Font(FontFamily.GenericSansSerif, 16);
+
+            ActiveViewMode = ViewMode.Single;
         }
     }
 }

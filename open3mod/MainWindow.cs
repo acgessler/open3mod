@@ -174,5 +174,29 @@ namespace open3mod
             toolStripButtonTwoViews.CheckState = CheckState.Unchecked;
             toolStripButtonFourViews.CheckState = CheckState.Checked;
         }
+
+        private void OnPick(object sender, EventArgs e)
+        {
+            var x = ((MouseEventArgs)e).X / (float)glControl1.ClientSize.Width;
+            var y = 1.0f - ((MouseEventArgs)e).Y / (float)glControl1.ClientSize.Height;
+
+            // check which viewport has been hit
+            var index = UiState.ViewIndex.Index0;
+            foreach(var view in _ui.ActiveViews)
+            {
+                if (view == null)
+                {
+                    continue;
+                }
+
+                if (x >= view.Value.X && x <= view.Value.Z &&
+                    y >= view.Value.Y && y <= view.Value.W)
+                {
+                    _ui.ActiveViewIndex = index;
+                    break;
+                }
+            ++index;
+            }           
+        }
     }
 }

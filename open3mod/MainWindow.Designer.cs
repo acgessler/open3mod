@@ -63,11 +63,11 @@ namespace open3mod
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.glControl1 = new open3mod.RenderControl();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonFullView = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonTwoViews = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonFourViews = new System.Windows.Forms.ToolStripButton();
+            this.glControl1 = new open3mod.RenderControl();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -385,21 +385,6 @@ namespace open3mod
             this.tabPage4.Text = "Textures";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // glControl1
-            // 
-            this.glControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.glControl1.BackColor = System.Drawing.Color.Black;
-            this.glControl1.Location = new System.Drawing.Point(0, 0);
-            this.glControl1.Name = "glControl1";
-            this.glControl1.Size = new System.Drawing.Size(742, 626);
-            this.glControl1.TabIndex = 0;
-            this.glControl1.VSync = true;
-            this.glControl1.Load += new System.EventHandler(this.OnGlLoad);
-            this.glControl1.Paint += new System.Windows.Forms.PaintEventHandler(this.GlPaint);
-            this.glControl1.Resize += new System.EventHandler(this.OnGlResize);
-            // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
@@ -434,6 +419,22 @@ namespace open3mod
             this.toolStripButtonFourViews.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonFourViews.Text = "Four Views";
             this.toolStripButtonFourViews.Click += new System.EventHandler(this.ToggleFourViews);
+            // 
+            // glControl1
+            // 
+            this.glControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.glControl1.BackColor = System.Drawing.Color.Black;
+            this.glControl1.Location = new System.Drawing.Point(0, 0);
+            this.glControl1.Name = "glControl1";
+            this.glControl1.Size = new System.Drawing.Size(742, 626);
+            this.glControl1.TabIndex = 0;
+            this.glControl1.VSync = true;
+            this.glControl1.Load += new System.EventHandler(this.OnGlLoad);
+            this.glControl1.Click += new System.EventHandler(this.OnPick);
+            this.glControl1.Paint += new System.Windows.Forms.PaintEventHandler(this.GlPaint);
+            this.glControl1.Resize += new System.EventHandler(this.OnGlResize);
             // 
             // MainWindow
             // 

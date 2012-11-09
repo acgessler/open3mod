@@ -65,27 +65,35 @@ namespace open3mod
         /// </summary>
         /// <param name="activeScene">Active scene or a null to show the "drag file here" screen</param>
         public void Draw(Scene activeScene = null)
-        {                
+        {
             GL.ClearColor(Color.LightGray);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            switch(Window.UiState.ActiveViewMode)
+            var index = UiState.ViewIndex.Index0;
+            foreach (var view in Window.UiState.ActiveViews)
             {
-                case UiState.ViewMode.Single:
-                    DrawViewport(activeScene,0.0,0.0,1.0,1.0, Window.UiState.ActiveViewIndex == UiState.ViewIndex.Index0);
-                    break;
-                case UiState.ViewMode.Two:
-                    DrawViewport(activeScene, 0.0, 0.0, 0.5, 1.0, Window.UiState.ActiveViewIndex == UiState.ViewIndex.Index0);
-                    DrawViewport(activeScene, 0.5, 0.0, 1.0, 1.0, Window.UiState.ActiveViewIndex == UiState.ViewIndex.Index1);
-                    break;
-                case UiState.ViewMode.Four:
-                    DrawViewport(activeScene, 0.0, 0.0, 0.5, 0.5, Window.UiState.ActiveViewIndex == UiState.ViewIndex.Index0);
-                    DrawViewport(activeScene, 0.5, 0.0, 1.0, 0.5, Window.UiState.ActiveViewIndex == UiState.ViewIndex.Index2);
-                    DrawViewport(activeScene, 0.0, 0.5, 0.5, 1.0, Window.UiState.ActiveViewIndex == UiState.ViewIndex.Index1);
-                    DrawViewport(activeScene, 0.5, 0.5, 1.0, 1.0, Window.UiState.ActiveViewIndex == UiState.ViewIndex.Index3);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                if (view == null)
+                {
+                    continue;
+                }
+
+                // draw the active viewport last (to make sure its contour line is on top)
+                if (Window.UiState.ActiveViewIndex == index)
+                {
+                    continue;
+                }
+
+                DrawViewport(activeScene, view.Value.X, view.Value.Y, view.Value.Z, view.Value.W, false);
+                ++index;
+            }
+
+            var activeVp = Window.UiState.ActiveViews[(int)Window.UiState.ActiveViewIndex];
+            Debug.Assert(activeVp != null);
+            DrawViewport(activeScene, activeVp.Value.X, activeVp.Value.Y, activeVp.Value.Z, activeVp.Value.W, true);
+
+            if (Window.UiState.ActiveViewMode != UiState.ViewMode.Single)
+            {
+                SetFullViewport();
             }
 
             if (Window.UiState.ShowFps)
@@ -119,7 +127,7 @@ namespace open3mod
             // update viewport 
             var w = (double)RenderResolution.Width;
             var h = (double)RenderResolution.Height;
-            GL.Viewport((int)(xs * w), (int)(ys * w), (int)((xe-xs) * w), (int)((ye-ys) * w));
+            GL.Viewport((int)(xs * w), (int)(ys * h), (int)((xe-xs) * w), (int)((ye-ys) * h));
 
             DrawViewportColors(active);
 
@@ -141,9 +149,14 @@ namespace open3mod
         }
 
 
-        private void DrawViewportColors(bool active)
+        private void SetFullViewport()
         {
-            
+            GL.Viewport(0, 0, RenderResolution.Width, RenderResolution.Height);
+        }
+
+
+        private void DrawViewportColors(bool active)
+        {         
             GL.MatrixMode(MatrixMode.Modelview);
             GL.PushMatrix();
             GL.LoadIdentity();
@@ -160,7 +173,7 @@ namespace open3mod
             }
 
             // draw contour line
-            GL.LineWidth(2);
+            GL.LineWidth(active ? 4 : 3);
             GL.Color4(active ? Color.GreenYellow : Color.DarkGray);
 
             GL.Begin(BeginMode.LineStrip);
@@ -169,6 +182,8 @@ namespace open3mod
             GL.Vertex2(1.0, 1.0);
             GL.Vertex2(-1.0, 1.0);
             GL.End();
+
+            GL.LineWidth(1);
 
             GL.PopMatrix();
             GL.MatrixMode(MatrixMode.Modelview);
