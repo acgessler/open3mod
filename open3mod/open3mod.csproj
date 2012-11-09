@@ -59,6 +59,7 @@
     <Compile Include="AssimpToOpenTk.cs" />
     <Compile Include="FpsTracker.cs" />
     <Compile Include="ICameraController.cs" />
+    <Compile Include="LogStore.cs" />
     <Compile Include="LogViewer.cs">
       <SubType>Form</SubType>
     </Compile>
