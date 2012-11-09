@@ -18,6 +18,7 @@ namespace open3mod
         private UiState _ui;
         private Renderer _renderer;
         private FpsTracker _fps;
+        private LogViewer _logViewer;
 
         public GLControl GlControl
         {
@@ -198,6 +199,20 @@ namespace open3mod
                 }
             ++index;
             }           
+        }
+
+
+        private void OnShowLogViewer(object sender, EventArgs e)
+        {
+            if(_logViewer == null)
+            {
+                _logViewer = new LogViewer(this);
+                _logViewer.Closed += (o, args) =>
+                {
+                    _logViewer = null;
+                };
+                _logViewer.Show();
+            }
         }
     }
 }

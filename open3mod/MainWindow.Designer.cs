@@ -42,6 +42,7 @@ namespace open3mod
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.logViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -68,7 +69,6 @@ namespace open3mod
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.treeViewNodeGraph = new System.Windows.Forms.TreeView();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.logViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -154,7 +154,7 @@ namespace open3mod
             // 
             this.toolStripMenuItem3.CheckOnClick = true;
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(129, 22);
             this.toolStripMenuItem3.Text = "Wireframe";
             // 
             // toolsToolStripMenuItem
@@ -165,6 +165,13 @@ namespace open3mod
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
             this.toolsToolStripMenuItem.Click += new System.EventHandler(this.toolsToolStripMenuItem_Click);
+            // 
+            // logViewerToolStripMenuItem
+            // 
+            this.logViewerToolStripMenuItem.Name = "logViewerToolStripMenuItem";
+            this.logViewerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.logViewerToolStripMenuItem.Text = "Log Viewer";
+            this.logViewerToolStripMenuItem.Click += new System.EventHandler(this.OnShowLogViewer);
             // 
             // toolStripMenuItem1
             // 
@@ -438,12 +445,6 @@ namespace open3mod
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "Textures";
             this.tabPage4.UseVisualStyleBackColor = true;
-            // 
-            // logViewerToolStripMenuItem
-            // 
-            this.logViewerToolStripMenuItem.Name = "logViewerToolStripMenuItem";
-            this.logViewerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.logViewerToolStripMenuItem.Text = "Log Viewer";
             // 
             // MainWindow
             // 

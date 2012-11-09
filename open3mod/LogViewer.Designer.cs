@@ -31,9 +31,9 @@
             this.richTextBox = new System.Windows.Forms.RichTextBox();
             this.checkBoxFilterError = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.checkBoxFilterWarning = new System.Windows.Forms.CheckBox();
-            this.checkBoxFilterInformation = new System.Windows.Forms.CheckBox();
             this.checkBoxFilterVerbose = new System.Windows.Forms.CheckBox();
+            this.checkBoxFilterInformation = new System.Windows.Forms.CheckBox();
+            this.checkBoxFilterWarning = new System.Windows.Forms.CheckBox();
             this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -43,10 +43,13 @@
             this.richTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBox.Location = new System.Drawing.Point(0, 142);
+            this.richTextBox.BackColor = System.Drawing.Color.White;
+            this.richTextBox.DetectUrls = false;
+            this.richTextBox.Location = new System.Drawing.Point(0, 138);
             this.richTextBox.Name = "richTextBox";
+            this.richTextBox.ReadOnly = true;
             this.richTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-            this.richTextBox.Size = new System.Drawing.Size(821, 429);
+            this.richTextBox.Size = new System.Drawing.Size(821, 433);
             this.richTextBox.TabIndex = 0;
             this.richTextBox.Text = "";
             // 
@@ -75,17 +78,17 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Filter";
             // 
-            // checkBoxFilterWarning
+            // checkBoxFilterVerbose
             // 
-            this.checkBoxFilterWarning.AutoSize = true;
-            this.checkBoxFilterWarning.Checked = true;
-            this.checkBoxFilterWarning.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxFilterWarning.Location = new System.Drawing.Point(21, 53);
-            this.checkBoxFilterWarning.Name = "checkBoxFilterWarning";
-            this.checkBoxFilterWarning.Size = new System.Drawing.Size(71, 17);
-            this.checkBoxFilterWarning.TabIndex = 2;
-            this.checkBoxFilterWarning.Text = "Warnings";
-            this.checkBoxFilterWarning.UseVisualStyleBackColor = true;
+            this.checkBoxFilterVerbose.AutoSize = true;
+            this.checkBoxFilterVerbose.Checked = true;
+            this.checkBoxFilterVerbose.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxFilterVerbose.Location = new System.Drawing.Point(112, 53);
+            this.checkBoxFilterVerbose.Name = "checkBoxFilterVerbose";
+            this.checkBoxFilterVerbose.Size = new System.Drawing.Size(65, 17);
+            this.checkBoxFilterVerbose.TabIndex = 3;
+            this.checkBoxFilterVerbose.Text = "Verbose";
+            this.checkBoxFilterVerbose.UseVisualStyleBackColor = true;
             // 
             // checkBoxFilterInformation
             // 
@@ -99,17 +102,17 @@
             this.checkBoxFilterInformation.Text = "Information";
             this.checkBoxFilterInformation.UseVisualStyleBackColor = true;
             // 
-            // checkBoxFilterVerbose
+            // checkBoxFilterWarning
             // 
-            this.checkBoxFilterVerbose.AutoSize = true;
-            this.checkBoxFilterVerbose.Checked = true;
-            this.checkBoxFilterVerbose.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxFilterVerbose.Location = new System.Drawing.Point(112, 53);
-            this.checkBoxFilterVerbose.Name = "checkBoxFilterVerbose";
-            this.checkBoxFilterVerbose.Size = new System.Drawing.Size(65, 17);
-            this.checkBoxFilterVerbose.TabIndex = 3;
-            this.checkBoxFilterVerbose.Text = "Verbose";
-            this.checkBoxFilterVerbose.UseVisualStyleBackColor = true;
+            this.checkBoxFilterWarning.AutoSize = true;
+            this.checkBoxFilterWarning.Checked = true;
+            this.checkBoxFilterWarning.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxFilterWarning.Location = new System.Drawing.Point(21, 53);
+            this.checkBoxFilterWarning.Name = "checkBoxFilterWarning";
+            this.checkBoxFilterWarning.Size = new System.Drawing.Size(71, 17);
+            this.checkBoxFilterWarning.TabIndex = 2;
+            this.checkBoxFilterWarning.Text = "Warnings";
+            this.checkBoxFilterWarning.UseVisualStyleBackColor = true;
             // 
             // button1
             // 

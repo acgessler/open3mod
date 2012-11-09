@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -356,7 +357,40 @@ namespace open3mod
             // pre-formatted messages) are the only way to capture
             // the logging. This means we have to recover the original
             // information (such as log level) from the string contents.
-            _logStore.Add(LogStore.Category.Info,  msg, 0.0);
+
+            int start = msg.IndexOf(':');
+            if(start == -1)
+            {
+                // this should not happen but nonetheless check for it
+                //Debug.Assert(false);
+                return;
+            }
+
+            var cat = LogStore.Category.Info;
+            if (msg.StartsWith("Error, "))
+            {
+                cat = LogStore.Category.Error;        
+            }
+            else if (msg.StartsWith("Debug, "))
+            {
+                cat = LogStore.Category.Debug;
+            }
+            else if (msg.StartsWith("Warn, "))
+            {
+                cat = LogStore.Category.Warn;
+            }
+            else if (msg.StartsWith("Info, "))
+            {
+                cat = LogStore.Category.Info;
+            }
+            else
+            {
+                // this should not happen but nonetheless check for it
+                //Debug.Assert(false);
+                return;
+            }
+
+            _logStore.Add(cat, msg.Substring(start + 1), 0.0);
         }
     }
 }
