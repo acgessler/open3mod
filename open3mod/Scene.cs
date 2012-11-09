@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,6 +28,7 @@ namespace open3mod
         private Vector3 _sceneMin;
         private Vector3 _sceneMax;
         private int _displayList;
+        private LogStore _logStore;
 
         /// <summary>
         /// Obtain the "raw" scene data as imported by Assimp
@@ -41,28 +43,38 @@ namespace open3mod
             get { return _sceneCenter; }
         }
 
+        public LogStore LogStore
+        {
+            get { return _logStore; }
+        }
+
 
         /// <summary>
         /// Construct a scene given a file name, throw if loading fails
         /// </summary>
         /// <param name="file">File name to be loaded</param>
-        public Scene(string file) 
+        public Scene(string file)
         {
-            var imp = new AssimpImporter();
+            _logStore = new LogStore();
 
-            // Assimp configuration:
-            
-            //  - if no normals are present, generate them using a threshold
-            //    angle of 66 degrees.
-            imp.SetConfig(new NormalSmoothingAngleConfig(66.0f));
-
-
-            //  - request lots of post processing steps, the details of which
-            //    can be found in the TargetRealTimeMaximumQuality docs.
-            _raw = imp.ImportFile(file, PostProcessPreset.TargetRealTimeMaximumQuality);
-            if (_raw == null)
+            using (var imp = new AssimpImporter { VerboseLoggingEnabled = true })
             {
-                throw new Exception("failed to read file: " + file);
+                imp.AttachLogStream((new LogPipe(_logStore)).GetStream());
+
+                // Assimp configuration:
+
+                //  - if no normals are present, generate them using a threshold
+                //    angle of 66 degrees.
+                imp.SetConfig(new NormalSmoothingAngleConfig(66.0f));
+
+
+                //  - request lots of post processing steps, the details of which
+                //    can be found in the TargetRealTimeMaximumQuality docs.
+                _raw = imp.ImportFile(file, PostProcessPreset.TargetRealTimeMaximumQuality);
+                if (_raw == null)
+                {
+                    throw new Exception("failed to read file: " + file);
+                }
             }
 
             // compute a bounding box (AABB) for the scene we just loaded
@@ -313,6 +325,38 @@ namespace open3mod
         public void Dispose()
         {
             //GL.DeleteTexture(_texID);
+        }
+    }
+
+
+    /// <summary>
+    /// Utility class to generate an assimp logstream to capture the logging
+    /// into a LogStore
+    /// </summary>
+    class LogPipe 
+    {
+        private readonly LogStore _logStore;
+
+        public LogPipe(LogStore logStore) 
+        {
+            _logStore = logStore;
+            
+        }
+
+        public LogStream GetStream()
+        {
+            return new LogStream(LogStreamCallback);
+        }
+
+
+        private void LogStreamCallback(string msg, IntPtr userdata)
+        {
+            // Unfortunately, assimp-net does not wrap assimp's native
+            // logging interfaces so log streams (which receive
+            // pre-formatted messages) are the only way to capture
+            // the logging. This means we have to recover the original
+            // information (such as log level) from the string contents.
+            _logStore.Add(LogStore.Category.Info,  msg, 0.0);
         }
     }
 }

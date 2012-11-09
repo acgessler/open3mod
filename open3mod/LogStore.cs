@@ -34,9 +34,9 @@ namespace open3mod
         /// </summary>
         public struct Entry
         {
-            public Category cat;
-            public string message;
-            public double time;
+            public Category Cat;
+            public string Message;
+            public double Time;
         }
 
 
@@ -59,7 +59,7 @@ namespace open3mod
 
         public void Add(Category cat, string message, double time)
         {
-            _messages.Add(new Entry() {cat = cat, message = message, time = time});
+            _messages.Add(new Entry() {Cat = cat, Message = message, Time = time});
         }
 
 
