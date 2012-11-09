@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,9 +15,9 @@ namespace open3mod
     public partial class LogViewer : Form
     {
         private readonly MainWindow _mainWindow;
+        private LogStore _currentLogStore;
 
-
-       private const string RtfHeader =
+        private const string RtfHeader =
 	    @"{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Courier New;}}" +
         @"{\colortbl;" +
             // color palette:
@@ -37,11 +39,11 @@ namespace open3mod
             _mainWindow = mainWindow;
             InitializeComponent();
 
-            FetchLogEntries();
+            FetchLogEntriesFromScene();
         }
 
 
-        private void FetchLogEntries()
+        private void FetchLogEntriesFromScene()
         {
             var scene = MainWindow.UiState.ActiveScene;
             if(scene == null)
@@ -50,25 +52,52 @@ namespace open3mod
                 return;
             }
 
+            _currentLogStore = scene.LogStore;
+            BuildRtf();           
+        }
+
+
+        private void BuildRtf()
+        {
             var sb = new StringBuilder();
 
             sb.Append(RtfHeader);
 
-            foreach(var entry in scene.LogStore.Messages)
+            foreach (var entry in _currentLogStore.Messages)
             {
                 string s;
-                switch(entry.Cat)
+                switch (entry.Cat)
                 {
                     case LogStore.Category.Info:
+                        if(!checkBoxFilterInformation.Checked)
+                        {
+                            continue;
+                        }
+
                         s = @"\pard \cf3 \b \fs18 ";
                         break;
                     case LogStore.Category.Warn:
+                        if (!checkBoxFilterWarning.Checked)
+                        {
+                            continue;
+                        }
+
                         s = @"\pard \cf2 \b \fs18 ";
                         break;
                     case LogStore.Category.Error:
+                        if (!checkBoxFilterError.Checked)
+                        {
+                            continue;
+                        }
+
                         s = @"\pard \cf1 \b \fs18 ";
                         break;
                     case LogStore.Category.Debug:
+                        if (!checkBoxFilterVerbose.Checked)
+                        {
+                            continue;
+                        }
+
                         s = @"\pard \cf4 \b \fs18 ";
                         break;
                     case LogStore.Category.System:
@@ -80,9 +109,9 @@ namespace open3mod
 
                 sb.Append(s);
 
-                foreach(var ch in entry.Message)
+                foreach (var ch in entry.Message)
                 {
-                    if(ch == '\n' || ch == '\r')
+                    if (ch == '\n' || ch == '\r')
                     {
                         continue;
                     }
@@ -91,7 +120,7 @@ namespace open3mod
                     {
                         sb.Append('\\');
                     }
-                    
+
                     sb.Append(ch);
                 }
 
@@ -102,6 +131,63 @@ namespace open3mod
 
             var rtfCode = sb.ToString();
             richTextBox.Rtf = rtfCode;
+        }
+
+
+        private void OnClearAll(object sender, EventArgs e)
+        {          
+            _currentLogStore.Drop();
+            richTextBox.Text = "Nothing to display";
+        }
+
+
+        private void OnSave(object sender, EventArgs e)
+        {
+            saveFileDialog.ShowDialog();
+            using (var openFile = saveFileDialog.OpenFile())
+            {
+                using (var stream = new StreamWriter(openFile))
+                {
+                    foreach (var entry in _currentLogStore.Messages)
+                    {                       
+                        stream.Write(LogEntryToPlainText(entry) + "\r\n");
+                    }
+                }               
+            }
+        }
+
+
+        private string LogEntryToPlainText(LogStore.Entry entry)
+        {
+            string s;
+            switch (entry.Cat)
+            {
+                case LogStore.Category.Info:
+                    s = "Info:   ";
+                    break;
+                case LogStore.Category.Warn:
+                    s = "Warn:   ";
+                    break;
+                case LogStore.Category.Error:
+                    s = "Error:  ";
+                    break;
+                case LogStore.Category.Debug:
+                    s = "Debug:  ";
+                    break;
+                case LogStore.Category.System:
+                    s = "System: ";
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return entry.Time.ToString(CultureInfo.InvariantCulture).PadLeft(10,'0') + "   " + s + entry.Message;
+        }
+
+
+        private void OnFilterChange(object sender, EventArgs e)
+        {
+            BuildRtf();
         }
     }
 }

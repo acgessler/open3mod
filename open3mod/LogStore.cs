@@ -36,7 +36,7 @@ namespace open3mod
         {
             public Category Cat;
             public string Message;
-            public double Time;
+            public long Time;
         }
 
 
@@ -57,9 +57,15 @@ namespace open3mod
         }
 
 
-        public void Add(Category cat, string message, double time)
+        public void Add(Category cat, string message, long time)
         {
             _messages.Add(new Entry() {Cat = cat, Message = message, Time = time});
+        }
+
+
+        public void Drop()
+        {
+            _messages.Clear();
         }
 
 

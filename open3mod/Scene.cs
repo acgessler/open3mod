@@ -337,6 +337,7 @@ namespace open3mod
     class LogPipe 
     {
         private readonly LogStore _logStore;
+        private Stopwatch _timer;
 
         public LogPipe(LogStore logStore) 
         {
@@ -352,6 +353,17 @@ namespace open3mod
 
         private void LogStreamCallback(string msg, IntPtr userdata)
         {
+            // Start timing with the very first logging messages. This
+            // is relatively reliable because assimp writes a log header
+            // as soon as it starts processing a file.
+            if (_timer == null)
+            {
+                _timer = new Stopwatch();
+                _timer.Start();                
+            }
+
+            long millis = _timer.ElapsedMilliseconds;
+
             // Unfortunately, assimp-net does not wrap assimp's native
             // logging interfaces so log streams (which receive
             // pre-formatted messages) are the only way to capture
@@ -390,7 +402,7 @@ namespace open3mod
                 return;
             }
 
-            _logStore.Add(cat, msg.Substring(start + 1), 0.0);
+            _logStore.Add(cat, msg.Substring(start + 1), millis);
         }
     }
 }
