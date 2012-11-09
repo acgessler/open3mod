@@ -81,10 +81,7 @@ namespace open3mod
         {
             GL.Enable(EnableCap.Texture2D);
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
-            GL.Enable(EnableCap.Lighting);
-            GL.Enable(EnableCap.Light0);
             GL.Enable(EnableCap.DepthTest);
-            GL.Enable(EnableCap.Normalize);
             GL.FrontFace(FrontFaceDirection.Ccw);
 
             if (state.RenderWireframe)
@@ -117,6 +114,10 @@ namespace open3mod
 
             // always switch back to FILL
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+
+            GL.Disable(EnableCap.DepthTest);
+            GL.Disable(EnableCap.Texture2D);
+            GL.Disable(EnableCap.Lighting);
         }
 
 
@@ -209,6 +210,7 @@ namespace open3mod
 
         private void ApplyMaterial(Material mat)
         {
+ 
             if (mat.GetTextureCount(TextureType.Diffuse) > 0)
             {
                 TextureSlot tex = mat.GetTexture(TextureType.Diffuse, 0);
