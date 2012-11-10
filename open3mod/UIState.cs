@@ -140,11 +140,24 @@ namespace open3mod
             get { return ActiveCameraControllerForView(ActiveViewIndex); }
         }
 
-
         /// <summary>
         /// Current active scene
         /// </summary>
-        public Scene ActiveScene = new Scene("../../../testdata/scenes/COLLADA.dae");
+        public Scene ActiveScene
+        {
+            get { return _activeScene; }
+            set
+            {
+                // make sure the previous scene instance is properly disposed
+                if(value != null)
+                {
+                    value.Dispose();
+                }
+                _activeScene = value;
+            }
+        }
+
+        private Scene _activeScene;
 
 
         /// <summary>

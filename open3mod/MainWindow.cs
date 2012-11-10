@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,9 @@ namespace open3mod
         private int _previousMousePosX = -1;
         private int _previousMousePosY = -1;
         private bool _mouseDown;
+
+        private delegate void DelegateOpenFile(String s);           
+        private readonly DelegateOpenFile _delegateOpenFile;                
 
         public GLControl GlControl
         {
@@ -44,6 +48,11 @@ namespace open3mod
             _ui = new UiState();
             _fps = new FpsTracker();
 
+            // create delegate used for asynchronous calls to OpenFile
+            _delegateOpenFile = this.OpenFile;
+
+            OpenFile("../../../testdata/scenes/COLLADA.dae");
+
             InitializeComponent();
 
             // sync UI with UIState
@@ -56,6 +65,16 @@ namespace open3mod
             toolStripButtonTwoViews.CheckState = _ui.ActiveViewMode == UiState.ViewMode.Two ? CheckState.Checked : CheckState.Unchecked;
             toolStripButtonFourViews.CheckState = _ui.ActiveViewMode == UiState.ViewMode.Four ? CheckState.Checked : CheckState.Unchecked;
         }
+
+        /// <summary>
+        /// Open a particular 3D model
+        /// </summary>
+        /// <param name="s"></param>
+        public void OpenFile(string s)
+        {
+            UiState.ActiveScene = new Scene(s);
+        }
+
 
         private void Form1Load(object sender, EventArgs e)
         {
@@ -263,6 +282,49 @@ namespace open3mod
         private void OnMouseEnter(object sender, EventArgs e)
         {
             Capture = false;
+        }
+
+        private void OnDrag(object sender, DragEventArgs e)
+        {
+            // code based on http://www.codeproject.com/Articles/3598/Drag-and-Drop
+            try
+            {
+                var a = (Array)e.Data.GetData(DataFormats.FileDrop);
+
+                if (a != null)
+                {
+                    // Extract string from first array element
+                    // (ignore all files except first if number of files are dropped).
+                    string s = a.GetValue(0).ToString();
+
+                    // Call OpenFile asynchronously.
+                    // Explorer instance from which file is dropped is not responding
+                    // all the time when DragDrop handler is active, so we need to return
+                    // immediately (especially if OpenFile shows MessageBox).
+
+                    BeginInvoke(_delegateOpenFile, new Object[] { s });
+
+                    // in the case Explorer overlaps this form
+                    Activate();        
+                }
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine("Error in DragDrop function: " + ex.Message);
+            }
+        }
+
+        private void OnDragEnter(object sender, DragEventArgs e)
+        {
+            // only accept files for drag and drop
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
         }
     }
 }
