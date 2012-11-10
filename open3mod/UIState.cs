@@ -132,6 +132,33 @@ namespace open3mod
 
 
         /// <summary>
+        /// Obtain an instance of the current active camera controller (i.e.
+        /// the controller for the current active view and current active camera
+        /// mode. This may be a null.
+        /// </summary>
+        public ICameraController ActiveCameraController {
+            get
+            {
+                if (CameraImpls[(int) CamMode, (int) ActiveViewIndex] == null)
+                {
+                    switch(CamMode)
+                    {
+                        case CameraMode.Fps:
+                            CameraImpls[(int) CamMode, (int) ActiveViewIndex] = null;
+                            break;
+                        case CameraMode.Orbit:
+                            CameraImpls[(int) CamMode, (int) ActiveViewIndex] = new OrbitCameraController();
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
+                return CameraImpls[(int) CamMode, (int) ActiveViewIndex];
+            }
+        }
+
+
+        /// <summary>
         /// Current active scene
         /// </summary>
         public Scene ActiveScene = new Scene("../../../testdata/scenes/COLLADA.dae");
@@ -155,6 +182,11 @@ namespace open3mod
             DefaultFont16 = new Font(FontFamily.GenericSansSerif, 16);
 
             ActiveViewMode = ViewMode.Single;
+        }
+
+        public ICameraController ActiveCameraControllerForView(ViewIndex targetView)
+        {
+            return CameraImpls[(int) CamMode, (int) targetView];
         }
     }
 }

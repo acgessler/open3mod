@@ -69,23 +69,27 @@ namespace open3mod
             GL.ClearColor(Color.LightGray);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
+            var ui = Window.UiState;
+
             var index = UiState.ViewIndex.Index0;
-            foreach (var view in Window.UiState.ActiveViews)
+            foreach (var view in ui.ActiveViews)
             {
                 // draw the active viewport last (to make sure its contour line is on top)
-                if (view == null || Window.UiState.ActiveViewIndex == index)
+                if (view == null || ui.ActiveViewIndex == index)
                 {
                     ++index;
                     continue;
                 }
 
-                DrawViewport(activeScene, view.Value.X, view.Value.Y, view.Value.Z, view.Value.W, false);
+                var cam = ui.ActiveCameraControllerForView(index);
+                DrawViewport(cam, activeScene, view.Value.X, view.Value.Y, view.Value.Z, view.Value.W, false);
                 ++index;
             }
 
-            var activeVp = Window.UiState.ActiveViews[(int)Window.UiState.ActiveViewIndex];
+            var activeVp = Window.UiState.ActiveViews[(int)ui.ActiveViewIndex];
             Debug.Assert(activeVp != null);
-            DrawViewport(activeScene, activeVp.Value.X, activeVp.Value.Y, activeVp.Value.Z, activeVp.Value.W, true);
+            DrawViewport(ui.ActiveCameraController, activeScene, activeVp.Value.X, activeVp.Value.Y, 
+                activeVp.Value.Z, activeVp.Value.W, true);
 
             if (Window.UiState.ActiveViewMode != UiState.ViewMode.Single)
             {
@@ -117,7 +121,8 @@ namespace open3mod
         }
 
 
-        private void DrawViewport(Scene activeScene, double xs, double ys, double xe, double ye, bool active = false)
+        private void DrawViewport(ICameraController view, Scene activeScene, double xs, double ys, double xe, 
+            double ye, bool active = false)
         {
             
             // update viewport 
@@ -140,7 +145,7 @@ namespace open3mod
             }
             else
             {
-                DrawScene(activeScene);
+                DrawScene(activeScene, view);
             }
         }
 
@@ -182,10 +187,10 @@ namespace open3mod
         }
 
 
-        private void DrawScene(Scene scene)
+        private void DrawScene(Scene scene, ICameraController view)
         {
             Debug.Assert(scene != null);
-            scene.Render(Window.UiState);
+            scene.Render(Window.UiState, view);
         }
 
 

@@ -17,5 +17,8 @@ namespace open3mod
     {
 
         Matrix4 GetView();
+
+        void MouseMove(int x, int y);
+        void Scroll(int z);
     }
 }

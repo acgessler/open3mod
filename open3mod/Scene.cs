@@ -90,7 +90,7 @@ namespace open3mod
         }
 
 
-        public void Render(UiState state)
+        public void Render(UiState state, ICameraController cam)
         {
             GL.Enable(EnableCap.Texture2D);
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
@@ -104,7 +104,8 @@ namespace open3mod
       
 
             GL.MatrixMode(MatrixMode.Modelview);
-            Matrix4 lookat = Matrix4.LookAt(0, 10, 5, 0, 0, 0, 0, 1, 0);
+            Matrix4 lookat = cam == null ? Matrix4.LookAt(0, 10, 5, 0, 0, 0, 0, 1, 0) : cam.GetView();
+
             GL.LoadMatrix(ref lookat);
 
             float tmp = _sceneMax.X - _sceneMin.X;

@@ -19,6 +19,9 @@ namespace open3mod
         private Renderer _renderer;
         private FpsTracker _fps;
         private LogViewer _logViewer;
+        private int _previousMousePosX = -1;
+        private int _previousMousePosY = -1;
+        private bool _mouseDown;
 
         public GLControl GlControl
         {
@@ -54,17 +57,17 @@ namespace open3mod
             toolStripButtonFourViews.CheckState = _ui.ActiveViewMode == UiState.ViewMode.Four ? CheckState.Checked : CheckState.Unchecked;
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void Form1Load(object sender, EventArgs e)
         {
 
         }
 
-        private void toolsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ToolsToolStripMenuItemClick(object sender, EventArgs e)
         {
 
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AboutToolStripMenuItemClick(object sender, EventArgs e)
         {
             var ab = new About();
             ab.ShowDialog();
@@ -176,10 +179,10 @@ namespace open3mod
             toolStripButtonFourViews.CheckState = CheckState.Checked;
         }
 
-        private void OnPick(object sender, EventArgs e)
+        private void UpdateActiveViewIfNeeded(MouseEventArgs e)
         {
-            var x = ((MouseEventArgs)e).X / (float)glControl1.ClientSize.Width;
-            var y = 1.0f - ((MouseEventArgs)e).Y / (float)glControl1.ClientSize.Height;
+            var x = e.X / (float)glControl1.ClientSize.Width;
+            var y = 1.0f - e.Y / (float)glControl1.ClientSize.Height;
 
             // check which viewport has been hit
             var index = UiState.ViewIndex.Index0;
@@ -201,7 +204,6 @@ namespace open3mod
             }           
         }
 
-
         private void OnShowLogViewer(object sender, EventArgs e)
         {
             if(_logViewer == null)
@@ -213,6 +215,54 @@ namespace open3mod
                 };
                 _logViewer.Show();
             }
+        }
+
+        private void OnMouseDown(object sender, MouseEventArgs e)
+        {
+            _mouseDown = true;
+
+            _previousMousePosX = e.X;
+            _previousMousePosY = e.Y;
+
+            UpdateActiveViewIfNeeded(e);
+        }
+
+        private void OnMouseUp(object sender, MouseEventArgs e)
+        {
+            _mouseDown = false;
+        }
+
+        private void OnMouseMove(object sender, MouseEventArgs e)
+        {       
+            if (e.Delta != 0 && UiState.ActiveCameraController != null)
+            {
+                UiState.ActiveCameraController.Scroll(e.Delta);
+            }
+
+            if(!_mouseDown)
+            {
+                return;
+            }
+
+            if (UiState.ActiveCameraController != null)
+            {
+                UiState.ActiveCameraController.MouseMove(e.X - _previousMousePosX, e.Y - _previousMousePosY);
+            }
+            _previousMousePosX = e.X;
+            _previousMousePosY = e.Y;
+        }
+
+        private void OnMouseLeave(object sender, EventArgs e)
+        {
+            if (_mouseDown)
+            {
+                Capture = true;
+            }
+        }
+
+        private void OnMouseEnter(object sender, EventArgs e)
+        {
+            Capture = false;
         }
     }
 }
