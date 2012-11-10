@@ -137,24 +137,7 @@ namespace open3mod
         /// mode. This may be a null.
         /// </summary>
         public ICameraController ActiveCameraController {
-            get
-            {
-                if (CameraImpls[(int) CamMode, (int) ActiveViewIndex] == null)
-                {
-                    switch(CamMode)
-                    {
-                        case CameraMode.Fps:
-                            CameraImpls[(int) CamMode, (int) ActiveViewIndex] = null;
-                            break;
-                        case CameraMode.Orbit:
-                            CameraImpls[(int) CamMode, (int) ActiveViewIndex] = new OrbitCameraController();
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-                }
-                return CameraImpls[(int) CamMode, (int) ActiveViewIndex];
-            }
+            get { return ActiveCameraControllerForView(ActiveViewIndex); }
         }
 
 
@@ -184,9 +167,29 @@ namespace open3mod
             ActiveViewMode = ViewMode.Single;
         }
 
+        /// <summary>
+        /// Get the ICameraController responsible for a particular view
+        /// for the current active camera mode.
+        /// </summary>
+        /// <param name="targetView">View index</param>
+        /// <returns>ICameraController or null if there is no implementation</returns>
         public ICameraController ActiveCameraControllerForView(ViewIndex targetView)
         {
-            return CameraImpls[(int) CamMode, (int) targetView];
+            if (CameraImpls[(int)CamMode, (int)targetView] == null)
+            {
+                switch (CamMode)
+                {
+                    case CameraMode.Fps:
+                        CameraImpls[(int)CamMode, (int)ActiveViewIndex] = null;
+                        break;
+                    case CameraMode.Orbit:
+                        CameraImpls[(int)CamMode, (int)ActiveViewIndex] = new OrbitCameraController();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            return CameraImpls[(int)CamMode, (int)targetView];
         }
     }
 }

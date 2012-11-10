@@ -17,11 +17,6 @@ namespace open3mod
         private double _lastFrameDelta;
         private double _lastFps;
 
-        public FpsTracker()
-        {
-            
-        }
-
         public double LastFrameDelta
         {
             get { return _lastFrameDelta; }

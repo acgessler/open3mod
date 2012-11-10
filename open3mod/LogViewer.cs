@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using open3mod.Properties;
 
 namespace open3mod
 {
@@ -48,7 +49,7 @@ namespace open3mod
             var scene = MainWindow.UiState.ActiveScene;
             if(scene == null)
             {
-                richTextBox.Text = "No scene loaded";
+                richTextBox.Text = Resources.LogViewer_FetchLogEntriesFromScene_No_scene_loaded;
                 return;
             }
 
@@ -137,7 +138,7 @@ namespace open3mod
         private void OnClearAll(object sender, EventArgs e)
         {          
             _currentLogStore.Drop();
-            richTextBox.Text = "Nothing to display";
+            richTextBox.Text = Resources.LogViewer_OnClearAll_Nothing_to_display;
         }
 
 

@@ -37,17 +37,18 @@ namespace open3mod
         }
 
         public void MouseMove(int x, int y)
-        {
-            var rotationX = Matrix4.CreateRotationY((float)(-x * RotationSpeed * Math.PI / 180.0));
-            var rotationY = Matrix4.CreateRotationX((float)(-y * RotationSpeed * Math.PI / 180.0));
+        {          
+            if (y != 0)
+            {
+                _offset = Vector3.TransformNormal(_offset, Matrix4.CreateFromAxisAngle(
+                    Vector3.Cross(_offset, Vector3.UnitY), (float)(y * RotationSpeed * Math.PI / 180.0)));
+            }
 
-            _offset = Vector3.TransformNormal(_offset, Matrix4.CreateFromAxisAngle(Vector3.Cross(_offset, Vector3.UnitY),
-                                                  (float)(y * RotationSpeed * Math.PI / 180.0)));
-
-            
-
-            _offset = Vector3.TransformNormal(_offset, Matrix4.CreateFromAxisAngle(Vector3.UnitY,
-                                                   (float)(-x * RotationSpeed * Math.PI / 180.0)));
+            if (x != 0)
+            {
+                _offset = Vector3.TransformNormal(_offset, Matrix4.CreateFromAxisAngle(
+                    Vector3.UnitY, (float)(-x * RotationSpeed * Math.PI / 180.0)));
+            }
 
             if (_offset.Y > 0.8f)
             {

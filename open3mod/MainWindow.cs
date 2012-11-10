@@ -15,9 +15,9 @@ namespace open3mod
 {
     public partial class MainWindow : Form
     {
-        private UiState _ui;
+        private readonly UiState _ui;
         private Renderer _renderer;
-        private FpsTracker _fps;
+        private readonly FpsTracker _fps;
         private LogViewer _logViewer;
         private int _previousMousePosX = -1;
         private int _previousMousePosY = -1;
