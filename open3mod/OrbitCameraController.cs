@@ -13,6 +13,10 @@ namespace open3mod
         private Vector3 _offset;
         private float _cameraDistance;
 
+
+        private const float ZoomSpeed = 1.00025f;
+        private const float MinimumCameraDistance = 0.1f;
+
         /// <summary>
         /// Rotation speed, in degrees per pixels
         /// </summary>
@@ -64,7 +68,8 @@ namespace open3mod
 
         public void Scroll(int z)
         {
-            _cameraDistance += z;
+            _cameraDistance *= (float)Math.Pow(ZoomSpeed, -z);
+            _cameraDistance = Math.Max(_cameraDistance, MinimumCameraDistance);
             UpdateViewMatrix();
         }
 
