@@ -57,6 +57,7 @@
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
     <Compile Include="AssimpToOpenTk.cs" />
+    <Compile Include="FpsCameraController.cs" />
     <Compile Include="FpsTracker.cs" />
     <Compile Include="ICameraController.cs" />
     <Compile Include="LogStore.cs" />

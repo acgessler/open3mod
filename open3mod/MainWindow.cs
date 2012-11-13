@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
+using KeyPressEventArgs = System.Windows.Forms.KeyPressEventArgs;
 
 namespace open3mod
 {
@@ -25,7 +26,13 @@ namespace open3mod
         private bool _mouseDown;
 
         private delegate void DelegateOpenFile(String s);           
-        private readonly DelegateOpenFile _delegateOpenFile;                
+        private readonly DelegateOpenFile _delegateOpenFile;
+        private bool _forwardPressed;
+        private bool _leftPressed;
+        private bool _rightPressed;
+        private bool _backPressed;
+        private bool _upPressed;
+        private bool _downPressed;
 
         public GLControl GlControl
         {
@@ -67,6 +74,9 @@ namespace open3mod
 
             // manually register the MouseWheel handler
             glControl1.MouseWheel += OnMouseMove;
+
+            // intercept all key events sent to children
+            KeyPreview = true;
         }
 
         /// <summary>
@@ -124,7 +134,6 @@ namespace open3mod
             FrameRender();
         }
 
-
         private void ApplicationIdle(object sender, EventArgs e)
         {
             // no guard needed -- we hooked into the event in Load handler
@@ -135,13 +144,67 @@ namespace open3mod
             }
         }
 
-
         private void FrameUpdate()
-        {
+        {          
             _fps.Update();
             _renderer.Update();
+
+            ProcessKeys();
         }
 
+        private void ProcessKeys()
+        {
+            var cam = UiState.ActiveCameraController;
+            if (cam == null)
+            {
+                return;
+            }
+
+            var dt = (float)_fps.LastFrameDelta;
+            float x = 0.0f, y = 0.0f, z = 0.0f;
+
+            bool changed = false;
+
+            if(_forwardPressed)
+            {
+                changed = true;
+                z += dt;
+            }
+            if (_backPressed)
+            {
+                changed = true;
+                z -= dt;
+            }
+
+            if (_rightPressed)
+            {
+                changed = true;
+                x += dt;
+            }
+            if (_leftPressed)
+            {
+                changed = true;
+                x -= dt;
+            }
+
+            if (_upPressed)
+            {
+                changed = true;
+                y += dt;
+            }
+            if (_downPressed)
+            {
+                changed = true;
+                y -= dt;
+            }
+
+            if(!changed)
+            {
+                return;
+            }
+
+            cam.MovementKey(x, y, z);
+        }
 
         private void FrameRender()
         {
@@ -328,6 +391,84 @@ namespace open3mod
             {
                 e.Effect = DragDropEffects.None;
             }
+        }
+
+        protected override bool IsInputKey(Keys keyData)
+        {
+            return true;
+        }
+
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            switch(e.KeyData)
+            {
+                case Keys.W:
+                case Keys.Up:
+                    _forwardPressed = true;
+                    break;
+
+                case Keys.A:
+                case Keys.Left:
+                    _leftPressed = true;
+                    break;
+
+                case Keys.S:
+                case Keys.Right:
+                    _rightPressed = true;
+                    break;
+
+                case Keys.D:
+                case Keys.Back:
+                    _backPressed = true;
+                    break;
+
+                case Keys.PageUp:
+                    _upPressed = true;
+                    break;
+
+                case Keys.PageDown:
+                    _downPressed = true;
+                    break;
+            }
+        }
+
+        private void OnKeyUp(object sender, KeyEventArgs keyEventArgs)
+        {
+            switch (keyEventArgs.KeyData)
+            {
+                case Keys.W:
+                case Keys.Up:
+                    _forwardPressed = false;
+                    break;
+
+                case Keys.A:
+                case Keys.Left:
+                    _leftPressed = false;
+                    break;
+
+                case Keys.S:
+                case Keys.Right:
+                    _rightPressed = false;
+                    break;
+
+                case Keys.D:
+                case Keys.Back:
+                    _backPressed = false;
+                    break;
+
+                case Keys.PageUp:
+                    _upPressed = false;
+                    break;
+
+                case Keys.PageDown:
+                    _downPressed = false;
+                    break;
+            }
+        }
+
+        private void OnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            e.IsInputKey = true;
         }
     }
 }

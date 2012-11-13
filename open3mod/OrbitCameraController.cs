@@ -73,6 +73,11 @@ namespace open3mod
             UpdateViewMatrix();
         }
 
+        public void MovementKey(float x, float y, float z)
+        {
+            // XXX switch to FPS camera at current position?
+        }
+
         private void UpdateViewMatrix()
         {
             _view = Matrix4.LookAt(_offset * _cameraDistance, Vector3.Zero, Vector3.UnitY);
