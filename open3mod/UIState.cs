@@ -77,7 +77,6 @@ namespace open3mod
             get { return _activeViewMode; }
             set
             { 
-     
                 // hardcoded table of viewport sizes. This is the only location
                 // so changing these constants will suffice to adjust viewports
                 _activeViewMode = value;
@@ -107,7 +106,7 @@ namespace open3mod
                             new Vector4(0.0f, 0.0f, 0.5f, 0.5f), 
                             new Vector4(0.5f, 0.0f, 1.0f, 0.5f),
                             new Vector4(0.0f, 0.5f, 0.5f, 1.0f),
-                            new Vector4(0.5f, 0.5f, 1.0f, 1.0f),
+                            new Vector4(0.5f, 0.5f, 1.0f, 1.0f)
                         };
                         break;
                     default:
