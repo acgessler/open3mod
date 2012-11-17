@@ -110,20 +110,20 @@ namespace open3mod
             Matrix4 lookat = cam == null ? Matrix4.LookAt(0, 10, 5, 0, 0, 0, 0, 1, 0) : cam.GetView();
 
             GL.LoadMatrix(ref lookat);
-
+            /*
             float tmp = _sceneMax.X - _sceneMin.X;
             tmp = Math.Max(_sceneMax.Y - _sceneMin.Y, tmp);
             tmp = Math.Max(_sceneMax.Z - _sceneMin.Z, tmp);
             tmp = 1.0f / tmp;
             GL.Scale(tmp * 2, tmp * 2, tmp * 2);
 
-            GL.Translate(-_sceneCenter);
+            GL.Translate(-_sceneCenter); */
 
             if (_displayList == 0)
             {
                 _displayList = GL.GenLists(1);
                 GL.NewList(_displayList, ListMode.Compile);
-                RecursiveRender(_raw.RootNode);
+                RecursiveRender(_raw.RootNode, ref lookat);
                 GL.EndList();
             }
 
@@ -138,11 +138,19 @@ namespace open3mod
         }
 
 
-        private void RecursiveRender(Node node)
+        private void RecursiveRender(Node node, ref Matrix4 view)
+        {
+            Matrix4 m = Matrix4.Identity;
+            RecursiveRender(node, ref m, ref view);
+        }
+
+
+        private void RecursiveRender(Node node, ref Matrix4 parentTransform, ref Matrix4 view)
         {
             Matrix4 m = AssimpToOpenTk.FromMatrix(node.Transform);
             m.Transpose();
-        
+
+            // keep using the opengl matrix stack to be compatible with displists
             GL.PushMatrix();
             GL.MultMatrix(ref m);
 
@@ -219,9 +227,10 @@ namespace open3mod
                 }
             }
 
+            GL.PopMatrix();
             for (int i = 0; i < node.ChildCount; i++)
             {
-                RecursiveRender(node.Children[i]);
+                RecursiveRender(node.Children[i], ref parentTransform);
             }
         }
 
