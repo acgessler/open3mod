@@ -31,6 +31,8 @@ namespace open3mod
         private int _displayList;
         private LogStore _logStore;
 
+        private MaterialMapper _mapper;
+
         /// <summary>
         /// Obtain the "raw" scene data as imported by Assimp
         /// </summary>
@@ -57,6 +59,7 @@ namespace open3mod
         public Scene(string file)
         {
             _logStore = new LogStore();
+            _mapper = new MaterialMapper();
 
             using (var imp = new AssimpImporter { VerboseLoggingEnabled = true })
             {
@@ -139,6 +142,7 @@ namespace open3mod
         {
             Matrix4 m = AssimpToOpenTk.FromMatrix(node.Transform);
             m.Transpose();
+        
             GL.PushMatrix();
             GL.MultMatrix(ref m);
 
@@ -147,7 +151,7 @@ namespace open3mod
                 foreach (int index in node.MeshIndices)
                 {
                     Mesh mesh = _raw.Meshes[index];
-                    ApplyMaterial(_raw.Materials[mesh.MaterialIndex]);
+                    _mapper.ApplyMaterial(_raw.Materials[mesh.MaterialIndex]);
 
                     if (mesh.HasNormals)
                     {
@@ -220,60 +224,6 @@ namespace open3mod
                 RecursiveRender(node.Children[i]);
             }
         }
-
-
-        private void ApplyMaterial(Material mat)
-        {
- 
-            if (mat.GetTextureCount(TextureType.Diffuse) > 0)
-            {
-                TextureSlot tex = mat.GetTexture(TextureType.Diffuse, 0);
-               // LoadTexture(tex.FilePath);
-            }
-
-            Color4 color = new Color4(.8f, .8f, .8f, 1.0f);
-            if (mat.HasColorDiffuse)
-            {
-                // color = FromColor(mat.ColorDiffuse);
-            }
-            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, color);
-
-            color = new Color4(0, 0, 0, 1.0f);
-            if (mat.HasColorSpecular)
-            {
-                color = AssimpToOpenTk.FromColor(mat.ColorSpecular);
-            }
-            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Specular, color);
-
-            color = new Color4(.2f, .2f, .2f, 1.0f);
-            if (mat.HasColorAmbient)
-            {
-                color = AssimpToOpenTk.FromColor(mat.ColorAmbient);
-            }
-            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, color);
-
-            color = new Color4(0, 0, 0, 1.0f);
-            if (mat.HasColorEmissive)
-            {
-                color = AssimpToOpenTk.FromColor(mat.ColorEmissive);
-            }
-            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, color);
-
-            float shininess = 1;
-            float strength = 1;
-            if (mat.HasShininess)
-            {
-                shininess = mat.Shininess;
-            }
-            if (mat.HasShininessStrength)
-            {
-                strength = mat.ShininessStrength;
-            }
-
-            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Shininess, shininess * strength);
-        }
-
-
 
 
         private void ComputeBoundingBox()
