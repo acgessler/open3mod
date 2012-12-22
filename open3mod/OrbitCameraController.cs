@@ -14,7 +14,7 @@ namespace open3mod
         private float _cameraDistance;
 
 
-        private const float ZoomSpeed = 1.00025f;
+        private const float ZoomSpeed = 1.00105f;
         private const float MinimumCameraDistance = 0.1f;
 
         /// <summary>
