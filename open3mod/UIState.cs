@@ -57,7 +57,7 @@ namespace open3mod
 
         public bool ShowFps = true;
 
-        public CameraMode CamMode = CameraMode.Fps;
+        public CameraMode CamMode = CameraMode.Orbit;
         public ViewIndex ActiveViewIndex = 0;
 
         private ViewMode _activeViewMode = ViewMode.Single;

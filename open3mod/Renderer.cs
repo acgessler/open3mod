@@ -124,14 +124,15 @@ namespace open3mod
         private void DrawViewport(ICameraController view, Scene activeScene, double xs, double ys, double xe, 
             double ye, bool active = false)
         {
-            
             // update viewport 
             var w = (double)RenderResolution.Width;
             var h = (double)RenderResolution.Height;
-            GL.Viewport((int)(xs * w), (int)(ys * h), (int)((xe-xs) * w), (int)((ye-ys) * h));
 
-            DrawViewportColors(active);
+            var vw = (int) ((xe-xs)*w);
+            var vh = (int) ((ye-ys)*h);
+            GL.Viewport((int)(xs * w), (int)(ys * h), (int)((xe - xs) * w), (int)((ye - ys) * h));
 
+            DrawViewportColorsPre(active);
             var aspectRatio = (float) ((xe - xs) / (ye - ys));
 
             // set a proper perspective matrix for rendering
@@ -147,6 +148,8 @@ namespace open3mod
             {
                 DrawScene(activeScene, view);
             }
+
+            DrawViewportColorsPost(active, vw, vh);
         }
 
 
@@ -156,8 +159,12 @@ namespace open3mod
         }
 
 
-        private void DrawViewportColors(bool active)
-        {         
+        private void DrawViewportColorsPre(bool active)
+        {
+            if (!active)
+            {
+                return;
+            }
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
             GL.MatrixMode(MatrixMode.Projection);
@@ -165,21 +172,38 @@ namespace open3mod
 
             // paint the active viewport in a slightly different shade of gray,
             // overwriting the initial background color.
-            if (active)
-            {
-                GL.Color4(Color.DarkGray);
-                GL.Rect(-1, -1, 1, 1);
-            }
+            GL.Color4(Color.DarkGray);
+            GL.Rect(-1, -1, 1, 1);
+        }
+
+
+        private void DrawViewportColorsPost(bool active, int width, int height)
+        {
+            GL.Hint(HintTarget.LineSmoothHint, HintMode.Nicest);
+
+            var texW = 1.0/width;
+            var texH = 1.0/height;
+
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+
+            var lineWidth = active ? 4 : 3;
 
             // draw contour line
-            GL.LineWidth(active ? 4 : 3);
+            GL.LineWidth(lineWidth);
             GL.Color4(active ? Color.GreenYellow : Color.DarkGray);
 
+            var xofs = lineWidth * 0.5 * texW;
+            var yofs = lineWidth * 0.5 * texH;
+
             GL.Begin(BeginMode.LineStrip);
-            GL.Vertex2(-1.0, -1.0);
-            GL.Vertex2(1.0, -1.0);
-            GL.Vertex2(1.0, 1.0);
-            GL.Vertex2(-1.0, 1.0);
+            GL.Vertex2(-1.0 + xofs, -1.0 + yofs);
+            GL.Vertex2(1.0 - xofs, -1.0 + yofs);
+            GL.Vertex2(1.0 - xofs, 1.0 - yofs);
+            GL.Vertex2(-1.0 + xofs, 1.0 - yofs);
+            GL.Vertex2(-1.0 + xofs, -1.0 + yofs);
             GL.End();
 
             GL.LineWidth(1);

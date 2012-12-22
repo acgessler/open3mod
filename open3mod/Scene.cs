@@ -230,7 +230,7 @@ namespace open3mod
             GL.PopMatrix();
             for (int i = 0; i < node.ChildCount; i++)
             {
-                RecursiveRender(node.Children[i], ref parentTransform);
+                RecursiveRender(node.Children[i], ref parentTransform); 
             }
         }
 
