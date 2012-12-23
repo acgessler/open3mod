@@ -136,7 +136,7 @@ namespace open3mod
             var aspectRatio = (float) ((xe - xs) / (ye - ys));
 
             // set a proper perspective matrix for rendering
-            Matrix4 perspective = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspectRatio, 0.1f, 1000f);
+            Matrix4 perspective = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspectRatio, 0.5f, 10000f);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadMatrix(ref perspective);          
 
