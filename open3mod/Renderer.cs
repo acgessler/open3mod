@@ -69,9 +69,9 @@ namespace open3mod
             GL.ClearColor(Color.LightGray);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            var ui = Window.UiState;
+            var ui = Window.UiState.ActiveTab;
 
-            var index = UiState.ViewIndex.Index0;
+            var index = Tab.ViewIndex.Index0;
             foreach (var view in ui.ActiveViews)
             {
                 // draw the active viewport last (to make sure its contour line is on top)
@@ -86,12 +86,12 @@ namespace open3mod
                 ++index;
             }
 
-            var activeVp = Window.UiState.ActiveViews[(int)ui.ActiveViewIndex];
+            var activeVp = ui.ActiveViews[(int)ui.ActiveViewIndex];
             Debug.Assert(activeVp != null);
             DrawViewport(ui.ActiveCameraController, activeScene, activeVp.Value.X, activeVp.Value.Y, 
                 activeVp.Value.Z, activeVp.Value.W, true);
 
-            if (Window.UiState.ActiveViewMode != UiState.ViewMode.Single)
+            if (ui.ActiveViewMode != Tab.ViewMode.Single)
             {
                 SetFullViewport();
             }

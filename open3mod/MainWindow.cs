@@ -52,15 +52,16 @@ namespace open3mod
 
         public MainWindow()
         {
-            _ui = new UiState();
-            _fps = new FpsTracker();
-
+           
             // create delegate used for asynchronous calls to OpenFile
             _delegateOpenFile = this.OpenFile;
 
-            OpenFile("../../../testdata/scenes/COLLADA.dae");
-
+         
             InitializeComponent();
+
+            // initialize UI state shelf with a default tab
+            _ui = new UiState(new Tab(tabControl1.TabPages[0], false));
+            _fps = new FpsTracker();
 
             // sync UI with UIState
             toolStripButtonShowFPS.CheckState = _ui.ShowFps ? CheckState.Checked : CheckState.Unchecked;
@@ -68,15 +69,28 @@ namespace open3mod
             toolStripButtonShowTextures.CheckState = _ui.RenderTextured ? CheckState.Checked : CheckState.Unchecked;
             toolStripButtonWireframe.CheckState = _ui.RenderWireframe ? CheckState.Checked : CheckState.Unchecked;
 
-            toolStripButtonFullView.CheckState = _ui.ActiveViewMode == UiState.ViewMode.Single ? CheckState.Checked : CheckState.Unchecked;
-            toolStripButtonTwoViews.CheckState = _ui.ActiveViewMode == UiState.ViewMode.Two ? CheckState.Checked : CheckState.Unchecked;
-            toolStripButtonFourViews.CheckState = _ui.ActiveViewMode == UiState.ViewMode.Four ? CheckState.Checked : CheckState.Unchecked;
+            var vm = _ui.ActiveTab.ActiveViewMode;
+            toolStripButtonFullView.CheckState = vm == Tab.ViewMode.Single ? CheckState.Checked : CheckState.Unchecked;
+            toolStripButtonTwoViews.CheckState = vm == Tab.ViewMode.Two ? CheckState.Checked : CheckState.Unchecked;
+            toolStripButtonFourViews.CheckState = vm == Tab.ViewMode.Four ? CheckState.Checked : CheckState.Unchecked;
 
             // manually register the MouseWheel handler
             glControl1.MouseWheel += OnMouseMove;
 
             // intercept all key events sent to children
             KeyPreview = true;
+
+            //AddTab("../../../testdata/scenes/COLLADA.dae");
+
+      
+            //OpenFile("../../../testdata/scenes/COLLADA.dae");                  
+        }
+
+
+
+        public void AddTab(string name, string file)
+        {
+            //tabControl1.TabPages.Add("nlunn", "new");
         }
 
         /// <summary>
@@ -85,7 +99,7 @@ namespace open3mod
         /// <param name="s"></param>
         public void OpenFile(string s)
         {
-            UiState.ActiveScene = new Scene(s);
+            UiState.ActiveTab.ActiveScene = new Scene(s);
         }
 
 
@@ -154,7 +168,7 @@ namespace open3mod
 
         private void ProcessKeys()
         {
-            var cam = UiState.ActiveCameraController;
+            var cam = UiState.ActiveTab.ActiveCameraController;
             if (cam == null)
             {
                 return;
@@ -208,7 +222,7 @@ namespace open3mod
 
         private void FrameRender()
         {
-            _renderer.Draw(_ui.ActiveScene);
+            _renderer.Draw(_ui.ActiveTab.ActiveScene);
             glControl1.SwapBuffers();
         }
 
@@ -236,8 +250,8 @@ namespace open3mod
 
         private void ToggleFullView(object sender, EventArgs e)
         {
-            if (UiState.ActiveViewMode == UiState.ViewMode.Single) return;
-            UiState.ActiveViewMode = UiState.ViewMode.Single;
+            if (UiState.ActiveTab.ActiveViewMode == Tab.ViewMode.Single) return;
+            UiState.ActiveTab.ActiveViewMode = Tab.ViewMode.Single;
 
             toolStripButtonFullView.CheckState = CheckState.Checked;
             toolStripButtonTwoViews.CheckState = CheckState.Unchecked;
@@ -246,8 +260,8 @@ namespace open3mod
 
         private void ToggleTwoViews(object sender, EventArgs e)
         {
-            if (UiState.ActiveViewMode == UiState.ViewMode.Two) return;
-            UiState.ActiveViewMode = UiState.ViewMode.Two;
+            if (UiState.ActiveTab.ActiveViewMode == Tab.ViewMode.Two) return;
+            UiState.ActiveTab.ActiveViewMode = Tab.ViewMode.Two;
 
             toolStripButtonFullView.CheckState = CheckState.Unchecked;
             toolStripButtonTwoViews.CheckState = CheckState.Checked;
@@ -256,8 +270,8 @@ namespace open3mod
 
         private void ToggleFourViews(object sender, EventArgs e)
         {
-            if (UiState.ActiveViewMode == UiState.ViewMode.Four) return;
-            UiState.ActiveViewMode = UiState.ViewMode.Four;
+            if (UiState.ActiveTab.ActiveViewMode == Tab.ViewMode.Four) return;
+            UiState.ActiveTab.ActiveViewMode = Tab.ViewMode.Four;
 
             toolStripButtonFullView.CheckState = CheckState.Unchecked;
             toolStripButtonTwoViews.CheckState = CheckState.Unchecked;
@@ -270,8 +284,8 @@ namespace open3mod
             var y = 1.0f - e.Y / (float)glControl1.ClientSize.Height;
 
             // check which viewport has been hit
-            var index = UiState.ViewIndex.Index0;
-            foreach(var view in _ui.ActiveViews)
+            var index = Tab.ViewIndex.Index0;
+            foreach(var view in _ui.ActiveTab.ActiveViews)
             {
                 if (view == null)
                 {
@@ -282,7 +296,7 @@ namespace open3mod
                 if (x >= view.Value.X && x <= view.Value.Z &&
                     y >= view.Value.Y && y <= view.Value.W)
                 {
-                    _ui.ActiveViewIndex = index;
+                    _ui.ActiveTab.ActiveViewIndex = index;
                     break;
                 }
             ++index;
@@ -319,9 +333,9 @@ namespace open3mod
 
         private void OnMouseMove(object sender, MouseEventArgs e)
         {       
-            if (e.Delta != 0 && UiState.ActiveCameraController != null)
+            if (e.Delta != 0 && UiState.ActiveTab.ActiveCameraController != null)
             {
-                UiState.ActiveCameraController.Scroll(e.Delta);
+                UiState.ActiveTab.ActiveCameraController.Scroll(e.Delta);
             }
 
             if(!_mouseDown)
@@ -329,9 +343,9 @@ namespace open3mod
                 return;
             }
 
-            if (UiState.ActiveCameraController != null)
+            if (UiState.ActiveTab.ActiveCameraController != null)
             {
-                UiState.ActiveCameraController.MouseMove(e.X - _previousMousePosX, e.Y - _previousMousePosY);
+                UiState.ActiveTab.ActiveCameraController.MouseMove(e.X - _previousMousePosX, e.Y - _previousMousePosY);
             }
             _previousMousePosX = e.X;
             _previousMousePosY = e.Y;
@@ -469,6 +483,13 @@ namespace open3mod
         private void OnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             e.IsInputKey = true;
+        }
+
+        private void OnTabSelected(object sender, TabControlEventArgs e)
+        {
+            // add the gl control to the tab control to make it appear on all tabs
+            // it doesn't seem to matter if this is done multiple times.
+            tabControl1.SelectedTab.Container.Add(glControl1);
         }
     }
 }

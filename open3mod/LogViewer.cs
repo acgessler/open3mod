@@ -46,7 +46,7 @@ namespace open3mod
 
         private void FetchLogEntriesFromScene()
         {
-            var scene = MainWindow.UiState.ActiveScene;
+            var scene = MainWindow.UiState.ActiveTab.ActiveScene;
             if(scene == null)
             {
                 richTextBox.Text = Resources.LogViewer_FetchLogEntriesFromScene_No_scene_loaded;

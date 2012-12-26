@@ -82,6 +82,7 @@
     </Compile>
     <Compile Include="Renderer.cs" />
     <Compile Include="Scene.cs" />
+    <Compile Include="Tab.cs" />
     <Compile Include="TextOverlay.cs" />
     <Compile Include="UIState.cs" />
     <EmbeddedResource Include="About.resx">

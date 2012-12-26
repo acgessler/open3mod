@@ -13,150 +13,97 @@ namespace open3mod
     /// Utility to store global UI settings such as rendering options.
     /// A single instance of UiState is typically passed around to
     /// anybody who needs access to it.
+    /// 
+    /// UIState also maintains the central list of open tabs as well
+    /// as the info which is active.
     /// </summary>
     public class UiState
     {
-        /// <summary>
-        /// Enum of all supported camera modes.
-        /// </summary>
-        public enum CameraMode
-        {
-            Fps = 0,
-            Orbit,
-            _Max
-        }
-
-        /// <summary>
-        /// Index all 3D views - there can be up to four 3D views at this time,
-        /// but the rest of the codebase always works with _Max so it can be
-        /// nicely adjusted simply by adding more indexes.
-        /// </summary>
-        public enum ViewIndex
-        {
-            Index0 = 0,
-            Index1,
-            Index2,
-            Index3,
-            _Max
-        }
-
-        /// <summary>
-        /// Supported arrangements of 3D views. Right now only the number of
-        /// 3d windows.
-        /// </summary>
-        public enum ViewMode
-        {
-            Single,
-            Two,
-            Four
-        }
-
+      
         public bool RenderWireframe;
         public bool RenderTextured = true;
         public bool RenderLit = true;
 
         public bool ShowFps = true;
 
-        public CameraMode CamMode = CameraMode.Orbit;
-        public ViewIndex ActiveViewIndex = 0;
-
-        private ViewMode _activeViewMode = ViewMode.Single;
-
         /// <summary>
-        /// For each viewport the bottom-left and upper-right corners or null
-        /// if the viewport is not currently active.
+        /// Current active tab. May never be null, there is always
+        /// a selected tab, even if it is just the dummy tab.
         /// </summary>
-        public Vector4?[] ActiveViews = new Vector4?[(int) ViewIndex._Max];
-
-
-        /// <summary>
-        /// Current view mode
-        /// </summary>
-        public ViewMode ActiveViewMode
-        {
-            get { return _activeViewMode; }
-            set
-            { 
-                // hardcoded table of viewport sizes. This is the only location
-                // so changing these constants will suffice to adjust viewports
-                _activeViewMode = value;
-                switch(_activeViewMode)
-                {
-                    case ViewMode.Single:
-                        ActiveViews = new Vector4?[]
-                        {
-                            new Vector4(0.0f, 0.0f, 1.0f, 1.0f), 
-                            null,
-                            null,
-                            null
-                        };
-                        break;
-                    case ViewMode.Two:
-                        ActiveViews = new Vector4?[]
-                        {
-                            new Vector4(0.0f, 0.0f, 0.5f, 1.0f), 
-                            null,
-                            new Vector4(0.5f, 0.0f, 1.0f, 1.0f), 
-                            null
-                        };            
-                        break;
-                    case ViewMode.Four:
-                        ActiveViews = new Vector4?[]
-                        {
-                            new Vector4(0.0f, 0.0f, 0.5f, 0.5f), 
-                            new Vector4(0.5f, 0.0f, 1.0f, 0.5f),
-                            new Vector4(0.0f, 0.5f, 0.5f, 1.0f),
-                            new Vector4(0.5f, 0.5f, 1.0f, 1.0f)
-                        };
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-
-                Debug.Assert(ActiveViews[0] != null);
-                if (ActiveViews[(int)ActiveViewIndex] == null)
-                {
-                    ActiveViewIndex = ViewIndex.Index0;
-                }
-            }
-        }
-
-
-        /// <summary>
-        /// Camera controllers maintain state even when they are not active, 
-        /// therefore we need to keep a camera controller for every
-        /// view index X camera mode.
-        /// </summary>
-        public ICameraController[,] CameraImpls = new ICameraController[(int)CameraMode._Max,(int)ViewIndex._Max];
-
-
-        /// <summary>
-        /// Obtain an instance of the current active camera controller (i.e.
-        /// the controller for the current active view and current active camera
-        /// mode. This may be a null.
-        /// </summary>
-        public ICameraController ActiveCameraController {
-            get { return ActiveCameraControllerForView(ActiveViewIndex); }
+        public Tab ActiveTab {
+            get;
+            private set;
         }
 
         /// <summary>
-        /// Current active scene
+        /// Ordered list of tabs (order by creation)
         /// </summary>
-        public Scene ActiveScene
+        public readonly List<Tab> Tabs;
+
+
+
+        /// <summary>
+        /// Set a particular tab as selected. This sets the "ActiveTab"
+        /// property to the tab object.
+        /// </summary>
+        /// <param name="id">Unique id of the tab to be selected</param>
+        public void SelectTab(object id) 
         {
-            get { return _activeScene; }
-            set
+            foreach (Tab ts in Tabs)
             {
-                // make sure the previous scene instance is properly disposed
-                if(value != null)
+                if (ts.ID == id)
                 {
-                    value.Dispose();
+                    ActiveTab = ts;
+                    return;
                 }
-                _activeScene = value;
             }
+
+            Debug.Assert(false, "tab with id not found: " + id.ToString());
         }
 
-        private Scene _activeScene;
+
+        /// <summary>
+        /// Remove a particular tab. The tab need not be active (i.e. to
+        /// remove a tab, one first needs to make sure another tab is
+        /// selected. This also secures the invariant that there be 
+        /// always at least one tab.
+        /// </summary>
+        /// <param name="id">Unique id of the tab to be removed</param>
+        public void RemoveTab(object id)
+        {
+            foreach (Tab ts in Tabs)
+            {
+                if (ts.ID == id)
+                {
+                    Debug.Assert(ActiveTab != ts, "active tab cannot be removed: " + id.ToString());
+                    Tabs.Remove(ts);
+                    return;
+                }
+            }
+
+            Debug.Assert(false, "tab with id not found: " + id.ToString());
+        }
+
+
+        /// <summary>
+        /// Add a tab with a given ID. The selected tab is not changed by this
+        /// operation.
+        /// </summary>
+        /// <param name="id">Tag object. The ID member of this tab must be
+        /// unique for all tabs (during the entire lifetime of the tab).</param>
+        public void AddTab(Tab tab)
+        {
+#if DEBUG
+            Debug.Assert(!Tabs.Contains(tab), "tab exists already:" + tab.ID.ToString());
+            foreach (Tab ts in Tabs)
+            {
+                Debug.Assert(ts.ID != tab.ID, "tab id exists already: " + tab.ID.ToString());
+            }
+#endif
+            Tabs.Add(tab);
+        }
+
+
 
 
         /// <summary>
@@ -171,37 +118,15 @@ namespace open3mod
         public readonly Font DefaultFont16;
 
 
-        public UiState()
+        public UiState(Tab defaultTab)
         {
             DefaultFont12 = new Font(FontFamily.GenericSansSerif, 12);
             DefaultFont16 = new Font(FontFamily.GenericSansSerif, 16);
 
-            ActiveViewMode = ViewMode.Single;
-        }
+            Tabs = new List<Tab>();
+            Tabs.Add(defaultTab);
 
-        /// <summary>
-        /// Get the ICameraController responsible for a particular view
-        /// for the current active camera mode.
-        /// </summary>
-        /// <param name="targetView">View index</param>
-        /// <returns>ICameraController or null if there is no implementation</returns>
-        public ICameraController ActiveCameraControllerForView(ViewIndex targetView)
-        {
-            if (CameraImpls[(int)CamMode, (int)targetView] == null)
-            {
-                switch (CamMode)
-                {
-                    case CameraMode.Fps:
-                        CameraImpls[(int)CamMode, (int)ActiveViewIndex] = new FpsCameraController();
-                        break;
-                    case CameraMode.Orbit:
-                        CameraImpls[(int)CamMode, (int)ActiveViewIndex] = new OrbitCameraController();
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-            return CameraImpls[(int)CamMode, (int)targetView];
-        }
+            ActiveTab = defaultTab;
+        }    
     }
 }
