@@ -25,7 +25,7 @@ namespace open3mod
         private int _previousMousePosY = -1;
         private bool _mouseDown;
 
-        private delegate void DelegateOpenFile(String s);           
+        private delegate void DelegateOpenFile(String s, Tab tab, bool setActive);           
         private readonly DelegateOpenFile _delegateOpenFile;
         private bool _forwardPressed;
         private bool _leftPressed;
@@ -63,17 +63,12 @@ namespace open3mod
             _ui = new UiState(new Tab(tabControl1.TabPages[0], false));
             _fps = new FpsTracker();
 
-            // sync UI with UIState
+            // sync global UI with UIState
             toolStripButtonShowFPS.CheckState = _ui.ShowFps ? CheckState.Checked : CheckState.Unchecked;
             toolStripButtonShowShaded.CheckState = _ui.RenderLit ? CheckState.Checked : CheckState.Unchecked;
             toolStripButtonShowTextures.CheckState = _ui.RenderTextured ? CheckState.Checked : CheckState.Unchecked;
             toolStripButtonWireframe.CheckState = _ui.RenderWireframe ? CheckState.Checked : CheckState.Unchecked;
-
-            var vm = _ui.ActiveTab.ActiveViewMode;
-            toolStripButtonFullView.CheckState = vm == Tab.ViewMode.Single ? CheckState.Checked : CheckState.Unchecked;
-            toolStripButtonTwoViews.CheckState = vm == Tab.ViewMode.Two ? CheckState.Checked : CheckState.Unchecked;
-            toolStripButtonFourViews.CheckState = vm == Tab.ViewMode.Four ? CheckState.Checked : CheckState.Unchecked;
-
+          
             // manually register the MouseWheel handler
             glControl1.MouseWheel += OnMouseMove;
 
@@ -82,24 +77,67 @@ namespace open3mod
 
             //AddTab("../../../testdata/scenes/COLLADA.dae");
 
-      
-            //OpenFile("../../../testdata/scenes/COLLADA.dae");                  
+
+            AddTab("../../../testdata/scenes/COLLADA.dae", false);                  
         }
 
 
 
-        public void AddTab(string name, string file)
+        public void AddTab(string file, bool async = true, bool setActive = true)
         {
-            //tabControl1.TabPages.Add("nlunn", "new");
+            var key = GenerateTabKey();
+            tabControl1.TabPages.Add(key, file);
+
+            var t = new Tab(tabControl1.TabPages[key], true);
+            UiState.AddTab(t);
+
+            t.ActiveScene = new Scene(file);
+
+
+            if (async)
+            {
+                BeginInvoke(_delegateOpenFile, new Object[] { file, t, setActive });
+            }
+            else
+            {
+                OpenFile(file, t, setActive);
+            }
+
+            SelectTab(tabControl1.TabPages[key]);
         }
+
+
+        public void SelectTab(TabPage tab)
+        {
+            // update UI
+            var vm = _ui.ActiveTab.ActiveViewMode;
+            toolStripButtonFullView.CheckState = vm == Tab.ViewMode.Single ? CheckState.Checked : CheckState.Unchecked;
+            toolStripButtonTwoViews.CheckState = vm == Tab.ViewMode.Two ? CheckState.Checked : CheckState.Unchecked;
+            toolStripButtonFourViews.CheckState = vm == Tab.ViewMode.Four ? CheckState.Checked : CheckState.Unchecked;
+
+            // update internal housekeeping
+            UiState.SelectTab(tab);
+        }
+
+
+        private static int _tabCounter;
+        private string GenerateTabKey()
+        {
+            return (++_tabCounter).ToString();
+        }
+
 
         /// <summary>
         /// Open a particular 3D model
         /// </summary>
         /// <param name="s"></param>
-        public void OpenFile(string s)
+        public void OpenFile(string s, Tab tab, bool setActive)
         {
-            UiState.ActiveTab.ActiveScene = new Scene(s);
+            tab.ActiveScene = new Scene(s);
+            if (setActive)
+            {
+                UiState.SelectTab(tab.ID);
+            }
         }
 
 
@@ -381,8 +419,7 @@ namespace open3mod
                     // Explorer instance from which file is dropped is not responding
                     // all the time when DragDrop handler is active, so we need to return
                     // immediately (especially if OpenFile shows MessageBox).
-
-                    BeginInvoke(_delegateOpenFile, new Object[] { s });
+                    AddTab(s, true, true);                   
 
                     // in the case Explorer overlaps this form
                     Activate();        
@@ -487,9 +524,16 @@ namespace open3mod
 
         private void OnTabSelected(object sender, TabControlEventArgs e)
         {
+            var tab = tabControl1.SelectedTab;
+
             // add the gl control to the tab control to make it appear on all tabs
             // it doesn't seem to matter if this is done multiple times.
-            tabControl1.SelectedTab.Container.Add(glControl1);
+            //glControl1.Container.Remove(glControl1);
+            
+            tab.Controls.Add(glControl1);
+            
+
+            SelectTab(tab);
         }
     }
 }

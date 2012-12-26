@@ -44,7 +44,7 @@ namespace open3mod
 
         /// <summary>
         /// Set a particular tab as selected. This sets the "ActiveTab"
-        /// property to the tab object.
+        /// property to the tab object. This does *not* update the UI.
         /// </summary>
         /// <param name="id">Unique id of the tab to be selected</param>
         public void SelectTab(object id) 
@@ -59,6 +59,12 @@ namespace open3mod
             }
 
             Debug.Assert(false, "tab with id not found: " + id.ToString());
+        }
+
+
+        public void SelectTab(Tab tab)
+        {
+            SelectTab(tab.ID);
         }
 
 
@@ -82,6 +88,12 @@ namespace open3mod
             }
 
             Debug.Assert(false, "tab with id not found: " + id.ToString());
+        }
+
+
+        public void RemoveTab(Tab tab)
+        {
+            RemoveTab(tab.ID);
         }
 
 
