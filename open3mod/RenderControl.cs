@@ -21,7 +21,7 @@ namespace open3mod
     class RenderControl : GLControl
     {
         public RenderControl()
-            : base(new GraphicsMode(new ColorFormat(32), 24, 8, 4))
+            : base(new GraphicsMode(new ColorFormat(32), 32, 0, 4))
         { }
     }
 }

@@ -17,6 +17,12 @@ namespace open3mod
         private double _lastFrameDelta;
         private double _lastFps;
 
+
+        // limit maximum framerate to avoid taking too much CPU, overheating
+        // laptop mainboards or accidentially causing nuclear detonations.
+        public const int FRAMERATE_LIMIT = 100;
+
+
         public double LastFrameDelta
         {
             get { return _lastFrameDelta; }
@@ -59,6 +65,11 @@ namespace open3mod
             else
             {
                 _lastFps = 1/_lastFrameDelta;
+            }
+
+            if (_lastFps > FRAMERATE_LIMIT)
+            {
+                System.Threading.Thread.Sleep(1 + (int)(1000.0 / FRAMERATE_LIMIT - _lastFrameDelta * 1000));
             }
         }
     }
