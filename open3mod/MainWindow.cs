@@ -59,8 +59,14 @@ namespace open3mod
          
             InitializeComponent();
 
+            // create default tab
+            tabControl1.TabPages.Add("empty");
+            var emptyTab = tabControl1.TabPages[0];
+            PopulateUITab(emptyTab);
+            ActivateUITab(emptyTab);
+   
             // initialize UI state shelf with a default tab
-            _ui = new UiState(new Tab(tabControl1.TabPages[0], false));
+            _ui = new UiState(new Tab(emptyTab, false));
             _fps = new FpsTracker();
 
             // sync global UI with UIState
@@ -76,11 +82,24 @@ namespace open3mod
             KeyPreview = true;
 
             //AddTab("../../../testdata/scenes/COLLADA.dae");
-
-
             AddTab("../../../testdata/scenes/COLLADA.dae", false);                  
         }
 
+
+        private void PopulateUITab(TabPage ui)
+        {
+            var tui = new TabUISkeleton();
+
+            tui.Size = ui.ClientSize;
+            tui.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+            ui.Controls.Add(tui);
+        }
+
+
+        private void ActivateUITab(TabPage ui)
+        {
+            ((TabUISkeleton)ui.Controls[0]).InjectGlControl(glControl1);
+        }
 
 
         public void AddTab(string file, bool async = true, bool setActive = true)
@@ -88,7 +107,11 @@ namespace open3mod
             var key = GenerateTabKey();
             tabControl1.TabPages.Add(key, file);
 
-            var t = new Tab(tabControl1.TabPages[key], true);
+            var ui = tabControl1.TabPages[key];
+
+            PopulateUITab(ui);
+
+            var t = new Tab(ui, true);
             UiState.AddTab(t);
 
             t.ActiveScene = new Scene(file);
@@ -103,17 +126,22 @@ namespace open3mod
                 OpenFile(file, t, setActive);
             }
 
-            SelectTab(tabControl1.TabPages[key]);
+            SelectTab(ui);
         }
 
 
         public void SelectTab(TabPage tab)
         {
+            tabControl1.SelectedTab = tab;
+
             // update UI
             var vm = _ui.ActiveTab.ActiveViewMode;
             toolStripButtonFullView.CheckState = vm == Tab.ViewMode.Single ? CheckState.Checked : CheckState.Unchecked;
             toolStripButtonTwoViews.CheckState = vm == Tab.ViewMode.Two ? CheckState.Checked : CheckState.Unchecked;
             toolStripButtonFourViews.CheckState = vm == Tab.ViewMode.Four ? CheckState.Checked : CheckState.Unchecked;
+
+            // update the UI - this also injects the GL panel into the tab
+            ActivateUITab(tab);
 
             // update internal housekeeping
             UiState.SelectTab(tab);
@@ -136,7 +164,7 @@ namespace open3mod
             tab.ActiveScene = new Scene(s);
             if (setActive)
             {
-                UiState.SelectTab(tab.ID);
+                SelectTab((TabPage)tab.ID);
             }
         }
 
@@ -525,13 +553,6 @@ namespace open3mod
         private void OnTabSelected(object sender, TabControlEventArgs e)
         {
             var tab = tabControl1.SelectedTab;
-
-            // add the gl control to the tab control to make it appear on all tabs
-            // it doesn't seem to matter if this is done multiple times.
-            //glControl1.Container.Remove(glControl1);
-            
-            tab.Controls.Add(glControl1);
-            
 
             SelectTab(tab);
         }

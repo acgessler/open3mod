@@ -30,12 +30,12 @@
         {
             this.tabControlInfoViewPicker = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.textBoxFilter = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.treeViewNodeGraph = new System.Windows.Forms.TreeView();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.Animations = new System.Windows.Forms.TabPage();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.label1 = new System.Windows.Forms.Label();
-            this.textBoxFilter = new System.Windows.Forms.TextBox();
+            this.Animations = new System.Windows.Forms.TabPage();
             this.tabControlInfoViewPicker.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.SuspendLayout();
@@ -69,6 +69,27 @@
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "Tree";
             // 
+            // textBoxFilter
+            // 
+            this.textBoxFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxFilter.Location = new System.Drawing.Point(53, 7);
+            this.textBoxFilter.Name = "textBoxFilter";
+            this.textBoxFilter.Size = new System.Drawing.Size(395, 20);
+            this.textBoxFilter.TabIndex = 2;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(15, 12);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(29, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Filter";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
+            // 
             // treeViewNodeGraph
             // 
             this.treeViewNodeGraph.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -89,16 +110,6 @@
             this.tabPage4.Text = "Textures";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // Animations
-            // 
-            this.Animations.Location = new System.Drawing.Point(4, 22);
-            this.Animations.Name = "Animations";
-            this.Animations.Padding = new System.Windows.Forms.Padding(3);
-            this.Animations.Size = new System.Drawing.Size(454, 662);
-            this.Animations.TabIndex = 2;
-            this.Animations.Text = "Animations";
-            this.Animations.UseVisualStyleBackColor = true;
-            // 
             // tabPage1
             // 
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
@@ -109,32 +120,22 @@
             this.tabPage1.Text = "Materials";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // label1
+            // Animations
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(15, 12);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(29, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Filter";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
-            // 
-            // textBoxFilter
-            // 
-            this.textBoxFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxFilter.Location = new System.Drawing.Point(53, 7);
-            this.textBoxFilter.Name = "textBoxFilter";
-            this.textBoxFilter.Size = new System.Drawing.Size(395, 20);
-            this.textBoxFilter.TabIndex = 2;
+            this.Animations.Location = new System.Drawing.Point(4, 22);
+            this.Animations.Name = "Animations";
+            this.Animations.Padding = new System.Windows.Forms.Padding(3);
+            this.Animations.Size = new System.Drawing.Size(454, 662);
+            this.Animations.TabIndex = 2;
+            this.Animations.Text = "Animations";
+            this.Animations.UseVisualStyleBackColor = true;
             // 
             // InspectionView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tabControlInfoViewPicker);
+            this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "InspectionView";
             this.Size = new System.Drawing.Size(465, 694);
             this.tabControlInfoViewPicker.ResumeLayout(false);

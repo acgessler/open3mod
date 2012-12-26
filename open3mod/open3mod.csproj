@@ -89,6 +89,12 @@
     <Compile Include="Renderer.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="Tab.cs" />
+    <Compile Include="TabUISkeleton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TabUISkeleton.Designer.cs">
+      <DependentUpon>TabUISkeleton.cs</DependentUpon>
+    </Compile>
     <Compile Include="TextOverlay.cs" />
     <Compile Include="UIState.cs" />
     <EmbeddedResource Include="About.resx">
@@ -113,6 +119,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="TabUISkeleton.resx">
+      <DependentUpon>TabUISkeleton.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
