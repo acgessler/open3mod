@@ -59,6 +59,7 @@
     <Compile Include="AssimpToOpenTk.cs" />
     <Compile Include="FpsCameraController.cs" />
     <Compile Include="FpsTracker.cs" />
+    <Compile Include="HierarchyInspectionView.cs" />
     <Compile Include="ICameraController.cs" />
     <Compile Include="InspectionView.cs">
       <SubType>UserControl</SubType>
@@ -79,6 +80,7 @@
     <Compile Include="MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="MaterialInspectionView.cs" />
     <Compile Include="MaterialMapper.cs" />
     <Compile Include="OrbitCameraController.cs" />
     <Compile Include="Program.cs" />
@@ -96,6 +98,7 @@
       <DependentUpon>TabUISkeleton.cs</DependentUpon>
     </Compile>
     <Compile Include="TextOverlay.cs" />
+    <Compile Include="TextureInspectionView.cs" />
     <Compile Include="UIState.cs" />
     <EmbeddedResource Include="About.resx">
       <DependentUpon>About.cs</DependentUpon>
