@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Threading;
+
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -27,12 +29,18 @@ namespace open3mod
 
         private delegate void DelegateOpenFile(String s, Tab tab, bool setActive);           
         private readonly DelegateOpenFile _delegateOpenFile;
+
+        private delegate void DelegateSelectTab(TabPage tab);
+        private readonly DelegateSelectTab _delegateSelectTab;
+
         private bool _forwardPressed;
         private bool _leftPressed;
         private bool _rightPressed;
         private bool _backPressed;
         private bool _upPressed;
         private bool _downPressed;
+
+        private readonly bool initialized = false;
 
         public GLControl GlControl
         {
@@ -51,11 +59,10 @@ namespace open3mod
 
 
         public MainWindow()
-        {
-           
+        {        
             // create delegate used for asynchronous calls to OpenFile
-            _delegateOpenFile = this.OpenFile;
-
+            _delegateOpenFile = OpenFile;
+            _delegateSelectTab = SelectTab;
          
             InitializeComponent();
 
@@ -82,7 +89,9 @@ namespace open3mod
             KeyPreview = true;
 
             //AddTab("../../../testdata/scenes/COLLADA.dae");
-            AddTab("../../../testdata/scenes/COLLADA.dae", false);                  
+            AddTab("../../../testdata/scenes/COLLADA.dae", false);
+
+            initialized = true;
         }
 
 
@@ -102,6 +111,13 @@ namespace open3mod
         }
 
 
+        /// <summary>
+        /// Open a new tab given a scene file to load
+        /// </summary>
+        /// <param name="file">Source file</param>
+        /// <param name="async">Specifies whether the data is loaded asynchr.</param>
+        /// <param name="setActive">Specifies whether the newly added tab will
+        /// be selected when the loading process is complete.</param>
         public void AddTab(string file, bool async = true, bool setActive = true)
         {
             var key = GenerateTabKey();
@@ -114,37 +130,39 @@ namespace open3mod
             var t = new Tab(ui, true);
             UiState.AddTab(t);
 
-            t.ActiveScene = new Scene(file);
-
-
             if (async)
             {
-                BeginInvoke(_delegateOpenFile, new Object[] { file, t, setActive });
+                Thread th = new Thread(new ThreadStart(() => OpenFile(file, t, setActive)));
+                th.Start();
+
+                //BeginInvoke(_delegateOpenFile, new Object[] { file, t, setActive });
             }
             else
             {
                 OpenFile(file, t, setActive);
             }
-
-            SelectTab(ui);
         }
 
 
+        /// <summary>
+        /// Select a given tab in the UI
+        /// </summary>
+        /// <param name="tab"></param>
         public void SelectTab(TabPage tab)
         {
             tabControl1.SelectedTab = tab;
 
-            // update UI
+            // update internal housekeeping
+            UiState.SelectTab(tab);
+
+            // update UI checkboxes
             var vm = _ui.ActiveTab.ActiveViewMode;
             toolStripButtonFullView.CheckState = vm == Tab.ViewMode.Single ? CheckState.Checked : CheckState.Unchecked;
             toolStripButtonTwoViews.CheckState = vm == Tab.ViewMode.Two ? CheckState.Checked : CheckState.Unchecked;
             toolStripButtonFourViews.CheckState = vm == Tab.ViewMode.Four ? CheckState.Checked : CheckState.Unchecked;
 
-            // update the UI - this also injects the GL panel into the tab
+            // some other UI housekeeping, this also injects the GL panel into the tab
             ActivateUITab(tab);
-
-            // update internal housekeeping
-            UiState.SelectTab(tab);
         }
 
 
@@ -156,15 +174,28 @@ namespace open3mod
 
 
         /// <summary>
-        /// Open a particular 3D model
+        /// Open a particular 3D model and assigns it to a particular tab.
+        /// May be called on a non-GUI-thread.
         /// </summary>
         /// <param name="s"></param>
-        public void OpenFile(string s, Tab tab, bool setActive)
+        private void OpenFile(string s, Tab tab, bool setActive)
         {
             tab.ActiveScene = new Scene(s);
             if (setActive)
             {
-                SelectTab((TabPage)tab.ID);
+                // must use BeginInvoke() here to make sure it gets executed
+                // on the thread hosting the GUI message pump. An exception
+                // are potential calls coming from our own c'tor: at this
+                // time the window handle is not ready yet and BeginInvoke()
+                // is thus not available.
+                if (!initialized)
+                {
+                    SelectTab((TabPage)tab.ID);
+                }
+                else
+                {
+                    BeginInvoke(_delegateSelectTab, new Object[] { (TabPage)tab.ID });
+                }
             }
         }
 
