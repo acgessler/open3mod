@@ -60,6 +60,14 @@ namespace open3mod
             get { return _mapper; }
         }
 
+        public HashSet<Node> VisibleNodes
+        {
+            get { return _nodesToShow; }
+        }
+
+
+        private HashSet<Node> _nodesToShow;
+
 
         /// <summary>
         /// Construct a scene given a file name, throw if loading fails
@@ -83,7 +91,6 @@ namespace open3mod
                 //    angle of 66 degrees.
                 imp.SetConfig(new NormalSmoothingAngleConfig(66.0f));
 
-
                 //  - request lots of post processing steps, the details of which
                 //    can be found in the TargetRealTimeMaximumQuality docs.
                 _raw = imp.ImportFile(file, PostProcessPreset.TargetRealTimeMaximumQuality);
@@ -96,6 +103,18 @@ namespace open3mod
             // compute a bounding box (AABB) for the scene we just loaded
             ComputeBoundingBox();
         } 
+
+
+        /// <summary>
+        /// Set the nodes of the scene that are visible. Visibility is not
+        /// automatically inherited by children, so all children need to
+        /// be included in the filter list if they should be visible.
+        /// </summary>
+        /// <param name="filter">Node list or null to disable filtering</param>
+        public void SetVisibleNodes(HashSet<Node> filter)
+        {
+            _nodesToShow = filter;
+        }
      
 
         public void Update(double delta)
@@ -106,7 +125,7 @@ namespace open3mod
 
         public void Render(UiState state, ICameraController cam)
         {
-            _renderer.Render(state, cam);
+            _renderer.Render(state, cam, _nodesToShow);
         }
 
 
