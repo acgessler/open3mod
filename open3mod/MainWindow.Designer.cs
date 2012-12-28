@@ -31,6 +31,7 @@ namespace open3mod
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,9 +64,14 @@ namespace open3mod
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.helpToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.closeAllButThisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonTabClose = new System.Windows.Forms.Button();
             this.glControl1 = new open3mod.RenderControl();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
+            this.tabContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -340,6 +346,41 @@ namespace open3mod
             this.tabControl1.Size = new System.Drawing.Size(1051, 663);
             this.tabControl1.TabIndex = 3;
             this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.OnTabSelected);
+            this.tabControl1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.OnShowTabContextMenu);
+            // 
+            // tabContextMenuStrip
+            // 
+            this.tabContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.closeToolStripMenuItem,
+            this.closeAllButThisToolStripMenuItem});
+            this.tabContextMenuStrip.Name = "tabContextMenuStrip";
+            this.tabContextMenuStrip.Size = new System.Drawing.Size(162, 48);
+            // 
+            // closeToolStripMenuItem
+            // 
+            this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.closeToolStripMenuItem.Text = "Close";
+            this.closeToolStripMenuItem.Click += new System.EventHandler(this.OnCloseTabFromContextMenu);
+            // 
+            // closeAllButThisToolStripMenuItem
+            // 
+            this.closeAllButThisToolStripMenuItem.Name = "closeAllButThisToolStripMenuItem";
+            this.closeAllButThisToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.closeAllButThisToolStripMenuItem.Text = "Close all but this";
+            this.closeAllButThisToolStripMenuItem.Click += new System.EventHandler(this.OnCloseAllTabsButThisFromContextMenu);
+            // 
+            // buttonTabClose
+            // 
+            this.buttonTabClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonTabClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonTabClose.Location = new System.Drawing.Point(1023, 38);
+            this.buttonTabClose.Name = "buttonTabClose";
+            this.buttonTabClose.Size = new System.Drawing.Size(22, 25);
+            this.buttonTabClose.TabIndex = 4;
+            this.buttonTabClose.Text = "X";
+            this.buttonTabClose.UseVisualStyleBackColor = true;
+            this.buttonTabClose.Click += new System.EventHandler(this.OnCloseTab);
             // 
             // glControl1
             // 
@@ -348,7 +389,7 @@ namespace open3mod
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.glControl1.BackColor = System.Drawing.Color.Black;
-            this.glControl1.Location = new System.Drawing.Point(511, 12);
+            this.glControl1.Location = new System.Drawing.Point(177, 12);
             this.glControl1.Name = "glControl1";
             this.glControl1.Size = new System.Drawing.Size(742, 626);
             this.glControl1.TabIndex = 0;
@@ -373,6 +414,7 @@ namespace open3mod
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1051, 734);
+            this.Controls.Add(this.buttonTabClose);
             this.Controls.Add(this.glControl1);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.toolStrip1);
@@ -387,6 +429,7 @@ namespace open3mod
             this.menuStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            this.tabContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -426,6 +469,10 @@ namespace open3mod
         private System.Windows.Forms.ToolStripMenuItem logViewerToolStripMenuItem;
         private RenderControl glControl1;
         private TabControl tabControl1;
+        private ContextMenuStrip tabContextMenuStrip;
+        private ToolStripMenuItem closeToolStripMenuItem;
+        private ToolStripMenuItem closeAllButThisToolStripMenuItem;
+        private Button buttonTabClose;
     }
 }
 

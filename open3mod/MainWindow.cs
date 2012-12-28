@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
@@ -151,7 +152,6 @@ namespace open3mod
             {
                 var th = new Thread(() => OpenFile(t, setActive));
                 th.Start();
-
                 //BeginInvoke(_delegateOpenFile, new Object[] { file, t, setActive });
             }
             else
@@ -196,11 +196,42 @@ namespace open3mod
 
 
         /// <summary>
+        /// Close a given tab in the UI
+        /// </summary>
+        /// <param name="tab"></param>
+        private void CloseTab(TabPage tab)
+        {
+            Debug.Assert(tab != null);
+
+            if (tab == tabControl1.SelectedTab)
+            {
+                // need to select another tab first
+                for (var i = 0; i < tabControl1.TabCount; ++i)
+                {
+                    if (tabControl1.TabPages[i] == tab)
+                    {
+                        continue;
+                    }
+                    SelectTab(tabControl1.TabPages[i]);
+                    break;
+                }
+            }
+
+            // free all internal data for this scene
+            UiState.RemoveTab(tab);
+
+            // and drop the UI tab
+            tabControl1.TabPages.Remove(tab);
+        }
+
+
+        /// <summary>
         /// Select a given tab in the UI
         /// </summary>
         /// <param name="tab"></param>
         public void SelectTab(TabPage tab)
         {
+            Debug.Assert(tab != null);
             tabControl1.SelectedTab = tab;
 
             // update internal housekeeping
@@ -218,6 +249,8 @@ namespace open3mod
 
 
         private static int _tabCounter;
+        private TabPage _tabContextMenuOwner;
+
         private string GenerateTabKey()
         {
             return (++_tabCounter).ToString(CultureInfo.InvariantCulture);
@@ -247,7 +280,7 @@ namespace open3mod
                 else
                 {
                     BeginInvoke(_delegateSelectTab, new[] { tab.ID });
-                    BeginInvoke(_delegatePopulateInspector, new[] { tab });
+                    BeginInvoke(_delegatePopulateInspector, new object[] { tab });
                 }
             }
         }
@@ -653,6 +686,52 @@ namespace open3mod
             var tab = tabControl1.SelectedTab;
 
             SelectTab(tab);
+        }
+
+        private void OnShowTabContextMenu(object sender, MouseEventArgs e)
+        {
+            // http://social.msdn.microsoft.com/forums/en-US/winforms/thread/e09d081d-a7f5-479d-bd29-44b6d163ebc8
+            if (e.Button == MouseButtons.Right)
+            {
+                for (int i = 0; i < tabControl1.TabCount; i++)
+                {
+                    // get the tab's rectangle area and check if it contains the mouse cursor
+                    Rectangle r = tabControl1.GetTabRect(i);
+                    if (r.Contains(e.Location))
+                    {
+                        // hack: store the owning tab so the event handlers for
+                        // the context menu know on whom they operate
+                        _tabContextMenuOwner = tabControl1.TabPages[i];
+                        tabContextMenuStrip.Show(tabControl1, e.Location);                    
+                    }
+                }
+            }
+        }
+
+        private void OnCloseTabFromContextMenu(object sender, EventArgs e)
+        {
+            Debug.Assert(_tabContextMenuOwner != null);
+            CloseTab(_tabContextMenuOwner);
+        }
+
+        private void OnCloseAllTabsButThisFromContextMenu(object sender, EventArgs e)
+        {
+            Debug.Assert(_tabContextMenuOwner != null);
+            for (int i = 0; i < tabControl1.TabCount; i++)
+            {
+                if (_tabContextMenuOwner != tabControl1.TabPages[i])
+                {
+                    CloseTab(tabControl1.TabPages[i]);
+                }
+            }
+        }
+
+        private void OnCloseTab(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedTab != null)
+            {
+                CloseTab(tabControl1.SelectedTab);
+            }
         }
     }
 }
