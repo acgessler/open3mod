@@ -97,7 +97,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.treeViewNodeGraph.Location = new System.Drawing.Point(0, 36);
             this.treeViewNodeGraph.Name = "treeViewNodeGraph";
-            this.treeViewNodeGraph.Size = new System.Drawing.Size(458, 633);
+            this.treeViewNodeGraph.Size = new System.Drawing.Size(448, 626);
             this.treeViewNodeGraph.TabIndex = 0;
             // 
             // tabPage4
