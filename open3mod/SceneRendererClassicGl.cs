@@ -27,7 +27,7 @@ namespace open3mod
         }
 
 
-        public void Render(UiState state, ICameraController cam, HashSet<Node> visibleNodes)
+        public void Render(UiState state, ICameraController cam, HashSet<Node> visibleNodes, bool visibleSetChanged)
         {
             GL.Enable(EnableCap.Texture2D);
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
@@ -53,9 +53,12 @@ namespace open3mod
 
             GL.Translate(-_sceneCenter); */
 
-            if (_displayList == 0)
+            if (_displayList == 0 || visibleSetChanged)
             {
-                _displayList = GL.GenLists(1);
+                if (_displayList == 0)
+                {
+                    _displayList = GL.GenLists(1);
+                }
                 GL.NewList(_displayList, ListMode.Compile);
                 RecursiveRender(_owner.Raw.RootNode, ref lookat, visibleNodes);
                 GL.EndList();
@@ -88,7 +91,7 @@ namespace open3mod
             GL.PushMatrix();
             GL.MultMatrix(ref m);
 
-            if (node.HasMeshes)
+            if (node.HasMeshes && (visibleNodes == null || visibleNodes.Contains(node)))
             {
                 foreach (int index in node.MeshIndices)
                 {
@@ -165,11 +168,8 @@ namespace open3mod
 
             
             for (int i = 0; i < node.ChildCount; i++)
-            {
-                if (visibleNodes == null || visibleNodes.Contains(node.Children[i]))
-                {
-                    RecursiveRender(node.Children[i], ref parentTransform, visibleNodes);
-                }
+            {              
+                RecursiveRender(node.Children[i], ref parentTransform, visibleNodes);
             }
         }
     }

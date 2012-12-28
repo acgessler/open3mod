@@ -53,5 +53,10 @@ namespace open3mod
         {
 
         }
+
+        private void AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            Hierarchy.UpdateFilters();
+        }
     }
 }

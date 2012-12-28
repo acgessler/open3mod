@@ -99,6 +99,7 @@
             this.treeViewNodeGraph.Name = "treeViewNodeGraph";
             this.treeViewNodeGraph.Size = new System.Drawing.Size(448, 626);
             this.treeViewNodeGraph.TabIndex = 0;
+            this.treeViewNodeGraph.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.AfterSelect);
             // 
             // tabPage4
             // 

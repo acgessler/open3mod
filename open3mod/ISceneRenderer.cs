@@ -15,6 +15,15 @@ namespace open3mod
     /// </summary>
     public interface ISceneRenderer
     {
-        void Render(UiState state, ICameraController cam, HashSet<Node> visibleNodes);
+        /// <summary>
+        /// Draw the scene
+        /// </summary>
+        /// <param name="state">Global UI state, includes rendering parameters</param>
+        /// <param name="cam">Camera controller to be used</param>
+        /// <param name="visibleNodes">Set of nodes to render or null to render them all</param>
+        /// <param name="visibleSetChanged">true if the visible is different to the last
+        /// time this method was invoked.</param>
+        void Render(UiState state, ICameraController cam, HashSet<Node> visibleNodes, 
+            bool visibleSetChanged);
     }
 }

@@ -65,7 +65,7 @@ namespace open3mod
             get { return _nodesToShow; }
         }
 
-
+        private bool _nodesToShowChanged = true;
         private HashSet<Node> _nodesToShow;
 
 
@@ -114,6 +114,7 @@ namespace open3mod
         public void SetVisibleNodes(HashSet<Node> filter)
         {
             _nodesToShow = filter;
+            _nodesToShowChanged = true;
         }
      
 
@@ -125,7 +126,8 @@ namespace open3mod
 
         public void Render(UiState state, ICameraController cam)
         {
-            _renderer.Render(state, cam, _nodesToShow);
+            _renderer.Render(state, cam, _nodesToShow, _nodesToShowChanged);
+            _nodesToShowChanged = false;
         }
 
 
