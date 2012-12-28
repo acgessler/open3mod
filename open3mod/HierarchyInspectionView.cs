@@ -76,7 +76,6 @@ namespace open3mod
             }
         }
 
-
         private void AddMeshNode(Mesh mesh, int id, TreeNode uiNode)
         {
             Debug.Assert(uiNode != null);
