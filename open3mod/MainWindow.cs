@@ -139,6 +139,8 @@ namespace open3mod
             tabControl1.TabPages.Add(key, GenerateTabCaption(file));
 
             var ui = tabControl1.TabPages[key];
+            ui.ToolTipText = file;
+            tabControl1.ShowToolTips = true;
 
             PopulateUITab(ui);
 
