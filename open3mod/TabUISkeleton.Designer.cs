@@ -1,6 +1,6 @@
 ﻿namespace open3mod
 {
-    partial class TabUISkeleton
+    partial class TabUiSkeleton
     {
         /// <summary> 
         /// Required designer variable.
@@ -70,7 +70,7 @@
             this.Controls.Add(this.splitContainer1);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.MinimumSize = new System.Drawing.Size(400, 0);
-            this.Name = "TabUISkeleton";
+            this.Name = "TabUiSkeleton";
             this.Size = new System.Drawing.Size(793, 696);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();

@@ -24,6 +24,10 @@ namespace open3mod
         private delegate void DelegateSelectTab(TabPage tab);
         private readonly DelegateSelectTab _delegateSelectTab;
 
+        private delegate void DelegatePopulateInspector(Tab tab);
+        private readonly DelegatePopulateInspector _delegatePopulateInspector;
+
+
         private bool _forwardPressed;
         private bool _leftPressed;
         private bool _rightPressed;
@@ -51,8 +55,9 @@ namespace open3mod
 
         public MainWindow()
         {        
-            // create delegate used for asynchronous calls to OpenFile
+            // create delegate used for asynchronous calls 
             _delegateSelectTab = SelectTab;
+            _delegatePopulateInspector = PopulateInspector;
          
             InitializeComponent();
 
@@ -87,7 +92,7 @@ namespace open3mod
 
         private void PopulateUITab(TabPage ui)
         {
-            var tui = new TabUISkeleton();
+            var tui = new TabUiSkeleton();
 
             tui.Size = ui.ClientSize;
             tui.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
@@ -97,7 +102,7 @@ namespace open3mod
 
         private void ActivateUiTab(TabPage ui)
         {
-            ((TabUISkeleton)ui.Controls[0]).InjectGlControl(glControl1);
+            ((TabUiSkeleton)ui.Controls[0]).InjectGlControl(glControl1);
         }
 
 
@@ -224,6 +229,7 @@ namespace open3mod
         private void OpenFile(Tab tab, bool setActive)
         {
             tab.ActiveScene = new Scene(tab.File);
+           
             if (setActive)
             {
                 // must use BeginInvoke() here to make sure it gets executed
@@ -234,12 +240,35 @@ namespace open3mod
                 if (!_initialized)
                 {
                     SelectTab((TabPage)tab.ID);
+                    PopulateInspector(tab);
                 }
                 else
                 {
                     BeginInvoke(_delegateSelectTab, new[] { tab.ID });
+                    BeginInvoke(_delegatePopulateInspector, new[] { tab });
                 }
             }
+        }
+
+
+        /// <summary>
+        /// Populate the inspector view for a given tab. This can be called
+        /// as soon as the scene to be displayed is loaded.
+        /// </summary>
+        /// <param name="tab"></param>
+        private void PopulateInspector(Tab tab)
+        {
+            var ui = UiForTab(tab);
+            Debug.Assert(ui != null);
+
+            var inspector = ui.GetInspector();
+            inspector.SetSceneSource(tab.ActiveScene);
+        }
+
+
+        private TabUiSkeleton UiForTab(Tab tab)
+        {
+            return ((TabUiSkeleton) ((TabPage) tab.ID).Controls[0]);
         }
 
 

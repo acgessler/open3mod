@@ -13,18 +13,24 @@ using OpenTK.Graphics;
 
 namespace open3mod
 {
-    public partial class TabUISkeleton : UserControl
+    public partial class TabUiSkeleton : UserControl
     {
-        public TabUISkeleton()
+        public TabUiSkeleton()
         {
             InitializeComponent();
         }
 
 
-        public System.Windows.Forms.SplitContainer GetSplitter()
+        public SplitContainer GetSplitter()
         {
             return splitContainer1;
         }
+
+        public InspectionView GetInspector()
+        {
+            return inspectionView1;
+        }
+
 
         public void InjectGlControl(GLControl gl)
         {

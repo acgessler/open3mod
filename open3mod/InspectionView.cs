@@ -23,15 +23,16 @@ namespace open3mod
             InitializeComponent();
         }
 
-        public void SetSceneSource(Scene _scene)
+
+        public void SetSceneSource(Scene scene)
         {
-            if (Scene == _scene)
+            if (Scene == scene)
             {
                 return;
             }
 
             Clear();
-            Scene = _scene;
+            Scene = scene;
 
             Hierarchy = new HierarchyInspectionView(Scene, treeViewNodeGraph);
             Textures = new TextureInspectionView(Scene, null);
