@@ -1,20 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
+using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
 
 using OpenTK;
-using OpenTK.Graphics;
-using OpenTK.Graphics.OpenGL;
-using KeyPressEventArgs = System.Windows.Forms.KeyPressEventArgs;
 
 namespace open3mod
 {
@@ -40,7 +31,7 @@ namespace open3mod
         private bool _upPressed;
         private bool _downPressed;
 
-        private readonly bool initialized = false;
+        private readonly bool _initialized;
 
         public GLControl GlControl
         {
@@ -69,7 +60,7 @@ namespace open3mod
             tabControl1.TabPages.Add("empty");
             var emptyTab = tabControl1.TabPages[0];
             PopulateUITab(emptyTab);
-            ActivateUITab(emptyTab);
+            ActivateUiTab(emptyTab);
    
             // initialize UI state shelf with a default tab
             _ui = new UiState(new Tab(emptyTab, null));
@@ -90,7 +81,7 @@ namespace open3mod
             //AddTab("../../../testdata/scenes/COLLADA.dae");
             AddTab("../../../testdata/scenes/COLLADA.dae", false);
 
-            initialized = true;
+            _initialized = true;
         }
 
 
@@ -104,7 +95,7 @@ namespace open3mod
         }
 
 
-        private void ActivateUITab(TabPage ui)
+        private void ActivateUiTab(TabPage ui)
         {
             ((TabUISkeleton)ui.Controls[0]).InjectGlControl(glControl1);
         }
@@ -151,7 +142,7 @@ namespace open3mod
 
             if (async)
             {
-                Thread th = new Thread(new ThreadStart(() => OpenFile(t, setActive)));
+                var th = new Thread(() => OpenFile(t, setActive));
                 th.Start();
 
                 //BeginInvoke(_delegateOpenFile, new Object[] { file, t, setActive });
@@ -208,21 +199,21 @@ namespace open3mod
             // update internal housekeeping
             UiState.SelectTab(tab);
 
-            // update UI checkboxes
+            // update UI check boxes
             var vm = _ui.ActiveTab.ActiveViewMode;
             toolStripButtonFullView.CheckState = vm == Tab.ViewMode.Single ? CheckState.Checked : CheckState.Unchecked;
             toolStripButtonTwoViews.CheckState = vm == Tab.ViewMode.Two ? CheckState.Checked : CheckState.Unchecked;
             toolStripButtonFourViews.CheckState = vm == Tab.ViewMode.Four ? CheckState.Checked : CheckState.Unchecked;
 
             // some other UI housekeeping, this also injects the GL panel into the tab
-            ActivateUITab(tab);
+            ActivateUiTab(tab);
         }
 
 
         private static int _tabCounter;
         private string GenerateTabKey()
         {
-            return (++_tabCounter).ToString();
+            return (++_tabCounter).ToString(CultureInfo.InvariantCulture);
         }
 
 
@@ -230,7 +221,6 @@ namespace open3mod
         /// Open a particular 3D model and assigns it to a particular tab.
         /// May be called on a non-GUI-thread.
         /// </summary>
-        /// <param name="s"></param>
         private void OpenFile(Tab tab, bool setActive)
         {
             tab.ActiveScene = new Scene(tab.File);
@@ -241,13 +231,13 @@ namespace open3mod
                 // are potential calls coming from our own c'tor: at this
                 // time the window handle is not ready yet and BeginInvoke()
                 // is thus not available.
-                if (!initialized)
+                if (!_initialized)
                 {
                     SelectTab((TabPage)tab.ID);
                 }
                 else
                 {
-                    BeginInvoke(_delegateSelectTab, new Object[] { (TabPage)tab.ID });
+                    BeginInvoke(_delegateSelectTab, new[] { tab.ID });
                 }
             }
         }
@@ -531,7 +521,7 @@ namespace open3mod
                     // Explorer instance from which file is dropped is not responding
                     // all the time when DragDrop handler is active, so we need to return
                     // immediately (especially if OpenFile shows MessageBox).
-                    AddTab(s, true, true);                   
+                    AddTab(s);                   
 
                     // in the case Explorer overlaps this form
                     Activate();        
@@ -546,14 +536,7 @@ namespace open3mod
         private void OnDragEnter(object sender, DragEventArgs e)
         {
             // only accept files for drag and drop
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                e.Effect = DragDropEffects.Copy;
-            }
-            else
-            {
-                e.Effect = DragDropEffects.None;
-            }
+            e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.Copy : DragDropEffects.None;
         }
 
         protected override bool IsInputKey(Keys keyData)
