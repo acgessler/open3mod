@@ -184,6 +184,15 @@ namespace open3mod
             }
         }
 
+
+        /// <summary>
+        /// File name of the scene in the tab. This member is already set while
+        /// the scene is loading and "ActiveScene" is null. This field is null
+        /// if the tab is in state TabState.Empty.
+        /// </summary>
+        public string File { get; private set; }
+
+
         private Scene _activeScene;
 
 
@@ -197,12 +206,16 @@ namespace open3mod
         /// <summary>
         /// Create an empty tab.
         /// <param name="id">Static id to associate with the tab, see "ID"</param>
-        /// <param name="loading">Specifies whether the initial tab state is "TabState.Loading"</param>
+        /// <param name="fileBeingLoaded">Specifies the file that is being loaded
+        /// for this tab. If this is non-null, the state of the tab is set
+        /// to TabState.Loading and the file name is stored in the File field.</param>
         /// </summary>
-        public Tab(object id, bool loading = false)
+        public Tab(object id, string fileBeingLoaded)
         {
             ActiveViewMode = ViewMode.Single;
-            State = TabState.Empty;
+            State = fileBeingLoaded == null ? TabState.Empty : TabState.Loading;
+
+            File = fileBeingLoaded;
 
             ID = id;
         }

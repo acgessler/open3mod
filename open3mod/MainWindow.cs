@@ -28,8 +28,7 @@ namespace open3mod
         private int _previousMousePosY = -1;
         private bool _mouseDown;
 
-        private delegate void DelegateOpenFile(String s, Tab tab, bool setActive);           
-        private readonly DelegateOpenFile _delegateOpenFile;
+    
 
         private delegate void DelegateSelectTab(TabPage tab);
         private readonly DelegateSelectTab _delegateSelectTab;
@@ -62,7 +61,6 @@ namespace open3mod
         public MainWindow()
         {        
             // create delegate used for asynchronous calls to OpenFile
-            _delegateOpenFile = OpenFile;
             _delegateSelectTab = SelectTab;
          
             InitializeComponent();
@@ -74,7 +72,7 @@ namespace open3mod
             ActivateUITab(emptyTab);
    
             // initialize UI state shelf with a default tab
-            _ui = new UiState(new Tab(emptyTab, false));
+            _ui = new UiState(new Tab(emptyTab, null));
             _fps = new FpsTracker();
 
             // sync global UI with UIState
@@ -113,7 +111,9 @@ namespace open3mod
 
 
         /// <summary>
-        /// Open a new tab given a scene file to load
+        /// Open a new tab given a scene file to load. If the specified scene is
+        /// already open in a tab, the existing
+        /// tab is selected in the UI (if requested) and no tab is added.
         /// </summary>
         /// <param name="file">Source file</param>
         /// <param name="async">Specifies whether the data is loaded asynchr.</param>
@@ -121,6 +121,24 @@ namespace open3mod
         /// be selected when the loading process is complete.</param>
         public void AddTab(string file, bool async = true, bool setActive = true)
         {
+            // check whether the scene is already loaded
+            for (int j = 0; j < tabControl1.TabPages.Count; ++j)
+            {
+                var tab = UiState.TabForId(tabControl1.TabPages[j]);
+                Debug.Assert(tab != null);
+
+                if(tab.File == file)
+                {
+                    // if so, activate its tab and return
+                    if(setActive)
+                    {
+                        SelectTab(tabControl1.TabPages[j]);
+                    }
+
+                    return;
+                }
+            }
+
             var key = GenerateTabKey();
             tabControl1.TabPages.Add(key, GenerateTabCaption(file));
 
@@ -128,19 +146,19 @@ namespace open3mod
 
             PopulateUITab(ui);
 
-            var t = new Tab(ui, true);
+            var t = new Tab(ui, file);
             UiState.AddTab(t);
 
             if (async)
             {
-                Thread th = new Thread(new ThreadStart(() => OpenFile(file, t, setActive)));
+                Thread th = new Thread(new ThreadStart(() => OpenFile(t, setActive)));
                 th.Start();
 
                 //BeginInvoke(_delegateOpenFile, new Object[] { file, t, setActive });
             }
             else
             {
-                OpenFile(file, t, setActive);
+                OpenFile(t, setActive);
             }
         }
 
@@ -213,9 +231,9 @@ namespace open3mod
         /// May be called on a non-GUI-thread.
         /// </summary>
         /// <param name="s"></param>
-        private void OpenFile(string s, Tab tab, bool setActive)
+        private void OpenFile(Tab tab, bool setActive)
         {
-            tab.ActiveScene = new Scene(s);
+            tab.ActiveScene = new Scene(tab.File);
             if (setActive)
             {
                 // must use BeginInvoke() here to make sure it gets executed

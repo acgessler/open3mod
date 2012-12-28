@@ -41,6 +41,16 @@ namespace open3mod
         public readonly List<Tab> Tabs;
 
 
+        /// <summary>
+        /// Get the Tab instance with a particular id 
+        /// </summary>
+        /// <param name="id">unique tab ID</param>
+        /// <returns>null if there is no tab with this id</returns>
+        public Tab TabForId(object id)
+        {
+            return Tabs.FirstOrDefault(ts => ts.ID == id);
+        }
+
 
         /// <summary>
         /// Set a particular tab as selected. This sets the "ActiveTab"

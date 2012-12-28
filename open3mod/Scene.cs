@@ -24,6 +24,11 @@ namespace open3mod
     /// </summary>
     public class Scene : IDisposable
     {
+        /// <summary>
+        /// Source file name / path
+        /// </summary>
+        public string File { get; set; }
+
         private readonly Assimp.Scene _raw;
         private Vector3 _sceneCenter;
         private Vector3 _sceneMin;
@@ -58,6 +63,7 @@ namespace open3mod
         /// <param name="file">File name to be loaded</param>
         public Scene(string file)
         {
+            File = file;
             _logStore = new LogStore();
             _mapper = new MaterialMapper();
 
