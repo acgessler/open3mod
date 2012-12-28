@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -121,7 +122,7 @@ namespace open3mod
         public void AddTab(string file, bool async = true, bool setActive = true)
         {
             var key = GenerateTabKey();
-            tabControl1.TabPages.Add(key, file);
+            tabControl1.TabPages.Add(key, GenerateTabCaption(file));
 
             var ui = tabControl1.TabPages[key];
 
@@ -141,6 +142,40 @@ namespace open3mod
             {
                 OpenFile(file, t, setActive);
             }
+        }
+
+
+        /// <summary>
+        /// Generate a suitable caption to display on a scene tab given a
+        /// file name. If multiple contains files with the same names,
+        /// their captions are disambiguated.
+        /// </summary>
+        /// <param name="file">Full path to scene file</param>
+        /// <returns></returns>
+        private string GenerateTabCaption(string file)
+        {
+            var name = Path.GetFileName(file);
+            for (int j = 0; j < tabControl1.TabPages.Count; ++j )
+            {
+                if (name == tabControl1.TabPages[j].Text)
+                {
+                    string numberedName = null;
+                    for (int i = 2; numberedName == null; ++i)
+                    {
+                        numberedName = name + " (" + i + ")";
+                        for (int k = 0; k < tabControl1.TabPages.Count; ++k)
+                        {
+                            if (numberedName == tabControl1.TabPages[k].Text)
+                            {
+                                numberedName = null;
+                                break;
+                            }
+                        }                    
+                    }
+                    return numberedName;
+                }
+            }
+            return name;
         }
 
 

@@ -116,11 +116,20 @@ namespace open3mod
         /// </summary>
         public void Resize()
         {
-            
             _textOverlay.Resize();
         }
 
 
+        /// <summary>
+        /// Draw a scene to a viewport using an ICameraController to specify the camera.
+        /// </summary>
+        /// <param name="view">Active cam controller for this viewport</param>
+        /// <param name="activeScene">Scene to be drawn</param>
+        /// <param name="xs">X-axis starting point of the viewport in range [0,1]</param>
+        /// <param name="ys">Y-axis starting point of the viewport in range [0,1]</param>
+        /// <param name="xe">X-axis end point of the viewport in range [0,1]</param>
+        /// <param name="ye">X-axis end point of the viewport in range [0,1]</param>
+        /// <param name="active"></param>
         private void DrawViewport(ICameraController view, Scene activeScene, double xs, double ys, double xe, 
             double ye, bool active = false)
         {
