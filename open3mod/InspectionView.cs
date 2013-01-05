@@ -37,6 +37,8 @@ namespace open3mod
             Hierarchy = new HierarchyInspectionView(Scene, treeViewNodeGraph);
             Textures = new TextureInspectionView(Scene, null);
             Materials = new MaterialInspectionView(Scene, null);
+
+            UpdateStatistics();
         }
 
 
@@ -57,6 +59,21 @@ namespace open3mod
         private void AfterSelect(object sender, TreeViewEventArgs e)
         {
             Hierarchy.UpdateFilters();
+            UpdateStatistics();
+        }
+
+        private void UpdateStatistics()
+        {
+            labelNodeStats.Text = string.Format("Showing {0} of {1} nodes ({2} meshes, {3} instances)", 
+                Hierarchy.CountVisible, 
+                Hierarchy.CountNodes, 
+                Hierarchy.CountVisibleMeshes, 
+                Hierarchy.CountVisibleInstancedMeshes);
+        }
+
+        private void linkLabelShowHiddenNodes_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+
         }
     }
 }

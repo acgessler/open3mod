@@ -264,24 +264,23 @@ namespace open3mod
         private void OpenFile(Tab tab, bool setActive)
         {
             tab.ActiveScene = new Scene(tab.File);
-           
-            if (setActive)
+
+            if (!setActive) return;
+
+            // must use BeginInvoke() here to make sure it gets executed
+            // on the thread hosting the GUI message pump. An exception
+            // are potential calls coming from our own c'tor: at this
+            // time the window handle is not ready yet and BeginInvoke()
+            // is thus not available.
+            if (!_initialized)
             {
-                // must use BeginInvoke() here to make sure it gets executed
-                // on the thread hosting the GUI message pump. An exception
-                // are potential calls coming from our own c'tor: at this
-                // time the window handle is not ready yet and BeginInvoke()
-                // is thus not available.
-                if (!_initialized)
-                {
-                    SelectTab((TabPage)tab.ID);
-                    PopulateInspector(tab);
-                }
-                else
-                {
-                    BeginInvoke(_delegateSelectTab, new[] { tab.ID });
-                    BeginInvoke(_delegatePopulateInspector, new object[] { tab });
-                }
+                SelectTab((TabPage)tab.ID);
+                PopulateInspector(tab);
+            }
+            else
+            {
+                BeginInvoke(_delegateSelectTab, new[] { tab.ID });
+                BeginInvoke(_delegatePopulateInspector, new object[] { tab });
             }
         }
 
