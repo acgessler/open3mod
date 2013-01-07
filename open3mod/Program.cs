@@ -17,6 +17,8 @@ namespace open3mod
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainWindow());
+
+            TextureQueue.Terminate();
         }
     }
 }
