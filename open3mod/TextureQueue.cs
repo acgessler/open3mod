@@ -73,20 +73,20 @@ namespace open3mod
             try
             {
                 while (true)
-                {
-                    bool empty;
-                    lock (Queue) {
-                        empty = Queue.Count == 0;
-                    }
-                    if (empty)
+                {                   
+                    Task task;
+                    try
                     {
+                        lock (Queue)
+                        {
+                            task = Queue.Dequeue();
+                        }
+                    }
+                    catch(InvalidOperationException)
+                    {
+                        // empty queue, go sleep
                         Event.WaitOne();
                         continue;
-                    }
-
-                    Task task;
-                    lock (Queue) {
-                        task = Queue.Dequeue();
                     }
 
                     // XXX support more file formats (such as dds, tga ..)
