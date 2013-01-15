@@ -32,10 +32,12 @@ namespace open3mod
         private Vector3 _sceneCenter;
         private Vector3 _sceneMin;
         private Vector3 _sceneMax;       
-        private LogStore _logStore;
+        private readonly LogStore _logStore;
 
-        private MaterialMapper _mapper;
-        private ISceneRenderer _renderer;
+        private readonly TextureSet _textureSet;
+
+        private readonly MaterialMapper _mapper;
+        private readonly ISceneRenderer _renderer;
 
         /// <summary>
         /// Obtain the "raw" scene data as imported by Assimp
@@ -68,6 +70,9 @@ namespace open3mod
         private bool _nodesToShowChanged = true;
         private HashSet<Node> _nodesToShow;
 
+        public delegate void TextureCallback(Texture tex);
+        private readonly Dictionary<string, List<TextureCallback>> _textureCallbacks;
+
 
         /// <summary>
         /// Construct a scene given a file name, throw if loading fails
@@ -79,6 +84,7 @@ namespace open3mod
             _logStore = new LogStore();
             _mapper = new MaterialMapper();
 
+           
             _renderer = new SceneRendererClassicGl(this);
 
             using (var imp = new AssimpImporter { VerboseLoggingEnabled = true })
@@ -100,9 +106,37 @@ namespace open3mod
                 }
             }
 
+            _textureSet = new TextureSet();
+            _textureCallbacks = new Dictionary<string, List<TextureCallback>>();
+
+            LoadTextures();
+
             // compute a bounding box (AABB) for the scene we just loaded
             ComputeBoundingBox();
-        } 
+        }
+
+
+        private void LoadTextures()
+        {
+            var materials = _raw.Materials;
+            foreach(var mat in materials)
+            {
+                var textures = mat.GetAllTextures();
+                foreach (var tex in textures.Where(tex => !_textureSet.ContainsKey(tex.FilePath)))
+                {
+                    TextureSlot tex1 = tex;
+                   
+                    _textureSet.Add(tex.FilePath, new Texture(tex.FilePath, (self) =>
+                     {
+                         if (_textureCallbacks.ContainsKey(tex1.FilePath))
+                         {
+                             _textureCallbacks[tex1.FilePath].ForEach(
+                                 callback => callback(self));
+                         }
+                     }));
+                }
+            }
+        }
 
 
         /// <summary>
@@ -181,7 +215,7 @@ namespace open3mod
 
         public void Dispose()
         {
-            //GL.DeleteTexture(_texID);
+            _textureSet.Dispose();
         }
     }
 

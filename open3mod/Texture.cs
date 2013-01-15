@@ -22,9 +22,10 @@ namespace open3mod
     /// object does not guarantee a valid "Image" or OpenGl texture
     /// object.
     /// </summary>
-    public class Texture
+    public class Texture : IDisposable
     {
         private readonly string _file;
+        private readonly TextureQueue.CompletionCallback _callback;
         private Image _image;
         private int _gl;
 
@@ -41,13 +42,25 @@ namespace open3mod
             GlTextureCreated,
         }
 
+        public delegate void CompletionCallback(Texture self);
 
         public LoadState State { get; private set; }
+        public string FileName
+        {
+            get { return _file; }
+        }
 
-
-        public Texture(string file)
+        /// <summary>
+        /// Start loading a texture from a given file name
+        /// </summary>
+        /// <param name="file">File to load from</param>
+        /// <param name="callback">Optional callback to be invoked
+        ///   when loading to memory is either complete or in definitely
+        ///   failed state.)</param>
+        public Texture(string file, CompletionCallback callback)
         {
             _file = file;
+            _callback = (s, image) => callback(this);
             LoadAsync();
         }
 
@@ -82,6 +95,11 @@ namespace open3mod
                 State = LoadState.LoadingPending;
                 TextureQueue.Enqueue(_file, (file, image) =>
                 {
+                    if (_callback != null)
+                    {
+                        _callback(_file, _image);
+                    }
+
                     Debug.Assert(_file.Equals(file));
                     SetImage(image);
                 });
@@ -139,6 +157,12 @@ namespace open3mod
                 // set final state
                 State = LoadState.GlTextureCreated;
             }
+        }
+
+        public void Dispose()
+        {
+            GL.DeleteTexture(_gl);
+            _gl = 0;
         }
     }
 }

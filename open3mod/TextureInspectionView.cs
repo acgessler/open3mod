@@ -17,6 +17,15 @@ namespace open3mod
         {
             _scene = scene;
             _list = list;
+
+            foreach (var mat in scene.Raw.Materials)
+            {
+                var textures = mat.GetAllTextures();
+                foreach (var tex in textures)
+                {
+                    _list.Items.Add(tex.FilePath);
+                }
+            }
         }
     }
 }

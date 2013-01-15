@@ -10,7 +10,7 @@ namespace open3mod
 {
     /// <summary>
     /// Class that handles asynchronous texture loading. Users enqueue
-    /// their requests using Enqueue(), which takes a delegate that is
+    /// their requests using Enqueue(), which takes a delegate that it
     /// invokes as soon as loading completes. 
     /// 
     /// In the current implementation, textures are loaded in FIFO order 
@@ -77,8 +77,7 @@ namespace open3mod
                     Task task;
                     try
                     {
-                        lock (Queue)
-                        {
+                        lock (Queue) {
                             task = Queue.Dequeue();
                         }
                     }

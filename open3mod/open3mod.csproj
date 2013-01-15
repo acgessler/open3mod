@@ -103,6 +103,7 @@
     <Compile Include="Texture.cs" />
     <Compile Include="TextureInspectionView.cs" />
     <Compile Include="TextureQueue.cs" />
+    <Compile Include="TextureSet.cs" />
     <Compile Include="UIState.cs" />
     <EmbeddedResource Include="About.resx">
       <DependentUpon>About.cs</DependentUpon>
