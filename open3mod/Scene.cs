@@ -70,10 +70,6 @@ namespace open3mod
         private bool _nodesToShowChanged = true;
         private HashSet<Node> _nodesToShow;
 
-        public delegate void TextureCallback(Texture tex);
-        private readonly Dictionary<string, List<TextureCallback>> _textureCallbacks;
-
-
         /// <summary>
         /// Construct a scene given a file name, throw if loading fails
         /// </summary>
@@ -81,10 +77,9 @@ namespace open3mod
         public Scene(string file)
         {
             File = file;
+  
             _logStore = new LogStore();
             _mapper = new MaterialMapper();
-
-           
             _renderer = new SceneRendererClassicGl(this);
 
             using (var imp = new AssimpImporter { VerboseLoggingEnabled = true })
@@ -107,8 +102,6 @@ namespace open3mod
             }
 
             _textureSet = new TextureSet();
-            _textureCallbacks = new Dictionary<string, List<TextureCallback>>();
-
             LoadTextures();
 
             // compute a bounding box (AABB) for the scene we just loaded
@@ -122,18 +115,9 @@ namespace open3mod
             foreach(var mat in materials)
             {
                 var textures = mat.GetAllTextures();
-                foreach (var tex in textures.Where(tex => !_textureSet.ContainsKey(tex.FilePath)))
+                foreach (var tex in textures)
                 {
-                    TextureSlot tex1 = tex;
-                   
-                    _textureSet.Add(tex.FilePath, new Texture(tex.FilePath, (self) =>
-                     {
-                         if (_textureCallbacks.ContainsKey(tex1.FilePath))
-                         {
-                             _textureCallbacks[tex1.FilePath].ForEach(
-                                 callback => callback(self));
-                         }
-                     }));
+                    _textureSet.Add(tex.FilePath);               
                 }
             }
         }

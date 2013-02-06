@@ -60,7 +60,7 @@ namespace open3mod
         public Texture(string file, CompletionCallback callback)
         {
             _file = file;
-            _callback = (s, image) => callback(this);
+            _callback = (s, image) =>  callback(this);
             LoadAsync();
         }
 
@@ -127,7 +127,7 @@ namespace open3mod
 
                 System.Drawing.Imaging.BitmapData textureData =
                     textureBitmap.LockBits(
-                        new System.Drawing.Rectangle(0, 0, textureBitmap.Width, textureBitmap.Height),
+                        new Rectangle(0, 0, textureBitmap.Width, textureBitmap.Height),
                         System.Drawing.Imaging.ImageLockMode.ReadOnly,
                         System.Drawing.Imaging.PixelFormat.Format24bppRgb
                         );
