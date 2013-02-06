@@ -47,11 +47,11 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox.BackColor = System.Drawing.Color.White;
             this.richTextBox.DetectUrls = false;
-            this.richTextBox.Location = new System.Drawing.Point(0, 94);
+            this.richTextBox.Location = new System.Drawing.Point(0, 0);
             this.richTextBox.Name = "richTextBox";
             this.richTextBox.ReadOnly = true;
             this.richTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-            this.richTextBox.Size = new System.Drawing.Size(574, 566);
+            this.richTextBox.Size = new System.Drawing.Size(574, 522);
             this.richTextBox.TabIndex = 0;
             this.richTextBox.Text = "";
             // 
@@ -74,9 +74,9 @@
             this.groupBox1.Controls.Add(this.checkBoxFilterInformation);
             this.groupBox1.Controls.Add(this.checkBoxFilterWarning);
             this.groupBox1.Controls.Add(this.checkBoxFilterError);
-            this.groupBox1.Location = new System.Drawing.Point(12, 12);
+            this.groupBox1.Location = new System.Drawing.Point(12, 528);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(353, 64);
+            this.groupBox1.Size = new System.Drawing.Size(344, 64);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Filter";
@@ -123,7 +123,7 @@
             // buttonClearAll
             // 
             this.buttonClearAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonClearAll.Location = new System.Drawing.Point(469, 23);
+            this.buttonClearAll.Location = new System.Drawing.Point(469, 537);
             this.buttonClearAll.Name = "buttonClearAll";
             this.buttonClearAll.Size = new System.Drawing.Size(93, 23);
             this.buttonClearAll.TabIndex = 3;
@@ -134,7 +134,7 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(469, 53);
+            this.button1.Location = new System.Drawing.Point(469, 566);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(93, 23);
             this.button1.TabIndex = 4;
@@ -150,7 +150,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(574, 661);
+            this.ClientSize = new System.Drawing.Size(574, 608);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.buttonClearAll);
             this.Controls.Add(this.groupBox1);
