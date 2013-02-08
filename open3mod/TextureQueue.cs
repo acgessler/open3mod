@@ -66,6 +66,7 @@ namespace open3mod
         private static void StartThread()
         {
             _thread = new Thread(ThreadProc);
+            _thread.Start();
         }
 
         private static void ThreadProc()

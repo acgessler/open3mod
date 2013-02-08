@@ -51,11 +51,6 @@ namespace open3mod
         }
 
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void AfterSelect(object sender, TreeViewEventArgs e)
         {
             Hierarchy.UpdateFilters();
@@ -71,9 +66,5 @@ namespace open3mod
                 Hierarchy.CountVisibleInstancedMeshes);
         }
 
-        private void linkLabelShowHiddenNodes_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-
-        }
     }
 }

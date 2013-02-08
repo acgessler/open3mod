@@ -48,5 +48,10 @@ namespace open3mod
         {
 
         }
+
+        private void inspectionView1_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

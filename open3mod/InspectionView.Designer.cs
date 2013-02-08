@@ -148,7 +148,6 @@
             this.label1.Size = new System.Drawing.Size(29, 13);
             this.label1.TabIndex = 1;
             this.label1.Text = "Filter";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // treeViewNodeGraph
             // 

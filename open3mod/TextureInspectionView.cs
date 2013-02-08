@@ -26,6 +26,11 @@ namespace open3mod
                     _list.Items.Add(tex.FilePath);
                 }
             }
+
+            _scene.TextureSet.AddCallback((name, tex) =>
+                                              {
+                                                  _list.Items[name].Text = "loaded";
+                                              });
         }
     }
 }

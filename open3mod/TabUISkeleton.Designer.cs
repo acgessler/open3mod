@@ -62,6 +62,7 @@
             this.inspectionView1.Name = "inspectionView1";
             this.inspectionView1.Size = new System.Drawing.Size(222, 693);
             this.inspectionView1.TabIndex = 0;
+            this.inspectionView1.Load += new System.EventHandler(this.inspectionView1_Load);
             // 
             // TabUiSkeleton
             // 

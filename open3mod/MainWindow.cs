@@ -85,7 +85,7 @@ namespace open3mod
             KeyPreview = true;
 
             //AddTab("../../../testdata/scenes/COLLADA.dae");
-            AddTab("../../../testdata/scenes/COLLADA.dae", false);
+            AddTab("../../../testdata/scenes/F4U1_L.3ds", false);
 
             _initialized = true;
         }

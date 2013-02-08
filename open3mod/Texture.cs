@@ -161,8 +161,11 @@ namespace open3mod
 
         public void Dispose()
         {
-            GL.DeleteTexture(_gl);
-            _gl = 0;
+            if (_gl != 0)
+            {
+                GL.DeleteTexture(_gl);
+                _gl = 0;
+            }
         }
     }
 }

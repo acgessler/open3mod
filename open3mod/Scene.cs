@@ -67,6 +67,11 @@ namespace open3mod
             get { return _nodesToShow; }
         }
 
+        public TextureSet TextureSet
+        {
+            get { return _textureSet; }
+        }
+
         private bool _nodesToShowChanged = true;
         private HashSet<Node> _nodesToShow;
 
@@ -117,7 +122,7 @@ namespace open3mod
                 var textures = mat.GetAllTextures();
                 foreach (var tex in textures)
                 {
-                    _textureSet.Add(tex.FilePath);               
+                    TextureSet.Add(tex.FilePath);               
                 }
             }
         }
@@ -199,7 +204,7 @@ namespace open3mod
 
         public void Dispose()
         {
-            _textureSet.Dispose();
+            TextureSet.Dispose();
         }
     }
 
