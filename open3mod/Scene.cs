@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 using Assimp;
 using Assimp.Configs;
 using OpenTK;
+using System.IO;
 
 
 namespace open3mod
@@ -23,11 +25,9 @@ namespace open3mod
     /// </summary>
     public class Scene : IDisposable
     {
-        /// <summary>
-        /// Source file name / path
-        /// </summary>
-        public string File { get; set; }
-
+        private readonly string _file;
+        private readonly string _baseDir;
+       
         private readonly Assimp.Scene _raw;
         private Vector3 _sceneCenter;
         private Vector3 _sceneMin;
@@ -38,6 +38,25 @@ namespace open3mod
 
         private readonly MaterialMapper _mapper;
         private readonly ISceneRenderer _renderer;
+
+
+        /// <summary>
+        /// Source file name with full path
+        /// </summary>
+        public string File
+        {
+            get { return _file; }
+        }
+
+        /// <summary>
+        /// Folder in which the source file resides, the "working directory"
+        /// for the scene if you want.
+        /// </summary>
+        public string BaseDir
+        {
+            get { return _baseDir; }
+        }
+
 
         /// <summary>
         /// Obtain the "raw" scene data as imported by Assimp
@@ -81,7 +100,8 @@ namespace open3mod
         /// <param name="file">File name to be loaded</param>
         public Scene(string file)
         {
-            File = file;
+            _file = file;
+            _baseDir = Path.GetDirectoryName(file);
   
             _logStore = new LogStore();
             _mapper = new MaterialMapper();
@@ -106,7 +126,7 @@ namespace open3mod
                 }
             }
 
-            _textureSet = new TextureSet();
+            _textureSet = new TextureSet(BaseDir);
             LoadTextures();
 
             // compute a bounding box (AABB) for the scene we just loaded

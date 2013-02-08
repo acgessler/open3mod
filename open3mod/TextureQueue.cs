@@ -18,16 +18,18 @@ namespace open3mod
     /// </summary>
     public static class TextureQueue
     {
-        public delegate void CompletionCallback(string file, Image image);
+        public delegate void CompletionCallback(string file, Image image, TextureLoader.LoadResult result);
 
         private struct Task
         {
             public readonly string File;
+            public readonly string BaseDir;
             public readonly CompletionCallback Callback;
 
-            public Task(string file, CompletionCallback callback) : this()
+            public Task(string file, string baseDir, CompletionCallback callback) : this()
             {
                 File = file;
+                BaseDir = baseDir;
                 Callback = callback;
             }
         }
@@ -36,8 +38,9 @@ namespace open3mod
         private static readonly Queue<Task> Queue = new Queue<Task>();
         private static readonly AutoResetEvent Event = new AutoResetEvent(false);
 
+        private static volatile bool _break = false;
 
-        public static void Enqueue(string file, CompletionCallback callback)
+        public static void Enqueue(string file, string baseDir, CompletionCallback callback)
         {
             if (_thread == null)
             {
@@ -45,7 +48,7 @@ namespace open3mod
             }
 
             lock (Queue) {
-                Queue.Enqueue(new Task(file, callback));
+                Queue.Enqueue(new Task(file, baseDir, callback));
             }
             Event.Set();
         }
@@ -57,10 +60,11 @@ namespace open3mod
                 return;
             }
 
-            _thread.Interrupt();
+            _break = true;
             // note that completion callbacks may still be called
             // after this point. With the current implementation
             // of Texture it doesn't matter, though.
+            Event.Set();
         }
 
         private static void StartThread()
@@ -73,8 +77,10 @@ namespace open3mod
         {
             try
             {
-                while (true)
-                {                   
+                while (!_break)
+                {
+                    // TODO remove this! just a temporary blocker to test async loading
+                    Thread.Sleep(5000);
                     Task task;
                     try
                     {
@@ -85,12 +91,14 @@ namespace open3mod
                     catch(InvalidOperationException)
                     {
                         // empty queue, go sleep
-                        Event.WaitOne();
+                     
+                        Event.WaitOne();                      
                         continue;
                     }
 
                     // XXX support more file formats (such as dds, tga ..)
-                    task.Callback(task.File, Image.FromFile(task.File));
+                    var loader = new TextureLoader(task.File, task.BaseDir);
+                    task.Callback(task.File, loader.Image, loader.Result);
                 }
             }
             catch(ThreadInterruptedException)

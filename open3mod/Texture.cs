@@ -30,11 +30,12 @@ namespace open3mod
         private int _gl;
 
         private readonly object _lock = new object();
+        private readonly string _baseDir;
 
         /// <summary>
         /// Possible states of a Texture object during its lifetime
         /// </summary>
-        public enum LoadState
+        public enum TextureState
         {
             LoadingPending,
             LoadingFailed,
@@ -44,7 +45,7 @@ namespace open3mod
 
         public delegate void CompletionCallback(Texture self);
 
-        public LoadState State { get; private set; }
+        public TextureState State { get; private set; }
         public string FileName
         {
             get { return _file; }
@@ -57,10 +58,11 @@ namespace open3mod
         /// <param name="callback">Optional callback to be invoked
         ///   when loading to memory is either complete or in definitely
         ///   failed state.)</param>
-        public Texture(string file, CompletionCallback callback)
+        public Texture(string file, string baseDir, CompletionCallback callback)
         {
             _file = file;
-            _callback = (s, image) =>  callback(this);
+            _baseDir = baseDir;
+            _callback = (s, image, status) => callback(this);
             LoadAsync();
         }
 
@@ -92,35 +94,36 @@ namespace open3mod
         private void LoadAsync()
         {
             lock (_lock) {
-                State = LoadState.LoadingPending;
-                TextureQueue.Enqueue(_file, (file, image) =>
+                State = TextureState.LoadingPending;
+                TextureQueue.Enqueue(_file, _baseDir , (file, image, result) =>
                 {
                     if (_callback != null)
                     {
-                        _callback(_file, _image);
+                        _callback(_file, _image, result);
                     }
 
                     Debug.Assert(_file.Equals(file));
-                    SetImage(image);
+                    SetImage(image, result);
                 });
             }
         }
 
-        private void SetImage(Image image)
+        private void SetImage(Image image, TextureLoader.LoadResult result)
         {
-            Debug.Assert(State == LoadState.LoadingPending);
+            Debug.Assert(State == TextureState.LoadingPending);
 
             lock (_lock)
             {
                 _image = image;
                 // set proper state
-                State = _image == null ? LoadState.LoadingFailed : LoadState.WinFormsImageCreated;
+                State = result != TextureLoader.LoadResult.Good  ? TextureState.LoadingFailed : TextureState.WinFormsImageCreated;
+                Debug.Assert(result != TextureLoader.LoadResult.Good || _image != null);
             }
         }
 
         private void CreateGlTexture()
         {
-            Debug.Assert(State == LoadState.WinFormsImageCreated);
+            Debug.Assert(State == TextureState.WinFormsImageCreated);
             lock (_lock) {
                 // http://www.opentk.com/node/259
                 var textureBitmap = new Bitmap(_image);
@@ -155,7 +158,7 @@ namespace open3mod
                 textureBitmap.UnlockBits(textureData);
 
                 // set final state
-                State = LoadState.GlTextureCreated;
+                State = TextureState.GlTextureCreated;
             }
         }
 

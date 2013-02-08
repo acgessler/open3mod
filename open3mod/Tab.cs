@@ -166,9 +166,9 @@ namespace open3mod
             set
             {
                 // make sure the previous scene instance is properly disposed
-                if(value != null)
+                if (_activeScene != null)
                 {
-                    value.Dispose();
+                    _activeScene.Dispose();
                 }
                 _activeScene = value;
 

@@ -23,14 +23,14 @@ namespace open3mod
                 var textures = mat.GetAllTextures();
                 foreach (var tex in textures)
                 {
-                    _list.Items.Add(tex.FilePath);
+                    _list.Items.Add(tex.FilePath,tex.FilePath,-1);
                 }
             }
 
             _scene.TextureSet.AddCallback((name, tex) =>
-                                              {
-                                                  _list.Items[name].Text = "loaded";
-                                              });
+            {
+                //_list.Items[name].Text += "loaded";
+            });
         }
     }
 }
