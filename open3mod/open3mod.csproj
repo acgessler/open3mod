@@ -165,6 +165,10 @@
       <Project>{3415ff29-c0be-44fc-ad34-94796118e690}</Project>
       <Name>AssimpNet</Name>
     </ProjectReference>
+    <ProjectReference Include="..\libs\devil-net\DevILNet\DevILNet.csproj">
+      <Project>{578fd0d9-41aa-4fa4-8d9b-4021978fa48d}</Project>
+      <Name>DevILNet</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
