@@ -13,6 +13,8 @@ namespace open3mod
         private readonly Scene _scene;
         private readonly ListView _list;
 
+        private delegate void SetLabelTextDelegate(string name, Texture tex);
+
         public TextureInspectionView(Scene scene, ListView list)
         {
             _scene = scene;
@@ -27,10 +29,16 @@ namespace open3mod
                 }
             }
 
-            _scene.TextureSet.AddCallback((name, tex) =>
-            {
-                //_list.Items[name].Text += "loaded";
-            });
+            _scene.TextureSet.AddCallback((name, tex) => _list.BeginInvoke(new SetLabelTextDelegate(SetTextureToLoadedStatus),
+                new object[]{
+                    name, tex
+                }
+        ));
+        }
+
+        private void SetTextureToLoadedStatus(string name, Texture tex)
+        {
+            _list.Items[name].Text += " LOADED";
         }
     }
 }

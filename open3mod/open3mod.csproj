@@ -120,6 +120,12 @@
     <Compile Include="TextureLoader.cs" />
     <Compile Include="TextureQueue.cs" />
     <Compile Include="TextureSet.cs" />
+    <Compile Include="TextureThumbnailControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TextureThumbnailControl.Designer.cs">
+      <DependentUpon>TextureThumbnailControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UIState.cs" />
     <EmbeddedResource Include="About.resx">
       <DependentUpon>About.cs</DependentUpon>
@@ -145,6 +151,9 @@
     </Compile>
     <EmbeddedResource Include="TabUISkeleton.resx">
       <DependentUpon>TabUISkeleton.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TextureThumbnailControl.resx">
+      <DependentUpon>TextureThumbnailControl.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="ClassDiagram1.cd" />
     <None Include="ClassDiagram2.cd" />
