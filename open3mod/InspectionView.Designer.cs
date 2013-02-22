@@ -39,9 +39,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.treeViewNodeGraph = new System.Windows.Forms.TreeView();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.listViewTextures = new System.Windows.Forms.ListView();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.Animations = new System.Windows.Forms.TabPage();
+            this.textureFlowPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.tabControlInfoViewPicker.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -162,7 +162,7 @@
             // 
             // tabPage4
             // 
-            this.tabPage4.Controls.Add(this.listViewTextures);
+            this.tabPage4.Controls.Add(this.textureFlowPanel);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
@@ -170,18 +170,6 @@
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "Textures";
             this.tabPage4.UseVisualStyleBackColor = true;
-            // 
-            // listViewTextures
-            // 
-            this.listViewTextures.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listViewTextures.Location = new System.Drawing.Point(0, 0);
-            this.listViewTextures.Name = "listViewTextures";
-            this.listViewTextures.Size = new System.Drawing.Size(454, 662);
-            this.listViewTextures.TabIndex = 0;
-            this.listViewTextures.UseCompatibleStateImageBehavior = false;
-            this.listViewTextures.View = System.Windows.Forms.View.Tile;
             // 
             // tabPage1
             // 
@@ -202,6 +190,16 @@
             this.Animations.TabIndex = 2;
             this.Animations.Text = "Animations";
             this.Animations.UseVisualStyleBackColor = true;
+            // 
+            // textureFlowPanel
+            // 
+            this.textureFlowPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textureFlowPanel.Location = new System.Drawing.Point(0, 0);
+            this.textureFlowPanel.Name = "textureFlowPanel";
+            this.textureFlowPanel.Size = new System.Drawing.Size(455, 662);
+            this.textureFlowPanel.TabIndex = 0;
             // 
             // InspectionView
             // 
@@ -238,6 +236,6 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.LinkLabel linkLabel1;
-        private System.Windows.Forms.ListView listViewTextures;
+        private System.Windows.Forms.FlowLayoutPanel textureFlowPanel;
     }
 }

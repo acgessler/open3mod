@@ -35,7 +35,7 @@ namespace open3mod
             Scene = scene;
 
             Hierarchy = new HierarchyInspectionView(Scene, treeViewNodeGraph);
-            Textures = new TextureInspectionView(Scene, listViewTextures);
+            Textures = new TextureInspectionView(Scene, textureFlowPanel);
             Materials = new MaterialInspectionView(Scene, null);
 
             UpdateStatistics();
