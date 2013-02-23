@@ -58,6 +58,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.texCaptionLabel);
             this.Controls.Add(this.pictureBox);
+            this.DoubleBuffered = true;
             this.Name = "TextureThumbnailControl";
             this.Size = new System.Drawing.Size(228, 242);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();

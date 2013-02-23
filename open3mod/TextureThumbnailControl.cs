@@ -25,8 +25,15 @@ namespace open3mod
         private static Image _loadError;
         private static Image _background;
 
-        private static readonly SolidBrush _paintBrush = new SolidBrush(Color.CornflowerBlue);
+        private static readonly SolidBrush PaintBrush = new SolidBrush(Color.CornflowerBlue);
         private static GraphicsPath _selectPath;
+        private int _mouseOverCounter = 0;
+
+        private int _mouseOverFadeTimer;
+
+        // time the hover selection background fades out after the mouse leaves the control, in ms
+        private const int FadeTime = 500;
+
 
         public TextureThumbnailControl(TextureInspectionView owner, Scene scene, string filePath)
         {
@@ -40,12 +47,15 @@ namespace open3mod
             pictureBox.BackgroundImage = GetBackgroundImage();
 
             // forward Click()s on children to us
+            // and use a ref counter for MouseEnter()/MouseLeave()
             foreach(var c in Controls)
             {
                 var cc = c as Control;
                 if(cc != null)
                 {
                     cc.Click += (sender, args) => OnClick(new EventArgs());
+                    cc.MouseEnter += (sender, args) => OnMouseEnter(new EventArgs());
+                    cc.MouseLeave += (sender, args) => OnMouseLeave(new EventArgs());
                 }
             }
         }
@@ -104,12 +114,23 @@ namespace open3mod
         {
             base.OnPaint(e);
 
-            if(_selected)
+            if(_selected || _mouseOverFadeTimer > 0 || _mouseOverCounter > 0)
             {
                 CreateGraphicsPathForSelection();
 
                 Debug.Assert(_selectPath != null);
-                e.Graphics.FillPath(_paintBrush, _selectPath);
+
+                if (_selected)
+                {
+                    e.Graphics.FillPath(PaintBrush, _selectPath);
+                }
+                else
+                {
+                    float intensity = 0.5f * (_mouseOverCounter > 0 ? 1.0f : (float)_mouseOverFadeTimer/FadeTime);
+                    var color = Color.FromArgb((byte)(intensity * 255.0f), Color.CornflowerBlue);
+
+                    e.Graphics.FillPath(new SolidBrush(color), _selectPath);
+                }
             }
         }
 
@@ -130,6 +151,42 @@ namespace open3mod
             // this is fine because it is assumed that all instances always have
             // the same Size at a time.
             _selectPath = RoundedRectangle.Create(1, 1, w-2, h-2, corner);
+        }
+
+        protected override void OnMouseEnter(EventArgs e)
+        {
+            base.OnMouseEnter(e);
+
+            _mouseOverFadeTimer = FadeTime;
+            _mouseOverCounter = 1;
+            Invalidate();
+        }
+
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            if (ClientRectangle.Contains(this.PointToClient(Control.MousePosition)))
+            {
+                return;
+            }
+
+            base.OnMouseLeave(e);
+
+            _mouseOverCounter = 0;
+            _mouseOverFadeTimer = FadeTime;
+
+            var t = new Timer {Interval = 30};
+            t.Tick += (sender, args) =>
+            {                
+                _mouseOverFadeTimer -= t.Interval;
+                if (_mouseOverFadeTimer < 0)
+                {
+                    t.Stop();
+                }
+
+                Invalidate();
+            };
+
+            t.Start();
         }
 
         private static Image GetLoadErrorImage()
