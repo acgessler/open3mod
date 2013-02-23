@@ -49,7 +49,8 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.inspectionView1);
             this.splitContainer1.Size = new System.Drawing.Size(793, 696);
-            this.splitContainer1.SplitterDistance = 564;
+            this.splitContainer1.SplitterDistance = 500;
+            this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 0;
             // 
             // inspectionView1
@@ -60,7 +61,7 @@
             this.inspectionView1.Location = new System.Drawing.Point(0, 0);
             this.inspectionView1.Margin = new System.Windows.Forms.Padding(0);
             this.inspectionView1.Name = "inspectionView1";
-            this.inspectionView1.Size = new System.Drawing.Size(222, 693);
+            this.inspectionView1.Size = new System.Drawing.Size(284, 693);
             this.inspectionView1.TabIndex = 0;
             this.inspectionView1.Load += new System.EventHandler(this.inspectionView1_Load);
             // 

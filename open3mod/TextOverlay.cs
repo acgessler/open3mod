@@ -15,7 +15,7 @@ namespace open3mod
     /// The concept is easy, anyone who wants to draw a text can obtain a .net
     /// drawing context and draw whatever they like. Text drawers need to take
     /// care not to interfere with each other's regions since they will easily
-    /// overwrite other text.
+    /// overwrite other text. 
     /// 
     /// Based on http://www.opentk.com/doc/graphics/how-to-render-text-using-opengl
     /// </summary>

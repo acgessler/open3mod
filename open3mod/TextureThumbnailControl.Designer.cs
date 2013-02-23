@@ -35,16 +35,18 @@
             // 
             // pictureBox
             // 
-            this.pictureBox.Location = new System.Drawing.Point(12, 3);
+            this.pictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBox.Location = new System.Drawing.Point(9, 8);
             this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(203, 201);
+            this.pictureBox.Size = new System.Drawing.Size(210, 210);
+            this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox.TabIndex = 0;
             this.pictureBox.TabStop = false;
             // 
             // texCaptionLabel
             // 
             this.texCaptionLabel.AutoSize = true;
-            this.texCaptionLabel.Location = new System.Drawing.Point(9, 207);
+            this.texCaptionLabel.Location = new System.Drawing.Point(8, 221);
             this.texCaptionLabel.Name = "texCaptionLabel";
             this.texCaptionLabel.Size = new System.Drawing.Size(99, 13);
             this.texCaptionLabel.TabIndex = 1;

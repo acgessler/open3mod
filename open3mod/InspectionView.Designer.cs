@@ -39,9 +39,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.treeViewNodeGraph = new System.Windows.Forms.TreeView();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.textureFlowPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.Animations = new System.Windows.Forms.TabPage();
-            this.textureFlowPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.tabControlInfoViewPicker.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -62,7 +62,7 @@
             this.tabControlInfoViewPicker.Multiline = true;
             this.tabControlInfoViewPicker.Name = "tabControlInfoViewPicker";
             this.tabControlInfoViewPicker.SelectedIndex = 0;
-            this.tabControlInfoViewPicker.Size = new System.Drawing.Size(462, 688);
+            this.tabControlInfoViewPicker.Size = new System.Drawing.Size(354, 688);
             this.tabControlInfoViewPicker.TabIndex = 2;
             // 
             // tabPage3
@@ -76,7 +76,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(454, 662);
+            this.tabPage3.Size = new System.Drawing.Size(346, 662);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "Tree";
             // 
@@ -88,7 +88,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel2.Location = new System.Drawing.Point(3, 617);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(448, 21);
+            this.panel2.Size = new System.Drawing.Size(340, 21);
             this.panel2.TabIndex = 4;
             // 
             // linkLabel1
@@ -117,7 +117,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(3, 638);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(448, 21);
+            this.panel1.Size = new System.Drawing.Size(340, 21);
             this.panel1.TabIndex = 3;
             // 
             // labelNodeStats
@@ -136,7 +136,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxFilter.Location = new System.Drawing.Point(53, 7);
             this.textBoxFilter.Name = "textBoxFilter";
-            this.textBoxFilter.Size = new System.Drawing.Size(395, 20);
+            this.textBoxFilter.Size = new System.Drawing.Size(287, 20);
             this.textBoxFilter.TabIndex = 2;
             // 
             // label1
@@ -154,9 +154,10 @@
             this.treeViewNodeGraph.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.treeViewNodeGraph.BackColor = System.Drawing.Color.White;
             this.treeViewNodeGraph.Location = new System.Drawing.Point(0, 36);
             this.treeViewNodeGraph.Name = "treeViewNodeGraph";
-            this.treeViewNodeGraph.Size = new System.Drawing.Size(448, 575);
+            this.treeViewNodeGraph.Size = new System.Drawing.Size(340, 575);
             this.treeViewNodeGraph.TabIndex = 0;
             this.treeViewNodeGraph.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.AfterSelect);
             // 
@@ -166,10 +167,22 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(454, 662);
+            this.tabPage4.Size = new System.Drawing.Size(346, 662);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "Textures";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // textureFlowPanel
+            // 
+            this.textureFlowPanel.AutoScroll = true;
+            this.textureFlowPanel.AutoScrollMinSize = new System.Drawing.Size(0, 1000);
+            this.textureFlowPanel.AutoSize = true;
+            this.textureFlowPanel.BackColor = System.Drawing.Color.Transparent;
+            this.textureFlowPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textureFlowPanel.Location = new System.Drawing.Point(3, 3);
+            this.textureFlowPanel.Name = "textureFlowPanel";
+            this.textureFlowPanel.Size = new System.Drawing.Size(340, 656);
+            this.textureFlowPanel.TabIndex = 0;
             // 
             // tabPage1
             // 
@@ -191,16 +204,6 @@
             this.Animations.Text = "Animations";
             this.Animations.UseVisualStyleBackColor = true;
             // 
-            // textureFlowPanel
-            // 
-            this.textureFlowPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textureFlowPanel.Location = new System.Drawing.Point(0, 0);
-            this.textureFlowPanel.Name = "textureFlowPanel";
-            this.textureFlowPanel.Size = new System.Drawing.Size(455, 662);
-            this.textureFlowPanel.TabIndex = 0;
-            // 
             // InspectionView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -208,7 +211,7 @@
             this.Controls.Add(this.tabControlInfoViewPicker);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "InspectionView";
-            this.Size = new System.Drawing.Size(465, 694);
+            this.Size = new System.Drawing.Size(357, 694);
             this.tabControlInfoViewPicker.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
@@ -217,6 +220,7 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
             this.ResumeLayout(false);
 
         }

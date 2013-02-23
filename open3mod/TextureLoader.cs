@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,9 +26,35 @@ namespace open3mod
         private readonly LoadResult _result;
         private readonly Image _image;
 
-        public TextureLoader(string path, string basedir)
+        public TextureLoader(string name, string basedir)
         {
-            _result = LoadResult.FileNotFound;
+            try
+            {
+                using (var stream = ObtainStream(name, basedir))
+                {
+                    Debug.Assert(stream != null);
+
+                    // try loading using standard .net first
+                    try
+                    {
+                        _image = Image.FromStream(stream);
+                        _result = LoadResult.Good;
+                    }     
+                    catch (Exception)
+                    {
+                        // TODO try using DevIL
+                    }
+                }
+            }
+            catch(FileNotFoundException)
+            {
+                _result = LoadResult.FileNotFound;
+            }
+        }
+
+        private Stream ObtainStream(string name, string basedir)
+        {
+            return new FileStream(Path.Combine(basedir, name), FileMode.Open, FileAccess.Read);
         }
 
         public Image Image

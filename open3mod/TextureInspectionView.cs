@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,8 @@ namespace open3mod
     {
         private readonly Scene _scene;
         private readonly FlowLayoutPanel _flow;
-        private readonly List<TextureThumbnailControl> _entries; 
+        private readonly List<TextureThumbnailControl> _entries;
+        private TextureThumbnailControl _selectedEntry;
 
         private delegate void SetLabelTextDelegate(string name, Texture tex);
 
@@ -53,17 +55,50 @@ namespace open3mod
 
         }
 
+        public TextureThumbnailControl SelectedEntry
+        {
+            get { return _selectedEntry; }
+        }
+
         private void AddTextureEntry(string filePath)
         {
             var control = new TextureThumbnailControl(this, _scene, filePath);
+            control.Click += (sender, args) =>
+            {
+                var v = sender as TextureThumbnailControl;
+                if (v != null)
+                {
+                    SelectEntry(v);
+                }
+            };
+
             _entries.Add(control);
             _flow.Controls.Add(control);
         }
 
+        private void SelectEntry(TextureThumbnailControl thumb)
+        {
+            if(thumb == SelectedEntry)
+            {
+                return;
+            }
+
+            thumb.IsSelected = true;
+
+            if (_selectedEntry != null)
+            {
+                _selectedEntry.IsSelected = false;
+            }
+            _selectedEntry = thumb;
+        }
+
+      
+
         private void SetTextureToLoadedStatus(string name, Texture tex)
         {
             var control = _entries.Find(con => con.FilePath == name);
-            control.SetImage(tex.Image);
+            Debug.Assert(control != null);
+            control.SetTexture(tex);
         }
     }
 }
