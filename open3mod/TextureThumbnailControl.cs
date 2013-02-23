@@ -37,8 +37,17 @@ namespace open3mod
             InitializeComponent();
 
             texCaptionLabel.Text = Path.GetFileName(filePath);
-
             pictureBox.BackgroundImage = GetBackgroundImage();
+
+            // forward Click()s on children to us
+            foreach(var c in Controls)
+            {
+                var cc = c as Control;
+                if(cc != null)
+                {
+                    cc.Click += (sender, args) => OnClick(new EventArgs());
+                }
+            }
         }
 
 
@@ -114,13 +123,13 @@ namespace open3mod
             var w = Size.Width;
             var h = Size.Height;
 
-            const int corner = 8;
+            const int corner = 7;
 
             // this is an instance method relying on the control's Size to build
             // a GraphicsPath but it caches the result in the static _selectPath -
             // this is fine because it is assumed that all instances always have
             // the same Size at a time.
-            _selectPath = RoundedRectangle.Create(0, 0, w, h, corner);
+            _selectPath = RoundedRectangle.Create(1, 1, w-2, h-2, corner);
         }
 
         private static Image GetLoadErrorImage()
