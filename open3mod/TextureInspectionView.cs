@@ -38,9 +38,17 @@ namespace open3mod
                     {
                         return;
                     }
-                    _flow.BeginInvoke(new SetLabelTextDelegate(SetTextureToLoadedStatus),
-                            new object[] {name, tex}
-                        );
+
+                    if (_flow.IsHandleCreated)
+                    {
+                        _flow.BeginInvoke(new SetLabelTextDelegate(SetTextureToLoadedStatus),
+                                          new object[] {name, tex}
+                            );
+                    }
+                    else
+                    {
+                        SetTextureToLoadedStatus(name, tex);
+                    }
                 });
 
         }
@@ -54,7 +62,8 @@ namespace open3mod
 
         private void SetTextureToLoadedStatus(string name, Texture tex)
         {
-            //var control = _entries.Find(control => control.FilePath == name);
+            var control = _entries.Find(con => con.FilePath == name);
+            control.SetImage(tex.Image);
         }
     }
 }
