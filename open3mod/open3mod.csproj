@@ -105,6 +105,7 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Renderer.cs" />
+    <Compile Include="RoundedRectangle.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="SceneRendererClassicGl.cs" />
     <Compile Include="Tab.cs" />

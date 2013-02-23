@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Data;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -23,7 +24,9 @@ namespace open3mod
 
         private static Image _loadError;
         private static Image _background;
-   
+
+        private static readonly SolidBrush _paintBrush = new SolidBrush(Color.CornflowerBlue);
+        private static GraphicsPath _selectPath;
 
         public TextureThumbnailControl(TextureInspectionView owner, Scene scene, string filePath)
         {
@@ -57,8 +60,11 @@ namespace open3mod
                 _selected = value;
 
                 // adjust colors for selected elements
-                BackColor = _selected ? Color.CornflowerBlue : Color.Empty;
+                // [background color adjustments are handled by OnPaint()]
+                //BackColor = _selected ? Color.CornflowerBlue : Color.Empty;
                 texCaptionLabel.ForeColor = _selected ? Color.White : Color.Black;
+
+                Invalidate();
             }
         }
 
@@ -83,6 +89,38 @@ namespace open3mod
             {
                 pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
             }
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            if(_selected)
+            {
+                CreateGraphicsPathForSelection();
+
+                Debug.Assert(_selectPath != null);
+                e.Graphics.FillPath(_paintBrush, _selectPath);
+            }
+        }
+
+        private void CreateGraphicsPathForSelection()
+        {
+            if (_selectPath != null)
+            {
+                return;
+            }
+
+            var w = Size.Width;
+            var h = Size.Height;
+
+            const int corner = 8;
+
+            // this is an instance method relying on the control's Size to build
+            // a GraphicsPath but it caches the result in the static _selectPath -
+            // this is fine because it is assumed that all instances always have
+            // the same Size at a time.
+            _selectPath = RoundedRectangle.Create(0, 0, w, h, corner);
         }
 
         private static Image GetLoadErrorImage()
@@ -124,6 +162,6 @@ namespace open3mod
             return _background;
         }
 
-       
+         
     }
 }
