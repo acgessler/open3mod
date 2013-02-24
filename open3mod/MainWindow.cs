@@ -349,7 +349,12 @@ namespace open3mod
 
         private void OnGlLoad(object sender, EventArgs e)
         {
-            _renderer = new Renderer(this);
+            if (_renderer != null)
+            {
+                _renderer.Dispose();
+            }
+
+            _renderer = new Renderer(this);           
 
             // register Idle event so we get regular callbacks for drawing
             Application.Idle += ApplicationIdle;

@@ -51,6 +51,7 @@ namespace open3mod
 
         private static Image _loadError;
         private static Image _background;
+        private static Image _loadAnimImage;
 
         private static readonly Color SelectionColor = Color.CornflowerBlue;
         private static readonly Color LoadingColor = Color.Chartreuse;
@@ -61,10 +62,10 @@ namespace open3mod
 
         private int _mouseOverFadeTimer;
         private bool _replaced;
+        
 
         // time the hover selection background fades out after the mouse leaves the control, in ms
         private const int FadeTime = 500;
-
 
         public TextureThumbnailControl(TextureInspectionView owner, Scene scene, string filePath)
         {
@@ -90,6 +91,8 @@ namespace open3mod
                     cc.MouseLeave += (sender, args) => OnMouseLeave(new EventArgs());
                 }
             }
+
+            SetLoadingState();
         }
 
 
@@ -166,9 +169,8 @@ namespace open3mod
 
             var newFileId = _owner.Scene.TextureSet.Replace(_texture.FileName, newFile);
 
-            BeginInvoke(new MethodInvoker(() => pictureBox.Image = null));
-
-            _texture = null;
+            BeginInvoke(new MethodInvoker(SetLoadingState));
+            
             _owner.Scene.TextureSet.AddCallback((id, tex) =>
             {
                 if(id == newFileId)
@@ -193,6 +195,14 @@ namespace open3mod
             });
 
             Invalidate();
+        }
+
+
+        private void SetLoadingState()
+        {
+            _texture = null;
+            pictureBox.Image = GetLoadingImage();
+            pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
         }
 
 
@@ -346,16 +356,7 @@ namespace open3mod
                 return _loadError;
             }
 
-            Assembly assembly = Assembly.GetExecutingAssembly();
-
-            // for some reason we need to keep the stream open for the _lifetime_ of the Image,
-            // therefore the Dispose() is _not_ missing.
-            var imageStream = assembly.GetManifestResourceStream("open3mod.Images.FailedToLoad.bmp");
-            
-            Debug.Assert(imageStream != null);
-            _loadError = Image.FromStream(imageStream);
-            
-
+            _loadError = GetImageFromResource("open3mod.Images.TextureTransparentBackground.png");                   
             return _loadError;
         }
 
@@ -367,17 +368,33 @@ namespace open3mod
                 return _background;
             }
 
-            Assembly assembly = Assembly.GetExecutingAssembly();
+            _background = GetImageFromResource("open3mod.Images.TextureTransparentBackground.png");                   
+            return _background;
+        }
 
+
+        private static Image GetLoadingImage()
+        {
+            if (_loadAnimImage != null)
+            {
+                return _loadAnimImage;
+            }
+
+            _loadAnimImage = GetImageFromResource("open3mod.Images.TextureLoading.gif");
+            return _loadAnimImage;
+        }
+
+
+        private static Image GetImageFromResource(string resPath)
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
             // for some reason we need to keep the stream open for the _lifetime_ of the Image,
             // therefore the Dispose() is _not_ missing.
-            var stream = assembly.GetManifestResourceStream("open3mod.Images.TextureTransparentBackground.png");
+            var stream = assembly.GetManifestResourceStream(resPath);
 
             Debug.Assert(stream != null);
-            _background = Image.FromStream(stream);
-            
-            return _background;
-        }        
+            return Image.FromStream(stream);
+        }
     }
 }
 

@@ -44,7 +44,7 @@ namespace open3mod
     {
         private readonly Renderer _renderer;
         private Bitmap _textBmp;
-        private readonly int _textTexture;
+        private int _textTexture;
 
         private Graphics _tempContext;
 
@@ -129,6 +129,7 @@ namespace open3mod
             if (_textTexture > 0)
             {
                 GL.DeleteTexture(_textTexture);
+                _textTexture = 0;
             }
         }
 
