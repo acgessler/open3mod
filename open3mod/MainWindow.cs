@@ -83,11 +83,15 @@ namespace open3mod
 
             // intercept all key events sent to children
             KeyPreview = true;
-
-            //AddTab("../../../testdata/scenes/COLLADA.dae");
-            AddTab("../../../testdata/scenes/F4U1_L.3ds", false);
-
             _initialized = true;
+        }
+
+
+        protected override void OnCreateControl()
+        {
+            base.OnCreateControl();
+
+            AddTab("../../../testdata/scenes/spider.obj", false);
         }
 
 
