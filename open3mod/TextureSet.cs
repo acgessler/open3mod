@@ -30,7 +30,13 @@ namespace open3mod
         private readonly Dictionary<string, Texture> _dict;
         private readonly List<string> _loaded; 
 
-        public delegate void TextureCallback(string name, Texture tex);
+        /// <summary>
+        /// Texture callback delegate, see AddCallback()
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="tex"></param>
+        /// <returns>Return false to unregister the callback</returns>
+        public delegate bool TextureCallback(string name, Texture tex);
         private readonly List<TextureCallback> _textureCallbacks;
 
         private readonly Dictionary<string, KeyValuePair<string,string>> _replacements;
@@ -61,7 +67,10 @@ namespace open3mod
             {
                 foreach(var s in _loaded)
                 {
-                    callback(s, _dict[s]);
+                    if(!callback(s, _dict[s]))
+                    {
+                        return;
+                    }
                 }
                 _textureCallbacks.Add(callback);
             }           
@@ -86,7 +95,17 @@ namespace open3mod
                 {
                     Debug.Assert(_dict.ContainsKey(path));
                     _loaded.Add(path);
-                    _textureCallbacks.ForEach(callback => callback(path, self));
+                    for (int i = 0, e = _textureCallbacks.Count; i < e; )
+                    {
+                        var callback = _textureCallbacks[i];
+                        if (!callback(path, self))
+                        {
+                            _textureCallbacks.RemoveAt(i);
+                            --e;
+                            continue;
+                        }
+                        ++i;
+                    }
                 }               
             }));
         }
@@ -169,8 +188,6 @@ namespace open3mod
         {
             Debug.Assert(Exists(path));
             Debug.Assert(path != newPath);
-
-            Delete(path);
 
             string newId;
             if(Exists(newPath))

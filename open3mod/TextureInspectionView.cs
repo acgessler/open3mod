@@ -24,21 +24,29 @@ namespace open3mod
             _flow = flow;
             _entries = new List<TextureThumbnailControl>();
 
+            var have = new HashSet<string>();
             foreach (var mat in scene.Raw.Materials)
             {
                 var textures = mat.GetAllTextures();
                 foreach (var tex in textures)
                 {
-                    AddTextureEntry(tex.FilePath);
+                    if (have.Contains(tex.FilePath))
+                    {
+                        continue;
+                    }
+
+                    have.Add(tex.FilePath);
+                    AddTextureEntry(tex.FilePath);                   
                 }
             }
 
-            _scene.TextureSet.AddCallback((name, tex) =>
+            var countdown = have.Count;
+            Scene.TextureSet.AddCallback((name, tex) =>
                 {
                     // we need to handle this case because texture callbacks may occur late
                     if (_flow.IsDisposed)
                     {
-                        return;
+                        return false;
                     }
 
                     if (_flow.IsHandleCreated)
@@ -51,6 +59,7 @@ namespace open3mod
                     {
                         SetTextureToLoadedStatus(name, tex);
                     }
+                    return --countdown > 0;
                 });
 
         }
@@ -60,9 +69,15 @@ namespace open3mod
             get { return _selectedEntry; }
         }
 
+        public Scene Scene
+        {
+            get { return _scene; }
+        }
+
+
         private void AddTextureEntry(string filePath)
         {
-            var control = new TextureThumbnailControl(this, _scene, filePath);
+            var control = new TextureThumbnailControl(this, Scene, filePath);
             control.Click += (sender, args) =>
             {
                 var v = sender as TextureThumbnailControl;
@@ -81,7 +96,7 @@ namespace open3mod
             if(thumb == SelectedEntry)
             {
                 return;
-            }
+            } 
 
             thumb.IsSelected = true;
 
@@ -97,7 +112,14 @@ namespace open3mod
         private void SetTextureToLoadedStatus(string name, Texture tex)
         {
             var control = _entries.Find(con => con.FilePath == name);
-            Debug.Assert(control != null);
+            if(control == null)
+            {
+                // this can happen if textures have been replaced -
+                // when the replacement textures finish loading,
+                // we don't have entries for them. This is handled
+                // by the corresponding thumbnails themselves.
+                return;
+            }
             control.SetTexture(tex);
         }
     }

@@ -66,6 +66,8 @@ namespace open3mod
             LoadAsync();
         }
 
+
+
         /// <summary>
         /// Get the Image associated with the texture or null if the
         /// image has not yet been loaded or if an error occurred

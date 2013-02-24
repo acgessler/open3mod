@@ -30,6 +30,7 @@
         {
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.texCaptionLabel = new System.Windows.Forms.Label();
+            this.labelOldTexture = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -46,21 +47,36 @@
             // texCaptionLabel
             // 
             this.texCaptionLabel.AutoSize = true;
-            this.texCaptionLabel.Location = new System.Drawing.Point(8, 221);
+            this.texCaptionLabel.BackColor = System.Drawing.Color.Transparent;
+            this.texCaptionLabel.Location = new System.Drawing.Point(7, 223);
             this.texCaptionLabel.Name = "texCaptionLabel";
             this.texCaptionLabel.Size = new System.Drawing.Size(99, 13);
             this.texCaptionLabel.TabIndex = 1;
             this.texCaptionLabel.Text = "ATextureName.png";
             // 
+            // labelOldTexture
+            // 
+            this.labelOldTexture.AutoSize = true;
+            this.labelOldTexture.BackColor = System.Drawing.Color.Transparent;
+            this.labelOldTexture.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelOldTexture.ForeColor = System.Drawing.SystemColors.ButtonShadow;
+            this.labelOldTexture.Location = new System.Drawing.Point(9, 230);
+            this.labelOldTexture.Name = "labelOldTexture";
+            this.labelOldTexture.Size = new System.Drawing.Size(29, 12);
+            this.labelOldTexture.TabIndex = 2;
+            this.labelOldTexture.Text = "label1";
+            // 
             // TextureThumbnailControl
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.labelOldTexture);
             this.Controls.Add(this.texCaptionLabel);
             this.Controls.Add(this.pictureBox);
             this.DoubleBuffered = true;
             this.Name = "TextureThumbnailControl";
-            this.Size = new System.Drawing.Size(228, 242);
+            this.Size = new System.Drawing.Size(228, 245);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -71,5 +87,6 @@
 
         private System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.Label texCaptionLabel;
+        private System.Windows.Forms.Label labelOldTexture;
     }
 }

@@ -14,6 +14,12 @@ using System.Windows.Forms;
 
 namespace open3mod
 {
+    /// <summary>
+    /// Custom UI control to draw texture thumbnails in the texture inspector panel.
+    /// Instances of this class flow in a FlowControlPanel. TextureInspectionView
+    /// implements custom selection logic to handle texture selections. It also
+    /// maintains the thumbnail set for a scene.
+    /// </summary>
     public partial class TextureThumbnailControl : UserControl
     {
         private readonly TextureInspectionView _owner;
@@ -25,11 +31,15 @@ namespace open3mod
         private static Image _loadError;
         private static Image _background;
 
-        private static readonly SolidBrush PaintBrush = new SolidBrush(Color.CornflowerBlue);
+        private static readonly Color SelectionColor = Color.CornflowerBlue;
+        private static readonly Color LoadingColor = Color.Chartreuse;
+        private static readonly Color FailureColor = Color.Crimson;
+
         private static GraphicsPath _selectPath;
         private int _mouseOverCounter = 0;
 
         private int _mouseOverFadeTimer;
+        private bool _replaced;
 
         // time the hover selection background fades out after the mouse leaves the control, in ms
         private const int FadeTime = 500;
@@ -43,6 +53,7 @@ namespace open3mod
 
             InitializeComponent();
 
+            labelOldTexture.Text = "";
             texCaptionLabel.Text = Path.GetFileName(filePath);
             pictureBox.BackgroundImage = GetBackgroundImage();
 
@@ -66,6 +77,7 @@ namespace open3mod
             get { return _filePath; }
         }
 
+
         public bool IsSelected
         {
             get { return _selected; }
@@ -82,19 +94,21 @@ namespace open3mod
                 // [background color adjustments are handled by OnPaint()]
                 //BackColor = _selected ? Color.CornflowerBlue : Color.Empty;
                 texCaptionLabel.ForeColor = _selected ? Color.White : Color.Black;
+                labelOldTexture.ForeColor = _selected ? Color.White : Color.DarkGray;
 
                 Invalidate();
             }
         }
 
+        /// <summary>
+        /// Called by TextureInspectionView when the texture pertaining
+        /// to a thumbnail has been loaded (with success or not).
+        /// </summary>
+        /// <param name="texture">Texture to show a thumbnail for</param>
         public void SetTexture(Texture texture)
         {
             _texture = texture;
-            var image = texture.Image;
-            if(image == null)
-            {
-                image = GetLoadErrorImage();
-            }
+            var image = texture.Image ?? GetLoadErrorImage();
 
             Debug.Assert(image != null);
 
@@ -108,31 +122,108 @@ namespace open3mod
             {
                 pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
             }
+
+            Invalidate();
         }
+
+
+        /// <summary>
+        /// Change the source texture path for this texture. This
+        /// tries to load the requested file and sets it as new texture
+        /// image. It then updates the thumbnail view. This is only
+        /// valid if CanChangeTextureSource() is true.
+        /// 
+        /// TODO Texture instances are available from the very beginning,
+        /// it's just that this part of the system doesn't get them 
+        /// until loading is complete. So this is a design limitation
+        /// that could probably be resolved.
+        /// </summary>
+        /// <param name="newFile"></param>
+        public void ChangeTextureSource(string newFile)
+        {
+           Debug.Assert(CanChangeTextureSource());
+
+            var newFileId = _owner.Scene.TextureSet.Replace(_texture.FileName, newFile);
+
+            BeginInvoke(new MethodInvoker(() => pictureBox.Image = null));
+
+            _texture = null;
+            _owner.Scene.TextureSet.AddCallback((id, tex) =>
+            {
+                if(id == newFileId)
+                {
+                    var old = texCaptionLabel.Text;
+
+                    if (!_replaced)
+                    {
+                        _replaced = true;
+                        BeginInvoke(new MethodInvoker(() =>
+                        {
+                            texCaptionLabel.Text = Path.GetFileName(newFile);
+                            labelOldTexture.Text = "was " + old;
+                            texCaptionLabel.Top -= 4;
+                        }));
+                    }
+
+                    SetTexture(tex);
+                    return false;
+                }
+                return true;
+            });
+
+            Invalidate();
+        }
+
+
+        public bool CanChangeTextureSource()
+        {
+            return _texture != null;
+        }
+
 
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
 
-            if(_selected || _mouseOverFadeTimer > 0 || _mouseOverCounter > 0)
+            if(_selected || _mouseOverFadeTimer > 0 || _mouseOverCounter > 0 || _texture == null 
+                || _texture.State == Texture.TextureState.LoadingFailed)
             {
                 CreateGraphicsPathForSelection();
 
                 Debug.Assert(_selectPath != null);
 
+                Color col = SelectionColor;
+   
                 if (_selected)
                 {
-                    e.Graphics.FillPath(PaintBrush, _selectPath);
+                    col = SelectionColor;
                 }
-                else
+                else if (_texture == null)
                 {
-                    float intensity = 0.5f * (_mouseOverCounter > 0 ? 1.0f : (float)_mouseOverFadeTimer/FadeTime);
-                    var color = Color.FromArgb((byte)(intensity * 255.0f), Color.CornflowerBlue);
-
-                    e.Graphics.FillPath(new SolidBrush(color), _selectPath);
+                    col = LoadingColor;
                 }
+                else if (_texture.State == Texture.TextureState.LoadingFailed)
+                {
+                    col = FailureColor;
+                }
+
+                if(!_selected) {
+                    float intensity = 0.5f * (_mouseOverCounter > 0 ? 1.0f : (float)_mouseOverFadeTimer/FadeTime);
+                    if(intensity < 0.0f)
+                    {
+                        intensity = 0.0f;
+                    }
+                    if (_texture == null || _texture.State == Texture.TextureState.LoadingFailed)
+                    {
+                        intensity += 0.4f;
+                    }
+                    col = Color.FromArgb((byte)(intensity * 255.0f), col);
+                }
+
+                e.Graphics.FillPath( new SolidBrush(col), _selectPath);
             }
         }
+
 
         private void CreateGraphicsPathForSelection()
         {
@@ -153,6 +244,7 @@ namespace open3mod
             _selectPath = RoundedRectangle.Create(1, 1, w-2, h-2, corner);
         }
 
+
         protected override void OnMouseEnter(EventArgs e)
         {
             base.OnMouseEnter(e);
@@ -161,6 +253,7 @@ namespace open3mod
             _mouseOverCounter = 1;
             Invalidate();
         }
+
 
         protected override void OnMouseLeave(EventArgs e)
         {
@@ -189,6 +282,42 @@ namespace open3mod
             t.Start();
         }
 
+
+        protected override void  OnDragDrop(DragEventArgs e)
+        {
+            try
+            {
+                var a = (Array)e.Data.GetData(DataFormats.FileDrop);
+
+                if (a != null)
+                {
+                    // Extract string from first array element
+                    // (ignore all files except first if more than one file was dropped)
+                    string s = a.GetValue(0).ToString();
+
+                    // Do it async to avoid stalling the cursor
+                    BeginInvoke((MethodInvoker)(() => ChangeTextureSource(s)), new object[] {this});
+                }
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine("Error in DragDrop function: " + ex.Message);
+            }
+        }
+
+
+        protected override void OnDragEnter(DragEventArgs e)
+        {
+            if (!CanChangeTextureSource())
+            {
+                e.Effect = DragDropEffects.None;
+                return;
+            }
+            // only accept files for drag and drop
+            e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.Copy : DragDropEffects.None;
+        }
+
+
         private static Image GetLoadErrorImage()
         {
             if (_loadError != null)
@@ -209,6 +338,7 @@ namespace open3mod
             return _loadError;
         }
 
+
         private static Image GetBackgroundImage()
         {
             if (_background != null)
@@ -226,8 +356,6 @@ namespace open3mod
             _background = Image.FromStream(stream);
             
             return _background;
-        }
-
-         
+        }        
     }
 }
