@@ -395,6 +395,23 @@ namespace open3mod
             Debug.Assert(stream != null);
             return Image.FromStream(stream);
         }
+
+        private void OnContextMenuReplace(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OnContextMenuOpen(object sender, EventArgs e)
+        {
+            // TODO NIY
+        }
+
+        private void OnContextMenuExport(object sender, EventArgs e)
+        {
+            // TODO NIY
+        }
+
+      
     }
 }
 

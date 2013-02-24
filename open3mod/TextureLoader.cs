@@ -67,7 +67,7 @@ namespace open3mod
                     }
                 }
             }
-            catch(FileNotFoundException)
+            catch(IOException)
             {
                 _result = LoadResult.FileNotFound;
             }

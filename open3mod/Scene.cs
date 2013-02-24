@@ -128,23 +128,30 @@ namespace open3mod
             _mapper = new MaterialMapper();
             _renderer = new SceneRendererClassicGl(this);
 
-            using (var imp = new AssimpImporter { VerboseLoggingEnabled = true })
+            try
             {
-                imp.AttachLogStream((new LogPipe(_logStore)).GetStream());
-
-                // Assimp configuration:
-
-                //  - if no normals are present, generate them using a threshold
-                //    angle of 66 degrees.
-                imp.SetConfig(new NormalSmoothingAngleConfig(66.0f));
-
-                //  - request lots of post processing steps, the details of which
-                //    can be found in the TargetRealTimeMaximumQuality docs.
-                _raw = imp.ImportFile(file, PostProcessPreset.TargetRealTimeMaximumQuality);
-                if (_raw == null)
+                using (var imp = new AssimpImporter {VerboseLoggingEnabled = true})
                 {
-                    throw new Exception("failed to read file: " + file);
+                    imp.AttachLogStream((new LogPipe(_logStore)).GetStream());
+
+                    // Assimp configuration:
+
+                    //  - if no normals are present, generate them using a threshold
+                    //    angle of 66 degrees.
+                    imp.SetConfig(new NormalSmoothingAngleConfig(66.0f));
+
+                    //  - request lots of post processing steps, the details of which
+                    //    can be found in the TargetRealTimeMaximumQuality docs.
+                    _raw = imp.ImportFile(file, PostProcessPreset.TargetRealTimeMaximumQuality);
+                    if (_raw == null)
+                    {
+                        throw new Exception("failed to read file: " + file);
+                    }
                 }
+            }
+            catch(AssimpException ex)
+            {
+                throw new Exception("failed to read file: " + file + " (" + ex.Message + ")");
             }
 
             _textureSet = new TextureSet(BaseDir);

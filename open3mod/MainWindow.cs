@@ -83,14 +83,10 @@ namespace open3mod
          
             InitializeComponent();
 
-            // create default tab
-            tabControl1.TabPages.Add("empty");
-            var emptyTab = tabControl1.TabPages[0];
-            PopulateUITab(emptyTab);
-            ActivateUiTab(emptyTab);
+            AddEmptyTab();           
    
             // initialize UI state shelf with a default tab
-            _ui = new UiState(new Tab(emptyTab, null));
+            _ui = new UiState(new Tab(_emptyTab, null));
             _fps = new FpsTracker();
 
             // sync global UI with UIState
@@ -108,11 +104,33 @@ namespace open3mod
         }
 
 
+        /// <summary>
+        /// Add an "empty" tab if it doesn't exist yet
+        /// </summary>
+        private void AddEmptyTab()
+        {
+            if (_emptyTab != null)
+            {
+                return;
+            }
+            // create default tab
+            tabControl1.TabPages.Add("empty");
+            _emptyTab = tabControl1.TabPages[tabControl1.TabPages.Count-1];
+            PopulateUITab(_emptyTab);
+            ActivateUiTab(_emptyTab);
+
+            // happens when being called from ctor
+            if (_ui != null)
+            {
+                _ui.AddTab(new Tab(_emptyTab, null));
+            }
+        }
+
+
         protected override void OnCreateControl()
         {
             base.OnCreateControl();
-
-            AddTab("../../../testdata/scenes/spider.obj", false);
+            AddTab("../../../testdata/scenes/spider.obj");
         }
 
 
@@ -160,7 +178,7 @@ namespace open3mod
                     return;
                 }
             }
-
+            
             var key = GenerateTabKey();
             tabControl1.TabPages.Add(key, GenerateTabCaption(file));
 
@@ -182,6 +200,11 @@ namespace open3mod
             else
             {
                 OpenFile(t, setActive);
+            }
+
+            if (_emptyTab != null)
+            {
+                CloseTab(_emptyTab);
             }
         }
 
@@ -228,6 +251,12 @@ namespace open3mod
         {
             Debug.Assert(tab != null);
 
+            // If this is the last tab, we need to add an empty tab before we remove it
+            if (tabControl1.TabCount == 1)
+            {
+                AddEmptyTab();
+            }
+
             if (tab == tabControl1.SelectedTab)
             {
                 // need to select another tab first
@@ -247,6 +276,11 @@ namespace open3mod
 
             // and drop the UI tab
             tabControl1.TabPages.Remove(tab);
+
+            if(_emptyTab == tab)
+            {
+                _emptyTab = null;
+            }
         }
 
 
@@ -275,6 +309,7 @@ namespace open3mod
 
         private static int _tabCounter;
         private TabPage _tabContextMenuOwner;
+        private TabPage _emptyTab;
 
         private string GenerateTabKey()
         {
@@ -604,20 +639,21 @@ namespace open3mod
             {
                 var a = (Array)e.Data.GetData(DataFormats.FileDrop);
 
-                if (a != null)
+                if (a != null && a.GetLength(0) > 0)
                 {
-                    // Extract string from first array element
-                    // (ignore all files except first if number of files are dropped).
-                    string s = a.GetValue(0).ToString();
+                    for (int i = 0, count = a.GetLength(0); i < count; ++i)
+                    {
+                        var s = a.GetValue(i).ToString();
 
-                    // Call OpenFile asynchronously.
-                    // Explorer instance from which file is dropped is not responding
-                    // all the time when DragDrop handler is active, so we need to return
-                    // immediately (especially if OpenFile shows MessageBox).
-                    AddTab(s);                   
+                        // Call OpenFile asynchronously.
+                        // Explorer instance from which file is dropped is not responding
+                        // all the time when DragDrop handler is active, so we need to return
+                        // immediately (of particular importance if OpenFile shows MessageBox).
+                        AddTab(s);                       
+                    }
 
                     // in the case Explorer overlaps this form
-                    Activate();        
+                    Activate();
                 }
             }
             catch (Exception ex)
@@ -761,6 +797,39 @@ namespace open3mod
             {
                 CloseTab(tabControl1.SelectedTab);
             }
+        }
+
+        private void OnFileMenuOpen(object sender, EventArgs e)
+        {
+            if(openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                var names = openFileDialog.FileNames;
+                var first = true;
+                foreach(var name in names)
+                {
+                    AddTab(name,true, first);
+                    first = false;
+                }
+            }
+        }
+
+        private void OnFileMenuCloseAll(object sender, EventArgs e)
+        {
+            while(tabControl1.TabPages.Count > 1)
+            {
+                CloseTab(tabControl1.TabPages[0]);
+            }
+            CloseTab(tabControl1.TabPages[0]);
+        }
+
+        private void OnFileMenuRecent(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OnFileMenuQuit(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }
