@@ -128,7 +128,14 @@ namespace open3mod
 
         public void Dispose()
         {
-            _textOverlay.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+
+        public virtual void Dispose(bool disposing)
+        {
+            _textOverlay.Dispose(disposing);
         }
 
 

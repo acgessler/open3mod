@@ -113,6 +113,13 @@ namespace open3mod
 
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+
+        public virtual void Dispose(bool disposing)
+        {
             if (_textTexture > 0)
             {
                 GL.DeleteTexture(_textTexture);
