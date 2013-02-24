@@ -111,6 +111,12 @@ namespace open3mod
         }
 
 
+        ~TextOverlay() 
+        {
+            Dispose(false);
+        }
+
+
         public void Dispose()
         {
             Dispose(true);

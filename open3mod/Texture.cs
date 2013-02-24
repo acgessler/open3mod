@@ -185,7 +185,21 @@ namespace open3mod
             }
         }
 
+
+         ~Texture() 
+        {
+            Dispose(false);
+        }
+
+
         public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+
+        public virtual void Dispose(bool disposing)
         {
             if (_gl != 0)
             {
@@ -193,6 +207,7 @@ namespace open3mod
                 _gl = 0;
             }
         }
+
     }
 }
 
