@@ -43,7 +43,7 @@ namespace open3mod
     /// object does not guarantee a valid "Image" or OpenGl texture
     /// object.
     /// </summary>
-    public class Texture : IDisposable
+    public sealed class Texture : IDisposable
     {
         private readonly string _file;
         private readonly TextureQueue.CompletionCallback _callback;
@@ -146,7 +146,10 @@ namespace open3mod
 
         private void CreateGlTexture()
         {
-            Debug.Assert(State == TextureState.WinFormsImageCreated);
+            if(State != TextureState.WinFormsImageCreated)
+            {
+                return;
+            }
             lock (_lock) {
                 // http://www.opentk.com/node/259
                 var textureBitmap = new Bitmap(_image);
@@ -186,28 +189,24 @@ namespace open3mod
         }
 
 
-         ~Texture() 
+        ~Texture()
         {
-            Dispose(false);
+            // this should not happen, OpenTK is not safe to use from
+            // within Finalizers - for this reason, a manual Dispose()
+            // is needed upfront.
+            Debug.Assert(false);
         }
 
 
         public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-
-        public virtual void Dispose(bool disposing)
         {
             if (_gl != 0)
             {
                 GL.DeleteTexture(_gl);
                 _gl = 0;
             }
+            GC.SuppressFinalize(this);
         }
-
     }
 }
 

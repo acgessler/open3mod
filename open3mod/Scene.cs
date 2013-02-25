@@ -44,7 +44,7 @@ namespace open3mod
     /// only a viewer, we ignore the recommendation of the assimp docs and use
     /// its data structures (almost) directly for rendering.
     /// </summary>
-    public class Scene : IDisposable
+    public sealed class Scene : IDisposable
     {
         private readonly string _file;
         private readonly string _baseDir;
@@ -114,6 +114,7 @@ namespace open3mod
 
         private bool _nodesToShowChanged = true;
         private HashSet<Node> _nodesToShow;
+        private bool _texturesChanged = false;
 
         /// <summary>
         /// Construct a scene given a file name, throw if loading fails
@@ -125,7 +126,7 @@ namespace open3mod
             _baseDir = Path.GetDirectoryName(file);
   
             _logStore = new LogStore();
-            _mapper = new MaterialMapper();
+            _mapper = new MaterialMapper(this);
             _renderer = new SceneRendererClassicGl(this);
 
             try
@@ -173,6 +174,8 @@ namespace open3mod
                     TextureSet.Add(tex.FilePath);               
                 }
             }
+
+            TextureSet.AddCallback((name, tex) => _texturesChanged=true);
         }
 
 
@@ -197,7 +200,9 @@ namespace open3mod
 
         public void Render(UiState state, ICameraController cam)
         {
-            _renderer.Render(state, cam, _nodesToShow, _nodesToShowChanged);
+            _renderer.Render(state, cam, _nodesToShow, _nodesToShowChanged, _texturesChanged);
+
+            _texturesChanged = false;
             _nodesToShowChanged = false;
         }
 

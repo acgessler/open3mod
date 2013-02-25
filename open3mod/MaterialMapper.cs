@@ -38,6 +38,13 @@ namespace open3mod
     /// </summary>
     public class MaterialMapper
     {
+        private readonly Scene _scene;
+
+        public MaterialMapper(Scene scene)
+        {
+            _scene = scene;
+        }
+
         /// <summary>
         /// Apply a material to the gl state machine
         /// </summary>
@@ -53,13 +60,21 @@ namespace open3mod
             if (mat.GetTextureCount(TextureType.Diffuse) > 0)
             {
                 TextureSlot tex = mat.GetTexture(TextureType.Diffuse, 0);
-                // LoadTexture(tex.FilePath);
+                var gtex = _scene.TextureSet.GetOriginalOrReplacement(tex.FilePath);
+
+                if(gtex.GlTexture != 0)
+                {
+                    GL.ActiveTexture(TextureUnit.Texture0);
+                    GL.BindTexture(TextureTarget.Texture2D, gtex.GlTexture);
+
+                    GL.Enable(EnableCap.Texture2D);
+                }
             }
 
-            Color4 color = new Color4(.8f, .8f, .8f, 1.0f);
+            var color = new Color4(.8f, .8f, .8f, 1.0f);
             if (mat.HasColorDiffuse)
             {
-                // color = FromColor(mat.ColorDiffuse);
+                color = AssimpToOpenTk.FromColor(mat.ColorDiffuse);
             }
             GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, color);
 

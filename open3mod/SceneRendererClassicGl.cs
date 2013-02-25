@@ -48,12 +48,15 @@ namespace open3mod
         }
 
 
-        public void Render(UiState state, ICameraController cam, HashSet<Node> visibleNodes, bool visibleSetChanged)
+        public void Render(UiState state, ICameraController cam, HashSet<Node> visibleNodes, bool visibleSetChanged, bool texturesChanged)
         {
-            GL.Enable(EnableCap.Texture2D);
+            GL.Disable(EnableCap.Texture2D);
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
             GL.Enable(EnableCap.DepthTest);
             GL.FrontFace(FrontFaceDirection.Ccw);
+
+            GL.ShadeModel(ShadingModel.Smooth);
+            GL.Enable(EnableCap.Light0);
 
             if (state.RenderWireframe)
             {
@@ -74,7 +77,7 @@ namespace open3mod
 
             GL.Translate(-_sceneCenter); */
 
-            if (_displayList == 0 || visibleSetChanged)
+            if (_displayList == 0 || visibleSetChanged || texturesChanged)
             {
                 if (_displayList == 0)
                 {

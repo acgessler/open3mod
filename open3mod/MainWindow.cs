@@ -418,6 +418,10 @@ namespace open3mod
 
         private void ApplicationIdle(object sender, EventArgs e)
         {
+            if(IsDisposed)
+            {
+                return;
+            }
             // no guard needed -- we hooked into the event in Load handler
             while (glControl1.IsIdle)
             {
@@ -830,6 +834,13 @@ namespace open3mod
         private void OnFileMenuQuit(object sender, EventArgs e)
         {
             Close();
+        }
+
+
+        private void OnCloseForm(object sender, FormClosedEventArgs e)
+        {
+            _renderer.Dispose();
+            UiState.Dispose();
         }
     }
 }

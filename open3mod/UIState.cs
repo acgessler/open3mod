@@ -38,7 +38,7 @@ namespace open3mod
     /// UIState also maintains the central list of open tabs as well
     /// as the info which is active.
     /// </summary>
-    public class UiState
+    public sealed class UiState : IDisposable
     {
       
         public bool RenderWireframe;
@@ -170,7 +170,16 @@ namespace open3mod
             Tabs.Add(defaultTab);
 
             ActiveTab = defaultTab;
-        }    
+        }
+
+
+        public void Dispose()
+        {
+            foreach (var tab in Tabs)
+            {
+                tab.Dispose();
+            }
+        }
     }
 }
 

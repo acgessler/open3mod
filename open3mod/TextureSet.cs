@@ -45,7 +45,7 @@ namespace open3mod
     /// textures receive new, unique IDs even if they did already exist
     /// to avoid all the issues that could arise from cyclic replacements.
     /// </summary>
-    public class TextureSet : IDisposable
+    public sealed class TextureSet : IDisposable
     {
         private readonly string _baseDir;
         private readonly Dictionary<string, Texture> _dict;
@@ -61,7 +61,8 @@ namespace open3mod
         private readonly List<TextureCallback> _textureCallbacks;
 
         private readonly Dictionary<string, KeyValuePair<string,string>> _replacements;
- 
+        private bool _disposed;
+
 
         public TextureSet(string baseDir)
         {
@@ -111,9 +112,14 @@ namespace open3mod
                 return;
             }
             _dict.Add(path, new Texture(path, _baseDir, self =>
-            {
+            {               
                 lock(_loaded)
                 {
+                    if (_disposed)
+                    {
+                        return;
+                    }
+
                     Debug.Assert(_dict.ContainsKey(path));
                     _loaded.Add(path);
                     for (int i = 0, e = _textureCallbacks.Count; i < e; )
@@ -228,10 +234,16 @@ namespace open3mod
 
         public void Dispose()
         {
-            foreach(var k in _dict)
+            if(_disposed)
+            {
+                return;
+            }
+            _disposed = true;
+            foreach (var k in _dict)
             {
                 k.Value.Dispose();
             }
+            
             lock (_loaded) // TODO don't know if this is safe here
             {
                 _dict.Clear();

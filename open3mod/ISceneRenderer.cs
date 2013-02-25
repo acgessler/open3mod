@@ -44,8 +44,11 @@ namespace open3mod
         /// <param name="visibleNodes">Set of nodes to render or null to render them all</param>
         /// <param name="visibleSetChanged">true if the visible is different to the last
         /// time this method was invoked.</param>
-        void Render(UiState state, ICameraController cam, HashSet<Node> visibleNodes, 
-            bool visibleSetChanged);
+        /// <param name="texturesChanged">true if one or more textures were changed since
+        /// the last time this method was invoked. This happens when textures are being
+        /// replaced by the user, or during asynchronous loading.</param>
+        void Render(UiState state, ICameraController cam, HashSet<Node> visibleNodes,
+            bool visibleSetChanged, bool texturesChanged);
     }
 }
 

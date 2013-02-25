@@ -39,7 +39,7 @@ namespace open3mod
     /// list of all tabs is maintained by UIState, which also knows which tab
     /// is active. 
     /// </summary>
-    public class Tab
+    public sealed class Tab
     {
         /// <summary>
         /// Enum of all supported tab states.
@@ -265,6 +265,15 @@ namespace open3mod
                 }
             }
             return CameraImpls[(int)CamMode, (int)targetView];
+        }
+
+
+        public void Dispose()
+        {
+            if (ActiveScene != null)
+            {
+                ActiveScene.Dispose();
+            }
         }
     }
 }
