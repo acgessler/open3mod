@@ -180,7 +180,7 @@ namespace open3mod
             }
             
             var key = GenerateTabKey();
-            tabControl1.TabPages.Add(key, GenerateTabCaption(file));
+            tabControl1.TabPages.Add(key, GenerateTabCaption(file) + LoadingTitlePostfix);
 
             var ui = tabControl1.TabPages[key];
             ui.ToolTipText = file;
@@ -310,6 +310,7 @@ namespace open3mod
         private static int _tabCounter;
         private TabPage _tabContextMenuOwner;
         private TabPage _emptyTab;
+        private const string LoadingTitlePostfix = " (loading)";
 
         private string GenerateTabKey()
         {
@@ -327,6 +328,16 @@ namespace open3mod
 
             if (!setActive) return;
 
+            var updateTitle = new MethodInvoker(() =>
+            {
+                var t = (TabPage)tab.ID;
+                if (t.Text.EndsWith(LoadingTitlePostfix))
+                {
+                    t.Text = t.Text.Substring(0,t.Text.Length -
+                        LoadingTitlePostfix.Length);
+                }
+            });
+
             // must use BeginInvoke() here to make sure it gets executed
             // on the thread hosting the GUI message pump. An exception
             // are potential calls coming from our own c'tor: at this
@@ -336,11 +347,13 @@ namespace open3mod
             {
                 SelectTab((TabPage)tab.ID);
                 PopulateInspector(tab);
+                updateTitle();
             }
             else
             {
                 BeginInvoke(_delegateSelectTab, new[] { tab.ID });
                 BeginInvoke(_delegatePopulateInspector, new object[] { tab });
+                BeginInvoke(updateTitle);
             }
         }
 
