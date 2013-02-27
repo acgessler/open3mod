@@ -120,13 +120,14 @@ namespace open3mod
                 State = TextureState.LoadingPending;
                 TextureQueue.Enqueue(_file, _baseDir , (file, image, result) =>
                 {
+                    
+                    Debug.Assert(_file.Equals(file));
+                    SetImage(image, result);
+
                     if (_callback != null)
                     {
                         _callback(_file, _image, result);
                     }
-
-                    Debug.Assert(_file.Equals(file));
-                    SetImage(image, result);
                 });
             }
         }
