@@ -73,9 +73,43 @@ namespace open3mod
             }
         }
 
+        /// <summary>
+        /// Try to obtain a read stream to a given file, looking at some alternative
+        /// locations if direct access fails. In case of failure, this method
+        /// throws IOException.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="basedir"></param>
+        /// <returns>A valid stream</returns>
         private Stream ObtainStream(string name, string basedir)
         {
-            return new FileStream(Path.Combine(basedir, name), FileMode.Open, FileAccess.Read);
+            Debug.Assert(name != null);
+            Debug.Assert(basedir != null);
+
+            Stream s = null;
+            try
+            {
+                s = new FileStream(Path.Combine(basedir, name), FileMode.Open, FileAccess.Read);
+            }
+            catch (IOException)
+            {
+                var fileName = Path.GetFileName(name);
+                if (fileName == null)
+                {
+                    throw;
+                }
+                try
+                {
+                    s = new FileStream(Path.Combine(basedir, fileName), FileMode.Open, FileAccess.Read);
+                }
+                catch (IOException)
+                {
+                    s = new FileStream(name, FileMode.Open, FileAccess.Read);
+                }
+            }
+
+            Debug.Assert(s != null);
+            return s;
         }
 
         public Image Image
