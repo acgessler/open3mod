@@ -31,8 +31,10 @@ namespace open3mod
     public class OrbitCameraController : ICameraController
     {
         private Matrix4 _view;
-        private Vector3 _offset;
+        private Matrix4 _viewWithOffset;
         private float _cameraDistance;
+        private readonly Vector3 _right;
+        private readonly Vector3 _up;
 
 
         private const float ZoomSpeed = 1.00105f;
@@ -48,8 +50,12 @@ namespace open3mod
         public OrbitCameraController()
         {
             _view = Matrix4.Identity;
-            _offset = Vector3.UnitZ;
+            _viewWithOffset = Matrix4.Identity;
+
             _cameraDistance = InitialCameraDistance;
+
+            _right = Vector3.UnitX;
+            _up = Vector3.UnitY;
 
             UpdateViewMatrix();
         }
@@ -58,32 +64,22 @@ namespace open3mod
 
         public Matrix4 GetView()
         {
-            return _view;
+            return _viewWithOffset;
         }
 
         public void MouseMove(int x, int y)
-        {          
-            if (y != 0)
-            {
-                _offset = Vector3.TransformNormal(_offset, Matrix4.CreateFromAxisAngle(
-                    Vector3.Cross(_offset, Vector3.UnitY), (float)(y * RotationSpeed * Math.PI / 180.0)));
-            }
-
+        {
             if (x != 0)
             {
-                _offset = Vector3.TransformNormal(_offset, Matrix4.CreateFromAxisAngle(
-                    Vector3.UnitY, (float)(-x * RotationSpeed * Math.PI / 180.0)));
+                _view *= Matrix4.CreateFromAxisAngle(_up, (float)(x * RotationSpeed * Math.PI / 180.0));
             }
 
-            if (_offset.Y > 0.8f)
+            if (y != 0)
             {
-                _offset.Y = 0.8f;
+  
+                _view *= Matrix4.CreateFromAxisAngle(_right, (float) (y*RotationSpeed*Math.PI/180.0));
             }
-            if (_offset.Y < -0.8f)
-            {
-                _offset.Y = -0.8f;
-            }
-               
+              
             UpdateViewMatrix();
         }
 
@@ -101,7 +97,7 @@ namespace open3mod
 
         private void UpdateViewMatrix()
         {
-            _view = Matrix4.LookAt(_offset * _cameraDistance, Vector3.Zero, Vector3.UnitY);
+            _viewWithOffset = Matrix4.LookAt(_view.Column2.Xyz * _cameraDistance, Vector3.Zero, _view.Column1.Xyz);
         }
     }
 }
