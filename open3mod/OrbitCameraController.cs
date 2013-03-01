@@ -42,7 +42,7 @@ namespace open3mod
         /// Rotation speed, in degrees per pixels
         /// </summary>
         private const float RotationSpeed = 0.5f;
-        private const float InitialCameraDistance = 10.0f;
+        private const float InitialCameraDistance = 3.0f;
 
 
         public OrbitCameraController()

@@ -126,8 +126,7 @@ namespace open3mod
             _baseDir = Path.GetDirectoryName(file);
   
             _logStore = new LogStore();
-            _mapper = new MaterialMapper(this);
-            _renderer = new SceneRendererClassicGl(this);
+            _mapper = new MaterialMapper(this);          
 
             try
             {
@@ -160,6 +159,8 @@ namespace open3mod
 
             // compute a bounding box (AABB) for the scene we just loaded
             ComputeBoundingBox();
+
+            _renderer = new SceneRendererClassicGl(this, _sceneMin, _sceneMax);
         }
 
 
@@ -214,10 +215,7 @@ namespace open3mod
             Matrix4 identity = Matrix4.Identity;
 
             ComputeBoundingBox(_raw.RootNode, ref _sceneMin, ref _sceneMax, ref identity);
-
-            _sceneCenter.X = (_sceneMin.X + _sceneMax.X) / 2.0f;
-            _sceneCenter.Y = (_sceneMin.Y + _sceneMax.Y) / 2.0f;
-            _sceneCenter.Z = (_sceneMin.Z + _sceneMax.Z) / 2.0f;
+            _sceneCenter = (_sceneMin + _sceneMax) / 2.0f;
         }
 
 

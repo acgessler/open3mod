@@ -39,12 +39,16 @@ namespace open3mod
     public class SceneRendererClassicGl : ISceneRenderer
     {
         private readonly Scene _owner;
+        private readonly Vector3 _initposeMin;
+        private readonly Vector3 _initposeMax;
         private int _displayList;
 
 
-        public SceneRendererClassicGl(Scene owner)
+        public SceneRendererClassicGl(Scene owner, Vector3 initposeMin, Vector3 initposeMax)
         {
             _owner = owner;
+            _initposeMin = initposeMin;
+            _initposeMax = initposeMax;
         }
 
 
@@ -63,20 +67,20 @@ namespace open3mod
                 GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
             }
 
-
             GL.MatrixMode(MatrixMode.Modelview);
             Matrix4 lookat = cam == null ? Matrix4.LookAt(0, 10, 5, 0, 0, 0, 0, 1, 0) : cam.GetView();
 
             GL.LoadMatrix(ref lookat);
-            /*
-            float tmp = _sceneMax.X - _sceneMin.X;
-            tmp = Math.Max(_sceneMax.Y - _sceneMin.Y, tmp);
-            tmp = Math.Max(_sceneMax.Z - _sceneMin.Z, tmp);
+
+            float tmp = _initposeMax.X - _initposeMin.X;
+            tmp = Math.Max(_initposeMax.Y - _initposeMin.Y, tmp);
+            tmp = Math.Max(_initposeMax.Z - _initposeMin.Z, tmp);
             tmp = 1.0f / tmp;
             GL.Scale(tmp * 2, tmp * 2, tmp * 2);
 
-            GL.Translate(-_sceneCenter); */
-
+            GL.Translate(-(_initposeMin + _initposeMax) * 0.5f); 
+         
+           
             if (_displayList == 0 || visibleSetChanged || texturesChanged)
             {
                 if (_displayList == 0)
