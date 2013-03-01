@@ -62,7 +62,8 @@ namespace open3mod
 
         private int _mouseOverFadeTimer;
         private bool _replaced;
-        
+        private string _newFileId;
+
 
         // time the hover selection background fades out after the mouse leaves the control, in ms
         private const int FadeTime = 500;
@@ -167,33 +168,47 @@ namespace open3mod
         {
            Debug.Assert(CanChangeTextureSource());
 
-            var newFileId = _owner.Scene.TextureSet.Replace(_texture.FileName, newFile);
-
-            BeginInvoke(new MethodInvoker(SetLoadingState));
-            
-            _owner.Scene.TextureSet.AddCallback((id, tex) =>
+            if (_texture.FileName == newFile)
             {
-                if(id == newFileId)
-                {
-                    var old = texCaptionLabel.Text;
+                return;
+            }
 
-                    if (!_replaced)
+            // note: it is important to keep _newFileId as a field just in case the
+            // users drags and drops another texture onto the control while this
+            // texture is still being loaded.
+            _newFileId = _owner.Scene.TextureSet.Replace(_texture.FileName, newFile);
+
+            // SetLoadingState() needs to be run on the GUI thread - AddCallback()
+            // need not, but it needs to be sequenced after SetLoadingState().
+            BeginInvoke(new MethodInvoker(() => { 
+                SetLoadingState();
+
+                _owner.Scene.TextureSet.AddCallback((id, tex) =>
+                {
+                    if(id == _newFileId)
                     {
-                        _replaced = true;
+                        var old = texCaptionLabel.Text;
+
                         BeginInvoke(new MethodInvoker(() =>
                         {
                             texCaptionLabel.Text = Path.GetFileName(newFile);
-                            labelOldTexture.Text = "was " + old;
-                            texCaptionLabel.Top -= 4;
+
+                            if (!_replaced)
+                            {
+                                labelOldTexture.Text = "was " + old;
+                                texCaptionLabel.Top -= 4;
+
+                                _replaced = true;
+                            }
                         }));
+ 
+                        SetTexture(tex);
+                        return false;
                     }
-
-                    SetTexture(tex);
-                    return false;
-                }
-                return true;
-            });
-
+                    return true;
+                });
+            }));
+            
             Invalidate();
         }
 

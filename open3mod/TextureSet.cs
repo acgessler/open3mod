@@ -87,15 +87,33 @@ namespace open3mod
 
             lock (_loaded)
             {
-                foreach(var s in _loaded)
-                {
-                    if(!callback(s, _dict[s]))
-                    {
-                        return;
-                    }
-                }
+                if (InvokeCallbacks(callback)) return;
                 _textureCallbacks.Add(callback);
-            }           
+            }
+        }
+
+
+        private bool InvokeCallbacks(TextureCallback callback)
+        {
+            foreach (var s in _loaded)
+            {
+                if (!callback(s, _dict[s]))
+                {
+                    return true;
+                }
+            }
+            foreach (var kv in _replacements)
+            {
+                if (!_loaded.Contains(kv.Value.Value))
+                {
+                    continue;
+                }
+                if (!callback(kv.Value.Key, Get(kv.Value.Value)))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
 
@@ -122,6 +140,27 @@ namespace open3mod
 
                     Debug.Assert(_dict.ContainsKey(path));
                     _loaded.Add(path);
+
+                    // if this texture is being used as replacement for another texture,
+                    // we need to invoke callbacks for its ID too
+                    // TODO obviously, all the replacement code needs a re-design.
+                    foreach (var kv in _replacements)
+                    {
+                        if (kv.Value.Value == path)
+                        {
+                            for (int i = 0, e = _textureCallbacks.Count; i < e; )
+                            {
+                                var callback = _textureCallbacks[i];
+                                if (!callback(kv.Value.Key, self))
+                                {
+                                    _textureCallbacks.RemoveAt(i);
+                                    --e;
+                                    continue;
+                                }
+                                ++i;
+                            }
+                        }
+                    }
                     for (int i = 0, e = _textureCallbacks.Count; i < e; )
                     {
                         var callback = _textureCallbacks[i];
@@ -219,7 +258,7 @@ namespace open3mod
             string newId;
             if(Exists(newPath))
             {
-                newId = newPath + '_' + Guid.NewGuid();
+                newId = newPath + '_' + Guid.NewGuid();               
             }
             else
             {
@@ -227,7 +266,7 @@ namespace open3mod
                 Add(newPath);
             }
 
-            _replacements[path] = new KeyValuePair<string, string>(newId, newPath);
+            _replacements[path] = new KeyValuePair<string, string>(newId, newPath);          
             return newId;
         }
 

@@ -112,7 +112,6 @@ namespace open3mod
                     catch(InvalidOperationException)
                     {
                         // empty queue, go sleep
-                     
                         Event.WaitOne();                      
                         continue;
                     }
