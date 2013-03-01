@@ -137,18 +137,22 @@ namespace open3mod
 
             Debug.Assert(image != null);
 
-            pictureBox.Image = image;
-        
-            if(image.Width < pictureBox.Width && image.Height < pictureBox.Height)
+            BeginInvoke(new MethodInvoker(() =>
             {
-                pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
-            }
-            else
-            {
-                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-            }
+                pictureBox.Image = image;
 
-            Invalidate();
+                if (image.Width < pictureBox.Width && image.Height < pictureBox.Height)
+                {
+                    pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
+                }
+                else
+                {
+                    pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+                }
+
+                Invalidate();
+            }));
+            
         }
 
 
