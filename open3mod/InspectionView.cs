@@ -57,6 +57,13 @@ namespace open3mod
 
             Hierarchy = new HierarchyInspectionView(Scene, treeViewNodeGraph);
             Textures = new TextureInspectionView(Scene, textureFlowPanel);
+            if(Textures.Empty)
+            {
+                // disable the texture tab altogether if there are no textures
+                // this would need to be changed if there was a way to add 
+                // new texture slots later on.
+                tabControlInfoViewPicker.TabPages.Remove(tabPageTextures);
+            }
             Materials = new MaterialInspectionView(Scene, null);
 
             UpdateStatistics();

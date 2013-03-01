@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.tabControlInfoViewPicker = new System.Windows.Forms.TabControl();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tabPageTree = new System.Windows.Forms.TabPage();
             this.panel2 = new System.Windows.Forms.Panel();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.label2 = new System.Windows.Forms.Label();
@@ -38,15 +38,15 @@
             this.textBoxFilter = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.treeViewNodeGraph = new System.Windows.Forms.TreeView();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.tabPageTextures = new System.Windows.Forms.TabPage();
             this.textureFlowPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.Animations = new System.Windows.Forms.TabPage();
+            this.tabPageMaterials = new System.Windows.Forms.TabPage();
+            this.tabPageAnimations = new System.Windows.Forms.TabPage();
             this.tabControlInfoViewPicker.SuspendLayout();
-            this.tabPage3.SuspendLayout();
+            this.tabPageTree.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.tabPage4.SuspendLayout();
+            this.tabPageTextures.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControlInfoViewPicker
@@ -54,10 +54,10 @@
             this.tabControlInfoViewPicker.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControlInfoViewPicker.Controls.Add(this.tabPage3);
-            this.tabControlInfoViewPicker.Controls.Add(this.tabPage4);
-            this.tabControlInfoViewPicker.Controls.Add(this.tabPage1);
-            this.tabControlInfoViewPicker.Controls.Add(this.Animations);
+            this.tabControlInfoViewPicker.Controls.Add(this.tabPageTree);
+            this.tabControlInfoViewPicker.Controls.Add(this.tabPageTextures);
+            this.tabControlInfoViewPicker.Controls.Add(this.tabPageMaterials);
+            this.tabControlInfoViewPicker.Controls.Add(this.tabPageAnimations);
             this.tabControlInfoViewPicker.Location = new System.Drawing.Point(3, 3);
             this.tabControlInfoViewPicker.Multiline = true;
             this.tabControlInfoViewPicker.Name = "tabControlInfoViewPicker";
@@ -65,20 +65,20 @@
             this.tabControlInfoViewPicker.Size = new System.Drawing.Size(354, 688);
             this.tabControlInfoViewPicker.TabIndex = 2;
             // 
-            // tabPage3
+            // tabPageTree
             // 
-            this.tabPage3.BackColor = System.Drawing.Color.Silver;
-            this.tabPage3.Controls.Add(this.panel2);
-            this.tabPage3.Controls.Add(this.panel1);
-            this.tabPage3.Controls.Add(this.textBoxFilter);
-            this.tabPage3.Controls.Add(this.label1);
-            this.tabPage3.Controls.Add(this.treeViewNodeGraph);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(346, 662);
-            this.tabPage3.TabIndex = 0;
-            this.tabPage3.Text = "Tree";
+            this.tabPageTree.BackColor = System.Drawing.Color.Silver;
+            this.tabPageTree.Controls.Add(this.panel2);
+            this.tabPageTree.Controls.Add(this.panel1);
+            this.tabPageTree.Controls.Add(this.textBoxFilter);
+            this.tabPageTree.Controls.Add(this.label1);
+            this.tabPageTree.Controls.Add(this.treeViewNodeGraph);
+            this.tabPageTree.Location = new System.Drawing.Point(4, 22);
+            this.tabPageTree.Name = "tabPageTree";
+            this.tabPageTree.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageTree.Size = new System.Drawing.Size(346, 662);
+            this.tabPageTree.TabIndex = 0;
+            this.tabPageTree.Text = "Tree";
             // 
             // panel2
             // 
@@ -161,16 +161,16 @@
             this.treeViewNodeGraph.TabIndex = 0;
             this.treeViewNodeGraph.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.AfterSelect);
             // 
-            // tabPage4
+            // tabPageTextures
             // 
-            this.tabPage4.Controls.Add(this.textureFlowPanel);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(346, 662);
-            this.tabPage4.TabIndex = 1;
-            this.tabPage4.Text = "Textures";
-            this.tabPage4.UseVisualStyleBackColor = true;
+            this.tabPageTextures.Controls.Add(this.textureFlowPanel);
+            this.tabPageTextures.Location = new System.Drawing.Point(4, 22);
+            this.tabPageTextures.Name = "tabPageTextures";
+            this.tabPageTextures.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageTextures.Size = new System.Drawing.Size(346, 662);
+            this.tabPageTextures.TabIndex = 1;
+            this.tabPageTextures.Text = "Textures";
+            this.tabPageTextures.UseVisualStyleBackColor = true;
             // 
             // textureFlowPanel
             // 
@@ -184,25 +184,25 @@
             this.textureFlowPanel.Size = new System.Drawing.Size(340, 656);
             this.textureFlowPanel.TabIndex = 0;
             // 
-            // tabPage1
+            // tabPageMaterials
             // 
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(454, 662);
-            this.tabPage1.TabIndex = 3;
-            this.tabPage1.Text = "Materials";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.tabPageMaterials.Location = new System.Drawing.Point(4, 22);
+            this.tabPageMaterials.Name = "tabPageMaterials";
+            this.tabPageMaterials.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageMaterials.Size = new System.Drawing.Size(346, 662);
+            this.tabPageMaterials.TabIndex = 3;
+            this.tabPageMaterials.Text = "Materials";
+            this.tabPageMaterials.UseVisualStyleBackColor = true;
             // 
-            // Animations
+            // tabPageAnimations
             // 
-            this.Animations.Location = new System.Drawing.Point(4, 22);
-            this.Animations.Name = "Animations";
-            this.Animations.Padding = new System.Windows.Forms.Padding(3);
-            this.Animations.Size = new System.Drawing.Size(454, 662);
-            this.Animations.TabIndex = 2;
-            this.Animations.Text = "Animations";
-            this.Animations.UseVisualStyleBackColor = true;
+            this.tabPageAnimations.Location = new System.Drawing.Point(4, 22);
+            this.tabPageAnimations.Name = "tabPageAnimations";
+            this.tabPageAnimations.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageAnimations.Size = new System.Drawing.Size(346, 662);
+            this.tabPageAnimations.TabIndex = 2;
+            this.tabPageAnimations.Text = "Animations";
+            this.tabPageAnimations.UseVisualStyleBackColor = true;
             // 
             // InspectionView
             // 
@@ -213,14 +213,14 @@
             this.Name = "InspectionView";
             this.Size = new System.Drawing.Size(357, 694);
             this.tabControlInfoViewPicker.ResumeLayout(false);
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
+            this.tabPageTree.ResumeLayout(false);
+            this.tabPageTree.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.tabPage4.ResumeLayout(false);
-            this.tabPage4.PerformLayout();
+            this.tabPageTextures.ResumeLayout(false);
+            this.tabPageTextures.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -228,12 +228,12 @@
         #endregion
 
         private System.Windows.Forms.TabControl tabControlInfoViewPicker;
-        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage tabPageTree;
         private System.Windows.Forms.TreeView treeViewNodeGraph;
-        private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.TabPage Animations;
+        private System.Windows.Forms.TabPage tabPageTextures;
+        private System.Windows.Forms.TabPage tabPageAnimations;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPageMaterials;
         private System.Windows.Forms.TextBox textBoxFilter;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label labelNodeStats;

@@ -85,6 +85,11 @@ namespace open3mod
 
         }
 
+        public bool Empty
+        {
+            get { return _entries.Count == 0; }
+        }
+
         public TextureThumbnailControl SelectedEntry
         {
             get { return _selectedEntry; }
