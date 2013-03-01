@@ -78,8 +78,7 @@ namespace open3mod
             tmp = 1.0f / tmp;
             GL.Scale(tmp * 2, tmp * 2, tmp * 2);
 
-            GL.Translate(-(_initposeMin + _initposeMax) * 0.5f); 
-         
+            GL.Translate(-(_initposeMin + _initposeMax) * 0.5f);          
            
             if (_displayList == 0 || visibleSetChanged || texturesChanged)
             {

@@ -69,6 +69,14 @@ namespace open3mod
 
                     GL.Enable(EnableCap.Texture2D);
                 }
+                else
+                {
+                    GL.Disable(EnableCap.Texture2D);
+                }
+            }
+            else
+            {
+                GL.Disable(EnableCap.Texture2D);
             }
 
             var color = new Color4(.8f, .8f, .8f, 1.0f);
