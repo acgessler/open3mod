@@ -47,6 +47,10 @@ namespace open3mod
 
         public bool ShowFps = true;
 
+        public bool ShowBBs = false;
+        public bool ShowNormals = false;
+        public bool ShowSkeleton = false;
+
         /// <summary>
         /// Current active tab. May never be null, there is always
         /// a selected tab, even if it is just the dummy tab.

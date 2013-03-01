@@ -533,6 +533,21 @@ namespace open3mod
             _ui.RenderWireframe = !_ui.RenderWireframe;
         }
 
+        private void ToggleShowBB(object sender, EventArgs e)
+        {
+            _ui.ShowBBs = !_ui.ShowBBs;
+        }
+
+        private void ToggleShowNormals(object sender, EventArgs e)
+        {
+            _ui.ShowNormals = !_ui.ShowNormals;
+        }
+
+        private void ToggleShowSkeleton(object sender, EventArgs e)
+        {
+            _ui.ShowSkeleton = !_ui.ShowSkeleton;
+        }
+
         private void ToggleFullView(object sender, EventArgs e)
         {
             if (UiState.ActiveTab.ActiveViewMode == Tab.ViewMode.Single) return;
@@ -855,6 +870,8 @@ namespace open3mod
             _renderer.Dispose();
             UiState.Dispose();
         }
+
+       
     }
 }
 
