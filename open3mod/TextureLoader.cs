@@ -59,7 +59,14 @@ namespace open3mod
                     try
                     {
                         _image = Image.FromStream(stream);
-                        _result = LoadResult.Good;
+                        if (_image != null)
+                        {
+                            _result = LoadResult.Good;
+                        }
+                        else
+                        {
+                            _result = LoadResult.UnknownFileFormat;   
+                        }
                     }     
                     catch (Exception)
                     {
