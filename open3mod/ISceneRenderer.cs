@@ -30,8 +30,8 @@ namespace open3mod
 {
     /// <summary>
     /// Abstract interface to support different scene rendering implementations.
-    /// A ISceneRenderer is always bound to a single scene during its entire
-    /// lifetime. They are expected to obey all view filters requested by
+    /// An ISceneRenderer is always bound to a single scene during its entire
+    /// lifetime. Renderers are expected to handle all view filters requested by
     /// a scene.
     /// </summary>
     public interface ISceneRenderer
