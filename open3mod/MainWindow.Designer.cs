@@ -75,11 +75,11 @@ namespace open3mod
             this.closeAllButThisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonTabClose = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.glControl1 = new open3mod.RenderControl();
             this.toolStripButtonShowBB = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonShowNormals = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonShowSkeleton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.glControl1 = new open3mod.RenderControl();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.tabContextMenuStrip.SuspendLayout();
@@ -406,6 +406,44 @@ namespace open3mod
             // 
             this.openFileDialog.Multiselect = true;
             // 
+            // toolStripButtonShowBB
+            // 
+            this.toolStripButtonShowBB.CheckOnClick = true;
+            this.toolStripButtonShowBB.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonShowBB.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowBB.Image")));
+            this.toolStripButtonShowBB.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonShowBB.Name = "toolStripButtonShowBB";
+            this.toolStripButtonShowBB.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonShowBB.Text = "Show Bounding Boxes";
+            this.toolStripButtonShowBB.Click += new System.EventHandler(this.ToggleShowBB);
+            // 
+            // toolStripButtonShowNormals
+            // 
+            this.toolStripButtonShowNormals.CheckOnClick = true;
+            this.toolStripButtonShowNormals.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonShowNormals.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowNormals.Image")));
+            this.toolStripButtonShowNormals.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonShowNormals.Name = "toolStripButtonShowNormals";
+            this.toolStripButtonShowNormals.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonShowNormals.Text = "Show Normals";
+            this.toolStripButtonShowNormals.Click += new System.EventHandler(this.ToggleShowNormals);
+            // 
+            // toolStripButtonShowSkeleton
+            // 
+            this.toolStripButtonShowSkeleton.CheckOnClick = true;
+            this.toolStripButtonShowSkeleton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonShowSkeleton.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowSkeleton.Image")));
+            this.toolStripButtonShowSkeleton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonShowSkeleton.Name = "toolStripButtonShowSkeleton";
+            this.toolStripButtonShowSkeleton.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonShowSkeleton.Text = "Show Skeleton";
+            this.toolStripButtonShowSkeleton.Click += new System.EventHandler(this.ToggleShowSkeleton);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
+            // 
             // glControl1
             // 
             this.glControl1.AllowDrop = true;
@@ -431,41 +469,6 @@ namespace open3mod
             this.glControl1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.OnMouseUp);
             this.glControl1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.OnPreviewKeyDown);
             this.glControl1.Resize += new System.EventHandler(this.OnGlResize);
-            // 
-            // toolStripButtonShowBB
-            // 
-            this.toolStripButtonShowBB.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonShowBB.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowBB.Image")));
-            this.toolStripButtonShowBB.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonShowBB.Name = "toolStripButtonShowBB";
-            this.toolStripButtonShowBB.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonShowBB.Text = "Show Bounding Boxes";
-            this.toolStripButtonShowBB.Click += new System.EventHandler(this.ToggleShowBB);
-            // 
-            // toolStripButtonShowNormals
-            // 
-            this.toolStripButtonShowNormals.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonShowNormals.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowNormals.Image")));
-            this.toolStripButtonShowNormals.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonShowNormals.Name = "toolStripButtonShowNormals";
-            this.toolStripButtonShowNormals.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonShowNormals.Text = "Show Normals";
-            this.toolStripButtonShowNormals.Click += new System.EventHandler(this.ToggleShowNormals);
-            // 
-            // toolStripButtonShowSkeleton
-            // 
-            this.toolStripButtonShowSkeleton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonShowSkeleton.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowSkeleton.Image")));
-            this.toolStripButtonShowSkeleton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonShowSkeleton.Name = "toolStripButtonShowSkeleton";
-            this.toolStripButtonShowSkeleton.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonShowSkeleton.Text = "Show Skeleton";
-            this.toolStripButtonShowSkeleton.Click += new System.EventHandler(this.ToggleShowSkeleton);
-            // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
             // 
             // MainWindow
             // 
