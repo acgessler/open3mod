@@ -48,15 +48,35 @@ namespace open3mod
         /// <summary>
         /// Apply a material to the gl state machine
         /// </summary>
+        /// <param name="mesh"> </param>
         /// <param name="mat"></param>
-        public void ApplyMaterial(Material mat)
+        public void ApplyMaterial(Mesh mesh, Material mat)
         {
-            ApplyFixedFunctionMaterial(mat);
+            ApplyFixedFunctionMaterial(mesh, mat);
         }
 
 
-        private void ApplyFixedFunctionMaterial(Material mat)
+        private void ApplyFixedFunctionMaterial(Mesh mesh, Material mat)
         {
+            if (mesh.HasNormals)
+            {
+                GL.Enable(EnableCap.Lighting);
+            }
+            else
+            {
+                GL.Disable(EnableCap.Lighting);
+            }
+
+            bool hasColors = mesh.HasVertexColors(0);
+            if (hasColors)
+            {
+                GL.Enable(EnableCap.ColorMaterial);
+            }
+            else
+            {
+                GL.Disable(EnableCap.ColorMaterial);
+            }
+
             if (mat.GetTextureCount(TextureType.Diffuse) > 0)
             {
                 TextureSlot tex = mat.GetTexture(TextureType.Diffuse, 0);

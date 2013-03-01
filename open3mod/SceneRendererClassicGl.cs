@@ -42,6 +42,7 @@ namespace open3mod
         private readonly Vector3 _initposeMin;
         private readonly Vector3 _initposeMax;
         private int _displayList;
+        private RenderFlags _lastFlags;
 
 
         public SceneRendererClassicGl(Scene owner, Vector3 initposeMin, Vector3 initposeMax)
@@ -52,7 +53,8 @@ namespace open3mod
         }
 
 
-        public void Render(UiState state, ICameraController cam, HashSet<Node> visibleNodes, bool visibleSetChanged, bool texturesChanged)
+        public void Render(ICameraController cam, HashSet<Node> visibleNodes, bool visibleSetChanged, bool texturesChanged,
+            RenderFlags flags)
         {
             GL.Disable(EnableCap.Texture2D);
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
@@ -62,7 +64,7 @@ namespace open3mod
             GL.ShadeModel(ShadingModel.Smooth);
             GL.Enable(EnableCap.Light0);
 
-            if (state.RenderWireframe)
+            if (flags.HasFlag(RenderFlags.Wireframe))
             {
                 GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
             }
@@ -80,14 +82,15 @@ namespace open3mod
 
             GL.Translate(-(_initposeMin + _initposeMax) * 0.5f);          
            
-            if (_displayList == 0 || visibleSetChanged || texturesChanged)
+            if (_displayList == 0 || visibleSetChanged || texturesChanged || flags != _lastFlags)
             {
+                _lastFlags = flags;
                 if (_displayList == 0)
                 {
                     _displayList = GL.GenLists(1);
                 }
                 GL.NewList(_displayList, ListMode.Compile);
-                RecursiveRender(_owner.Raw.RootNode, ref lookat, visibleNodes);
+                RecursiveRender(_owner.Raw.RootNode, ref lookat, visibleNodes, flags);
                 GL.EndList();
             }
 
@@ -102,14 +105,17 @@ namespace open3mod
         }
 
 
-        private void RecursiveRender(Node node, ref Matrix4 view, HashSet<Node> visibleNodes)
+        private void RecursiveRender(Node node, ref Matrix4 view, HashSet<Node> visibleNodes, 
+            RenderFlags flags)
         {
             Matrix4 m = Matrix4.Identity;
-            RecursiveRender(node, ref m, ref view, visibleNodes);
+            RecursiveRender(node, ref m, ref view, visibleNodes, flags);
         }
 
 
-        private void RecursiveRender(Node node, ref Matrix4 parentTransform, ref Matrix4 view,HashSet<Node> visibleNodes)
+        private void RecursiveRender(Node node, ref Matrix4 parentTransform, ref Matrix4 view, 
+            HashSet<Node> visibleNodes, 
+            RenderFlags flags)
         {
             Matrix4 m = AssimpToOpenTk.FromMatrix(node.Transform);
             m.Transpose();
@@ -123,27 +129,10 @@ namespace open3mod
                 foreach (int index in node.MeshIndices)
                 {
                     Mesh mesh = _owner.Raw.Meshes[index];
-                    _owner.MaterialMapper.ApplyMaterial(_owner.Raw.Materials[mesh.MaterialIndex]);
+                    _owner.MaterialMapper.ApplyMaterial(mesh,_owner.Raw.Materials[mesh.MaterialIndex]);
 
-                    if (mesh.HasNormals)
-                    {
-                        GL.Enable(EnableCap.Lighting);
-                    }
-                    else
-                    {
-                        GL.Disable(EnableCap.Lighting);
-                    }
-
-                    bool hasColors = mesh.HasVertexColors(0);
-                    if (hasColors)
-                    {
-                        GL.Enable(EnableCap.ColorMaterial);
-                    }
-                    else
-                    {
-                        GL.Disable(EnableCap.ColorMaterial);
-                    }
-
+               
+                    bool hasColors = mesh.HasVertexColors(0);              
                     bool hasTexCoords = mesh.HasTextureCoords(0);
 
                     foreach (Face face in mesh.Faces)
@@ -172,6 +161,14 @@ namespace open3mod
                             if (hasColors)
                             {
                                 Color4 vertColor = AssimpToOpenTk.FromColor(mesh.GetVertexColors(0)[indice]);
+                                if (flags.HasFlag(RenderFlags.Shaded))
+                                {
+                                    GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, vertColor);
+                                }
+                                else
+                                {
+                                    GL.Color4(vertColor);
+                                }
                             }
                             if (mesh.HasNormals)
                             {
@@ -188,6 +185,15 @@ namespace open3mod
                         }
                         GL.End();
                     }
+
+                    if (flags.HasFlag(RenderFlags.ShowNormals))
+                    {
+                        DrawNormals(mesh);
+                    }
+                    if (flags.HasFlag(RenderFlags.ShowBoundingBoxes))
+                    {
+                        DrawBoundingBox(mesh);
+                    }
                 }
             }
 
@@ -196,8 +202,42 @@ namespace open3mod
             
             for (int i = 0; i < node.ChildCount; i++)
             {              
-                RecursiveRender(node.Children[i], ref parentTransform, visibleNodes);
+                RecursiveRender(node.Children[i], ref parentTransform, visibleNodes, flags);
             }
+        }
+
+
+        private void DrawBoundingBox(Mesh mesh)
+        {
+            // TODO
+        }
+
+
+        private void DrawNormals(Mesh mesh)
+        {
+            // scale by scene size because the scene will be resized to fit
+            // the unit box but the normals should have a fixed length
+            var scale = (_initposeMax - _initposeMin).Length * 0.02f;
+
+            GL.Begin(BeginMode.Lines);
+
+            GL.Disable(EnableCap.Lighting);
+            GL.Disable(EnableCap.Texture2D);
+            GL.Enable(EnableCap.ColorMaterial);
+
+            GL.Color4(new Color4(0.0f, 1.0f, 0.0f, 1.0f));
+
+            for (int i = 0; i < mesh.VertexCount; ++i)
+            {
+                
+                var v = AssimpToOpenTk.FromVector(mesh.Vertices[i]);
+                var n = AssimpToOpenTk.FromVector(mesh.Normals[i]);
+                GL.Vertex3(v);
+                GL.Vertex3(v+n*scale);
+            }
+            GL.End();
+
+            GL.Disable(EnableCap.ColorMaterial);
         }
     }
 }

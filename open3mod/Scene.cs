@@ -201,7 +201,37 @@ namespace open3mod
 
         public void Render(UiState state, ICameraController cam)
         {
-            _renderer.Render(state, cam, _nodesToShow, _nodesToShowChanged, _texturesChanged);
+            RenderFlags flags = 0;
+            if (state.ShowBBs)
+            {
+                flags |= RenderFlags.ShowNormals;
+            }
+            if (state.ShowNormals)
+            {
+                flags |= RenderFlags.ShowNormals;
+            }
+            if (state.ShowBBs)
+            {
+                flags |= RenderFlags.ShowBoundingBoxes;
+            }
+            if (state.ShowSkeleton)
+            {
+                flags |= RenderFlags.ShowSkeleton;
+            }
+            if (state.RenderLit)
+            {
+                flags |= RenderFlags.Shaded;
+            }
+            if (state.RenderTextured)
+            {
+                flags |= RenderFlags.Textured;
+            }
+            if (state.RenderWireframe)
+            {
+                flags |= RenderFlags.Wireframe;
+            }
+
+            _renderer.Render(cam, _nodesToShow, _nodesToShowChanged, _texturesChanged, flags);
 
             _texturesChanged = false;
             _nodesToShowChanged = false;

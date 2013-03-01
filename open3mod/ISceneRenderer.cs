@@ -28,6 +28,18 @@ using Assimp;
 
 namespace open3mod
 {
+    [Flags]
+    public enum RenderFlags
+    {
+        Wireframe = 0x1,
+        Shaded = 0x2,
+        ShowBoundingBoxes = 0x4,
+        ShowNormals = 0x8,
+        ShowSkeleton = 0x10,
+        Textured = 0x20
+    }
+
+
     /// <summary>
     /// Abstract interface to support different scene rendering implementations.
     /// An ISceneRenderer is always bound to a single scene during its entire
@@ -39,7 +51,6 @@ namespace open3mod
         /// <summary>
         /// Draw the scene
         /// </summary>
-        /// <param name="state">Global UI state, includes rendering parameters</param>
         /// <param name="cam">Camera controller to be used</param>
         /// <param name="visibleNodes">Set of nodes to render or null to render them all</param>
         /// <param name="visibleSetChanged">true if the visible is different to the last
@@ -47,8 +58,10 @@ namespace open3mod
         /// <param name="texturesChanged">true if one or more textures were changed since
         /// the last time this method was invoked. This happens when textures are being
         /// replaced by the user, or during asynchronous loading.</param>
-        void Render(UiState state, ICameraController cam, HashSet<Node> visibleNodes,
-            bool visibleSetChanged, bool texturesChanged);
+        /// <param name="flags">Selected set of rendering overlays</param>
+        void Render(ICameraController cam, HashSet<Node> visibleNodes,
+            bool visibleSetChanged, bool texturesChanged, 
+            RenderFlags flags);
     }
 }
 
