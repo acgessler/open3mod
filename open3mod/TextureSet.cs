@@ -208,14 +208,11 @@ namespace open3mod
         /// must have been replaced by another texture using Replace()</param>
         public Texture GetOriginalOrReplacement(string path)
         {
-            Texture val;
-            if(_dict.TryGetValue(path, out val))
+            if(_replacements.ContainsKey(path))
             {
-                return val;
+                return GetOriginalOrReplacement(_replacements[path].Key);
             }
-
-            Debug.Assert(_replacements.ContainsKey(path));
-            return GetOriginalOrReplacement(_replacements[path].Key);
+            return _dict[path];
         }
 
 
