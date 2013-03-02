@@ -203,7 +203,6 @@ namespace open3mod
             {
                 var th = new Thread(() => OpenFile(t, setActive));
                 th.Start();
-                //BeginInvoke(_delegateOpenFile, new Object[] { file, t, setActive });
             }
             else
             {
@@ -377,6 +376,7 @@ namespace open3mod
         private TabPage _tabContextMenuOwner;
         private TabPage _emptyTab;
         private const string LoadingTitlePostfix = " (loading)";
+        private const string FailedTitlePostfix = " (failed)";
 
         private string GenerateTabKey()
         {
@@ -390,9 +390,20 @@ namespace open3mod
         /// </summary>
         private void OpenFile(Tab tab, bool setActive)
         {
-            tab.ActiveScene = new Scene(tab.File);
+            try
+            {
+                tab.ActiveScene = new Scene(tab.File);
 
-            if (!setActive) return;
+            }
+            catch(Exception ex)
+            {
+                tab.SetFailed(ex.Message);
+            }
+
+            if (!setActive)
+            {
+                return;
+            }
 
             var updateTitle = new MethodInvoker(() =>
             {
@@ -401,6 +412,11 @@ namespace open3mod
                 {
                     t.Text = t.Text.Substring(0,t.Text.Length -
                         LoadingTitlePostfix.Length);
+
+                    if (tab.State == Tab.TabState.Failed)
+                    {
+                        t.Text = t.Text + FailedTitlePostfix;
+                    }
                 }
             });
 
@@ -573,7 +589,7 @@ namespace open3mod
 
         private void FrameRender()
         {
-            _renderer.Draw(_ui.ActiveTab.ActiveScene);
+            _renderer.Draw(_ui.ActiveTab);
             glControl1.SwapBuffers();
         }
 

@@ -82,10 +82,12 @@ namespace open3mod
 
 
         /// <summary>
-        /// Draw a given scene or alternatively a default screen.
+        /// Draw the contents of a given tab. If the tab contains a scene,
+        /// this scene is drawn. If the tab is in loading or failed state,
+        /// the corresponding info screen will be drawn.
         /// </summary>
-        /// <param name="activeScene">Active scene or a null to show the "drag file here" screen</param>
-        public void Draw(Scene activeScene = null)
+        /// <param name="activeTab">Tab containing the scene to be drawn</param>
+        public void Draw(Tab activeTab)
         {
             GL.ClearColor(Color.LightGray);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -103,13 +105,13 @@ namespace open3mod
                 }
 
                 var cam = ui.ActiveCameraControllerForView(index);
-                DrawViewport(cam, activeScene, view.Value.X, view.Value.Y, view.Value.Z, view.Value.W, false);
+                DrawViewport(cam, activeTab, view.Value.X, view.Value.Y, view.Value.Z, view.Value.W, false);
                 ++index;
             }
 
             var activeVp = ui.ActiveViews[(int)ui.ActiveViewIndex];
             Debug.Assert(activeVp != null);
-            DrawViewport(ui.ActiveCameraController, activeScene, activeVp.Value.X, activeVp.Value.Y, 
+            DrawViewport(ui.ActiveCameraController, activeTab, activeVp.Value.X, activeVp.Value.Y, 
                 activeVp.Value.Z, activeVp.Value.W, true);
 
             if (ui.ActiveViewMode != Tab.ViewMode.Single)
@@ -152,13 +154,13 @@ namespace open3mod
         /// Draw a scene to a viewport using an ICameraController to specify the camera.
         /// </summary>
         /// <param name="view">Active cam controller for this viewport</param>
-        /// <param name="activeScene">Scene to be drawn</param>
+        /// <param name="activeTab">Scene to be drawn</param>
         /// <param name="xs">X-axis starting point of the viewport in range [0,1]</param>
         /// <param name="ys">Y-axis starting point of the viewport in range [0,1]</param>
         /// <param name="xe">X-axis end point of the viewport in range [0,1]</param>
         /// <param name="ye">X-axis end point of the viewport in range [0,1]</param>
         /// <param name="active"></param>
-        private void DrawViewport(ICameraController view, Scene activeScene, double xs, double ys, double xe, 
+        private void DrawViewport(ICameraController view, Tab activeTab, double xs, double ys, double xe, 
             double ye, bool active = false)
         {
             // update viewport 
@@ -177,13 +179,21 @@ namespace open3mod
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadMatrix(ref perspective);          
 
-            if (activeScene == null)
+            if (activeTab.ActiveScene == null)
             {
-                DrawNoSceneSplash();
+                if (activeTab.State == Tab.TabState.Failed)
+                {
+                    DrawFailureSplash(activeTab.ErrorMessage);
+                }
+                else
+                {
+                    Debug.Assert(activeTab.State == Tab.TabState.Empty || activeTab.State == Tab.TabState.Loading);
+                    DrawNoSceneSplash();
+                }
             }
             else
             {
-                DrawScene(activeScene, view);
+                DrawScene(activeTab.ActiveScene, view);
             }
 
             DrawViewportColorsPost(active, vw, vh);
@@ -258,10 +268,34 @@ namespace open3mod
         private void DrawNoSceneSplash()
         {
             var graphics = _textOverlay.GetDrawableGraphicsContext();
-
             graphics.DrawString("Drag file here", Window.UiState.DefaultFont12, new SolidBrush(Color.Black), 199, 199);
-            graphics.DrawString("Drag file here", Window.UiState.DefaultFont16, new SolidBrush(Color.Red), 200, 200);
         }
+
+
+
+        private void DrawFailureSplash(string message)
+        {
+            var graphics = _textOverlay.GetDrawableGraphicsContext();
+
+            var format = new StringFormat();
+            format.LineAlignment = StringAlignment.Center;
+            format.Alignment = StringAlignment.Center;
+
+            // hack: re-use the image we use for failed texture imports :-)
+            var img = TextureThumbnailControl.GetLoadErrorImage();
+
+            graphics.DrawImage(img, GlControl.Width / 2 - img.Width / 2, GlControl.Height / 2 - img.Height - 30,img.Width,img.Height);
+            graphics.DrawString("Sorry, this scene failed to load.", Window.UiState.DefaultFont16, 
+                new SolidBrush(Color.Red), 
+                new RectangleF(0,0,GlControl.Width,GlControl.Height),
+                format);
+
+            graphics.DrawString("What the importer said went wrong: " + message, Window.UiState.DefaultFont12,
+                new SolidBrush(Color.Black),
+                new RectangleF(0, 100, GlControl.Width, GlControl.Height),
+                format);
+        }
+
 
 
         private double _accTime;

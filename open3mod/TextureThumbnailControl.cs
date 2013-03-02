@@ -376,7 +376,9 @@ namespace open3mod
         }
 
 
-        private static Image GetLoadErrorImage()
+        // hack: we make that public because it gets also used by the Renderer
+        // to draw tabs which failed to load their scenes.
+        public static Image GetLoadErrorImage()
         {
             if (_loadError != null)
             {

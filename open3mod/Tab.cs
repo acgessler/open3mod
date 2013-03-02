@@ -48,7 +48,8 @@ namespace open3mod
 
             Empty = 0,
             Loading,
-            Rendering
+            Rendering,
+            Failed
         }
 
 
@@ -186,6 +187,8 @@ namespace open3mod
             get { return _activeScene; }
             set
             {
+                Debug.Assert(State != TabState.Failed, "cannot recover from TabState.Failed");
+
                 // make sure the previous scene instance is properly disposed
                 if (_activeScene != null)
                 {
@@ -214,6 +217,16 @@ namespace open3mod
         public string File { get; private set; }
 
 
+        /// <summary>
+        /// If the tab is in a failed state this contains the error message
+        /// that describes the failure. Otherwise, this is an empty string.
+        /// </summary>
+        public string ErrorMessage
+        {
+            get { return _errorMessage; }
+        }
+
+
         private Scene _activeScene;
 
 
@@ -222,6 +235,8 @@ namespace open3mod
         /// is set via the c'tor and never changes.
         /// </summary>
         public readonly object ID;
+
+        private string _errorMessage;
 
 
         /// <summary>
@@ -275,6 +290,19 @@ namespace open3mod
                 ActiveScene.Dispose();
             }
         }
+
+        /// <summary>
+        /// Set the tab to a permanent "failed to load" state. In this
+        /// state, the tab keeps displaying an error message but nothing
+        /// else. 
+        /// </summary>
+        /// <param name="message"></param>
+        public void SetFailed(string message)
+        {
+            State = TabState.Failed;
+            _activeScene = null;
+            _errorMessage = message;
+        }     
     }
 }
 
