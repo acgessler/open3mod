@@ -238,7 +238,7 @@ namespace open3mod
             GL.End();
 
             GL.Begin(BeginMode.LineLoop);
-            GL.Vertex3(min);
+            GL.Vertex3(new Vector3(max.X, min.Y, min.Z));
             GL.Vertex3(new Vector3(max.X, max.Y, min.Z));
             GL.Vertex3(new Vector3(max.X, max.Y, max.Z));
             GL.Vertex3(new Vector3(max.X, min.Y, max.Z));
