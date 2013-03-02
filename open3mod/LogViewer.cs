@@ -40,7 +40,7 @@ namespace open3mod
         private LogStore _currentLogStore;
 
         private const string RtfHeader =
-	    @"{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Courier New;}}" +
+	    @"{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}}" +
         @"{\colortbl;" +
             // color palette:
             @"\red255\green0\blue0;" + 
@@ -210,6 +210,16 @@ namespace open3mod
         private void OnFilterChange(object sender, EventArgs e)
         {
             BuildRtf();
+        }
+
+        private void filterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
