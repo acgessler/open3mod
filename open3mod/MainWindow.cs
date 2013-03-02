@@ -20,6 +20,7 @@
 
 
 using System;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -75,6 +76,9 @@ namespace open3mod
         }
 
 
+        public const int MaxRecentItems = 12;
+
+
         public MainWindow()
         {        
             // create delegate used for asynchronous calls 
@@ -101,6 +105,8 @@ namespace open3mod
             // intercept all key events sent to children
             KeyPreview = true;
             _initialized = true;
+
+            InitRecentList();
         }
 
 
@@ -161,6 +167,8 @@ namespace open3mod
         /// be selected when the loading process is complete.</param>
         public void AddTab(string file, bool async = true, bool setActive = true)
         {
+            AddRecentItem(file);
+
             // check whether the scene is already loaded
             for (int j = 0; j < tabControl1.TabPages.Count; ++j)
             {
@@ -206,6 +214,64 @@ namespace open3mod
             {
                 CloseTab(_emptyTab);
             }
+        }
+
+
+        /// <summary>
+        /// Initially build the Recent-Files menu
+        /// </summary>
+        private void InitRecentList()
+        {
+            recentToolStripMenuItem.DropDownItems.Clear();
+            var v = CoreSettings.CoreSettings.Default.RecentFiles;
+            if (v == null)
+            {
+                v = CoreSettings.CoreSettings.Default.RecentFiles = new StringCollection();
+                CoreSettings.CoreSettings.Default.Save();
+            }
+            foreach (var s in v)
+            {
+                var tool = recentToolStripMenuItem.DropDownItems.Add(Path.GetFileName(s));
+                var path = s;
+                tool.Click += (sender, args) => AddTab(path);
+            }
+        }
+
+
+        /// <summary>
+        /// Add a new item to the Recent-Files menu and save it persistently
+        /// </summary>
+        /// <param name="file"></param>
+        private void AddRecentItem(string file)
+        {
+            var recent = CoreSettings.CoreSettings.Default.RecentFiles;
+
+            bool removed = false;
+            int i = 0;
+            foreach (var s in recent)
+            {
+                if (s == file)
+                {
+                    recentToolStripMenuItem.DropDownItems.RemoveAt(i);
+                    recent.Remove(s);
+                    removed = true;
+                    break;
+                }
+                ++i;
+            }
+
+            if (!removed && recent.Count == MaxRecentItems)
+            {
+                recent.RemoveAt(recent.Count - 1);
+            }
+
+            recent.Insert(0, file);
+            CoreSettings.CoreSettings.Default.Save();
+
+            recentToolStripMenuItem.DropDownItems.Insert(0, new ToolStripMenuItem(
+                Path.GetFileName(file), 
+                null, 
+                (sender, args) => AddTab(file)));
         }
 
 

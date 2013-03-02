@@ -72,6 +72,11 @@
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
     <Compile Include="AssimpToOpenTk.cs" />
+    <Compile Include="CoreSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>CoreSettings.settings</DependentUpon>
+    </Compile>
     <Compile Include="FpsCameraController.cs" />
     <Compile Include="FpsTracker.cs" />
     <Compile Include="HierarchyInspectionView.cs" />
@@ -156,6 +161,11 @@
     <EmbeddedResource Include="TextureThumbnailControl.resx">
       <DependentUpon>TextureThumbnailControl.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="CoreSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>CoreSettings.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>CoreSettings</CustomToolNamespace>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
