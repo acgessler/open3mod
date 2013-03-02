@@ -185,9 +185,13 @@ namespace open3mod
                 {
                     DrawFailureSplash(activeTab.ErrorMessage);
                 }
+                else if (activeTab.State == Tab.TabState.Loading)
+                {
+                    DrawLoadingSplash();
+                }
                 else
                 {
-                    Debug.Assert(activeTab.State == Tab.TabState.Empty || activeTab.State == Tab.TabState.Loading);
+                    Debug.Assert(activeTab.State == Tab.TabState.Empty);
                     DrawNoSceneSplash();
                 }
             }
@@ -280,13 +284,24 @@ namespace open3mod
         }
 
 
+        private void DrawLoadingSplash()
+        {
+            var graphics = _textOverlay.GetDrawableGraphicsContext();
+
+            var format = new StringFormat {LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center};
+
+            graphics.DrawString("Loading ...", Window.UiState.DefaultFont16,
+                new SolidBrush(Color.Black),
+                new RectangleF(0, 0, GlControl.Width, GlControl.Height),
+                format);
+        }
+
+
         private void DrawFailureSplash(string message)
         {
             var graphics = _textOverlay.GetDrawableGraphicsContext();
 
-            var format = new StringFormat();
-            format.LineAlignment = StringAlignment.Center;
-            format.Alignment = StringAlignment.Center;
+            var format = new StringFormat {LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center};
 
             // hack: re-use the image we use for failed texture imports :-)
             var img = TextureThumbnailControl.GetLoadErrorImage();
