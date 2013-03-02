@@ -153,6 +153,10 @@ namespace open3mod
         private void ActivateUiTab(TabPage ui)
         {
             ((TabUiSkeleton)ui.Controls[0]).InjectGlControl(glControl1);
+            if (_renderer != null)
+            {
+                _renderer.TextOverlay.Clear();
+            }
         }
 
 

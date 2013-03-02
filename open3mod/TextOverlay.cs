@@ -112,6 +112,19 @@ namespace open3mod
         }
 
 
+        /// <summary>
+        /// Clear the entire overlay
+        /// </summary>
+        public void Clear()
+        {
+            if (_tempContext == null)
+            {
+                _tempContext = Graphics.FromImage(_textBmp);
+            }
+            _tempContext.Clear(Color.Transparent);
+        }
+
+
         ~TextOverlay()
         {
             // bad, OpenTK is not safe to use from within finalizers.
