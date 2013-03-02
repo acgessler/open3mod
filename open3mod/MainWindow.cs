@@ -25,6 +25,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using System.Threading;
 
@@ -762,6 +763,47 @@ namespace open3mod
                     for (int i = 0, count = a.GetLength(0); i < count; ++i)
                     {
                         var s = a.GetValue(i).ToString();
+
+                        // check if the dragged file is a folder. In this case,
+                        // we load all applicable files in the folder.
+
+                        // TODO this means, files with no proper file extension
+                        // won't load this way.
+                        try
+                        {
+                            FileAttributes attr = File.GetAttributes(s);
+                            if (attr.HasFlag(FileAttributes.Directory))
+                            {
+                                string[] formats = null;
+                                using (var tempImporter = new Assimp.AssimpImporter())
+                                {
+                                    formats = tempImporter.GetSupportedFormats();
+                                }
+
+                                string[] files = Directory.GetFiles(s);
+                                foreach(var file in files)
+                                {
+                                    var ext = Path.GetExtension(file);
+                                    if(ext == null)
+                                    {
+                                        continue;
+                                    }
+                                    var lowerExt = ext.ToLower();
+                                    if (formats.Any(format => lowerExt == format))
+                                    {
+                                        AddTab(file);
+                                    }
+                                }
+                            }
+
+                            continue;
+                        }
+// ReSharper disable EmptyGeneralCatchClause
+                        catch(Exception ex)
+// ReSharper restore EmptyGeneralCatchClause
+                        {
+                            // ignore this - AddTab() handles the failure
+                        }
 
                         // Call OpenFile asynchronously.
                         // Explorer instance from which file is dropped is not responding
