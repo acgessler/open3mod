@@ -316,7 +316,8 @@ namespace open3mod
             if (_timer == null)
             {
                 _timer = new Stopwatch();
-                _timer.Start();                
+                _timer.Start(); 
+              
             }
 
             long millis = _timer.ElapsedMilliseconds;
@@ -325,7 +326,10 @@ namespace open3mod
             // logging interfaces so log streams (which receive
             // pre-formatted messages) are the only way to capture
             // the logging. This means we have to recover the original
-            // information (such as log level) from the string contents.
+            // information (such as log level and the thread/job id) 
+            // from the string contents.
+
+
 
             int start = msg.IndexOf(':');
             if(start == -1)
@@ -359,7 +363,18 @@ namespace open3mod
                 return;
             }
 
-            _logStore.Add(cat, msg.Substring(start + 1), millis);
+            int startThread = msg.IndexOf('T');
+            if (startThread == -1 || startThread >= start)
+            {
+                // this should not happen but nonetheless check for it
+                //Debug.Assert(false);
+                return;
+            }
+
+            int threadId = 0;
+            int.TryParse(msg.Substring(startThread + 1, start - startThread - 1), out threadId);
+
+            _logStore.Add(cat, msg.Substring(start + 1), millis, threadId);
         }
     }
 }

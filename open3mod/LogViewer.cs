@@ -129,8 +129,13 @@ namespace open3mod
                         throw new ArgumentOutOfRangeException();
                 }
 
-                sb.Append(s);
+                s = s + "job: "
+                    + entry.ThreadId.ToString(CultureInfo.InvariantCulture).PadLeft(5, ' ')
+                    + ",\t time: "
+                    + entry.Time.ToString(CultureInfo.InvariantCulture).PadLeft(10, ' ')
+                    + ",\t";
 
+                sb.Append(s);
                 foreach (var ch in entry.Message)
                 {
                     if (ch == '\n' || ch == '\r')
@@ -203,7 +208,12 @@ namespace open3mod
                     throw new ArgumentOutOfRangeException();
             }
 
-            return entry.Time.ToString(CultureInfo.InvariantCulture).PadLeft(10,'0') + "   " + s + entry.Message;
+            return entry.ThreadId.ToString(CultureInfo.InvariantCulture).PadLeft(4) 
+                + "|" 
+                + entry.Time.ToString(CultureInfo.InvariantCulture).PadLeft(10,'0') 
+                + "   " 
+                + s 
+                + entry.Message;
         }
 
 
