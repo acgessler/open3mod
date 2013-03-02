@@ -264,6 +264,10 @@ namespace open3mod
 
         private void DrawNormals(Mesh mesh)
         {
+            if(!mesh.HasNormals)
+            {
+                return;
+            }
             // scale by scene size because the scene will be resized to fit
             // the unit box but the normals should have a fixed length
             var scale = (_initposeMax - _initposeMin).Length * 0.02f;

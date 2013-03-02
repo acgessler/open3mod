@@ -202,10 +202,7 @@ namespace open3mod
         public void Render(UiState state, ICameraController cam)
         {
             RenderFlags flags = 0;
-            if (state.ShowBBs)
-            {
-                flags |= RenderFlags.ShowNormals;
-            }
+          
             if (state.ShowNormals)
             {
                 flags |= RenderFlags.ShowNormals;
