@@ -794,9 +794,8 @@ namespace open3mod
                                         AddTab(file);
                                     }
                                 }
-                            }
-
-                            continue;
+                                continue;
+                            }                           
                         }
 // ReSharper disable EmptyGeneralCatchClause
                         catch(Exception ex)
