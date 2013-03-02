@@ -55,7 +55,7 @@ namespace open3mod
 
         private static readonly Color SelectionColor = Color.CornflowerBlue;
         private static readonly Color LoadingColor = Color.Chartreuse;
-        private static readonly Color FailureColor = Color.Crimson;
+        private static readonly Color FailureColor = Color.Red;
 
         private static GraphicsPath _selectPath;
         private int _mouseOverCounter = 0;
@@ -263,9 +263,17 @@ namespace open3mod
                     {
                         intensity = 0.0f;
                     }
-                    if (_texture == null || _texture.State == Texture.TextureState.LoadingFailed)
+                    if (_texture == null)
                     {
                         intensity += 0.4f;
+                    }
+                    else if (_texture.State == Texture.TextureState.LoadingFailed)
+                    {
+                        intensity += 0.6f;
+                    }
+                    if (intensity > 1.0f)
+                    {
+                        intensity = 1.0f;
                     }
                     col = Color.FromArgb((byte)(intensity * 255.0f), col);
                 }
@@ -375,7 +383,7 @@ namespace open3mod
                 return _loadError;
             }
 
-            _loadError = GetImageFromResource("open3mod.Images.TextureTransparentBackground.png");                   
+            _loadError = GetImageFromResource("open3mod.Images.FailedToLoad.png");                   
             return _loadError;
         }
 
