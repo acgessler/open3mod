@@ -61,21 +61,62 @@ namespace open3mod
             _mainWindow = mainWindow;
             InitializeComponent();
 
+            _mainWindow.TabChanged += (tab, add) =>
+            {
+                if(IsDisposed)
+                {
+                    return;
+                }
+                PopulateList();
+            };
+
+            PopulateList();
+        }
+
+
+        private void PopulateList()
+        {
+            comboBoxSource.Items.Clear();
+ 
+            int select = -1;
+            foreach (var tab in MainWindow.UiState.Tabs)
+            {
+                if(tab.File == null)
+                {
+                    continue;
+                }
+                var index = comboBoxSource.Items.Add(tab.File);
+                if (tab == MainWindow.UiState.ActiveTab)
+                {
+                    select = index;
+                }
+            }
+
+            if (select != -1)
+            {
+                comboBoxSource.SelectedItem = comboBoxSource.Items[select];
+            }
+            else
+            {
+                comboBoxSource.SelectedItem = comboBoxSource.Items.Count > 0 ? comboBoxSource.Items[0] : null;
+            }
             FetchLogEntriesFromScene();
         }
 
 
         private void FetchLogEntriesFromScene()
         {
-            var scene = MainWindow.UiState.ActiveTab.ActiveScene;
-            if(scene == null)
+            var sceneName = (string)comboBoxSource.SelectedItem;
+            var scene = (from tab in MainWindow.UiState.Tabs where tab.File == sceneName select tab.ActiveScene).FirstOrDefault();
+
+            if (scene == null)
             {
                 richTextBox.Text = Resources.LogViewer_FetchLogEntriesFromScene_No_scene_loaded;
                 return;
             }
 
             _currentLogStore = scene.LogStore;
-            BuildRtf();           
+            BuildRtf();  
         }
 
 
@@ -230,6 +271,11 @@ namespace open3mod
         private void label1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void ChangeLogSource(object sender, EventArgs e)
+        {
+            FetchLogEntriesFromScene();
         }
     }
 }

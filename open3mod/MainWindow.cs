@@ -61,6 +61,9 @@ namespace open3mod
 
         private readonly bool _initialized;
 
+        public delegate void TabAddRemoveHandler (Tab tab, bool add);
+        public event TabAddRemoveHandler TabChanged;
+
         public GLControl GlControl
         {
             get { return glControl1; }
@@ -204,6 +207,11 @@ namespace open3mod
             var t = new Tab(ui, file);
             UiState.AddTab(t);
 
+            if (TabChanged != null)
+            {
+                TabChanged(t, true);
+            }
+
             if (async)
             {
                 var th = new Thread(() => OpenFile(t, setActive));
@@ -339,13 +347,18 @@ namespace open3mod
                     SelectTab(tabControl1.TabPages[i]);
                     break;
                 }
-            }
+            }            
 
             // free all internal data for this scene
             UiState.RemoveTab(tab);
 
             // and drop the UI tab
             tabControl1.TabPages.Remove(tab);
+
+            if (TabChanged != null)
+            {
+                TabChanged((Tab)tab.Tag, false);
+            }
 
             if(_emptyTab == tab)
             {
