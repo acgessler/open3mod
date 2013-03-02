@@ -100,8 +100,7 @@ namespace open3mod
             {
                 while (!_break)
                 {
-                    // TODO remove this! just a temporary blocker to test async loading
-                    Thread.Sleep(1500);
+                
                     Task task;
                     try
                     {
