@@ -42,6 +42,7 @@ namespace open3mod
         public InspectionView()
         {
             InitializeComponent();
+            Enabled = false;
         }
 
 
@@ -54,6 +55,14 @@ namespace open3mod
 
             Clear();
             Scene = scene;
+
+            if(scene == null)
+            {
+                Enabled = false;
+                return;
+            }
+
+            Enabled = true;
 
             Hierarchy = new HierarchyInspectionView(Scene, treeViewNodeGraph);
             Textures = new TextureInspectionView(Scene, textureFlowPanel);
