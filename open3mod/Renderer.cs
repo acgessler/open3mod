@@ -67,7 +67,7 @@ namespace open3mod
         internal Renderer(MainWindow window)
         {
             _window = window;
-            //_textOverlay = new TextOverlay(this);
+            _textOverlay = new TextOverlay(this);
         }
 
 
@@ -119,10 +119,10 @@ namespace open3mod
 
             if (Window.UiState.ShowFps)
             {
-                //DrawFps();
+                DrawFps();
             }
 
-            //_textOverlay.Draw();
+            _textOverlay.Draw();
         }
 
 
@@ -135,8 +135,7 @@ namespace open3mod
 
         public virtual void Dispose(bool disposing)
         {
-            //_textOverlay.Dispose(disposing);
-           
+            _textOverlay.Dispose();          
         }
 
 
@@ -145,7 +144,7 @@ namespace open3mod
         /// </summary>
         public void Resize()
         {
-            //_textOverlay.Resize();
+            _textOverlay.Resize();
         }
 
 

@@ -20,6 +20,7 @@
 
 
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using OpenTK.Graphics.OpenGL;
@@ -85,7 +86,7 @@ namespace open3mod
             _textBmp = new Bitmap(cs.Width, cs.Height);
 
             GL.BindTexture(TextureTarget.Texture2D, _textTexture);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, 0, 0, _textBmp.Width, _textBmp.Height,
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, _textBmp.Width, _textBmp.Height, 0,
                 PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
 
             GetDrawableGraphicsContext();
@@ -111,9 +112,11 @@ namespace open3mod
         }
 
 
-        ~TextOverlay() 
+        ~TextOverlay()
         {
-            Dispose(false);
+            // bad, OpenTK is not safe to use from within finalizers.
+            // Dispose() should be called manually.
+            Debug.Assert(false);
         }
 
 
@@ -163,14 +166,14 @@ namespace open3mod
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactorSrc.One, BlendingFactorDest.OneMinusSrcAlpha);
 
+            GL.BindTexture(TextureTarget.Texture2D, _textTexture);
+
             GL.Begin(BeginMode.Quads);
             GL.TexCoord2(0f, 0f); GL.Vertex2(0f, 0f);
             GL.TexCoord2(1f, 0f); GL.Vertex2(cs.Width, 0f);
             GL.TexCoord2(1f, 1f); GL.Vertex2(cs.Width, cs.Height);
             GL.TexCoord2(0f, 1f); GL.Vertex2(0f, cs.Height);
-            GL.End();
-
-            GL.BindTexture(TextureTarget.Texture2D, _textTexture);
+            GL.End();         
 
             GL.Disable(EnableCap.Blend);
             GL.Disable(EnableCap.Texture2D);
