@@ -208,8 +208,57 @@ namespace open3mod
 
 
         private void DrawBoundingBox(Mesh mesh)
-        {
-            // TODO
+        {           
+            GL.Disable(EnableCap.Lighting);
+            GL.Disable(EnableCap.Texture2D);
+            GL.Enable(EnableCap.ColorMaterial);
+
+            GL.Color4(new Color4(1.0f, 0.0f, 0.0f, 1.0f));
+
+            var min = new Vector3(1e10f, 1e10f, 1e10f);
+            var max = new Vector3(-1e10f, -1e10f, -1e10f);
+            for (int i = 0; i < mesh.VertexCount; ++i)
+            {
+                var tmp = AssimpToOpenTk.FromVector(mesh.Vertices[i]);
+
+                min.X = Math.Min(min.X, tmp.X);
+                min.Y = Math.Min(min.Y, tmp.Y);
+                min.Z = Math.Min(min.Z, tmp.Z);
+
+                max.X = Math.Max(max.X, tmp.X);
+                max.Y = Math.Max(max.Y, tmp.Y);
+                max.Z = Math.Max(max.Z, tmp.Z);
+            }
+
+            GL.Begin(BeginMode.LineLoop);
+            GL.Vertex3(min);
+            GL.Vertex3(new Vector3(min.X, max.Y, min.Z));
+            GL.Vertex3(new Vector3(min.X, max.Y, max.Z));
+            GL.Vertex3(new Vector3(min.X, min.Y, max.Z));
+            GL.End();
+
+            GL.Begin(BeginMode.LineLoop);
+            GL.Vertex3(min);
+            GL.Vertex3(new Vector3(max.X, max.Y, min.Z));
+            GL.Vertex3(new Vector3(max.X, max.Y, max.Z));
+            GL.Vertex3(new Vector3(max.X, min.Y, max.Z));
+            GL.End();
+
+            GL.Begin(BeginMode.Lines);
+            GL.Vertex3(min);
+            GL.Vertex3(new Vector3(max.X, min.Y, min.Z));
+
+            GL.Vertex3(new Vector3(min.X, max.Y, min.Z));
+            GL.Vertex3(new Vector3(max.X, max.Y, min.Z));
+
+            GL.Vertex3(new Vector3(min.X, max.Y, max.Z));
+            GL.Vertex3(new Vector3(max.X, max.Y, max.Z));
+
+            GL.Vertex3(new Vector3(min.X, min.Y, max.Z));
+            GL.Vertex3(new Vector3(max.X, min.Y, max.Z));
+            GL.End();
+
+            GL.Disable(EnableCap.ColorMaterial);
         }
 
 
@@ -228,8 +277,7 @@ namespace open3mod
             GL.Color4(new Color4(0.0f, 1.0f, 0.0f, 1.0f));
 
             for (int i = 0; i < mesh.VertexCount; ++i)
-            {
-                
+            {         
                 var v = AssimpToOpenTk.FromVector(mesh.Vertices[i]);
                 var n = AssimpToOpenTk.FromVector(mesh.Normals[i]);
                 GL.Vertex3(v);
