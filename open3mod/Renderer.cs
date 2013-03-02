@@ -268,9 +268,16 @@ namespace open3mod
         private void DrawNoSceneSplash()
         {
             var graphics = _textOverlay.GetDrawableGraphicsContext();
-            graphics.DrawString("Drag file here", Window.UiState.DefaultFont12, new SolidBrush(Color.Black), 199, 199);
-        }
 
+            var format = new StringFormat();
+            format.LineAlignment = StringAlignment.Center;
+            format.Alignment = StringAlignment.Center;
+
+            graphics.DrawString("Drag file here", Window.UiState.DefaultFont16, 
+                new SolidBrush(Color.Black),  
+                new RectangleF(0,0,GlControl.Width,GlControl.Height),
+                format);
+        }
 
 
         private void DrawFailureSplash(string message)
@@ -295,7 +302,6 @@ namespace open3mod
                 new RectangleF(0, 100, GlControl.Width, GlControl.Height),
                 format);
         }
-
 
 
         private double _accTime;
