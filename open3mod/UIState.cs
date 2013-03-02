@@ -167,11 +167,10 @@ namespace open3mod
 
         public UiState(Tab defaultTab)
         {
-            DefaultFont12 = new Font(FontFamily.GenericSansSerif, 12);
-            DefaultFont16 = new Font(FontFamily.GenericSansSerif, 16);
+            DefaultFont12 = new Font("Segoe UI", 12);
+            DefaultFont16 = new Font("Segoe UI", 18);
 
-            Tabs = new List<Tab>();
-            Tabs.Add(defaultTab);
+            Tabs = new List<Tab> {defaultTab};
 
             ActiveTab = defaultTab;
         }

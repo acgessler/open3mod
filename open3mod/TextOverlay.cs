@@ -168,11 +168,13 @@ namespace open3mod
 
             GL.BindTexture(TextureTarget.Texture2D, _textTexture);
 
+            const float offset = 0;
+
             GL.Begin(BeginMode.Quads);
-            GL.TexCoord2(0f, 0f); GL.Vertex2(0f, 0f);
-            GL.TexCoord2(1f, 0f); GL.Vertex2(cs.Width, 0f);
-            GL.TexCoord2(1f, 1f); GL.Vertex2(cs.Width, cs.Height);
-            GL.TexCoord2(0f, 1f); GL.Vertex2(0f, cs.Height);
+            GL.TexCoord2(0f, 0f); GL.Vertex2(0f - offset, 0f - offset);
+            GL.TexCoord2(1f, 0f); GL.Vertex2(cs.Width - offset, 0f - offset);
+            GL.TexCoord2(1f, 1f); GL.Vertex2(cs.Width - offset, cs.Height - offset);
+            GL.TexCoord2(0f, 1f); GL.Vertex2(0f - offset, cs.Height - offset);
             GL.End();         
 
             GL.Disable(EnableCap.Blend);
