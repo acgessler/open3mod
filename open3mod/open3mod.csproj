@@ -71,6 +71,12 @@
     <Compile Include="About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
+    <Compile Include="AnimationInspectionView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AnimationInspectionView.Designer.cs">
+      <DependentUpon>AnimationInspectionView.cs</DependentUpon>
+    </Compile>
     <Compile Include="AssimpToOpenTk.cs" />
     <Compile Include="CoreSettings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -132,9 +138,18 @@
     <Compile Include="TextureThumbnailControl.Designer.cs">
       <DependentUpon>TextureThumbnailControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="TimeSlideControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TimeSlideControl.Designer.cs">
+      <DependentUpon>TimeSlideControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UIState.cs" />
     <EmbeddedResource Include="About.resx">
       <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AnimationInspectionView.resx">
+      <DependentUpon>AnimationInspectionView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="InspectionView.resx">
       <DependentUpon>InspectionView.cs</DependentUpon>
@@ -160,6 +175,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="TextureThumbnailControl.resx">
       <DependentUpon>TextureThumbnailControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TimeSlideControl.resx">
+      <DependentUpon>TimeSlideControl.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="CoreSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

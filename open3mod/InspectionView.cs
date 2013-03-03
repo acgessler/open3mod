@@ -38,6 +38,7 @@ namespace open3mod
         public HierarchyInspectionView Hierarchy { get; private set; }
         public TextureInspectionView Textures { get; private set; }
         public MaterialInspectionView Materials { get; private set; }
+        public AnimationInspectionView Animations { get; private set; }
 
         public InspectionView()
         {
@@ -63,7 +64,7 @@ namespace open3mod
             }
 
             Enabled = true;
-
+           
             Hierarchy = new HierarchyInspectionView(Scene, treeViewNodeGraph);
             Textures = new TextureInspectionView(Scene, textureFlowPanel);
             if(Textures.Empty)
@@ -73,6 +74,8 @@ namespace open3mod
                 // new texture slots later on.
                 tabControlInfoViewPicker.TabPages.Remove(tabPageTextures);
             }
+
+            Animations = new AnimationInspectionView(tabPageAnimations);            
             Materials = new MaterialInspectionView(Scene, null);
 
             UpdateStatistics();

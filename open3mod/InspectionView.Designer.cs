@@ -42,6 +42,7 @@
             this.textureFlowPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.tabPageMaterials = new System.Windows.Forms.TabPage();
             this.tabPageAnimations = new System.Windows.Forms.TabPage();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.tabControlInfoViewPicker.SuspendLayout();
             this.tabPageTree.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -204,6 +205,10 @@
             this.tabPageAnimations.Text = "Animations";
             this.tabPageAnimations.UseVisualStyleBackColor = true;
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // InspectionView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -241,5 +246,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.FlowLayoutPanel textureFlowPanel;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
