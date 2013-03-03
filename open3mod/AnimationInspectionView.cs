@@ -12,12 +12,20 @@ namespace open3mod
 {
     public sealed partial class AnimationInspectionView : UserControl
     {
-        public AnimationInspectionView(TabPage tabPageAnimations)
+        private readonly Scene _scene;
+
+        public AnimationInspectionView(Scene scene, TabPage tabPageAnimations)
         {
+            _scene = scene;
             InitializeComponent();
             tabPageAnimations.Controls.Add(this);
 
-            Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+        }
+
+        public bool Empty
+        {
+            get { return _scene.Raw.AnimationCount == 0; }
         }
     }
 }

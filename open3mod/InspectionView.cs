@@ -75,7 +75,13 @@ namespace open3mod
                 tabControlInfoViewPicker.TabPages.Remove(tabPageTextures);
             }
 
-            Animations = new AnimationInspectionView(tabPageAnimations);            
+            Animations = new AnimationInspectionView(Scene, tabPageAnimations);
+            if (Animations.Empty)
+            {
+                // same for animations
+                tabControlInfoViewPicker.TabPages.Remove(tabPageAnimations);
+            }
+
             Materials = new MaterialInspectionView(Scene, null);
 
             UpdateStatistics();
