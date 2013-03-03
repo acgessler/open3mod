@@ -211,7 +211,10 @@ namespace open3mod
 
         private void OnSave(object sender, EventArgs e)
         {
-            saveFileDialog.ShowDialog();
+            if(saveFileDialog.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
             using (var openFile = saveFileDialog.OpenFile())
             {
                 using (var stream = new StreamWriter(openFile))
