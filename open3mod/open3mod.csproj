@@ -77,6 +77,7 @@
     <Compile Include="AnimationInspectionView.Designer.cs">
       <DependentUpon>AnimationInspectionView.cs</DependentUpon>
     </Compile>
+    <Compile Include="AnimEvaluator.cs" />
     <Compile Include="AssimpToOpenTk.cs" />
     <Compile Include="CoreSettings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -118,6 +119,7 @@
     <Compile Include="Renderer.cs" />
     <Compile Include="RoundedRectangle.cs" />
     <Compile Include="Scene.cs" />
+    <Compile Include="SceneAnimator.cs" />
     <Compile Include="SceneRendererClassicGl.cs" />
     <Compile Include="Tab.cs" />
     <Compile Include="TabUISkeleton.cs">

@@ -123,6 +123,7 @@
             this.listBoxAnimations.ScrollAlwaysVisible = true;
             this.listBoxAnimations.Size = new System.Drawing.Size(335, 186);
             this.listBoxAnimations.TabIndex = 9;
+            this.listBoxAnimations.SelectedIndexChanged += new System.EventHandler(this.OnChangeSelectedAnimation);
             // 
             // AnimationInspectionView
             // 

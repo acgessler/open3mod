@@ -34,19 +34,21 @@ using OpenTK.Graphics.OpenGL;
 namespace open3mod
 {
     /// <summary>
-    /// Map assimp materials to OpenGl materials and shaders
+    /// Map assimp materials to OpenGl materials and shaders. Each scene has its own
+    /// MaterialMapper, which is accessible via the Scene.MaterialMapper property.
     /// </summary>
     public class MaterialMapper
     {
         private readonly Scene _scene;
 
-        public MaterialMapper(Scene scene)
+        internal MaterialMapper(Scene scene)
         {
             _scene = scene;
         }
 
+
         /// <summary>
-        /// Apply a material to the gl state machine
+        /// Apply a material to the Gl state machine
         /// </summary>
         /// <param name="mesh"> </param>
         /// <param name="mat"></param>

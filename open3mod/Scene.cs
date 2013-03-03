@@ -102,6 +102,11 @@ namespace open3mod
             get { return _mapper; }
         }
 
+        public SceneAnimator SceneAnimator
+        {
+            get { return _animator; }
+        }
+
         public HashSet<Node> VisibleNodes
         {
             get { return _nodesToShow; }
@@ -115,6 +120,8 @@ namespace open3mod
         private bool _nodesToShowChanged = true;
         private HashSet<Node> _nodesToShow;
         private bool _texturesChanged = false;
+        private SceneAnimator _animator;
+
 
         /// <summary>
         /// Construct a scene given a file name, throw if loading fails
@@ -126,7 +133,7 @@ namespace open3mod
             _baseDir = Path.GetDirectoryName(file);
   
             _logStore = new LogStore();
-            _mapper = new MaterialMapper(this);          
+             
 
             try
             {
@@ -154,6 +161,8 @@ namespace open3mod
                 throw new Exception("failed to read file: " + file + " (" + ex.Message + ")");
             }
 
+            _mapper = new MaterialMapper(this); 
+            _animator = new SceneAnimator(this);
             _textureSet = new TextureSet(BaseDir);
             LoadTextures();
 
