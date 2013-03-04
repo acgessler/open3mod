@@ -21,7 +21,7 @@ namespace open3mod
     {
         private readonly Animation _animation;
         private Matrix4[] _currentTransforms;
-        private T3[] _lastPositions; 
+        private T3[] _lastPositions;
         private double _lastTime;
 
 
@@ -61,127 +61,127 @@ namespace open3mod
         public void Evaluate(double pTime)
         {
             // extract ticks per second. Assume default value if not given
-	        double ticksPerSecond = _animation.TicksPerSecond >= 0.0 ? _animation.TicksPerSecond : 25.0;
-	        // every following time calculation happens in ticks
-	        pTime *= ticksPerSecond;
+            double ticksPerSecond = _animation.TicksPerSecond >= 0.0 ? _animation.TicksPerSecond : 25.0;
+            // every following time calculation happens in ticks
+            pTime *= ticksPerSecond;
 
-	        // map into anim's duration
-	        double time = 0.0f;
-	        if( _animation.DurationInTicks > 0.0)
-	        {
-	            time = pTime % _animation.DurationInTicks;
-	        }
+            // map into anim's duration
+            double time = 0.0f;
+            if (_animation.DurationInTicks > 0.0)
+            {
+                time = pTime % _animation.DurationInTicks;
+            }
 
-	        // calculate the transformations for each animation channel
-	        for(int a = 0; a < _animation.NodeAnimationChannelCount; a++)
-	        {
-	            var channel = _animation.NodeAnimationChannels[a];
+            // calculate the transformations for each animation channel
+            for (int a = 0; a < _animation.NodeAnimationChannelCount; a++)
+            {
+                var channel = _animation.NodeAnimationChannels[a];
 
-		        // ******** Position *****
-		        var presentPosition = new Vector3D( 0, 0, 0);
-		        if( channel.PositionKeyCount > 0)
-		        {
-			        // Look for present frame number. Search from last position if time is after the last time, else from beginning
-			        // Should be much quicker than always looking from start for the average use case.
-			        var frame = (time >= _lastTime) ? _lastPositions[a].Item1 : 0;
-			        while( frame < channel.PositionKeyCount - 1)
-			        {
-				        if( time < channel.PositionKeys[frame+1].Time)
-				        {
-				            break;
-				        }
-			            frame++;
-			        }
+                // ******** Position *****
+                var presentPosition = new Vector3D(0, 0, 0);
+                if (channel.PositionKeyCount > 0)
+                {
+                    // Look for present frame number. Search from last position if time is after the last time, else from beginning
+                    // Should be much quicker than always looking from start for the average use case.
+                    var frame = (time >= _lastTime) ? _lastPositions[a].Item1 : 0;
+                    while (frame < channel.PositionKeyCount - 1)
+                    {
+                        if (time < channel.PositionKeys[frame + 1].Time)
+                        {
+                            break;
+                        }
+                        frame++;
+                    }
 
-			        // interpolate between this frame's value and next frame's value
-			        int nextFrame = (frame + 1) % channel.PositionKeyCount;
-			        var key = channel.PositionKeys[frame];
-			        var nextKey = channel.PositionKeys[nextFrame];
-			        double diffTime = nextKey.Time - key.Time;
-			        if( diffTime < 0.0)
-			        {
-			            diffTime += _animation.DurationInTicks;
-			        }
+                    // interpolate between this frame's value and next frame's value
+                    var nextFrame = (frame + 1) % channel.PositionKeyCount;
+                    var key = channel.PositionKeys[frame];
+                    var nextKey = channel.PositionKeys[nextFrame];
+                    var diffTime = nextKey.Time - key.Time;
+                    if (diffTime < 0.0)
+                    {
+                        diffTime += _animation.DurationInTicks;
+                    }
 
-		            if( diffTime > 0)
-			        {
-				        var factor = (float)( (time - key.Time) / diffTime);
-				        presentPosition = key.Value + (nextKey.Value - key.Value) * factor;
-			        } 
+                    if (diffTime > 0)
+                    {
+                        var factor = (float)((time - key.Time) / diffTime);
+                        presentPosition = key.Value + (nextKey.Value - key.Value) * factor;
+                    }
                     else
-			        {
-				        presentPosition = key.Value;
-			        }
+                    {
+                        presentPosition = key.Value;
+                    }
 
-			        _lastPositions[a].Item1 = frame;
-		        }
+                    _lastPositions[a].Item1 = frame;
+                }
 
-		        // ******** Rotation *********
-		        var presentRotation = new Assimp.Quaternion( 1, 0, 0, 0);
-		        if( channel.RotationKeyCount > 0)
-		        {
-			        var frame = (time >= _lastTime) ? _lastPositions[a].Item2 : 0;
-			        while( frame < channel.RotationKeyCount - 1)
-			        {
-				        if( time < channel.RotationKeys[frame+1].Time)
-				        {
-				            break;
-				        }
-			            frame++;
-			        }
+                // ******** Rotation *********
+                var presentRotation = new Assimp.Quaternion(1, 0, 0, 0);
+                if (channel.RotationKeyCount > 0)
+                {
+                    var frame = (time >= _lastTime) ? _lastPositions[a].Item2 : 0;
+                    while (frame < channel.RotationKeyCount - 1)
+                    {
+                        if (time < channel.RotationKeys[frame + 1].Time)
+                        {
+                            break;
+                        }
+                        frame++;
+                    }
 
-			        // interpolate between this frame's value and next frame's value
-			        var nextFrame = (frame + 1) % channel.RotationKeyCount;
-			        var key = channel.RotationKeys[frame];
-			        var nextKey = channel.RotationKeys[nextFrame];
-			        double diffTime = nextKey.Time - key.Time;
-			        if( diffTime < 0.0)
-			        {
-			            diffTime += _animation.DurationInTicks;
-			        }
-		            if( diffTime > 0)
-			        {
-				        var factor = (float)( (time - key.Time) / diffTime);
-			            presentRotation = Assimp.Quaternion.Slerp(key.Value, nextKey.Value, factor);
-			        } 
+                    // interpolate between this frame's value and next frame's value
+                    var nextFrame = (frame + 1) % channel.RotationKeyCount;
+                    var key = channel.RotationKeys[frame];
+                    var nextKey = channel.RotationKeys[nextFrame];
+                    double diffTime = nextKey.Time - key.Time;
+                    if (diffTime < 0.0)
+                    {
+                        diffTime += _animation.DurationInTicks;
+                    }
+                    if (diffTime > 0)
+                    {
+                        var factor = (float)((time - key.Time) / diffTime);
+                        presentRotation = Assimp.Quaternion.Slerp(key.Value, nextKey.Value, factor);
+                    }
                     else
-			        {
-				        presentRotation = key.Value;
-			        }
+                    {
+                        presentRotation = key.Value;
+                    }
 
-			        _lastPositions[a].Item2 = frame;
-		        }
+                    _lastPositions[a].Item2 = frame;
+                }
 
-		        // ******** Scaling **********
-		        var presentScaling = new Vector3D( 1, 1, 1);
-		        if( channel.ScalingKeyCount > 0)
-		        {
+                // ******** Scaling **********
+                var presentScaling = new Vector3D(1, 1, 1);
+                if (channel.ScalingKeyCount > 0)
+                {
                     var frame = (time >= _lastTime) ? _lastPositions[a].Item3 : 0;
-			        while( frame < channel.ScalingKeyCount - 1)
-			        {
-				        if( time < channel.ScalingKeys[frame+1].Time)
-				        {
-				            break;
-				        }
-			            frame++;
-			        }
+                    while (frame < channel.ScalingKeyCount - 1)
+                    {
+                        if (time < channel.ScalingKeys[frame + 1].Time)
+                        {
+                            break;
+                        }
+                        frame++;
+                    }
 
-			        // TODO: (thom) interpolation maybe? This time maybe even logarithmic, not linear
-			        presentScaling = channel.ScalingKeys[frame].Value;
-			        _lastPositions[a].Item3 = frame;
-		        }
+                    // TODO: (thom) interpolation maybe? This time maybe even logarithmic, not linear
+                    presentScaling = channel.ScalingKeys[frame].Value;
+                    _lastPositions[a].Item3 = frame;
+                }
 
-		        // build a transformation matrix from it
+                // build a transformation matrix from it
                 var mat = new Matrix4x4(presentRotation.GetMatrix());
-		        mat.A1 *= presentScaling.X; mat.B1 *= presentScaling.X; mat.C1 *= presentScaling.X;
-		        mat.A2 *= presentScaling.Y; mat.B2 *= presentScaling.Y; mat.C2 *= presentScaling.Y;
-		        mat.A3 *= presentScaling.Z; mat.B3 *= presentScaling.Z; mat.C3 *= presentScaling.Z;
-		        mat.A4 = presentPosition.X; mat.B4 = presentPosition.Y; mat.C4 = presentPosition.Z;
+                mat.A1 *= presentScaling.X; mat.B1 *= presentScaling.X; mat.C1 *= presentScaling.X;
+                mat.A2 *= presentScaling.Y; mat.B2 *= presentScaling.Y; mat.C2 *= presentScaling.Y;
+                mat.A3 *= presentScaling.Z; mat.B3 *= presentScaling.Z; mat.C3 *= presentScaling.Z;
+                mat.A4 = presentPosition.X; mat.B4 = presentPosition.Y; mat.C4 = presentPosition.Z;
 
-	            _currentTransforms[a] = AssimpToOpenTk.FromMatrix(ref mat);
-	        }
+                _currentTransforms[a] = AssimpToOpenTk.FromMatrix(ref mat);
+            }
 
-	        _lastTime = time;
+            _lastTime = time;
         }
     }
 }
