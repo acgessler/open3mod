@@ -120,10 +120,15 @@ namespace open3mod
             Matrix4 m = AssimpToOpenTk.FromMatrix(node.Transform);
             m.Transpose();
 
+            if (flags.HasFlag(RenderFlags.ShowSkeleton))
+            {
+                DrawSkeletonBone(node);
+            }
+
             // keep using the opengl matrix stack to be compatible with displists
             GL.PushMatrix();
             GL.MultMatrix(ref m);
-
+          
             if (node.HasMeshes && (visibleNodes == null || visibleNodes.Contains(node)))
             {
                 foreach (int index in node.MeshIndices)
@@ -196,14 +201,29 @@ namespace open3mod
                     }
                 }
             }
-
-            GL.PopMatrix();
-
-            
+                      
             for (int i = 0; i < node.ChildCount; i++)
             {              
                 RecursiveRender(node.Children[i], ref parentTransform, visibleNodes, flags);
             }
+
+            GL.PopMatrix();
+        }
+
+        private void DrawSkeletonBone(Node node)
+        {
+            GL.Disable(EnableCap.Lighting);
+            GL.Disable(EnableCap.Texture2D);
+            GL.Enable(EnableCap.ColorMaterial);
+
+            GL.Color4(new Color4(1.0f, 1.0f, 0.0f, 1.0f));
+
+            GL.Begin(BeginMode.Lines);
+            GL.Vertex3(new Vector3(0,0,0));
+            GL.Vertex3(new Vector3(node.Transform.A4, node.Transform.B4, node.Transform.C4));
+            GL.End();
+
+            GL.Disable(EnableCap.ColorMaterial);
         }
 
 
