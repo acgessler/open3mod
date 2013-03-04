@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Assimp;
+using OpenTK;
 
 namespace open3mod
 {
@@ -13,19 +15,54 @@ namespace open3mod
     /// </summary>
     public class SceneAnimator
     {
-        private Scene _scene;
-        private Assimp.Scene _raw;
+        /// <summary>
+        /// Utility class to keep track of per-node animation state
+        /// </summary>
+        private sealed class NodeState
+        {
+            public Matrix4 LocalTransform;
+            public Matrix4 GlobalTransform;
+            public int ChannelIndex;
+
+            public NodeState Parent;
+
+            public NodeState[] Children;
+        }
+
+
+        private readonly Scene _scene;
+        private readonly Assimp.Scene _raw;
+
         private int _activeAnim = -1;
-        private double _animPlaybackSpeed;
-        private double _animCursor;
+        private double _animPlaybackSpeed = 1.0;
+        private double _animCursor = 0.0;
+        private AnimEvaluator _evaluator;
+
+        private readonly Dictionary<string, NodeState> _nodeStateByName;
+        private NodeState _tree;
+
+        private readonly Matrix4[] _boneMatrices;
 
 
         internal SceneAnimator(Scene scene)
         {
             _scene = scene;
             _raw = scene.Raw;
-
             Debug.Assert(_raw != null, "scene must already be loaded");
+          
+            _nodeStateByName = new Dictionary<string, NodeState>();
+
+            int maxBoneCount = 0;
+            for (int i = 0; i < _raw.MeshCount; ++i)
+            {
+                var bc = _raw.Meshes[i].BoneCount;
+                if(bc > maxBoneCount)
+                {
+                    maxBoneCount = bc;
+                }
+            }
+
+            _boneMatrices = new Matrix4[maxBoneCount];
         }
 
 
@@ -39,10 +76,23 @@ namespace open3mod
             set
             {
                 Debug.Assert(value >= -1 && value < _raw.AnimationCount);
+
+                if(value == _activeAnim)
+                {
+                    return;
+                }
+
                 _activeAnim = value;
+                _tree = CreateNodeTree(_raw.RootNode, null);
+
+                if (_activeAnim != -1)
+                {
+                    _evaluator = new AnimEvaluator(_raw.Animations[_activeAnim]);
+                }
             }
         }
 
+       
 
         /// <summary>
         /// Animation playback speed factor. A factor of 1 means that the current
@@ -62,7 +112,11 @@ namespace open3mod
 
         /// <summary>
         /// Current animation playback position (cursor), in seconds. Can be 
-        /// assigned to, but the value needs to be within [0,AnimationDuration].
+        /// assigned to. The animation cursor can exceed the duration of the
+        /// animation, in which case the animation gets either looped (if 
+        /// Looping is true) or it remains in its final position (otherwise).
+        /// 
+        /// The value need to be non-negative, though.
         /// </summary>
         public double AnimationCursor
         {
@@ -70,8 +124,10 @@ namespace open3mod
 
             set
             {
-                Debug.Assert(value >= 0 && value <= AnimationDuration);
+                Debug.Assert(value >= 0);
                 _animCursor = value;
+
+                Recalculate();
             }
         }
 
@@ -91,6 +147,132 @@ namespace open3mod
                 var anim = _raw.Animations[ActiveAnimation];
                 return anim.DurationInTicks / anim.TicksPerSecond;
             }
+        }
+
+
+        /// <summary>
+        /// Obtain the current global transformation matrix for a node
+        /// </summary>
+        /// <param name="name">Name of the node (must exist)</param>
+        /// <param name="outTrafo">Receives the transformation matrix</param>
+        public void GetGlobalTransform(string name, out Matrix4 outTrafo)
+        {
+            Debug.Assert(_nodeStateByName.ContainsKey(name));
+            outTrafo = _nodeStateByName[name].GlobalTransform;
+        }
+
+
+        /// <summary>
+        /// Obtain the current global transformation matrix for a node
+        /// </summary>
+        /// <param name="node">Node</param>
+        /// <param name="outTrafo">Receives the transformation matrix</param>
+        public void GetGlobalTransform(Node node, out Matrix4 outTrafo)
+        {
+            GetGlobalTransform(node.Name, out outTrafo);
+        }
+
+
+        /// <summary>
+        /// Obtain the bone matrices for a given node mesh index at the
+        /// current time. 
+        /// </summary>
+        /// <param name="node">Node for which to query bone matrices</param>
+        /// <param name="meshIndex">Index of the mesh in the mesh list of
+        ///    the node (_not_ the scene-wide index)</param>
+        /// <returns>For each bone of the mesh the bone transformation
+        /// matrix. The returned array is only valid for the rest of
+        /// the frame. It may contain more entries than the mesh has
+        /// bones, the extra entries should be ignored in this case.</returns>
+        public Matrix4[] GetBoneMatricesForMesh(Node node, int meshIndex)
+        {
+            Debug.Assert(node != null);
+            Debug.Assert(meshIndex < node.MeshCount);
+
+            var globalMeshIndex = node.MeshIndices[meshIndex];
+            var mesh = _raw.Meshes[globalMeshIndex];
+
+            // calculate the mesh's inverse global transform
+            Matrix4 globalInverseMeshTransform;
+            GetGlobalTransform( node, out globalInverseMeshTransform );
+            globalInverseMeshTransform.Invert();
+
+            // Bone matrices transform from mesh coordinates in bind pose to mesh coordinates in skinned pose
+            // Therefore the formula is offsetMatrix * currentGlobalTransform * inverseCurrentMeshTransform
+            for( int a = 0; a < mesh.BoneCount; ++a)
+            {
+                var bone = mesh.Bones[a];
+
+                Matrix4 currentGlobalTransform;
+                GetGlobalTransform( bone.Name, out currentGlobalTransform );
+                _boneMatrices[a] = globalInverseMeshTransform * currentGlobalTransform * AssimpToOpenTk.FromMatrix(bone.OffsetMatrix);
+            }
+            return _boneMatrices;
+        }
+
+
+        private void Recalculate()
+        {
+            _evaluator.Update(_animCursor);
+            CalculateTransforms(_tree, _evaluator.CurrentTransforms);
+        }
+
+
+        private void CalculateTransforms(NodeState node, Matrix4[] perChannelLocalTransformation)
+        {
+            // grab the latest local transformation from the animation channel corr. to this node
+            if (node.ChannelIndex != -1)
+            {
+                Debug.Assert(node.ChannelIndex < perChannelLocalTransformation.Length);
+                node.LocalTransform = perChannelLocalTransformation[node.ChannelIndex];
+            }
+
+            node.GlobalTransform = node.Parent != null ? node.Parent.GlobalTransform*node.LocalTransform : node.LocalTransform;
+
+            // recursively update children
+            foreach (NodeState t in node.Children)
+            {
+                CalculateTransforms(t, perChannelLocalTransformation);
+            }
+        }
+
+
+        private NodeState CreateNodeTree(Node rootNode, NodeState parent)
+        {
+            var outNode = new NodeState {LocalTransform = AssimpToOpenTk.FromMatrix(rootNode.Transform)};
+            outNode.Parent = parent;
+
+            // calculate transforms
+            outNode.GlobalTransform = parent != null ? parent.GlobalTransform * outNode.LocalTransform : outNode.LocalTransform;
+
+            // populate by-name map to quickly map nodes to their state
+            _nodeStateByName[rootNode.Name] = outNode;
+
+            // find the index of the animation track affecting this node, if any
+            outNode.ChannelIndex = -1;
+            if (ActiveAnimation != -1)
+            {
+                var channels = _raw.Animations[ActiveAnimation].NodeAnimationChannels;
+                for (int i = 0; i < channels.Length; ++i)
+                {
+                    if (channels[i].NodeName != rootNode.Name)
+                    {
+                        continue;
+                    }
+                    outNode.ChannelIndex = i;
+                    break;
+                }
+            }
+
+            outNode.Children = new NodeState[rootNode.ChildCount];
+
+            // recursively add up children
+            for (int i = 0; i < rootNode.ChildCount; ++i)
+            {
+                outNode.Children[i] = CreateNodeTree(rootNode.Children[i], outNode);
+            }
+
+            return outNode;
         }
     }
 }
