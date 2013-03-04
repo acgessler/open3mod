@@ -210,20 +210,47 @@ namespace open3mod
             GL.PopMatrix();
         }
 
+
         private void DrawSkeletonBone(Node node)
         {
             GL.Disable(EnableCap.Lighting);
             GL.Disable(EnableCap.Texture2D);
             GL.Enable(EnableCap.ColorMaterial);
+            GL.Disable(EnableCap.DepthTest);
 
-            GL.Color4(new Color4(1.0f, 1.0f, 0.0f, 1.0f));
+            GL.Color4(new Color4(0.0f, 0.5f, 1.0f, 1.0f));
+
+            const float jointWidth = 0.15f;
+
+            var target = new Vector3(node.Transform.A4, node.Transform.B4, node.Transform.C4);
+            var right = new Vector3(1,0,0);
+            var targetNorm = target;
+            targetNorm.Normalize();
+
+            Vector3 up;
+            Vector3.Cross(ref targetNorm, ref right, out up);
+            Vector3.Cross(ref up, ref targetNorm, out right);
+
+            GL.Begin(BeginMode.LineLoop);
+            GL.Vertex3(-jointWidth * up + -jointWidth * right);
+            GL.Vertex3(-jointWidth * up +  jointWidth * right);
+            GL.Vertex3( jointWidth * up +  jointWidth * right);
+            GL.Vertex3( jointWidth * up + -jointWidth * right);
+            GL.End();  
 
             GL.Begin(BeginMode.Lines);
-            GL.Vertex3(new Vector3(0,0,0));
-            GL.Vertex3(new Vector3(node.Transform.A4, node.Transform.B4, node.Transform.C4));
+            GL.Vertex3(-jointWidth * up + -jointWidth * right);
+            GL.Vertex3(target);
+            GL.Vertex3(-jointWidth * up + jointWidth * right);
+            GL.Vertex3(target);
+            GL.Vertex3(jointWidth * up + jointWidth * right);
+            GL.Vertex3(target);
+            GL.Vertex3(jointWidth * up + -jointWidth * right);
+            GL.Vertex3(target);
             GL.End();
-
+       
             GL.Disable(EnableCap.ColorMaterial);
+            GL.Enable(EnableCap.DepthTest);
         }
 
 
