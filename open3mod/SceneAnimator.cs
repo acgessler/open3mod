@@ -213,7 +213,7 @@ namespace open3mod
 
         private void Recalculate()
         {
-            _evaluator.Update(_animCursor);
+            _evaluator.Evaluate(_animCursor);
             CalculateTransforms(_tree, _evaluator.CurrentTransforms);
         }
 

@@ -37,6 +37,11 @@ namespace open3mod
     {
         public static Matrix4 FromMatrix(Matrix4x4 mat)
         {
+            return FromMatrix(ref mat);
+        }
+
+        public static Matrix4 FromMatrix(ref Matrix4x4 mat)
+        {
             var m = new Matrix4
             {
                 M11 = mat.A1,
