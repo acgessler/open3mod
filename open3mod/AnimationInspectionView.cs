@@ -16,22 +16,23 @@ namespace open3mod
 
         public AnimationInspectionView(Scene scene, TabPage tabPageAnimations)
         {
-            _scene = scene;
+            _scene = scene;          
+            
+            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
             InitializeComponent();
+
             tabPageAnimations.Controls.Add(this);
 
-            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+            listBoxAnimations.Items.Add("None (Bind Pose)");
 
             if (scene.Raw.Animations != null)
             {
                 foreach (var anim in scene.Raw.Animations)
                 {
                     listBoxAnimations.Items.Add(anim.Name);
-                }
-
-                listBoxAnimations.SelectedIndex = 0;
-                listBoxAnimations.Items.Add("None (Bind Pose)");
+                }                
             }
+            listBoxAnimations.SelectedIndex = 0;
         }
 
         public bool Empty
@@ -42,7 +43,7 @@ namespace open3mod
 
         private void OnChangeSelectedAnimation(object sender, EventArgs e)
         {
-
+            _scene.SceneAnimator.ActiveAnimation = listBoxAnimations.SelectedIndex - 1;
         }
     }
 }
