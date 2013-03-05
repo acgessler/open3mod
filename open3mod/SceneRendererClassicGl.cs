@@ -210,6 +210,8 @@ namespace open3mod
             Vector3D translation;
             m.Decompose(out scaling, out rotation, out translation);
 
+            rotation.Normalize();
+
             m = new Matrix4x4(rotation.GetMatrix()) * Matrix4x4.FromTranslation(translation);
             var mConv = AssimpToOpenTk.FromMatrix(ref m);
             mConv.Transpose();
@@ -283,6 +285,10 @@ namespace open3mod
                 GL.Vertex3(jointWidth*up + jointWidth*right);
                 GL.Vertex3(target);
                 GL.Vertex3(jointWidth*up + -jointWidth*right);
+                GL.Vertex3(target);
+
+                GL.Color4(new Color4(1.0f, 1.0f, 0.0f, 1.0f));
+                GL.Vertex3(Vector3.Zero);
                 GL.Vertex3(target);
                 GL.End();
 
