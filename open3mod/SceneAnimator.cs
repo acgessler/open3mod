@@ -36,12 +36,14 @@ namespace open3mod
         private int _activeAnim = -1;
         private double _animPlaybackSpeed = 1.0;
         private double _animCursor = 0.0;
+        private bool _loop = true;
         private AnimEvaluator _evaluator;
 
         private readonly Dictionary<string, NodeState> _nodeStateByName;
         private NodeState _tree;
 
         private readonly Matrix4[] _boneMatrices;
+        private bool _isInEndPosition;
 
 
         internal SceneAnimator(Scene scene)
@@ -127,6 +129,16 @@ namespace open3mod
                 Debug.Assert(value >= 0);
                 _animCursor = value;
 
+                if (!Loop && _animCursor > AnimationDuration)
+                {
+                    _animCursor = AnimationDuration;
+                    _isInEndPosition = true;
+                }
+                else
+                {
+                    _isInEndPosition = false;
+                }
+
                 Recalculate();
             }
         }
@@ -147,6 +159,32 @@ namespace open3mod
                 var anim = _raw.Animations[ActiveAnimation];
                 return anim.DurationInTicks / anim.TicksPerSecond;
             }
+        }
+
+
+        /// <summary>
+        /// Specifies whether the animation loops (i.e. starts again as
+        /// soon as its predefined duration is exceeded) or just stays
+        /// in the final frame position.
+        /// </summary>
+        public bool Loop
+        {
+            get { return _loop; }
+            set { 
+                _loop = value;
+                // necessary to update animations if needed
+                AnimationCursor = _animCursor; 
+            }
+        }
+
+
+        /// <summary>
+        /// Play animation given a time delta since the last Update()
+        /// </summary>
+        /// <param name="delta">Real-world time delta, in seconds</param>
+        public void Update(double delta)
+        {
+            AnimationCursor += delta*AnimationPlaybackSpeed;
         }
 
 
@@ -213,7 +251,7 @@ namespace open3mod
 
         private void Recalculate()
         {
-            _evaluator.Evaluate(_animCursor);
+            _evaluator.Evaluate(_animCursor, _isInEndPosition);
             CalculateTransforms(_tree, _evaluator.CurrentTransforms);
         }
 

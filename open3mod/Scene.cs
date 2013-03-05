@@ -173,22 +173,6 @@ namespace open3mod
         }
 
 
-        private void LoadTextures()
-        {
-            var materials = _raw.Materials;
-            foreach(var mat in materials)
-            {
-                var textures = mat.GetAllTextures();
-                foreach (var tex in textures)
-                {
-                    TextureSet.Add(tex.FilePath);               
-                }
-            }
-
-            TextureSet.AddCallback((name, tex) => _texturesChanged=true);
-        }
-
-
         /// <summary>
         /// Set the nodes of the scene that are visible. Visibility is not
         /// automatically inherited by children, so all children need to
@@ -202,12 +186,21 @@ namespace open3mod
         }
      
 
+        /// <summary>
+        /// Call once per frame to do non-rendering jobs such as updating 
+        /// animations.
+        /// </summary>
+        /// <param name="delta">Real-world time delta in seconds</param>
         public void Update(double delta)
         {
-            
+            _animator.Update(delta);
         }
 
 
+        /// <summary>
+        /// Call once per frame to render the scene to the current viewport.
+        /// </summary>
+        /// <param name="delta">Real-world time delta in seconds</param>
         public void Render(UiState state, ICameraController cam)
         {
             RenderFlags flags = 0;
@@ -241,6 +234,22 @@ namespace open3mod
 
             _texturesChanged = false;
             _nodesToShowChanged = false;
+        }
+
+
+        private void LoadTextures()
+        {
+            var materials = _raw.Materials;
+            foreach (var mat in materials)
+            {
+                var textures = mat.GetAllTextures();
+                foreach (var tex in textures)
+                {
+                    TextureSet.Add(tex.FilePath);
+                }
+            }
+
+            TextureSet.AddCallback((name, tex) => _texturesChanged = true);
         }
 
 

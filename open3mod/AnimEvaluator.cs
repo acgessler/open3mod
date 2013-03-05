@@ -58,7 +58,18 @@ namespace open3mod
         }
 
 
-        public void Evaluate(double pTime)
+        /// <summary>
+        /// Evaluate animation channels at a given time
+        /// </summary>
+        /// <param name="pTime">Time, in seconds. If the time exceeds the animation's
+        /// duration value, it will be looped.</param>
+        /// <param name="isInEndPosition">A problem with automatic looping (and the
+        /// way how assimp handles animation duration) is that evaluating the
+        /// animation at a time that is exactly the animation duration might wrap
+        /// over to the first key frame (i.e. due to numerical inaccuracies). Setting
+        /// this parameter to true causes the pTime value to be ignored and the
+        /// last set of key frames to be taken.</param>
+        public void Evaluate(double pTime, bool isInEndPosition)
         {
             // extract ticks per second. Assume default value if not given
             double ticksPerSecond = _animation.TicksPerSecond >= 0.0 ? _animation.TicksPerSecond : 25.0;
@@ -77,8 +88,32 @@ namespace open3mod
             {
                 var channel = _animation.NodeAnimationChannels[a];
 
-                // ******** Position *****
                 var presentPosition = new Vector3D(0, 0, 0);
+                var presentRotation = new Assimp.Quaternion(1, 0, 0, 0);
+                var presentScaling = new Vector3D(1, 1, 1);
+
+                if (isInEndPosition)
+                {
+                    if (channel.PositionKeyCount > 0)
+                    {
+                        presentPosition = channel.PositionKeys.Last().Value;
+                        _lastPositions[a].Item1 = channel.PositionKeyCount - 1;
+                    }
+                    if (channel.RotationKeyCount > 0)
+                    {
+                        presentRotation = channel.RotationKeys.Last().Value;
+                        _lastPositions[a].Item2 = channel.RotationKeyCount - 1;
+                    }
+                    if (channel.ScalingKeyCount > 0)
+                    {
+                        presentScaling = channel.ScalingKeys.Last().Value;
+                        _lastPositions[a].Item3 = channel.ScalingKeyCount - 1;
+                    }
+                    BuildTransform(ref presentRotation, ref presentScaling, ref presentPosition, out _currentTransforms[a]);
+                    continue;
+                }
+
+                // ******** Position *****
                 if (channel.PositionKeyCount > 0)
                 {
                     // Look for present frame number. Search from last position if time is after the last time, else from beginning
@@ -117,7 +152,6 @@ namespace open3mod
                 }
 
                 // ******** Rotation *********
-                var presentRotation = new Assimp.Quaternion(1, 0, 0, 0);
                 if (channel.RotationKeyCount > 0)
                 {
                     var frame = (time >= _lastTime) ? _lastPositions[a].Item2 : 0;
@@ -152,8 +186,7 @@ namespace open3mod
                     _lastPositions[a].Item2 = frame;
                 }
 
-                // ******** Scaling **********
-                var presentScaling = new Vector3D(1, 1, 1);
+                // ******** Scaling **********                
                 if (channel.ScalingKeyCount > 0)
                 {
                     var frame = (time >= _lastTime) ? _lastPositions[a].Item3 : 0;
@@ -171,17 +204,41 @@ namespace open3mod
                     _lastPositions[a].Item3 = frame;
                 }
 
-                // build a transformation matrix from it
-                var mat = new Matrix4x4(presentRotation.GetMatrix());
-                mat.A1 *= presentScaling.X; mat.B1 *= presentScaling.X; mat.C1 *= presentScaling.X;
-                mat.A2 *= presentScaling.Y; mat.B2 *= presentScaling.Y; mat.C2 *= presentScaling.Y;
-                mat.A3 *= presentScaling.Z; mat.B3 *= presentScaling.Z; mat.C3 *= presentScaling.Z;
-                mat.A4 = presentPosition.X; mat.B4 = presentPosition.Y; mat.C4 = presentPosition.Z;
-
-                _currentTransforms[a] = AssimpToOpenTk.FromMatrix(ref mat);
+                BuildTransform(ref presentRotation, ref presentScaling, ref presentPosition, out _currentTransforms[a]);
             }
 
             _lastTime = time;
+        }
+
+
+        /// <summary>
+        /// Build a transformation matrix from rotation, scaling and translation components.
+        /// The transformation order is scaling, rotation, translation (left to right).
+        /// </summary>
+        /// <param name="presentRotation"></param>
+        /// <param name="presentScaling"></param>
+        /// <param name="presentPosition"></param>
+        /// <param name="outMatrix"></param>
+        private static void BuildTransform(ref Assimp.Quaternion presentRotation, ref Vector3D presentScaling, 
+            ref Vector3D presentPosition, out Matrix4 outMatrix)
+        {
+            int a;
+            // build a transformation matrix from it
+            var mat = new Matrix4x4(presentRotation.GetMatrix());
+            mat.A1 *= presentScaling.X;
+            mat.B1 *= presentScaling.X;
+            mat.C1 *= presentScaling.X;
+            mat.A2 *= presentScaling.Y;
+            mat.B2 *= presentScaling.Y;
+            mat.C2 *= presentScaling.Y;
+            mat.A3 *= presentScaling.Z;
+            mat.B3 *= presentScaling.Z;
+            mat.C3 *= presentScaling.Z;
+            mat.A4 = presentPosition.X;
+            mat.B4 = presentPosition.Y;
+            mat.C4 = presentPosition.Z;
+
+            outMatrix = AssimpToOpenTk.FromMatrix(ref mat);
         }
     }
 }
