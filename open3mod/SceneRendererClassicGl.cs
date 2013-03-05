@@ -215,25 +215,7 @@ namespace open3mod
                             var pos = AssimpToOpenTk.FromVector(mesh.Vertices[indice]);
                             if (boneMatrices != null)
                             {
-                                var map = _boneMap[index];
-                                uint offset;
-                                uint count;
-                                map.GetOffsetAndCountForVertex(indice, out offset, out count);
-                               
-                                var transformedPos = Vector3.Zero;
-
-                                var bones = map.BonesByVertex;
-                                for (var k = 0; k < count; ++k, ++offset)
-                                {
-                                    var boneWeightTuple = bones[offset];
-                                    Debug.Assert(boneWeightTuple.Item1 < boneMatrices.Length);
-
-                                    Vector3 tmp;
-                                    Vector3.Transform(ref pos, ref boneMatrices[boneWeightTuple.Item1], out tmp);
-                                    transformedPos += tmp * boneWeightTuple.Item2;
-                                }
-
-                                pos = transformedPos;
+                                EvaluateBoneInfluences(ref pos, index, indice, boneMatrices, out pos);
                             }
                             GL.Vertex3(pos);
                         }
@@ -256,7 +238,9 @@ namespace open3mod
         }
 
 
-        private void RecursiveRenderNoScale(Node node, HashSet<Node> visibleNodes, RenderFlags flags, float invGlobalScale, bool animated)
+        private void RecursiveRenderNoScale(Node node, HashSet<Node> visibleNodes, RenderFlags flags, 
+            float invGlobalScale, 
+            bool animated)
         {
             // TODO unify our use of OpenTK and Assimp matrices 
             Matrix4x4 m;
@@ -296,12 +280,19 @@ namespace open3mod
 
             if (node.HasMeshes && (visibleNodes == null || visibleNodes.Contains(node)))
             {
-                foreach (int index in node.MeshIndices)
+                foreach (var index in node.MeshIndices)
                 {
-                    Mesh mesh = _owner.Raw.Meshes[index];
+                    var mesh = _owner.Raw.Meshes[index];
+
+                    Matrix4[] boneMatrices = null;
+                    if (mesh.HasBones && animated)
+                    {
+                        boneMatrices = _owner.SceneAnimator.GetBoneMatricesForMesh(node, index);
+                    }
+
                     if (flags.HasFlag(RenderFlags.ShowNormals))
                     {
-                        DrawNormals(mesh, invGlobalScale);
+                        DrawNormals(index, mesh, boneMatrices, invGlobalScale,animated);
                     }
                 }
             }
@@ -314,6 +305,38 @@ namespace open3mod
             GL.PopMatrix();
         }
 
+
+        /// <summary>
+        /// Evaluate all bone influences on a single vertex
+        /// </summary>
+        /// <param name="pos">Untransformed vertex position</param>
+        /// <param name="meshIndex">Mesh meshIndex</param>
+        /// <param name="vertexIndex">Index of the vertex in the mesh</param>
+        /// <param name="boneMatrices">Bone matrices evaluated for the current mesh, node</param>
+        /// <param name="transformedPosOut">Receives the transformed vertex</param>
+        private void EvaluateBoneInfluences(ref Vector3 pos, int meshIndex, uint vertexIndex, Matrix4[] boneMatrices,
+            out Vector3 transformedPosOut)
+        {
+            var map = _boneMap[meshIndex];
+            uint offset;
+            uint count;
+            map.GetOffsetAndCountForVertex(vertexIndex, out offset, out count);
+
+            var transformedPos = Vector3.Zero;
+
+            var bones = map.BonesByVertex;
+            for (var k = 0; k < count; ++k, ++offset)
+            {
+                var boneWeightTuple = bones[offset];
+                Debug.Assert(boneWeightTuple.Item1 < boneMatrices.Length);
+
+                Vector3 tmp;
+                Vector3.Transform(ref pos, ref boneMatrices[boneWeightTuple.Item1], out tmp);
+                transformedPos += tmp * boneWeightTuple.Item2;
+            }
+
+            transformedPosOut = transformedPos;
+        }
 
 
         private void DrawSkeletonBone(Node node, float invGlobalScale)
@@ -424,7 +447,7 @@ namespace open3mod
         }
 
 
-        private void DrawNormals(Mesh mesh, float invGlobalScale)
+        private void DrawNormals(int meshIndex, Mesh mesh, Matrix4[] boneMatrices, float invGlobalScale, bool animated)
         {
             if(!mesh.HasNormals)
             {
@@ -442,10 +465,14 @@ namespace open3mod
 
             GL.Color4(new Color4(0.0f, 1.0f, 0.0f, 1.0f));
 
-            for (int i = 0; i < mesh.VertexCount; ++i)
+            for (uint i = 0; i < mesh.VertexCount; ++i)
             {         
                 var v = AssimpToOpenTk.FromVector(mesh.Vertices[i]);
                 var n = AssimpToOpenTk.FromVector(mesh.Normals[i]);
+                if (boneMatrices != null)
+                {
+                    EvaluateBoneInfluences(ref v, meshIndex, i, boneMatrices, out v);
+                }
                 GL.Vertex3(v);
                 GL.Vertex3(v+n*scale);
             }
