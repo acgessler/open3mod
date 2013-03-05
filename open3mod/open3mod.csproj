@@ -89,6 +89,7 @@
     <Compile Include="FpsTracker.cs" />
     <Compile Include="HierarchyInspectionView.cs" />
     <Compile Include="ICameraController.cs" />
+    <Compile Include="ImageFromResource.cs" />
     <Compile Include="InspectionView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -236,6 +237,13 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Images\FailedToLoad.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\HUD_FPS_Normal.png" />
+    <EmbeddedResource Include="Images\HUD_Orbit_Normal.png" />
+    <EmbeddedResource Include="Images\HUD_X_Normal.png" />
+    <EmbeddedResource Include="Images\HUD_Y_Normal.png" />
+    <EmbeddedResource Include="Images\HUD_Z_Normal.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

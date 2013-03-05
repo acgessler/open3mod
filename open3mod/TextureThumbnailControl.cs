@@ -385,7 +385,7 @@ namespace open3mod
                 return _loadError;
             }
 
-            _loadError = GetImageFromResource("open3mod.Images.FailedToLoad.png");                   
+            _loadError = ImageFromResource.Get("open3mod.Images.FailedToLoad.png");                   
             return _loadError;
         }
 
@@ -397,7 +397,7 @@ namespace open3mod
                 return _background;
             }
 
-            _background = GetImageFromResource("open3mod.Images.TextureTransparentBackground.png");                   
+            _background = ImageFromResource.Get("open3mod.Images.TextureTransparentBackground.png");                   
             return _background;
         }
 
@@ -409,21 +409,10 @@ namespace open3mod
                 return _loadAnimImage;
             }
 
-            _loadAnimImage = GetImageFromResource("open3mod.Images.TextureLoading.gif");
+            _loadAnimImage = ImageFromResource.Get("open3mod.Images.TextureLoading.gif");
             return _loadAnimImage;
         }
-
-
-        private static Image GetImageFromResource(string resPath)
-        {
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            // for some reason we need to keep the stream open for the _lifetime_ of the Image,
-            // therefore the Dispose() is _not_ missing.
-            var stream = assembly.GetManifestResourceStream(resPath);
-
-            Debug.Assert(stream != null);
-            return Image.FromStream(stream);
-        }
+       
 
         private void OnContextMenuReplace(object sender, EventArgs e)
         {
