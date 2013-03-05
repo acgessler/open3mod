@@ -14,9 +14,22 @@ namespace open3mod
     {
         // this only exists to keep references to all image streams
         private static readonly List<Stream> StreamRefs = new List<Stream>();
+        private static readonly Dictionary<string,Image> Cache = new Dictionary<string, Image>(); 
 
+        /// <summary>
+        /// Load a given embedded image resource.
+        /// Images are cached so redundant calls are ok to make.
+        ///  </summary>
+        /// <param name="resPath">Resource identifier</param>
+        /// <returns></returns>
         public static Image Get(string resPath)
         {
+            Image img;
+            if (Cache.TryGetValue(resPath, out img))
+            {
+                return img;
+            }
+
             var assembly = Assembly.GetExecutingAssembly();
             // for some reason we need to keep the stream open for the _lifetime_ of the Image,
             // therefore the Dispose() is _not_ missing here.
@@ -25,7 +38,10 @@ namespace open3mod
             StreamRefs.Add(stream);
 
             Debug.Assert(stream != null);
-            return Image.FromStream(stream);
+            img = Image.FromStream(stream);
+
+            Cache[resPath] = img;
+            return img;
         }
     }
 }
