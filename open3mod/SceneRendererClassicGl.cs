@@ -77,8 +77,8 @@ namespace open3mod
             float tmp = _initposeMax.X - _initposeMin.X;
             tmp = Math.Max(_initposeMax.Y - _initposeMin.Y, tmp);
             tmp = Math.Max(_initposeMax.Z - _initposeMin.Z, tmp);
-            tmp = 1.0f / tmp;
-            GL.Scale(tmp * 2, tmp * 2, tmp * 2);
+            tmp = 2.0f / tmp;
+            GL.Scale(tmp,tmp,tmp);
 
             GL.Translate(-(_initposeMin + _initposeMax) * 0.5f);          
            
@@ -90,7 +90,13 @@ namespace open3mod
                     _displayList = GL.GenLists(1);
                 }
                 GL.NewList(_displayList, ListMode.Compile);
-                RecursiveRender(_owner.Raw.RootNode, ref lookat, visibleNodes, flags);
+                RecursiveRender(_owner.Raw.RootNode, visibleNodes, flags);
+
+                if (flags.HasFlag(RenderFlags.ShowSkeleton) || flags.HasFlag(RenderFlags.ShowNormals))
+                {
+                    RecursiveRenderNoScale(_owner.Raw.RootNode, visibleNodes, flags, 1.0f / tmp);
+                }
+
                 GL.EndList();
             }
 
@@ -105,25 +111,10 @@ namespace open3mod
         }
 
 
-        private void RecursiveRender(Node node, ref Matrix4 view, HashSet<Node> visibleNodes, 
-            RenderFlags flags)
-        {
-            Matrix4 m = Matrix4.Identity;
-            RecursiveRender(node, ref m, ref view, visibleNodes, flags);
-        }
-
-
-        private void RecursiveRender(Node node, ref Matrix4 parentTransform, ref Matrix4 view, 
-            HashSet<Node> visibleNodes, 
-            RenderFlags flags)
+        private void RecursiveRender(Node node, HashSet<Node> visibleNodes,  RenderFlags flags)
         {
             Matrix4 m = AssimpToOpenTk.FromMatrix(node.Transform);
             m.Transpose();
-
-            if (flags.HasFlag(RenderFlags.ShowSkeleton))
-            {
-                DrawSkeletonBone(node);
-            }
 
             // keep using the opengl matrix stack to be compatible with displists
             GL.PushMatrix();
@@ -135,7 +126,6 @@ namespace open3mod
                 {
                     Mesh mesh = _owner.Raw.Meshes[index];
                     _owner.MaterialMapper.ApplyMaterial(mesh,_owner.Raw.Materials[mesh.MaterialIndex]);
-
                
                     bool hasColors = mesh.HasVertexColors(0);              
                     bool hasTexCoords = mesh.HasTextureCoords(0);
@@ -190,11 +180,7 @@ namespace open3mod
                         }
                         GL.End();
                     }
-
-                    if (flags.HasFlag(RenderFlags.ShowNormals))
-                    {
-                        DrawNormals(mesh);
-                    }
+                   
                     if (flags.HasFlag(RenderFlags.ShowBoundingBoxes))
                     {
                         DrawBoundingBox(mesh);
@@ -204,53 +190,105 @@ namespace open3mod
                       
             for (int i = 0; i < node.ChildCount; i++)
             {              
-                RecursiveRender(node.Children[i], ref parentTransform, visibleNodes, flags);
+                RecursiveRender(node.Children[i], visibleNodes, flags);
             }
 
             GL.PopMatrix();
         }
 
 
-        private void DrawSkeletonBone(Node node)
+        private void RecursiveRenderNoScale(Node node, HashSet<Node> visibleNodes, RenderFlags flags, float invGlobalScale)
         {
-            GL.Disable(EnableCap.Lighting);
-            GL.Disable(EnableCap.Texture2D);
-            GL.Enable(EnableCap.ColorMaterial);
-            GL.Disable(EnableCap.DepthTest);
+            var m = node.Transform;
+            
+            // get rid of the scaling part of the matrix
+            // TODO this can be done faster and Decompose() doesn't handle
+            // non positively semi-definite matrices correctly anyway.
 
-            GL.Color4(new Color4(0.0f, 0.5f, 1.0f, 1.0f));
+            Vector3D scaling;
+            Assimp.Quaternion rotation;
+            Vector3D translation;
+            m.Decompose(out scaling, out rotation, out translation);
 
-            const float jointWidth = 0.15f;
+            m = new Matrix4x4(rotation.GetMatrix()) * Matrix4x4.FromTranslation(translation);
+            var mConv = AssimpToOpenTk.FromMatrix(ref m);
+            mConv.Transpose();
 
+            if (flags.HasFlag(RenderFlags.ShowSkeleton))
+            {
+                DrawSkeletonBone(node, invGlobalScale);
+            }
+
+            GL.PushMatrix();
+            GL.MultMatrix(ref mConv);
+
+            if (node.HasMeshes && (visibleNodes == null || visibleNodes.Contains(node)))
+            {
+                foreach (int index in node.MeshIndices)
+                {
+                    Mesh mesh = _owner.Raw.Meshes[index];
+                    if (flags.HasFlag(RenderFlags.ShowNormals))
+                    {
+                        DrawNormals(mesh, invGlobalScale);
+                    }
+                }
+            }
+
+            for (int i = 0; i < node.ChildCount; i++)
+            {
+                RecursiveRenderNoScale(node.Children[i], visibleNodes, flags, invGlobalScale);
+            }
+
+            GL.PopMatrix();
+        }
+
+
+        private void DrawSkeletonBone(Node node, float invGlobalScale)
+        {
             var target = new Vector3(node.Transform.A4, node.Transform.B4, node.Transform.C4);
-            var right = new Vector3(1,0,0);
-            var targetNorm = target;
-            targetNorm.Normalize();
+            if (target.LengthSquared > 1e-6f)
+            {
+                GL.Disable(EnableCap.Lighting);
+                GL.Disable(EnableCap.Texture2D);
+                GL.Enable(EnableCap.ColorMaterial);
+                GL.Disable(EnableCap.DepthTest);
 
-            Vector3 up;
-            Vector3.Cross(ref targetNorm, ref right, out up);
-            Vector3.Cross(ref up, ref targetNorm, out right);
+                GL.Color4(new Color4(0.0f, 0.5f, 1.0f, 1.0f));
 
-            GL.Begin(BeginMode.LineLoop);
-            GL.Vertex3(-jointWidth * up + -jointWidth * right);
-            GL.Vertex3(-jointWidth * up +  jointWidth * right);
-            GL.Vertex3( jointWidth * up +  jointWidth * right);
-            GL.Vertex3( jointWidth * up + -jointWidth * right);
-            GL.End();  
+                var right = new Vector3(1, 0, 0);
+                var targetNorm = target;
+                targetNorm.Normalize();
 
-            GL.Begin(BeginMode.Lines);
-            GL.Vertex3(-jointWidth * up + -jointWidth * right);
-            GL.Vertex3(target);
-            GL.Vertex3(-jointWidth * up + jointWidth * right);
-            GL.Vertex3(target);
-            GL.Vertex3(jointWidth * up + jointWidth * right);
-            GL.Vertex3(target);
-            GL.Vertex3(jointWidth * up + -jointWidth * right);
-            GL.Vertex3(target);
-            GL.End();
-       
-            GL.Disable(EnableCap.ColorMaterial);
-            GL.Enable(EnableCap.DepthTest);
+                Vector3 up;
+                Vector3.Cross(ref targetNorm, ref right, out up);
+                Vector3.Cross(ref up, ref targetNorm, out right);
+
+                const float jointWidth = 0.03f;
+
+                up *= invGlobalScale;
+                right *= invGlobalScale;
+
+                GL.Begin(BeginMode.LineLoop);
+                GL.Vertex3(-jointWidth*up + -jointWidth*right);
+                GL.Vertex3(-jointWidth*up + jointWidth*right);
+                GL.Vertex3(jointWidth*up + jointWidth*right);
+                GL.Vertex3(jointWidth*up + -jointWidth*right);
+                GL.End();
+
+                GL.Begin(BeginMode.Lines);
+                GL.Vertex3(-jointWidth*up + -jointWidth*right);
+                GL.Vertex3(target);
+                GL.Vertex3(-jointWidth*up + jointWidth*right);
+                GL.Vertex3(target);
+                GL.Vertex3(jointWidth*up + jointWidth*right);
+                GL.Vertex3(target);
+                GL.Vertex3(jointWidth*up + -jointWidth*right);
+                GL.Vertex3(target);
+                GL.End();
+
+                GL.Disable(EnableCap.ColorMaterial);
+                GL.Enable(EnableCap.DepthTest);
+            }           
         }
 
 
@@ -309,7 +347,7 @@ namespace open3mod
         }
 
 
-        private void DrawNormals(Mesh mesh)
+        private void DrawNormals(Mesh mesh, float invGlobalScale)
         {
             if(!mesh.HasNormals)
             {
@@ -317,7 +355,7 @@ namespace open3mod
             }
             // scale by scene size because the scene will be resized to fit
             // the unit box but the normals should have a fixed length
-            var scale = (_initposeMax - _initposeMin).Length * 0.02f;
+            var scale = invGlobalScale * 0.03f;
 
             GL.Begin(BeginMode.Lines);
 
