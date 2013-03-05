@@ -21,6 +21,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,11 +46,21 @@ namespace open3mod
         private RenderFlags _lastFlags;
 
 
-        public SceneRendererClassicGl(Scene owner, Vector3 initposeMin, Vector3 initposeMax)
+        private readonly BoneByVertexMap[] _boneMap;
+
+
+        internal SceneRendererClassicGl(Scene owner, Vector3 initposeMin, Vector3 initposeMax)
         {
             _owner = owner;
             _initposeMin = initposeMin;
             _initposeMax = initposeMax;
+
+            Debug.Assert(_owner.Raw != null);
+            _boneMap = new BoneByVertexMap[_owner.Raw.MeshCount];
+            for (int i = 0; i < _owner.Raw.MeshCount; ++i)
+            {
+                _boneMap[i] = new BoneByVertexMap(_owner.Raw.Meshes[i]);
+            }
         }
 
 

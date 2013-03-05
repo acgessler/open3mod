@@ -79,6 +79,7 @@
     </Compile>
     <Compile Include="AnimEvaluator.cs" />
     <Compile Include="AssimpToOpenTk.cs" />
+    <Compile Include="BoneByVertexMap.cs" />
     <Compile Include="CoreSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
