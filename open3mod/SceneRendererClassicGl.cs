@@ -145,6 +145,7 @@ namespace open3mod
             {
                 m = AssimpToOpenTk.FromMatrix(node.Transform);
             }
+            // TODO for some reason, all OpenTk matrices need a ^T - clarify our conventions somewhere
             m.Transpose();
      
             GL.PushMatrix();        
@@ -152,13 +153,19 @@ namespace open3mod
 
             if (node.HasMeshes && (visibleNodes == null || visibleNodes.Contains(node)))
             {
-                foreach (int index in node.MeshIndices)
+                foreach (var index in node.MeshIndices)
                 {
                     var mesh = _owner.Raw.Meshes[index];
                     _owner.MaterialMapper.ApplyMaterial(mesh,_owner.Raw.Materials[mesh.MaterialIndex]);
                
                     var hasColors = mesh.HasVertexColors(0);              
                     var hasTexCoords = mesh.HasTextureCoords(0);
+
+                    Matrix4[] boneMatrices = null;
+                    if (mesh.HasBones && animated)
+                    {
+                        boneMatrices = _owner.SceneAnimator.GetBoneMatricesForMesh(node, index);
+                    }
 
                     foreach (var face in mesh.Faces)
                     {
@@ -206,6 +213,28 @@ namespace open3mod
                                 GL.TexCoord2(uvw.X, 1 - uvw.Y);
                             }
                             var pos = AssimpToOpenTk.FromVector(mesh.Vertices[indice]);
+                            if (boneMatrices != null)
+                            {
+                                var map = _boneMap[index];
+                                uint offset;
+                                uint count;
+                                map.GetOffsetAndCountForVertex(indice, out offset, out count);
+                               
+                                var transformedPos = Vector3.Zero;
+
+                                var bones = map.BonesByVertex;
+                                for (var k = 0; k < count; ++k, ++offset)
+                                {
+                                    var boneWeightTuple = bones[offset];
+                                    Debug.Assert(boneWeightTuple.Item1 < boneMatrices.Length);
+
+                                    Vector3 tmp;
+                                    Vector3.Transform(ref pos, ref boneMatrices[boneWeightTuple.Item1], out tmp);
+                                    transformedPos += tmp * boneWeightTuple.Item2;
+                                }
+
+                                pos = transformedPos;
+                            }
                             GL.Vertex3(pos);
                         }
                         GL.End();

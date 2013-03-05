@@ -33,7 +33,7 @@ namespace open3mod
         private readonly Scene _scene;
         private readonly Assimp.Scene _raw;
 
-        private int _activeAnim = -1;
+        private int _activeAnim = -2;
         private double _animPlaybackSpeed = 1.0;
         private double _animCursor = 0.0;
         private bool _loop = true;
@@ -65,6 +65,9 @@ namespace open3mod
             }
 
             _boneMatrices = new Matrix4[maxBoneCount];
+
+            // initialize the node hierarchy
+            ActiveAnimation = -1;
         }
 
 
@@ -246,15 +249,17 @@ namespace open3mod
 
         /// <summary>
         /// Obtain the bone matrices for a given node mesh index at the
-        /// current time. 
+        /// current time. Calling this is costly, redundant invocations
+        /// should thus be avoided.
         /// </summary>
         /// <param name="node">Node for which to query bone matrices</param>
         /// <param name="meshIndex">Index of the mesh in the mesh list of
         ///    the node (_not_ the scene-wide index)</param>
         /// <returns>For each bone of the mesh the bone transformation
         /// matrix. The returned array is only valid for the rest of
-        /// the frame. It may contain more entries than the mesh has
-        /// bones, the extra entries should be ignored in this case.</returns>
+        /// the frame or till the next call to GetBoneMatricesForMesh(). 
+        /// It may contain more entries than the mesh has bones, the extra entries 
+        /// should be ignored in this case.</returns>
         public Matrix4[] GetBoneMatricesForMesh(Node node, int meshIndex)
         {
             Debug.Assert(node != null);
@@ -277,6 +282,8 @@ namespace open3mod
                 Matrix4 currentGlobalTransform;
                 GetGlobalTransform( bone.Name, out currentGlobalTransform );
                 _boneMatrices[a] = globalInverseMeshTransform * currentGlobalTransform * AssimpToOpenTk.FromMatrix(bone.OffsetMatrix);
+                // TODO for some reason, all OpenTk matrices need a ^T - clarify our conventions somewhere
+                _boneMatrices[a].Transpose();
             }
             return _boneMatrices;
         }
