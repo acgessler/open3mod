@@ -205,6 +205,10 @@ namespace open3mod
                             if (mesh.HasNormals)
                             {
                                 var normal = AssimpToOpenTk.FromVector(mesh.Normals[indice]);
+                                if (boneMatrices != null)
+                                {
+                                    EvaluateBoneInfluences(ref normal, index, indice, boneMatrices, out normal, true);
+                                }
                                 GL.Normal3(normal);
                             }
                             if (hasTexCoords)
@@ -292,7 +296,7 @@ namespace open3mod
 
                     if (flags.HasFlag(RenderFlags.ShowNormals))
                     {
-                        DrawNormals(index, mesh, boneMatrices, invGlobalScale,animated);
+                        DrawNormals(index, mesh, boneMatrices, invGlobalScale);
                     }
                 }
             }
@@ -314,8 +318,11 @@ namespace open3mod
         /// <param name="vertexIndex">Index of the vertex in the mesh</param>
         /// <param name="boneMatrices">Bone matrices evaluated for the current mesh, node</param>
         /// <param name="transformedPosOut">Receives the transformed vertex</param>
+        /// <param name="isDirectionVector">Specifies whether the input parameter is a direction vector
+        ///    instead of a 3D position. Vector3.TransformNormal() is used in this case.</param>
         private void EvaluateBoneInfluences(ref Vector3 pos, int meshIndex, uint vertexIndex, Matrix4[] boneMatrices,
-            out Vector3 transformedPosOut)
+            out Vector3 transformedPosOut,
+            bool isDirectionVector = false)
         {
             var map = _boneMap[meshIndex];
             uint offset;
@@ -331,7 +338,14 @@ namespace open3mod
                 Debug.Assert(boneWeightTuple.Item1 < boneMatrices.Length);
 
                 Vector3 tmp;
-                Vector3.Transform(ref pos, ref boneMatrices[boneWeightTuple.Item1], out tmp);
+                if(isDirectionVector)
+                {
+                    Vector3.TransformNormal(ref pos, ref boneMatrices[boneWeightTuple.Item1], out tmp);
+                }
+                else
+                {
+                    Vector3.Transform(ref pos, ref boneMatrices[boneWeightTuple.Item1], out tmp);
+                }
                 transformedPos += tmp * boneWeightTuple.Item2;
             }
 
@@ -447,7 +461,7 @@ namespace open3mod
         }
 
 
-        private void DrawNormals(int meshIndex, Mesh mesh, Matrix4[] boneMatrices, float invGlobalScale, bool animated)
+        private void DrawNormals(int meshIndex, Mesh mesh, Matrix4[] boneMatrices, float invGlobalScale)
         {
             if(!mesh.HasNormals)
             {
@@ -472,6 +486,7 @@ namespace open3mod
                 if (boneMatrices != null)
                 {
                     EvaluateBoneInfluences(ref v, meshIndex, i, boneMatrices, out v);
+                    EvaluateBoneInfluences(ref n, meshIndex, i, boneMatrices, out n, true);
                 }
                 GL.Vertex3(v);
                 GL.Vertex3(v+n*scale);
