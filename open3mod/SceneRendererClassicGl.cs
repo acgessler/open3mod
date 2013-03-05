@@ -228,7 +228,7 @@ namespace open3mod
                    
                     if (flags.HasFlag(RenderFlags.ShowBoundingBoxes))
                     {
-                        DrawBoundingBox(mesh);
+                        DrawBoundingBox(index, mesh, boneMatrices);
                     }
                 }
             }
@@ -406,7 +406,7 @@ namespace open3mod
         }
 
 
-        private void DrawBoundingBox(Mesh mesh)
+        private void DrawBoundingBox(int meshIndex, Mesh mesh, Matrix4[] boneMatrices)
         {           
             GL.Disable(EnableCap.Lighting);
             GL.Disable(EnableCap.Texture2D);
@@ -416,9 +416,14 @@ namespace open3mod
 
             var min = new Vector3(1e10f, 1e10f, 1e10f);
             var max = new Vector3(-1e10f, -1e10f, -1e10f);
-            for (int i = 0; i < mesh.VertexCount; ++i)
+            for (uint i = 0; i < mesh.VertexCount; ++i)
             {
                 var tmp = AssimpToOpenTk.FromVector(mesh.Vertices[i]);
+
+                if (boneMatrices != null)
+                {
+                    EvaluateBoneInfluences(ref tmp, meshIndex, i, boneMatrices, out tmp);
+                }
 
                 min.X = Math.Min(min.X, tmp.X);
                 min.Y = Math.Min(min.Y, tmp.Y);
@@ -426,7 +431,7 @@ namespace open3mod
 
                 max.X = Math.Max(max.X, tmp.X);
                 max.Y = Math.Max(max.Y, tmp.Y);
-                max.Z = Math.Max(max.Z, tmp.Z);
+                max.Z = Math.Max(max.Z, tmp.Z);               
             }
 
             GL.Begin(BeginMode.LineLoop);
