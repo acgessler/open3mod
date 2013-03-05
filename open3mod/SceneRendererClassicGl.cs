@@ -91,27 +91,39 @@ namespace open3mod
             tmp = 2.0f / tmp;
             GL.Scale(tmp,tmp,tmp);
 
-            GL.Translate(-(_initposeMin + _initposeMax) * 0.5f);          
-           
-            if (_displayList == 0 || visibleSetChanged || texturesChanged || flags != _lastFlags)
+            GL.Translate(-(_initposeMin + _initposeMax) * 0.5f);
+
+            // build and cache opengl displaylist and update only when the scene changes.
+            // when the scene is being animated, this is bad because it changes every
+            // frame anyway. In this case  we don't use a displist.
+            var animated = _owner.SceneAnimator.IsAnimationActive;
+            if (_displayList == 0 || visibleSetChanged || texturesChanged || flags != _lastFlags || animated)
             {
                 _lastFlags = flags;
-                if (_displayList == 0)
+
+                if (!animated)
                 {
-                    _displayList = GL.GenLists(1);
+                    if (_displayList == 0)
+                    {
+                        _displayList = GL.GenLists(1);
+                    }
+                    GL.NewList(_displayList, ListMode.Compile);
                 }
-                GL.NewList(_displayList, ListMode.Compile);
-                RecursiveRender(_owner.Raw.RootNode, visibleNodes, flags);
+
+                RecursiveRender(_owner.Raw.RootNode, visibleNodes, flags, animated);
 
                 if (flags.HasFlag(RenderFlags.ShowSkeleton) || flags.HasFlag(RenderFlags.ShowNormals))
                 {
-                    RecursiveRenderNoScale(_owner.Raw.RootNode, visibleNodes, flags, 1.0f / tmp);
+                    RecursiveRenderNoScale(_owner.Raw.RootNode, visibleNodes, flags, 1.0f / tmp, animated);
                 }
 
                 GL.EndList();
             }
 
-            GL.CallList(_displayList);
+            if (!animated)
+            {
+                GL.CallList(_displayList);
+            }
 
             // always switch back to FILL
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
@@ -122,26 +134,33 @@ namespace open3mod
         }
 
 
-        private void RecursiveRender(Node node, HashSet<Node> visibleNodes,  RenderFlags flags)
+        private void RecursiveRender(Node node, HashSet<Node> visibleNodes, RenderFlags flags, bool animated)
         {
-            Matrix4 m = AssimpToOpenTk.FromMatrix(node.Transform);
+            Matrix4 m;
+            if (animated)
+            {
+                _owner.SceneAnimator.GetLocalTransform(node, out m);
+            }
+            else
+            {
+                m = AssimpToOpenTk.FromMatrix(node.Transform);
+            }
             m.Transpose();
-
-            // keep using the opengl matrix stack to be compatible with displists
-            GL.PushMatrix();
+     
+            GL.PushMatrix();        
             GL.MultMatrix(ref m);
-          
+
             if (node.HasMeshes && (visibleNodes == null || visibleNodes.Contains(node)))
             {
                 foreach (int index in node.MeshIndices)
                 {
-                    Mesh mesh = _owner.Raw.Meshes[index];
+                    var mesh = _owner.Raw.Meshes[index];
                     _owner.MaterialMapper.ApplyMaterial(mesh,_owner.Raw.Materials[mesh.MaterialIndex]);
                
-                    bool hasColors = mesh.HasVertexColors(0);              
-                    bool hasTexCoords = mesh.HasTextureCoords(0);
+                    var hasColors = mesh.HasVertexColors(0);              
+                    var hasTexCoords = mesh.HasTextureCoords(0);
 
-                    foreach (Face face in mesh.Faces)
+                    foreach (var face in mesh.Faces)
                     {
                         BeginMode faceMode;
                         switch (face.IndexCount)
@@ -161,12 +180,12 @@ namespace open3mod
                         }
 
                         GL.Begin(faceMode);
-                        for (int i = 0; i < face.IndexCount; i++)
+                        for (var i = 0; i < face.IndexCount; i++)
                         {
-                            uint indice = face.Indices[i];
+                            var indice = face.Indices[i];
                             if (hasColors)
                             {
-                                Color4 vertColor = AssimpToOpenTk.FromColor(mesh.GetVertexColors(0)[indice]);
+                                var vertColor = AssimpToOpenTk.FromColor(mesh.GetVertexColors(0)[indice]);
                                 if (flags.HasFlag(RenderFlags.Shaded))
                                 {
                                     GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, vertColor);
@@ -178,15 +197,15 @@ namespace open3mod
                             }
                             if (mesh.HasNormals)
                             {
-                                Vector3 normal = AssimpToOpenTk.FromVector(mesh.Normals[indice]);
+                                var normal = AssimpToOpenTk.FromVector(mesh.Normals[indice]);
                                 GL.Normal3(normal);
                             }
                             if (hasTexCoords)
                             {
-                                Vector3 uvw = AssimpToOpenTk.FromVector(mesh.GetTextureCoords(0)[indice]);
+                                var uvw = AssimpToOpenTk.FromVector(mesh.GetTextureCoords(0)[indice]);
                                 GL.TexCoord2(uvw.X, 1 - uvw.Y);
                             }
-                            Vector3 pos = AssimpToOpenTk.FromVector(mesh.Vertices[indice]);
+                            var pos = AssimpToOpenTk.FromVector(mesh.Vertices[indice]);
                             GL.Vertex3(pos);
                         }
                         GL.End();
@@ -199,18 +218,29 @@ namespace open3mod
                 }
             }
                       
-            for (int i = 0; i < node.ChildCount; i++)
+            for (var i = 0; i < node.ChildCount; i++)
             {              
-                RecursiveRender(node.Children[i], visibleNodes, flags);
+                RecursiveRender(node.Children[i], visibleNodes, flags, animated);
             }
 
             GL.PopMatrix();
         }
 
 
-        private void RecursiveRenderNoScale(Node node, HashSet<Node> visibleNodes, RenderFlags flags, float invGlobalScale)
+        private void RecursiveRenderNoScale(Node node, HashSet<Node> visibleNodes, RenderFlags flags, float invGlobalScale, bool animated)
         {
-            var m = node.Transform;
+            // TODO unify our use of OpenTK and Assimp matrices 
+            Matrix4x4 m;
+            Matrix4 mConv;
+            if (animated)
+            {
+                _owner.SceneAnimator.GetLocalTransform(node, out mConv);
+                OpenTkToAssimp.FromMatrix(ref mConv, out m);
+            }
+            else
+            {
+                m = node.Transform;
+            }
             
             // get rid of the scaling part of the matrix
             // TODO this can be done faster and Decompose() doesn't handle
@@ -224,7 +254,7 @@ namespace open3mod
             rotation.Normalize();
 
             m = new Matrix4x4(rotation.GetMatrix()) * Matrix4x4.FromTranslation(translation);
-            var mConv = AssimpToOpenTk.FromMatrix(ref m);
+            mConv = AssimpToOpenTk.FromMatrix(ref m);
             mConv.Transpose();
 
             if (flags.HasFlag(RenderFlags.ShowSkeleton))
@@ -249,11 +279,12 @@ namespace open3mod
 
             for (int i = 0; i < node.ChildCount; i++)
             {
-                RecursiveRenderNoScale(node.Children[i], visibleNodes, flags, invGlobalScale);
+                RecursiveRenderNoScale(node.Children[i], visibleNodes, flags, invGlobalScale, animated);
             }
 
             GL.PopMatrix();
         }
+
 
 
         private void DrawSkeletonBone(Node node, float invGlobalScale)

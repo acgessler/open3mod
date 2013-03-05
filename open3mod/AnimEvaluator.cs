@@ -20,8 +20,8 @@ namespace open3mod
     public class AnimEvaluator
     {
         private readonly Animation _animation;
-        private Matrix4[] _currentTransforms;
-        private T3[] _lastPositions;
+        private readonly Matrix4[] _currentTransforms;
+        private readonly T3[] _lastPositions;
         private double _lastTime;
 
 

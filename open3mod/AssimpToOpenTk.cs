@@ -31,7 +31,7 @@ using OpenTK.Graphics;
 namespace open3mod
 {
     /// <summary>
-    /// Static utility functions to convert assimp math structures to their OpenTK counterparts
+    /// Static utility functions to convert from assimp math data types to OpenTk data types.
     /// </summary>
     public static class AssimpToOpenTk
     {

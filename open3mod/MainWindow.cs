@@ -548,6 +548,15 @@ namespace open3mod
             _fps.Update();
             _renderer.Update();
 
+            var delta = _fps.LastFrameDelta;
+            foreach(var tab in UiState.Tabs)
+            {
+                if (tab.ActiveScene != null)
+                {
+                    tab.ActiveScene.Update(delta);
+                }
+            }
+
             ProcessKeys();
         }
 

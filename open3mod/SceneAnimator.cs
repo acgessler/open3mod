@@ -179,6 +179,16 @@ namespace open3mod
 
 
         /// <summary>
+        /// Check if a real animation is active. This is equivalent to 
+        /// checking if the ActiveAnimation index is > -1.
+        /// </summary>
+        public bool IsAnimationActive
+        {
+            get { return ActiveAnimation > -1; }
+        }
+
+
+        /// <summary>
         /// Play animation given a time delta since the last Update()
         /// </summary>
         /// <param name="delta">Real-world time delta, in seconds</param>
@@ -189,7 +199,7 @@ namespace open3mod
 
 
         /// <summary>
-        /// Obtain the current global transformation matrix for a node
+        /// Obtain the current global transformation matrix for a node.
         /// </summary>
         /// <param name="name">Name of the node (must exist)</param>
         /// <param name="outTrafo">Receives the transformation matrix</param>
@@ -208,6 +218,29 @@ namespace open3mod
         public void GetGlobalTransform(Node node, out Matrix4 outTrafo)
         {
             GetGlobalTransform(node.Name, out outTrafo);
+        }
+
+
+        /// <summary>
+        /// Obtain the current local transformation matrix for a node
+        /// </summary>
+        /// <param name="name">Name of the node (must exist)</param>
+        /// <param name="outTrafo">Receives the transformation matrix</param>
+        public void GetLocalTransform(string name, out Matrix4 outTrafo)
+        {
+            Debug.Assert(_nodeStateByName.ContainsKey(name));
+            outTrafo = _nodeStateByName[name].LocalTransform;
+        }
+
+
+        /// <summary>
+        /// Obtain the current local transformation matrix for a node
+        /// </summary>
+        /// <param name="node">Node</param>
+        /// <param name="outTrafo">Receives the transformation matrix</param>
+        public void GetLocalTransform(Node node, out Matrix4 outTrafo)
+        {
+            GetLocalTransform(node.Name, out outTrafo);
         }
 
 
@@ -251,8 +284,13 @@ namespace open3mod
 
         private void Recalculate()
         {
-            _evaluator.Evaluate(_animCursor, _isInEndPosition);
-            CalculateTransforms(_tree, _evaluator.CurrentTransforms);
+            if (IsAnimationActive)
+            {
+                Debug.Assert(_evaluator != null);
+
+                _evaluator.Evaluate(_animCursor, _isInEndPosition);
+                CalculateTransforms(_tree, _evaluator.CurrentTransforms);
+            }         
         }
 
 
