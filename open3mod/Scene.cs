@@ -120,6 +120,7 @@ namespace open3mod
         private HashSet<Node> _nodesToShow;
         private bool _texturesChanged = false;
         private SceneAnimator _animator;
+        private double _accumulatedTimeDelta;
 
 
         /// <summary>
@@ -183,16 +184,25 @@ namespace open3mod
             _nodesToShow = filter;
             _nodesToShowChanged = true;
         }
-     
+
 
         /// <summary>
         /// Call once per frame to do non-rendering jobs such as updating 
         /// animations.
         /// </summary>
         /// <param name="delta">Real-world time delta in seconds</param>
-        public void Update(double delta)
+        /// <param name="silent">True if the scene is in background and won't
+        ///    be rendered this frame. It may then be possible to implement
+        ///    a cheaper update.</param>
+        public void Update(double delta, bool silent = false)
         {
-            _animator.Update(delta);
+            if(silent)
+            {
+                _accumulatedTimeDelta += delta;
+                return;
+            }
+            _animator.Update(delta + _accumulatedTimeDelta);
+            _accumulatedTimeDelta = 0.0;
         }
 
 

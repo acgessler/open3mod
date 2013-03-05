@@ -553,7 +553,7 @@ namespace open3mod
             {
                 if (tab.ActiveScene != null)
                 {
-                    tab.ActiveScene.Update(delta);
+                    tab.ActiveScene.Update(delta, tab != UiState.ActiveTab);
                 }
             }
 
