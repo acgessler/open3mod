@@ -222,7 +222,6 @@ namespace open3mod
         private static void BuildTransform(ref Assimp.Quaternion presentRotation, ref Vector3D presentScaling, 
             ref Vector3D presentPosition, out Matrix4 outMatrix)
         {
-            int a;
             // build a transformation matrix from it
             var mat = new Matrix4x4(presentRotation.GetMatrix());
             mat.A1 *= presentScaling.X;

@@ -31,7 +31,6 @@ using System.Threading.Tasks;
 using Assimp;
 using Assimp.Configs;
 using OpenTK;
-using System.IO;
 
 
 namespace open3mod

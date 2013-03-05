@@ -820,7 +820,7 @@ namespace open3mod
                             }                           
                         }
 // ReSharper disable EmptyGeneralCatchClause
-                        catch(Exception ex)
+                        catch(Exception)
 // ReSharper restore EmptyGeneralCatchClause
                         {
                             // ignore this - AddTab() handles the failure
