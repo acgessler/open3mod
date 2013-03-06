@@ -694,6 +694,15 @@ namespace open3mod
         }
 
 
+        /// <summary>
+        /// Converts a mouse position to a viewport index - in other words,
+        /// it calculates the index of the viewport that is hit by a click
+        /// on a given mouse position.
+        /// </summary>
+        /// <param name="x">Mouse x, in normalized [0,1] range</param>
+        /// <param name="y">Mouse y, in normalized [0,1] range</param>
+        /// <returns>Tab.ViewIndex._Max if the mouse coordinate doesn't hit a
+        /// viewport. If not, the ViewIndex of the tab that was hit.</returns>
         private Tab.ViewIndex MousePosToViewportIndex(float x, float y)
         {
             var index = Tab.ViewIndex.Index0;
@@ -716,6 +725,15 @@ namespace open3mod
         }
 
 
+        /// <summary>
+        /// Converts a mouse position to a viewport index - in other words,
+        /// it calculates the index of the viewport that is hit by a click
+        /// on a given mouse position.
+        /// </summary>
+        /// <param name="x">Mouse x, in client (pixel) coordinates</param>
+        /// <param name="y">Mouse y, in client (pixel) coordinates</param>
+        /// <returns>Tab.ViewIndex._Max if the mouse coordinate doesn't hit a
+        /// viewport. If not, the ViewIndex of the tab that was hit.</returns>
         private Tab.ViewIndex MousePosToViewportIndex(int x, int y)
         {
             var xf = x / (float)glControl1.ClientSize.Width;
@@ -747,6 +765,10 @@ namespace open3mod
 
             // hack: the renderer handles the input for the HUD, so forward the event
             var index = MousePosToViewportIndex(e.X, e.Y);
+            if (index == Tab.ViewIndex._Max)
+            {
+                return;
+            }
             var view = UiState.ActiveTab.ActiveViews[(int)index];
             Debug.Assert(view != null);
             _renderer.OnMouseClick(e, view.Value, index);
@@ -768,6 +790,10 @@ namespace open3mod
 
             // hack: the renderer handles the input for the HUD, so forward the event
             var index = MousePosToViewportIndex(e.X, e.Y);
+            if (index == Tab.ViewIndex._Max)
+            {
+                return;
+            }
             var view = UiState.ActiveTab.ActiveViews[(int) index];
             Debug.Assert(view != null);
             _renderer.OnMouseMove(e, view.Value, index);
