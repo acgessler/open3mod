@@ -54,16 +54,6 @@ namespace open3mod
 
 
         /// <summary>
-        /// Enum of all supported camera modes.
-        /// </summary>
-        public enum CameraMode
-        {
-            Fps = 0,
-            Orbit,
-            _Max
-        }
-
-        /// <summary>
         /// Index all 3D views - there can be up to four 3D views at this time,
         /// but the rest of the codebase always works with _Max so it can be
         /// nicely adjusted simply by adding more indexes.
@@ -95,18 +85,20 @@ namespace open3mod
         /// state can be set using the c'tor.
         /// </summary>
         public TabState State { get; private set; }
-        
 
-        public CameraMode CamMode = CameraMode.Orbit;
+
+        /// <summary>
+        /// Index of the currently active viewport
+        /// </summary>
         public ViewIndex ActiveViewIndex = 0;
 
-        private ViewMode _activeViewMode = ViewMode.Single;
 
         /// <summary>
         /// For each viewport the bottom-left and upper-right corners or null
         /// if the viewport is not currently active.
         /// </summary>
         public Vector4?[] ActiveViews = new Vector4?[(int) ViewIndex._Max];
+
 
 
         /// <summary>
@@ -118,7 +110,7 @@ namespace open3mod
             set
             { 
                 // hardcoded table of viewport sizes. This is the only location
-                // so changing these constants will suffice to adjust viewports
+                // so changing these constants is sufficient to adjust viewport defaults
                 _activeViewMode = value;
                 switch(_activeViewMode)
                 {
@@ -162,12 +154,22 @@ namespace open3mod
         }
 
 
+        private ViewMode _activeViewMode = ViewMode.Single;
+        private readonly CameraMode[] _camMode = new[]
+        {
+            CameraMode.Orbit,
+            CameraMode.X,
+            CameraMode.Y,
+            CameraMode.Z
+        };
+
+
         /// <summary>
         /// Camera controllers maintain state even when they are not active, 
         /// therefore we need to keep a camera controller for every
         /// view index X camera mode.
         /// </summary>
-        public ICameraController[,] CameraImpls = new ICameraController[(int)CameraMode._Max,(int)ViewIndex._Max];
+        private readonly ICameraController[,] _cameraImpls = new ICameraController[(int)CameraMode._Max,(int)ViewIndex._Max];
 
 
         /// <summary>
@@ -232,9 +234,9 @@ namespace open3mod
 
         /// <summary>
         /// Unique ID of the tab. This is used to connect with the UI. The value 
-        /// is set via the c'tor and never changes.
+        /// is set via the constructor and never changes.
         /// </summary>
-        public readonly object ID;
+        public readonly object Id;
 
         private string _errorMessage;
 
@@ -250,36 +252,42 @@ namespace open3mod
         {
             ActiveViewMode = ViewMode.Single;
             State = fileBeingLoaded == null ? TabState.Empty : TabState.Loading;
-
             File = fileBeingLoaded;
-
-            ID = id;
+            Id = id;
         }
 
 
         /// <summary>
-        /// Get the ICameraController responsible for a particular view
+        /// Gets the ICameraController responsible for a particular view
         /// for the current active camera mode.
         /// </summary>
         /// <param name="targetView">View index</param>
         /// <returns>ICameraController or null if there is no implementation</returns>
         public ICameraController ActiveCameraControllerForView(ViewIndex targetView)
         {
-            if (CameraImpls[(int)CamMode, (int)targetView] == null)
+            var camMode = _camMode[(int) targetView];
+            if (_cameraImpls[(int)camMode, (int)targetView] == null)
             {
-                switch (CamMode)
+                switch (camMode)
                 {
                     case CameraMode.Fps:
-                        CameraImpls[(int)CamMode, (int)ActiveViewIndex] = new FpsCameraController();
+                        _cameraImpls[(int)camMode, (int)ActiveViewIndex] = new FpsCameraController();
                         break;
+                    case CameraMode.X:
+                    case CameraMode.Y:
+                    case CameraMode.Z:
                     case CameraMode.Orbit:
-                        CameraImpls[(int)CamMode, (int)ActiveViewIndex] = new OrbitCameraController();
+                        var orbit = new OrbitCameraController(camMode);
+                        _cameraImpls[(int)CameraMode.X, (int)ActiveViewIndex] = orbit;
+                        _cameraImpls[(int)CameraMode.Y, (int)ActiveViewIndex] = orbit;
+                        _cameraImpls[(int)CameraMode.Z, (int)ActiveViewIndex] = orbit;
+                        _cameraImpls[(int)CameraMode.Orbit, (int)ActiveViewIndex] = orbit;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
             }
-            return CameraImpls[(int)CamMode, (int)targetView];
+            return _cameraImpls[(int)camMode, (int)targetView];
         }
 
 
@@ -292,7 +300,7 @@ namespace open3mod
         }
 
         /// <summary>
-        /// Set the tab to a permanent "failed to load" state. In this
+        /// Sets the tab to a permanent "failed to load" state. In this
         /// state, the tab keeps displaying an error message but nothing
         /// else. 
         /// </summary>
@@ -302,7 +310,28 @@ namespace open3mod
             State = TabState.Failed;
             _activeScene = null;
             _errorMessage = message;
-        }     
+        }
+
+
+        /// <summary>
+        /// Changes the camera mode in the currently active view.
+        /// </summary>
+        /// <param name="cameraMode">New camera mode</param>
+        public void ChangeActiveCameraMode(CameraMode cameraMode)
+        {
+            ChangeCameraModeForView(ActiveViewIndex, cameraMode);
+        }
+
+
+        /// <summary>
+        /// Changes the camera mode for a view.
+        /// </summary>
+        /// <param name="viewIndex">index of the view.</param>
+        /// <param name="cameraMode">New camera mode.</param>
+        private void ChangeCameraModeForView(ViewIndex viewIndex, CameraMode cameraMode)
+        {
+            _camMode[(int)viewIndex] = cameraMode;
+        }
     }
 }
 

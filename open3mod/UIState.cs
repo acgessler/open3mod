@@ -73,7 +73,7 @@ namespace open3mod
         /// <returns>null if there is no tab with this id</returns>
         public Tab TabForId(object id)
         {
-            return Tabs.FirstOrDefault(ts => ts.ID == id);
+            return Tabs.FirstOrDefault(ts => ts.Id == id);
         }
 
 
@@ -86,7 +86,7 @@ namespace open3mod
         {
             foreach (Tab ts in Tabs)
             {
-                if (ts.ID == id)
+                if (ts.Id == id)
                 {
                     ActiveTab = ts;
                     return;
@@ -99,7 +99,7 @@ namespace open3mod
 
         public void SelectTab(Tab tab)
         {
-            SelectTab(tab.ID);
+            SelectTab(tab.Id);
         }
 
 
@@ -114,7 +114,7 @@ namespace open3mod
         {
             foreach (Tab ts in Tabs)
             {
-                if (ts.ID == id)
+                if (ts.Id == id)
                 {
                     Debug.Assert(ActiveTab != ts, "active tab cannot be removed: " + id.ToString());
                     Tabs.Remove(ts);
@@ -128,7 +128,7 @@ namespace open3mod
 
         public void RemoveTab(Tab tab)
         {
-            RemoveTab(tab.ID);
+            RemoveTab(tab.Id);
         }
 
 
@@ -141,10 +141,10 @@ namespace open3mod
         public void AddTab(Tab tab)
         {
 #if DEBUG
-            Debug.Assert(!Tabs.Contains(tab), "tab exists already:" + tab.ID.ToString());
+            Debug.Assert(!Tabs.Contains(tab), "tab exists already:" + tab.Id.ToString());
             foreach (Tab ts in Tabs)
             {
-                Debug.Assert(ts.ID != tab.ID, "tab id exists already: " + tab.ID.ToString());
+                Debug.Assert(ts.Id != tab.Id, "tab id exists already: " + tab.Id.ToString());
             }
 #endif
             Tabs.Add(tab);

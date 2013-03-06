@@ -425,7 +425,7 @@ namespace open3mod
 
             var updateTitle = new MethodInvoker(() =>
             {
-                var t = (TabPage)tab.ID;
+                var t = (TabPage)tab.Id;
                 if (t.Text.EndsWith(LoadingTitlePostfix))
                 {
                     t.Text = t.Text.Substring(0,t.Text.Length -
@@ -445,13 +445,13 @@ namespace open3mod
             // is thus not available.
             if (!_initialized)
             {
-                SelectTab((TabPage)tab.ID);
+                SelectTab((TabPage)tab.Id);
                 PopulateInspector(tab);
                 updateTitle();
             }
             else
             {
-                BeginInvoke(_delegateSelectTab, new[] { tab.ID });
+                BeginInvoke(_delegateSelectTab, new[] { tab.Id });
                 BeginInvoke(_delegatePopulateInspector, new object[] { tab });
                 BeginInvoke(updateTitle);
             }
@@ -475,7 +475,7 @@ namespace open3mod
 
         private TabUiSkeleton UiForTab(Tab tab)
         {
-            return ((TabUiSkeleton) ((TabPage) tab.ID).Controls[0]);
+            return ((TabUiSkeleton) ((TabPage) tab.Id).Controls[0]);
         }
 
 

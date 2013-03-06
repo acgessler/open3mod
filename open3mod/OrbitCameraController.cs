@@ -47,7 +47,7 @@ namespace open3mod
         private const float InitialCameraDistance = 3.0f;
 
 
-        public OrbitCameraController()
+        public OrbitCameraController(CameraMode camMode)
         {
             _view = Matrix4.Identity;
             _viewWithOffset = Matrix4.Identity;
@@ -58,6 +58,8 @@ namespace open3mod
             _up = Vector3.UnitY;
 
             UpdateViewMatrix();
+
+            // TODO handle camMode
         }
 
 
@@ -95,9 +97,9 @@ namespace open3mod
             // XXX switch to FPS camera at current position?
         }
 
-        public CameraType GetCameraType()
+        public CameraMode GetCameraMode()
         {
-            return CameraType.Orbit;
+            return CameraMode.Orbit;
         }
 
         private void UpdateViewMatrix()

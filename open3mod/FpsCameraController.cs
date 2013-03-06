@@ -64,9 +64,9 @@ namespace open3mod
             _translation += v;
         }
 
-        public CameraType GetCameraType()
+        public CameraMode GetCameraMode()
         {
-            return CameraType.Fps;
+            return CameraMode.Fps;
         }
 
         public void MouseMove(int x, int y)

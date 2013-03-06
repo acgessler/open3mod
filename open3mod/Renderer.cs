@@ -47,6 +47,8 @@ namespace open3mod
         private Rectangle _hoverRegion;
         private double _displayFps;
         private Vector4 _hoverViewport;
+        private Point _mouseClickPos;
+        private bool _processHudClick;
 
 
         /// <summary>
@@ -202,10 +204,20 @@ namespace open3mod
                 var h = (int) (imageHeight*2.0/3);
 
                 var ui = Window.UiState.ActiveTab;
+
+                if (_processHudClick && 
+                    _mouseClickPos.X > x && _mouseClickPos.X <= x + w && 
+                    _mouseClickPos.Y > y && _mouseClickPos.Y <= y + h)
+                {
+                    _processHudClick = false;
+
+                    ui.ChangeActiveCameraMode((CameraMode)i);
+                    Debug.Assert(ui.ActiveCameraController.GetCameraMode() == (CameraMode)i);
+                }
  
                 // normal image
-                int imageIndex = 0;
-                if(ui.ActiveCameraController.GetCameraType() == (CameraType)i)
+                var imageIndex = 0;
+                if(ui.ActiveCameraController.GetCameraMode() == (CameraMode)i)
                 {
                     // selected image
                     imageIndex = 2;
@@ -239,6 +251,20 @@ namespace open3mod
             }
             _hudDirty = true;
             _hoverViewport = viewport;
+        }
+
+
+        public void OnMouseClick(MouseEventArgs mouseEventArgs, Vector4 viewport)
+        {
+            // a bit hacky - the click is processed by the render routine. But this is by
+            // far the simplest way to get this done without duplicating code.
+            if (_mousePos.X > _hoverRegion.Left && _mousePos.X <= _hoverRegion.Right &&
+                _mousePos.Y > _hoverRegion.Top && _mousePos.Y <= _hoverRegion.Bottom)
+            {
+                _mouseClickPos = mouseEventArgs.Location;
+                _processHudClick = true;
+                _hudDirty = true;
+            }
         }
 
 

@@ -28,43 +28,54 @@ using OpenTK;
 
 namespace open3mod
 {
-    public enum CameraType
+    /// <summary>
+    /// Predefined camera modes. The map from ICameraController implementations
+    /// to camera modes is not one-by-one because the X,Y and Z modes are 
+    /// states of the more general Orbit mode. 
+    /// </summary>
+    public enum CameraMode
     {
         // these indices must match the UI order
         X = 0,
         Y = 1,
         Z = 2,
         Orbit = 3,
-        Fps = 4
+        Fps = 4,
+
+        _Max = 5
     }
 
     /// <summary>
     /// Base camera abstraction. 
     /// 
-    /// A camera controller is assumed to be stateful, i.e. it maintains
+    /// A camera controller is assumed to be statefull, i.e. it maintains
     /// the current camera position and adjusts it to input.
     /// </summary>
     public interface ICameraController
     {
 
+        /// <summary>
+        /// Obtains the current view transformation matrix for the camera
+        /// </summary>
+        /// <returns>View matrix (rotation+translation, no scaling)</returns>
         Matrix4 GetView();
 
         /// <summary>
-        /// Process mouse movement events
+        /// Processes mouse movement events
         /// </summary>
         /// <param name="x">X delta</param>
         /// <param name="y">Y delta</param>
         void MouseMove(int x, int y);
 
         /// <summary>
-        /// Process scroll events
+        /// Processes scroll events
         /// </summary>
         /// <param name="z">Signed scroll delta (knocks * DELTA_.. constants
         ///   from WinFors)</param>
         void Scroll(int z);
 
         /// <summary>
-        /// Process movement keys
+        /// Processes movement keys
         /// </summary>
         /// <param name="x">Signed X axis movement, normalized by time</param>
         /// <param name="y">Signed Y axis movement, normalized by time</param>
@@ -72,10 +83,10 @@ namespace open3mod
         void MovementKey(float x, float y, float z);
 
         /// <summary>
-        /// Get the type of the current camera
+        /// Gets the mode of the camera
         /// </summary>
         /// <returns></returns>
-        CameraType GetCameraType();
+        CameraMode GetCameraMode();
     }
 }
 
