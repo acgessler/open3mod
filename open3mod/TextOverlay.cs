@@ -216,14 +216,24 @@ namespace open3mod
         /// </summary>
         private void Commit()
         {
-            BitmapData data = _textBmp.LockBits(new Rectangle(0, 0, _textBmp.Width, _textBmp.Height),
-                ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            try
+            {
+                var data = _textBmp.LockBits(new Rectangle(0, 0, _textBmp.Width, _textBmp.Height),
+                    ImageLockMode.ReadOnly,
+                    System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
-            GL.BindTexture(TextureTarget.Texture2D, _textTexture);
-            GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, _textBmp.Width, _textBmp.Height, 
-                PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
+                GL.BindTexture(TextureTarget.Texture2D, _textTexture);
+                GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, _textBmp.Width, _textBmp.Height,
+                    PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
 
-            _textBmp.UnlockBits(data);
+                _textBmp.UnlockBits(data);
+            }
+            catch(ArgumentException)
+            {
+                // this sometimes happens during Shutdown (presumably because Commit gets called
+                // after other resources have already been cleaned up). Ignore it because it
+                // doesn't matter at this time.
+            }
         }        
     }
 }
