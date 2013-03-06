@@ -745,6 +745,12 @@ namespace open3mod
             _previousMousePosX = e.X;
             _previousMousePosY = e.Y;
 
+            // hack: the renderer handles the input for the HUD, so forward the event
+            var index = MousePosToViewportIndex(e.X, e.Y);
+            var view = UiState.ActiveTab.ActiveViews[(int)index];
+            Debug.Assert(view != null);
+            _renderer.OnMouseClick(e, view.Value, index);
+
             UpdateActiveViewIfNeeded(e);
         }
 
@@ -761,9 +767,10 @@ namespace open3mod
             }
 
             // hack: the renderer handles the input for the HUD, so forward the event
-            var view = UiState.ActiveTab.ActiveViews[(int) MousePosToViewportIndex(e.X, e.Y)];
+            var index = MousePosToViewportIndex(e.X, e.Y);
+            var view = UiState.ActiveTab.ActiveViews[(int) index];
             Debug.Assert(view != null);
-            _renderer.OnMouseMove(e, view.Value);
+            _renderer.OnMouseMove(e, view.Value, index);
 
             if(!_mouseDown)
             {

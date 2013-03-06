@@ -49,6 +49,7 @@ namespace open3mod
         private Vector4 _hoverViewport;
         private Point _mouseClickPos;
         private bool _processHudClick;
+        private Tab.ViewIndex _hoverViewIndex;
 
 
         /// <summary>
@@ -211,13 +212,13 @@ namespace open3mod
                 {
                     _processHudClick = false;
 
-                    ui.ChangeActiveCameraMode((CameraMode)i);
-                    Debug.Assert(ui.ActiveCameraController.GetCameraMode() == (CameraMode)i);
+                    ui.ChangeCameraModeForView(_hoverViewIndex, (CameraMode)i);
+                    Debug.Assert(ui.ActiveCameraControllerForView(_hoverViewIndex).GetCameraMode() == (CameraMode)i);
                 }
  
                 // normal image
                 var imageIndex = 0;
-                if(ui.ActiveCameraController.GetCameraMode() == (CameraMode)i)
+                if (ui.ActiveCameraControllerForView(_hoverViewIndex).GetCameraMode() == (CameraMode)i)
                 {
                     // selected image
                     imageIndex = 2;
@@ -237,7 +238,7 @@ namespace open3mod
         }
 
 
-        public void OnMouseMove(MouseEventArgs mouseEventArgs, Vector4 viewport)
+        public void OnMouseMove(MouseEventArgs mouseEventArgs, Vector4 viewport, Tab.ViewIndex viewIndex)
         {
             _mousePos = mouseEventArgs.Location;
             if( _mousePos.X > _hoverRegion.Left && _mousePos.X <= _hoverRegion.Right &&
@@ -251,10 +252,11 @@ namespace open3mod
             }
             _hudDirty = true;
             _hoverViewport = viewport;
+            _hoverViewIndex = viewIndex;
         }
 
 
-        public void OnMouseClick(MouseEventArgs mouseEventArgs, Vector4 viewport)
+        public void OnMouseClick(MouseEventArgs mouseEventArgs, Vector4 viewport, Tab.ViewIndex viewIndex)
         {
             // a bit hacky - the click is processed by the render routine. But this is by
             // far the simplest way to get this done without duplicating code.

@@ -21,6 +21,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,6 +36,7 @@ namespace open3mod
         private float _cameraDistance;
         private readonly Vector3 _right;
         private readonly Vector3 _up;
+        private CameraMode _mode;
 
 
         private const float ZoomSpeed = 1.00105f;
@@ -49,6 +51,8 @@ namespace open3mod
 
         public OrbitCameraController(CameraMode camMode)
         {
+            _mode = camMode;
+
             _view = Matrix4.Identity;
             _viewWithOffset = Matrix4.Identity;
 
@@ -57,9 +61,7 @@ namespace open3mod
             _right = Vector3.UnitX;
             _up = Vector3.UnitY;
 
-            UpdateViewMatrix();
-
-            // TODO handle camMode
+            UpdateViewMatrix();            
         }
 
 
@@ -68,6 +70,7 @@ namespace open3mod
         {
             return _viewWithOffset;
         }
+
 
         public void MouseMove(int x, int y)
         {
@@ -85,6 +88,7 @@ namespace open3mod
             UpdateViewMatrix();
         }
 
+
         public void Scroll(int z)
         {
             _cameraDistance *= (float)Math.Pow(ZoomSpeed, -z);
@@ -92,19 +96,51 @@ namespace open3mod
             UpdateViewMatrix();
         }
 
+
         public void MovementKey(float x, float y, float z)
         {
             // XXX switch to FPS camera at current position?
         }
 
+
         public CameraMode GetCameraMode()
         {
-            return CameraMode.Orbit;
+            return _mode;
         }
+
 
         private void UpdateViewMatrix()
         {
             _viewWithOffset = Matrix4.LookAt(_view.Column2.Xyz * _cameraDistance, Vector3.Zero, _view.Column1.Xyz);
+        }
+
+
+        /// <summary>
+        /// Switches the camera controller between the X,Z,Y and Orbit modes.
+        /// </summary>
+        /// <param name="cameraMode"></param>
+        public void SetOrbitOrConstrainedMode(CameraMode cameraMode)
+        {
+            if(_mode == cameraMode)
+            {
+                return;
+            }
+            _mode = cameraMode;
+    
+            switch(_mode)
+            {
+                case CameraMode.X:
+                    break;
+                case CameraMode.Y:
+                    break;
+                case CameraMode.Z:
+                    break;
+                case CameraMode.Orbit:
+                    break;               
+                default:
+                    Debug.Assert(false);
+                    break;
+            }
         }
     }
 }

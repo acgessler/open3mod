@@ -271,17 +271,17 @@ namespace open3mod
                 switch (camMode)
                 {
                     case CameraMode.Fps:
-                        _cameraImpls[(int)camMode, (int)ActiveViewIndex] = new FpsCameraController();
+                        _cameraImpls[(int)camMode, (int)targetView] = new FpsCameraController();
                         break;
                     case CameraMode.X:
                     case CameraMode.Y:
                     case CameraMode.Z:
                     case CameraMode.Orbit:
                         var orbit = new OrbitCameraController(camMode);
-                        _cameraImpls[(int)CameraMode.X, (int)ActiveViewIndex] = orbit;
-                        _cameraImpls[(int)CameraMode.Y, (int)ActiveViewIndex] = orbit;
-                        _cameraImpls[(int)CameraMode.Z, (int)ActiveViewIndex] = orbit;
-                        _cameraImpls[(int)CameraMode.Orbit, (int)ActiveViewIndex] = orbit;
+                        _cameraImpls[(int)CameraMode.X, (int)targetView] = orbit;
+                        _cameraImpls[(int)CameraMode.Y, (int)targetView] = orbit;
+                        _cameraImpls[(int)CameraMode.Z, (int)targetView] = orbit;
+                        _cameraImpls[(int)CameraMode.Orbit, (int)targetView] = orbit;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -328,9 +328,23 @@ namespace open3mod
         /// </summary>
         /// <param name="viewIndex">index of the view.</param>
         /// <param name="cameraMode">New camera mode.</param>
-        private void ChangeCameraModeForView(ViewIndex viewIndex, CameraMode cameraMode)
+        public void ChangeCameraModeForView(ViewIndex viewIndex, CameraMode cameraMode)
         {
             _camMode[(int)viewIndex] = cameraMode;
+
+            // special handling to switch the orbit camera controller between the x,y,z and full orbit modes
+            if (cameraMode == CameraMode.Z || cameraMode == CameraMode.Y || cameraMode == CameraMode.X || cameraMode == CameraMode.Orbit)
+            {
+                if (_cameraImpls[(int)CameraMode.Orbit, (int)viewIndex] == null)
+                {
+                    return;
+                }
+
+                var orbit = _cameraImpls[(int) CameraMode.Orbit, (int) viewIndex] as OrbitCameraController;
+                Debug.Assert(orbit != null);
+
+                orbit.SetOrbitOrConstrainedMode(cameraMode);
+            } 
         }
     }
 }
