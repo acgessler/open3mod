@@ -83,7 +83,10 @@ namespace open3mod
         void MovementKey(float x, float y, float z);
 
         /// <summary>
-        /// Gets the mode of the camera
+        /// Gets the mode of the camera. The camera mode is allowed to change
+        /// during calls to MovementKey() or MouseMove() or Scroll() (this allows
+        /// one implementation class to handle multiple, related camera modes
+        /// that are still kept separate in the UI).
         /// </summary>
         /// <returns></returns>
         CameraMode GetCameraMode();

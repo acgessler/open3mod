@@ -51,9 +51,8 @@ namespace open3mod
 
         public OrbitCameraController(CameraMode camMode)
         {
-            _mode = camMode;
+            _view = Matrix4.CreateFromAxisAngle(new Vector3(1.0f, 1.0f, 0.0f), 0.9f);
 
-            _view = Matrix4.Identity;
             _viewWithOffset = Matrix4.Identity;
 
             _cameraDistance = InitialCameraDistance;
@@ -61,7 +60,7 @@ namespace open3mod
             _right = Vector3.UnitX;
             _up = Vector3.UnitY;
 
-            UpdateViewMatrix();            
+            SetOrbitOrConstrainedMode(camMode, true);           
         }
 
 
@@ -74,6 +73,11 @@ namespace open3mod
 
         public void MouseMove(int x, int y)
         {
+            if(x == 0 && y == 0)
+            {
+                return;
+            }
+
             if (x != 0)
             {
                 _view *= Matrix4.CreateFromAxisAngle(_up, (float)(x * RotationSpeed * Math.PI / 180.0));
@@ -86,6 +90,9 @@ namespace open3mod
             }
               
             UpdateViewMatrix();
+
+            // leave the X,Z,Y constrained camera modes if we were in any of them
+            SetOrbitOrConstrainedMode(CameraMode.Orbit);
         }
 
 
@@ -118,10 +125,11 @@ namespace open3mod
         /// <summary>
         /// Switches the camera controller between the X,Z,Y and Orbit modes.
         /// </summary>
-        /// <param name="cameraMode"></param>
-        public void SetOrbitOrConstrainedMode(CameraMode cameraMode)
+        /// <param name="cameraMode">One of the X,Z,Y,Orbit modes</param>
+        /// <param name="init">Do not use</param>
+        public void SetOrbitOrConstrainedMode(CameraMode cameraMode, bool init = false)
         {
-            if(_mode == cameraMode)
+            if(_mode == cameraMode && !init)
             {
                 return;
             }
@@ -130,17 +138,38 @@ namespace open3mod
             switch(_mode)
             {
                 case CameraMode.X:
+                    _view = new Matrix4(
+                        0,0,1,0,
+                        0,1,0,0,
+                       -1,0,0,0,
+                        0,0,0,1
+                        ); 
                     break;
                 case CameraMode.Y:
+                    _view = new Matrix4(
+                        0, 1, 0, 0,
+                        0, 0, 1, 0,
+                       -1, 0, 0, 0,
+                        0, 0, 0, 1
+                        ); 
                     break;
                 case CameraMode.Z:
+                    _view = new Matrix4(
+                        1, 0, 0, 0,
+                        0, 1, 0, 0,
+                        0, 0, 1, 0,
+                        0, 0, 0, 1
+                        ); 
                     break;
                 case CameraMode.Orbit:
+                    // leave _view unchanged 
                     break;               
                 default:
                     Debug.Assert(false);
                     break;
             }
+
+            UpdateViewMatrix(); 
         }
     }
 }

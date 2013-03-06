@@ -154,13 +154,13 @@ namespace open3mod
         }
 
 
-        private ViewMode _activeViewMode = ViewMode.Single;
+        private ViewMode _activeViewMode = ViewMode.Four;
         private readonly CameraMode[] _camMode = new[]
         {
             CameraMode.Orbit,
+            CameraMode.Z,
             CameraMode.X,
-            CameraMode.Y,
-            CameraMode.Z
+            CameraMode.Y
         };
 
 
@@ -250,7 +250,7 @@ namespace open3mod
         /// </summary>
         public Tab(object id, string fileBeingLoaded)
         {
-            ActiveViewMode = ViewMode.Single;
+            ActiveViewMode = ViewMode.Four;
             State = fileBeingLoaded == null ? TabState.Empty : TabState.Loading;
             File = fileBeingLoaded;
             Id = id;
