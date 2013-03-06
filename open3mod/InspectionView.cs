@@ -47,6 +47,10 @@ namespace open3mod
         }
 
 
+        /// <summary>
+        /// Binds a scene to the InspectionView.
+        /// </summary>
+        /// <param name="scene">May be null, in this case the inspector remains disabled</param>
         public void SetSceneSource(Scene scene)
         {
             if (Scene == scene)

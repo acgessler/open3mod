@@ -64,6 +64,11 @@ namespace open3mod
             _translation += v;
         }
 
+        public CameraType GetCameraType()
+        {
+            return CameraType.Fps;
+        }
+
         public void MouseMove(int x, int y)
         {
             if (y != 0)

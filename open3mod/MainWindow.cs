@@ -747,6 +747,9 @@ namespace open3mod
                 UiState.ActiveTab.ActiveCameraController.Scroll(e.Delta);
             }
 
+            // hack: the renderer handles the input for the HUD, so forward the event
+            _renderer.OnMouseMove(e);
+
             if(!_mouseDown)
             {
                 return;

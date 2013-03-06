@@ -25,6 +25,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -35,7 +36,17 @@ namespace open3mod
     public class Renderer : IDisposable
     {
         private readonly MainWindow _window;
-        private TextOverlay _textOverlay;
+        private readonly TextOverlay _textOverlay;
+
+        private Image[,] _hudImages;
+        private bool _hudDirty = true;
+
+        private double _accTime;
+        private readonly float[] _lastActiveVp = new float[4];
+        private Point _mousePos;
+        private Rectangle _hoverRegion;
+        private double _displayFps;
+
 
         /// <summary>
         /// The gl context which is being rendered to
@@ -124,7 +135,138 @@ namespace open3mod
                 DrawFps();
             }
 
+            DrawHud(activeVp.Value.X, activeVp.Value.Y, activeVp.Value.Z, activeVp.Value.W);           
             _textOverlay.Draw();
+        }
+
+
+        /// <summary>
+        /// Draw HUD (camera panel) given current active viewport pos, dim
+        /// </summary>
+        /// <param name="x1"></param>
+        /// <param name="y1"></param>
+        /// <param name="x2"></param>
+        /// <param name="y2"></param>
+        /// <param name="activeTab"> </param>
+        private void DrawHud(float x1, float y1, float x2, float y2)
+        {
+            if(!_hudDirty)
+            {
+// ReSharper disable CompareOfFloatsByEqualityOperator
+                _hudDirty = x1 != _lastActiveVp[0] || y1 != _lastActiveVp[1] || x2 != _lastActiveVp[2] || y2 != _lastActiveVp[3];
+// ReSharper restore CompareOfFloatsByEqualityOperator
+            }
+
+            _lastActiveVp[0] = x1;
+            _lastActiveVp[1] = y1;
+            _lastActiveVp[2] = x2;
+            _lastActiveVp[3] = y2;
+
+            if (!_textOverlay.WantRedraw)
+            {
+                if (_hudDirty)
+                {
+                    _textOverlay.WantRedrawNextFrame = true;
+                }
+                return;
+            }
+
+            _hudDirty = false;
+
+            LoadHudImages();
+            Debug.Assert(_hudImages != null);
+
+            var graphics = _textOverlay.GetDrawableGraphicsContext();
+            var xPoint = (int) ((x1+x2)*(double)RenderResolution.Width);
+            const int yPoint = 3;
+            const int xSpacing = 4;
+
+            var imageWidth = _hudImages[0, 0].Width;
+            var imageHeight = _hudImages[0, 0].Height;
+
+            var regionWidth = imageWidth * _hudImages.GetLength(0) + xSpacing * (_hudImages.GetLength(0)-1);
+            const int regionHeight = 25;
+
+            xPoint -= regionWidth;
+            _hoverRegion = new Rectangle(xPoint, yPoint, regionWidth - 2, regionHeight);
+
+            graphics.FillRectangle(new SolidBrush(Color.FromArgb(50, 100, 100, 100)), _hoverRegion);
+
+            xPoint += _hudImages.GetLength(0)/2;
+            for (var i = 0; i < _hudImages.GetLength(0); ++i)
+            {
+                var x = xPoint;
+                var y = yPoint + 2;
+                var w = (int) (imageWidth*2.0/3);
+                var h = (int) (imageHeight*2.0/3);
+
+                var ui = Window.UiState.ActiveTab;
+ 
+                // normal image
+                int imageIndex = 0;
+                if(ui.ActiveCameraController.GetCameraType() == (CameraType)i)
+                {
+                    // selected image
+                    imageIndex = 2;
+                }
+                else if (_mousePos.X > x && _mousePos.X <= x + w && _mousePos.Y > y && _mousePos.Y <= y + h)
+                {
+                    // hover image
+                    imageIndex = 1;
+                }
+
+                var img = _hudImages[i, imageIndex];
+                Debug.Assert(img.Width == imageWidth && img.Height == imageHeight, "all images must be of the same size");
+
+                graphics.DrawImage(img, x,y,w,h);
+                xPoint += img.Width;
+            }
+        }
+
+
+        public void OnMouseMove(MouseEventArgs mouseEventArgs)
+        {
+            _mousePos = mouseEventArgs.Location;
+            if( _mousePos.X > _hoverRegion.Left && _mousePos.X <= _hoverRegion.Right &&
+                _mousePos.Y > _hoverRegion.Top  && _mousePos.Y <= _hoverRegion.Bottom)
+            {
+                _hudDirty = true;
+            }
+        }
+
+
+        /// <summary>
+        /// Populate _hudImages
+        /// </summary>
+        private void LoadHudImages()
+        {
+            if (_hudImages == null)
+            {
+                _hudImages = new Image[5,3];
+                var prefixTable = new[]
+                {
+                    "open3mod.Images.HUD_X",
+                    "open3mod.Images.HUD_Y",
+                    "open3mod.Images.HUD_Z",
+                    "open3mod.Images.HUD_Orbit",
+                    "open3mod.Images.HUD_FPS"
+                };
+
+                var postFixTable = new[]
+                {
+                    "_Normal",
+                    "_Hover",
+                    "_Selected"
+                };
+
+                for (var i = 0; i < _hudImages.GetLength(0); ++i)
+                {
+                    for (var j = 0; j < _hudImages.GetLength(1); ++j)
+                    {
+                        _hudImages[i, j] = ImageFromResource.Get(prefixTable[i] + postFixTable[j] + ".png");
+                    }
+                }
+            }
         }
 
 
@@ -199,9 +341,10 @@ namespace open3mod
             {
                 DrawScene(activeTab.ActiveScene, view);
             }
-
+           
             DrawViewportColorsPost(active, vw, vh);
         }
+
 
 
         private void SetFullViewport()
@@ -319,22 +462,29 @@ namespace open3mod
         }
 
 
-        private double _accTime;
         private void DrawFps()
         {
             // only update every 1/3rd of a second
             _accTime += Window.Fps.LastFrameDelta;
             if (_accTime < 0.3333 && !_textOverlay.WantRedraw)
             {
+                if (_accTime >= 0.3333)
+                {
+                    _textOverlay.WantRedrawNextFrame = true;
+                }
                 return;
             }
 
-            _accTime = 0.0;
-
+            if (_accTime >= 0.3333)
+            {              
+                _displayFps = Window.Fps.LastFps;
+                _accTime = 0.0;      
+            }
+          
             var graphics = _textOverlay.GetDrawableGraphicsContext();
-            graphics.DrawString("FPS: " + Window.Fps.LastFps.ToString("0.0"), Window.UiState.DefaultFont12,
+            graphics.DrawString("FPS: " + _displayFps.ToString("0.0"), Window.UiState.DefaultFont12,
                                 new SolidBrush(Color.Red), 5, 5);
-        }
+        }       
     }
 }
 

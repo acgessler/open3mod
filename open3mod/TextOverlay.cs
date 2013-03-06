@@ -48,12 +48,15 @@ namespace open3mod
         private int _textTexture;
 
         private Graphics _tempContext;
+        private uint _frameIndex;
 
 
         public bool WantRedraw
         {
             get { return _tempContext != null; }
         }
+
+        public bool WantRedrawNextFrame { get; set; }
 
 
         public TextOverlay(Renderer renderer)
@@ -153,7 +156,10 @@ namespace open3mod
         public void Draw()
         {
             // Update the GL texture if needed. Make sure the .net Graphics context is 
-            // not hold longer than absolutely necessary
+            // not hold longer than absolutely necessary.
+
+            // Do this every second frame to make sure everyone got the chance of
+            // redrawing their stuff.
             if(_tempContext != null)
             {
                 Commit();
@@ -197,6 +203,11 @@ namespace open3mod
 
             GL.MatrixMode(MatrixMode.Modelview);
             GL.PopMatrix();
+
+            if (WantRedrawNextFrame)
+            {
+                GetDrawableGraphicsContext();
+            }
         }
 
 

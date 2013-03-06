@@ -95,6 +95,11 @@ namespace open3mod
             // XXX switch to FPS camera at current position?
         }
 
+        public CameraType GetCameraType()
+        {
+            return CameraType.Orbit;
+        }
+
         private void UpdateViewMatrix()
         {
             _viewWithOffset = Matrix4.LookAt(_view.Column2.Xyz * _cameraDistance, Vector3.Zero, _view.Column1.Xyz);

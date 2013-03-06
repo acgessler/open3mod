@@ -28,6 +28,16 @@ using OpenTK;
 
 namespace open3mod
 {
+    public enum CameraType
+    {
+        // these indices must match the UI order
+        X = 0,
+        Y = 1,
+        Z = 2,
+        Orbit = 3,
+        Fps = 4
+    }
+
     /// <summary>
     /// Base camera abstraction. 
     /// 
@@ -60,6 +70,12 @@ namespace open3mod
         /// <param name="y">Signed Y axis movement, normalized by time</param>
         /// <param name="z">Signed Z axis movement, normalized by time</param>
         void MovementKey(float x, float y, float z);
+
+        /// <summary>
+        /// Get the type of the current camera
+        /// </summary>
+        /// <returns></returns>
+        CameraType GetCameraType();
     }
 }
 

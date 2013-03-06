@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -81,11 +82,11 @@ namespace open3mod
             }
 
             GL.MatrixMode(MatrixMode.Modelview);
-            Matrix4 lookat = cam == null ? Matrix4.LookAt(0, 10, 5, 0, 0, 0, 0, 1, 0) : cam.GetView();
+            var lookat = cam == null ? Matrix4.LookAt(0, 10, 5, 0, 0, 0, 0, 1, 0) : cam.GetView();
 
             GL.LoadMatrix(ref lookat);
 
-            float tmp = _initposeMax.X - _initposeMin.X;
+            var tmp = _initposeMax.X - _initposeMin.X;
             tmp = Math.Max(_initposeMax.Y - _initposeMin.Y, tmp);
             tmp = Math.Max(_initposeMax.Z - _initposeMin.Z, tmp);
             tmp = 2.0f / tmp;
