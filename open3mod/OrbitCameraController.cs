@@ -149,7 +149,7 @@ namespace open3mod
                     _view = new Matrix4(
                         0, 1, 0, 0,
                         0, 0, 1, 0,
-                       -1, 0, 0, 0,
+                        1, 0, 0, 0,
                         0, 0, 0, 1
                         ); 
                     break;
