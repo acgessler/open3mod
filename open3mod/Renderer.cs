@@ -46,6 +46,7 @@ namespace open3mod
         private Point _mousePos;
         private Rectangle _hoverRegion;
         private double _displayFps;
+        private Vector4 _hoverViewport;
 
 
         /// <summary>
@@ -135,21 +136,21 @@ namespace open3mod
                 DrawFps();
             }
 
-            DrawHud(activeVp.Value.X, activeVp.Value.Y, activeVp.Value.Z, activeVp.Value.W);           
+            DrawHud();           
             _textOverlay.Draw();
         }
 
 
         /// <summary>
-        /// Draw HUD (camera panel) given current active viewport pos, dim
+        /// Draw HUD (camera panel) at the viewport that the mouse is currently hovering over
         /// </summary>
-        /// <param name="x1"></param>
-        /// <param name="y1"></param>
-        /// <param name="x2"></param>
-        /// <param name="y2"></param>
-        /// <param name="activeTab"> </param>
-        private void DrawHud(float x1, float y1, float x2, float y2)
+        private void DrawHud()
         {
+            var x1 = _hoverViewport.X;
+            var y1 = _hoverViewport.Y;
+            var x2 = _hoverViewport.Z;
+            var y2 = _hoverViewport.W;
+
             if(!_hudDirty)
             {
 // ReSharper disable CompareOfFloatsByEqualityOperator
@@ -177,8 +178,8 @@ namespace open3mod
             Debug.Assert(_hudImages != null);
 
             var graphics = _textOverlay.GetDrawableGraphicsContext();
-            var xPoint = (int) ((x1+x2)*(double)RenderResolution.Width);
-            const int yPoint = 3;
+            var xPoint = (int) (x2*(double)RenderResolution.Width);
+            var yPoint = 3 + (int)((1.0f-y2) * (double)RenderResolution.Height); // note: y is flipped
             const int xSpacing = 4;
 
             var imageWidth = _hudImages[0, 0].Width;
@@ -224,7 +225,7 @@ namespace open3mod
         }
 
 
-        public void OnMouseMove(MouseEventArgs mouseEventArgs)
+        public void OnMouseMove(MouseEventArgs mouseEventArgs, Vector4 viewport)
         {
             _mousePos = mouseEventArgs.Location;
             if( _mousePos.X > _hoverRegion.Left && _mousePos.X <= _hoverRegion.Right &&
@@ -232,6 +233,12 @@ namespace open3mod
             {
                 _hudDirty = true;
             }
+            if (viewport == _hoverViewport)
+            {
+                return;
+            }
+            _hudDirty = true;
+            _hoverViewport = viewport;
         }
 
 

@@ -689,12 +689,15 @@ namespace open3mod
 
         private void UpdateActiveViewIfNeeded(MouseEventArgs e)
         {
-            var x = e.X / (float)glControl1.ClientSize.Width;
-            var y = 1.0f - e.Y / (float)glControl1.ClientSize.Height;
+            // check which viewport has been hit and activate it
+            _ui.ActiveTab.ActiveViewIndex = MousePosToViewportIndex(e.X, e.Y);
+        }
 
-            // check which viewport has been hit
+
+        private Tab.ViewIndex MousePosToViewportIndex(float x, float y)
+        {
             var index = Tab.ViewIndex.Index0;
-            foreach(var view in _ui.ActiveTab.ActiveViews)
+            foreach (var view in _ui.ActiveTab.ActiveViews)
             {
                 if (view == null)
                 {
@@ -705,12 +708,22 @@ namespace open3mod
                 if (x >= view.Value.X && x <= view.Value.Z &&
                     y >= view.Value.Y && y <= view.Value.W)
                 {
-                    _ui.ActiveTab.ActiveViewIndex = index;
                     break;
                 }
-            ++index;
-            }           
+                ++index;
+            }
+            return index;
         }
+
+
+        private Tab.ViewIndex MousePosToViewportIndex(int x, int y)
+        {
+            var xf = x / (float)glControl1.ClientSize.Width;
+            var yf = 1.0f - y / (float)glControl1.ClientSize.Height;
+
+            return MousePosToViewportIndex(xf, yf);
+        }
+
 
         private void OnShowLogViewer(object sender, EventArgs e)
         {
@@ -748,7 +761,9 @@ namespace open3mod
             }
 
             // hack: the renderer handles the input for the HUD, so forward the event
-            _renderer.OnMouseMove(e);
+            var view = UiState.ActiveTab.ActiveViews[(int) MousePosToViewportIndex(e.X, e.Y)];
+            Debug.Assert(view != null);
+            _renderer.OnMouseMove(e, view.Value);
 
             if(!_mouseDown)
             {
