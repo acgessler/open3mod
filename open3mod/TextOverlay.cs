@@ -207,6 +207,7 @@ namespace open3mod
             if (WantRedrawNextFrame)
             {
                 GetDrawableGraphicsContext();
+                WantRedrawNextFrame = false;
             }
         }
 

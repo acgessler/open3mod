@@ -546,9 +546,9 @@ namespace open3mod
         private void FrameUpdate()
         {          
             _fps.Update();
-            _renderer.Update();
-
             var delta = _fps.LastFrameDelta;
+
+            _renderer.Update(delta);
             foreach(var tab in UiState.Tabs)
             {
                 if (tab.ActiveScene != null)

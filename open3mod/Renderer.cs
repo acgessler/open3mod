@@ -50,6 +50,38 @@ namespace open3mod
         private Point _mouseClickPos;
         private bool _processHudClick;
         private Tab.ViewIndex _hoverViewIndex;
+        private float _hoverFadeInTime;
+
+        // Some colors and other tweakables
+        protected Color HudColor
+        {
+            get { return Color.FromArgb(100, 80, 80, 80); }
+        }
+
+
+        protected Color BorderColor
+        {
+            get { return Color.DimGray; }
+        }
+
+
+        protected Color BackgroundColor
+        {
+            get { return Color.FromArgb(255, 170, 170, 170); }
+        }
+
+
+        protected Color ActiveViewColor
+        {
+            get { return Color.FromArgb(255, 180, 180, 180); }
+        }
+
+
+        protected float HudHoverTime
+        {
+            get { return 0.2f; }
+        }
+
 
 
         /// <summary>
@@ -90,9 +122,13 @@ namespace open3mod
         /// Perform any non-drawing operations that need to be executed
         /// once per frame and whose implementation resides in Renderer.
         /// </summary>
-        public void Update()
+        public void Update(double delta)
         {
-            
+            if (_hoverFadeInTime > 0)
+            {
+                _hoverFadeInTime -= (float)delta;
+                _hudDirty = true;
+            }
         }
 
 
@@ -104,7 +140,7 @@ namespace open3mod
         /// <param name="activeTab">Tab containing the scene to be drawn</param>
         public void Draw(Tab activeTab)
         {
-            GL.ClearColor(Color.LightGray);
+            GL.ClearColor(BackgroundColor);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             var ui = Window.UiState.ActiveTab;
@@ -194,7 +230,14 @@ namespace open3mod
             xPoint -= regionWidth;
             _hoverRegion = new Rectangle(xPoint, yPoint, regionWidth - 2, regionHeight);
 
-            graphics.FillRectangle(new SolidBrush(Color.FromArgb(50, 100, 100, 100)), _hoverRegion);
+            var color = HudColor;
+            if (_hoverFadeInTime > 0.0f)
+            {
+                color = Color.FromArgb((int)(color.A * (1.0f-_hoverFadeInTime/HudHoverTime)), color);
+            }
+
+            var brush = new SolidBrush(color);
+            graphics.FillRectangle(brush, _hoverRegion);
 
             xPoint += _hudImages.GetLength(0)/2;
             for (var i = 0; i < _hudImages.GetLength(0); ++i)
@@ -253,7 +296,10 @@ namespace open3mod
             _hudDirty = true;
             _hoverViewport = viewport;
             _hoverViewIndex = viewIndex;
+            _hoverFadeInTime = HudHoverTime;
         }
+
+   
 
 
         public void OnMouseClick(MouseEventArgs mouseEventArgs, Vector4 viewport, Tab.ViewIndex viewIndex)
@@ -401,7 +447,7 @@ namespace open3mod
 
             // paint the active viewport in a slightly different shade of gray,
             // overwriting the initial background color.
-            GL.Color4(Color.DarkGray);
+            GL.Color4(ActiveViewColor);
             GL.Rect(-1, -1, 1, 1);
         }
 
@@ -422,7 +468,7 @@ namespace open3mod
 
             // draw contour line
             GL.LineWidth(lineWidth);
-            GL.Color4(active ? Color.GreenYellow : Color.DarkGray);
+            GL.Color4(active ? Color.GreenYellow : BorderColor);
 
             var xofs = lineWidth * 0.5 * texW;
             var yofs = lineWidth * 0.5 * texH;
