@@ -19,6 +19,7 @@ namespace open3mod
             _scene = scene;          
             
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+            Dock = DockStyle.Fill;
             InitializeComponent();
 
             tabPageAnimations.Controls.Add(this);
