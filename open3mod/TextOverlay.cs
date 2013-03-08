@@ -116,7 +116,7 @@ namespace open3mod
 
 
         /// <summary>
-        /// Clear the entire overlay
+        /// Clears the entire overlay
         /// </summary>
         public void Clear()
         {
@@ -155,11 +155,7 @@ namespace open3mod
 
         public void Draw()
         {
-            // Update the GL texture if needed. Make sure the .net Graphics context is 
-            // not hold longer than absolutely necessary.
-
-            // Do this every second frame to make sure everyone got the chance of
-            // redrawing their stuff.
+            // Updates the GL texture if there were any changes to the .net offscreen buffer. 
             if(_tempContext != null)
             {
                 Commit();
