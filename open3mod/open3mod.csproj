@@ -85,6 +85,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>CoreSettings.settings</DependentUpon>
     </Compile>
+    <Compile Include="CpuSkinningEvaluator.cs" />
     <Compile Include="FpsCameraController.cs" />
     <Compile Include="FpsTracker.cs" />
     <Compile Include="HierarchyInspectionView.cs" />

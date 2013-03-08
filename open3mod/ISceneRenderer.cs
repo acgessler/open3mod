@@ -49,7 +49,13 @@ namespace open3mod
     public interface ISceneRenderer
     {
         /// <summary>
-        /// Draw the scene
+        /// Called once per frame to update per-frame data.
+        /// </summary>
+        /// <param name="delta"></param>
+        void Update(double delta);
+
+        /// <summary>
+        /// Draws the scene
         /// </summary>
         /// <param name="cam">Camera controller to be used</param>
         /// <param name="visibleNodes">Set of nodes to render or null to render them all</param>

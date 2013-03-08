@@ -47,21 +47,23 @@ namespace open3mod
         private RenderFlags _lastFlags;
 
 
-        private readonly BoneByVertexMap[] _boneMap;
+        private readonly CpuSkinningEvaluator _skinner;
 
-
+        
         internal SceneRendererClassicGl(Scene owner, Vector3 initposeMin, Vector3 initposeMax)
         {
             _owner = owner;
             _initposeMin = initposeMin;
             _initposeMax = initposeMax;
 
-            Debug.Assert(_owner.Raw != null);
-            _boneMap = new BoneByVertexMap[_owner.Raw.MeshCount];
-            for (int i = 0; i < _owner.Raw.MeshCount; ++i)
-            {
-                _boneMap[i] = new BoneByVertexMap(_owner.Raw.Meshes[i]);
-            }
+            Debug.Assert(_owner.Raw != null);    
+            _skinner = new CpuSkinningEvaluator(owner);
+        }
+
+
+        public void Update(double delta)
+        {
+            _skinner.Update();
         }
 
 
@@ -152,6 +154,8 @@ namespace open3mod
             GL.PushMatrix();        
             GL.MultMatrix(ref m);
 
+            
+
             if (node.HasMeshes && (visibleNodes == null || visibleNodes.Contains(node)))
             {
                 foreach (var index in node.MeshIndices)
@@ -162,11 +166,7 @@ namespace open3mod
                     var hasColors = mesh.HasVertexColors(0);              
                     var hasTexCoords = mesh.HasTextureCoords(0);
 
-                    Matrix4[] boneMatrices = null;
-                    if (mesh.HasBones && animated)
-                    {
-                        boneMatrices = _owner.SceneAnimator.GetBoneMatricesForMesh(node, index);
-                    }
+                    var skinning = mesh.HasBones && animated;
 
                     foreach (var face in mesh.Faces)
                     {
@@ -205,11 +205,16 @@ namespace open3mod
                             }
                             if (mesh.HasNormals)
                             {
-                                var normal = AssimpToOpenTk.FromVector(mesh.Normals[indice]);
-                                if (boneMatrices != null)
+                                Vector3 normal;
+                                if (skinning)
                                 {
-                                    EvaluateBoneInfluences(ref normal, index, indice, boneMatrices, out normal, true);
+                                    _skinner.GetTransformedVertexNormal(node, index, indice, out normal);
                                 }
+                                else
+                                {
+                                    normal = AssimpToOpenTk.FromVector(mesh.Normals[indice]);
+                                }
+                               
                                 GL.Normal3(normal);
                             }
                             if (hasTexCoords)
@@ -217,10 +222,15 @@ namespace open3mod
                                 var uvw = AssimpToOpenTk.FromVector(mesh.GetTextureCoords(0)[indice]);
                                 GL.TexCoord2(uvw.X, 1 - uvw.Y);
                             }
-                            var pos = AssimpToOpenTk.FromVector(mesh.Vertices[indice]);
-                            if (boneMatrices != null)
+ 
+                            Vector3 pos;
+                            if (skinning)
                             {
-                                EvaluateBoneInfluences(ref pos, index, indice, boneMatrices, out pos);
+                                _skinner.GetTransformedVertexPosition(node, index, indice, out pos);
+                            }
+                            else
+                            {
+                                pos = AssimpToOpenTk.FromVector(mesh.Vertices[indice]);
                             }
                             GL.Vertex3(pos);
                         }
@@ -229,7 +239,7 @@ namespace open3mod
                    
                     if (flags.HasFlag(RenderFlags.ShowBoundingBoxes))
                     {
-                        DrawBoundingBox(index, mesh, boneMatrices);
+                        DrawBoundingBox(node, index, mesh, skinning);
                     }
                 }
             }
@@ -287,17 +297,10 @@ namespace open3mod
             {
                 foreach (var index in node.MeshIndices)
                 {
-                    var mesh = _owner.Raw.Meshes[index];
-
-                    Matrix4[] boneMatrices = null;
-                    if (mesh.HasBones && animated)
-                    {
-                        boneMatrices = _owner.SceneAnimator.GetBoneMatricesForMesh(node, index);
-                    }
-
+                    var mesh = _owner.Raw.Meshes[index];           
                     if (flags.HasFlag(RenderFlags.ShowNormals))
                     {
-                        DrawNormals(index, mesh, boneMatrices, invGlobalScale);
+                        DrawNormals(node, index, mesh, mesh.HasBones && animated, invGlobalScale);
                     }
                 }
             }
@@ -308,49 +311,6 @@ namespace open3mod
             }
 
             GL.PopMatrix();
-        }
-
-
-        /// <summary>
-        /// Evaluate all bone influences on a single vertex
-        /// </summary>
-        /// <param name="pos">Untransformed vertex position</param>
-        /// <param name="meshIndex">Mesh meshIndex</param>
-        /// <param name="vertexIndex">Index of the vertex in the mesh</param>
-        /// <param name="boneMatrices">Bone matrices evaluated for the current mesh, node</param>
-        /// <param name="transformedPosOut">Receives the transformed vertex</param>
-        /// <param name="isDirectionVector">Specifies whether the input parameter is a direction vector
-        ///    instead of a 3D position. Vector3.TransformNormal() is used in this case.</param>
-        private void EvaluateBoneInfluences(ref Vector3 pos, int meshIndex, uint vertexIndex, Matrix4[] boneMatrices,
-            out Vector3 transformedPosOut,
-            bool isDirectionVector = false)
-        {
-            var map = _boneMap[meshIndex];
-            uint offset;
-            uint count;
-            map.GetOffsetAndCountForVertex(vertexIndex, out offset, out count);
-
-            var transformedPos = Vector3.Zero;
-
-            var bones = map.BonesByVertex;
-            for (var k = 0; k < count; ++k, ++offset)
-            {
-                var boneWeightTuple = bones[offset];
-                Debug.Assert(boneWeightTuple.Item1 < boneMatrices.Length);
-
-                Vector3 tmp;
-                if(isDirectionVector)
-                {
-                    Vector3.TransformNormal(ref pos, ref boneMatrices[boneWeightTuple.Item1], out tmp);
-                }
-                else
-                {
-                    Vector3.Transform(ref pos, ref boneMatrices[boneWeightTuple.Item1], out tmp);
-                }
-                transformedPos += tmp * boneWeightTuple.Item2;
-            }
-
-            transformedPosOut = transformedPos;
         }
 
 
@@ -407,7 +367,7 @@ namespace open3mod
         }
 
 
-        private void DrawBoundingBox(int meshIndex, Mesh mesh, Matrix4[] boneMatrices)
+        private void DrawBoundingBox(Node node, int meshIndex, Mesh mesh, bool skinning)
         {           
             GL.Disable(EnableCap.Lighting);
             GL.Disable(EnableCap.Texture2D);
@@ -418,13 +378,16 @@ namespace open3mod
             var min = new Vector3(1e10f, 1e10f, 1e10f);
             var max = new Vector3(-1e10f, -1e10f, -1e10f);
             for (uint i = 0; i < mesh.VertexCount; ++i)
-            {
-                var tmp = AssimpToOpenTk.FromVector(mesh.Vertices[i]);
-
-                if (boneMatrices != null)
+            {              
+                Vector3 tmp;
+                if (skinning)
                 {
-                    EvaluateBoneInfluences(ref tmp, meshIndex, i, boneMatrices, out tmp);
+                    _skinner.GetTransformedVertexPosition(node, meshIndex, i, out tmp);
                 }
+                else
+                {
+                    tmp = AssimpToOpenTk.FromVector(mesh.Vertices[i]);
+                }          
 
                 min.X = Math.Min(min.X, tmp.X);
                 min.Y = Math.Min(min.Y, tmp.Y);
@@ -467,7 +430,7 @@ namespace open3mod
         }
 
 
-        private void DrawNormals(int meshIndex, Mesh mesh, Matrix4[] boneMatrices, float invGlobalScale)
+        private void DrawNormals(Node node, int meshIndex, Mesh mesh, bool skinning, float invGlobalScale)
         {
             if(!mesh.HasNormals)
             {
@@ -486,14 +449,27 @@ namespace open3mod
             GL.Color4(new Color4(0.0f, 1.0f, 0.0f, 1.0f));
 
             for (uint i = 0; i < mesh.VertexCount; ++i)
-            {         
-                var v = AssimpToOpenTk.FromVector(mesh.Vertices[i]);
-                var n = AssimpToOpenTk.FromVector(mesh.Normals[i]);
-                if (boneMatrices != null)
+            {
+                Vector3 v;          
+                if(skinning)
                 {
-                    EvaluateBoneInfluences(ref v, meshIndex, i, boneMatrices, out v);
-                    EvaluateBoneInfluences(ref n, meshIndex, i, boneMatrices, out n, true);
+                    _skinner.GetTransformedVertexPosition(node, meshIndex, i, out v);
                 }
+                else
+                {
+                    v = AssimpToOpenTk.FromVector(mesh.Vertices[i]);
+                }
+
+                Vector3 n;
+                if (skinning)
+                {
+                    _skinner.GetTransformedVertexNormal(node, meshIndex, i, out n);
+                }
+                else
+                {
+                    n = AssimpToOpenTk.FromVector(mesh.Normals[i]);
+                }
+         
                 GL.Vertex3(v);
                 GL.Vertex3(v+n*scale);
             }

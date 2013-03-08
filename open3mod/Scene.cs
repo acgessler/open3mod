@@ -203,6 +203,8 @@ namespace open3mod
             }
             _animator.Update(delta + _accumulatedTimeDelta);
             _accumulatedTimeDelta = 0.0;
+
+            _renderer.Update(delta);
         }
 
 
