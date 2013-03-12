@@ -52,7 +52,7 @@ namespace open3mod
         public int FrameCnt
         {
             get { return _frameCnt; }
-        }
+        } 
 
         public double LastFps
         {

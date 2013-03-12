@@ -706,16 +706,18 @@ namespace open3mod
         private Tab.ViewIndex MousePosToViewportIndex(float x, float y)
         {
             var index = Tab.ViewIndex.Index0;
-            foreach (var view in _ui.ActiveTab.ActiveViews)
+            foreach (var viewport in _ui.ActiveTab.ActiveViews)
             {
-                if (view == null)
+                if (viewport == null)
                 {
                     ++index;
                     continue;
                 }
 
-                if (x >= view.Value.X && x <= view.Value.Z &&
-                    y >= view.Value.Y && y <= view.Value.W)
+                var view = viewport.Bounds;
+
+                if (x >= view.X && x <= view.Z &&
+                    y >= view.Y && y <= view.W)
                 {
                     break;
                 }
@@ -771,7 +773,7 @@ namespace open3mod
             }
             var view = UiState.ActiveTab.ActiveViews[(int)index];
             Debug.Assert(view != null);
-            _renderer.OnMouseClick(e, view.Value, index);
+            _renderer.OnMouseClick(e, view.Bounds, index);
 
             UpdateActiveViewIfNeeded(e);
         }
@@ -796,7 +798,7 @@ namespace open3mod
             }
             var view = UiState.ActiveTab.ActiveViews[(int) index];
             Debug.Assert(view != null);
-            _renderer.OnMouseMove(e, view.Value, index);
+            _renderer.OnMouseMove(e, view.Bounds, index);
 
             if(!_mouseDown)
             {

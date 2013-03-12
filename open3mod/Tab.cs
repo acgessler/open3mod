@@ -82,7 +82,7 @@ namespace open3mod
         /// <summary>
         /// Current state of the tab. The state flag is maintained internally
         /// and switched to "Rendering" as soon as a scene is set. The initial
-        /// state can be set using the c'tor.
+        /// state can be set using the constructor.
         /// </summary>
         public TabState State { get; private set; }
 
@@ -94,11 +94,15 @@ namespace open3mod
 
 
         /// <summary>
-        /// For each viewport the bottom-left and upper-right corners or null
-        /// if the viewport is not currently active.
+        /// Array of viewport objects. Entries are null until a viewport index is
+        /// at least used once with the tab. After a viewport has been enabled once,
+        /// the corresponding Viewport instance is retained so a viewport
+        /// keeps its state when the user hides it and shows it again. 
+        /// 
+        /// Which viewport setup is currently active in the GUI is specified by the 
+        /// ActiveViewMode property.
         /// </summary>
-        public Vector4?[] ActiveViews = new Vector4?[(int) ViewIndex._Max];
-
+        public Viewport[] ActiveViews = new Viewport[(int) ViewIndex._Max];
 
 
         /// <summary>
@@ -115,30 +119,30 @@ namespace open3mod
                 switch(_activeViewMode)
                 {
                     case ViewMode.Single:
-                        ActiveViews = new Vector4?[]
+                        ActiveViews = new []
                         {
-                            new Vector4(0.0f, 0.0f, 1.0f, 1.0f), 
+                            new Viewport(new Vector4(0.0f, 0.0f, 1.0f, 1.0f), CameraMode.Orbit), 
                             null,
                             null,
                             null
                         };
                         break;
                     case ViewMode.Two:
-                        ActiveViews = new Vector4?[]
+                        ActiveViews = new []
                         {
-                            new Vector4(0.0f, 0.0f, 0.5f, 1.0f), 
+                            new Viewport(new Vector4(0.0f, 0.0f, 0.5f, 1.0f), CameraMode.Orbit), 
                             null,
-                            new Vector4(0.5f, 0.0f, 1.0f, 1.0f), 
+                            new Viewport(new Vector4(0.5f, 0.0f, 1.0f, 1.0f), CameraMode.X), 
                             null
                         };            
                         break;
                     case ViewMode.Four:
-                        ActiveViews = new Vector4?[]
+                        ActiveViews = new []
                         {
-                            new Vector4(0.0f, 0.0f, 0.5f, 0.5f), 
-                            new Vector4(0.5f, 0.0f, 1.0f, 0.5f),
-                            new Vector4(0.0f, 0.5f, 0.5f, 1.0f),
-                            new Vector4(0.5f, 0.5f, 1.0f, 1.0f)
+                            new Viewport(new Vector4(0.0f, 0.0f, 0.5f, 0.5f), CameraMode.Orbit), 
+                            new Viewport(new Vector4(0.5f, 0.0f, 1.0f, 0.5f), CameraMode.Z),
+                            new Viewport(new Vector4(0.0f, 0.5f, 0.5f, 1.0f), CameraMode.X),
+                            new Viewport(new Vector4(0.5f, 0.5f, 1.0f, 1.0f), CameraMode.Y)
                         };
                         break;
                     default:
@@ -151,25 +155,7 @@ namespace open3mod
                     ActiveViewIndex = ViewIndex.Index0;
                 }
             }
-        }
-
-
-        private ViewMode _activeViewMode = ViewMode.Four;
-        private readonly CameraMode[] _camMode = new[]
-        {
-            CameraMode.Orbit,
-            CameraMode.Z,
-            CameraMode.X,
-            CameraMode.Y
-        };
-
-
-        /// <summary>
-        /// Camera controllers maintain state even when they are not active, 
-        /// therefore we need to keep a camera controller for every
-        /// view index X camera mode.
-        /// </summary>
-        private readonly ICameraController[,] _cameraImpls = new ICameraController[(int)CameraMode._Max,(int)ViewIndex._Max];
+        }       
 
 
         /// <summary>
@@ -227,9 +213,7 @@ namespace open3mod
         {
             get { return _errorMessage; }
         }
-
-
-        private Scene _activeScene;
+       
 
 
         /// <summary>
@@ -238,7 +222,11 @@ namespace open3mod
         /// </summary>
         public readonly object Id;
 
+
+
+        private Scene _activeScene;
         private string _errorMessage;
+        private ViewMode _activeViewMode = ViewMode.Four;
 
 
         /// <summary>
@@ -265,29 +253,7 @@ namespace open3mod
         /// <returns>ICameraController or null if there is no implementation</returns>
         public ICameraController ActiveCameraControllerForView(ViewIndex targetView)
         {
-            var camMode = _camMode[(int) targetView];
-            if (_cameraImpls[(int)camMode, (int)targetView] == null)
-            {
-                switch (camMode)
-                {
-                    case CameraMode.Fps:
-                        _cameraImpls[(int)camMode, (int)targetView] = new FpsCameraController();
-                        break;
-                    case CameraMode.X:
-                    case CameraMode.Y:
-                    case CameraMode.Z:
-                    case CameraMode.Orbit:
-                        var orbit = new OrbitCameraController(camMode);
-                        _cameraImpls[(int)CameraMode.X, (int)targetView] = orbit;
-                        _cameraImpls[(int)CameraMode.Y, (int)targetView] = orbit;
-                        _cameraImpls[(int)CameraMode.Z, (int)targetView] = orbit;
-                        _cameraImpls[(int)CameraMode.Orbit, (int)targetView] = orbit;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-            return _cameraImpls[(int)camMode, (int)targetView];
+            return ActiveViews[(int)targetView] == null ? null : ActiveViews[(int) targetView].ActiveCameraControllerForView();
         }
 
 
@@ -330,21 +296,10 @@ namespace open3mod
         /// <param name="cameraMode">New camera mode.</param>
         public void ChangeCameraModeForView(ViewIndex viewIndex, CameraMode cameraMode)
         {
-            _camMode[(int)viewIndex] = cameraMode;
+            Debug.Assert(ActiveViews[(int)viewIndex] != null);
+            var view = ActiveViews[(int) viewIndex];
 
-            // special handling to switch the orbit camera controller between the x,y,z and full orbit modes
-            if (cameraMode == CameraMode.Z || cameraMode == CameraMode.Y || cameraMode == CameraMode.X || cameraMode == CameraMode.Orbit)
-            {
-                if (_cameraImpls[(int)CameraMode.Orbit, (int)viewIndex] == null)
-                {
-                    return;
-                }
-
-                var orbit = _cameraImpls[(int) CameraMode.Orbit, (int) viewIndex] as OrbitCameraController;
-                Debug.Assert(orbit != null);
-
-                orbit.SetOrbitOrConstrainedMode(cameraMode);
-            } 
+            view.ChangeCameraModeForView(cameraMode);           
         }
     }
 }

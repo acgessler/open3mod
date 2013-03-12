@@ -146,24 +146,29 @@ namespace open3mod
             var ui = Window.UiState.ActiveTab;
 
             var index = Tab.ViewIndex.Index0;
-            foreach (var view in ui.ActiveViews)
+            foreach (var viewport in ui.ActiveViews)
             {
+              
                 // draw the active viewport last (to make sure its contour line is on top)
-                if (view == null || ui.ActiveViewIndex == index)
+                if (viewport == null || ui.ActiveViewIndex == index)
                 {
                     ++index;
                     continue;
                 }
 
-                var cam = ui.ActiveCameraControllerForView(index);
-                DrawViewport(cam, activeTab, view.Value.X, view.Value.Y, view.Value.Z, view.Value.W, false);
+                var view = viewport.Bounds;
+
+                var cam = viewport.ActiveCameraControllerForView();
+                DrawViewport(cam, activeTab, view.X, view.Y, view.Z, view.W, false);
                 ++index;
             }
 
             var activeVp = ui.ActiveViews[(int)ui.ActiveViewIndex];
             Debug.Assert(activeVp != null);
-            DrawViewport(ui.ActiveCameraController, activeTab, activeVp.Value.X, activeVp.Value.Y, 
-                activeVp.Value.Z, activeVp.Value.W, true);
+
+            var activeVpBounds = activeVp.Bounds;
+            DrawViewport(ui.ActiveCameraController, activeTab, activeVpBounds.X, activeVpBounds.Y,
+                activeVpBounds.Z, activeVpBounds.W, true);
 
             if (ui.ActiveViewMode != Tab.ViewMode.Single)
             {
