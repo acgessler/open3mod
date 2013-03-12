@@ -113,6 +113,9 @@
     </Compile>
     <Compile Include="MaterialInspectionView.cs" />
     <Compile Include="MaterialMapper.cs" />
+    <Compile Include="MaterialThumbnailControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="OpenTkToAssimp.cs" />
     <Compile Include="OrbitCameraController.cs" />
     <Compile Include="Program.cs" />
@@ -141,9 +144,13 @@
     <Compile Include="TextureThumbnailControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="TextureThumbnailControl.Designer.cs">
-      <DependentUpon>TextureThumbnailControl.cs</DependentUpon>
+    <Compile Include="ThumbnailControlBase.cs">
+      <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="ThumbnailControlBase.Designer.cs">
+      <DependentUpon>ThumbnailControlBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ThumbnailViewBase.cs" />
     <Compile Include="TimeSlideControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -180,8 +187,8 @@
     <EmbeddedResource Include="TabUISkeleton.resx">
       <DependentUpon>TabUISkeleton.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TextureThumbnailControl.resx">
-      <DependentUpon>TextureThumbnailControl.cs</DependentUpon>
+    <EmbeddedResource Include="ThumbnailControlBase.resx">
+      <DependentUpon>ThumbnailControlBase.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TimeSlideControl.resx">
       <DependentUpon>TimeSlideControl.cs</DependentUpon>

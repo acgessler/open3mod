@@ -30,21 +30,18 @@ using System.Windows.Forms;
 
 namespace open3mod
 {
-    public class TextureInspectionView
+    public class TextureInspectionView : ThumbnailViewBase<TextureThumbnailControl>
     {
         private readonly Scene _scene;
-        private readonly FlowLayoutPanel _flow;
-        private readonly List<TextureThumbnailControl> _entries;
-        private TextureThumbnailControl _selectedEntry;
+        
 
         private delegate void SetLabelTextDelegate(string name, Texture tex);
 
         public TextureInspectionView(Scene scene, FlowLayoutPanel flow)
+            : base(flow)
         {
             _scene = scene;
-            _flow = flow;
-            _entries = new List<TextureThumbnailControl>();
-
+           
             var have = new HashSet<string>();
             foreach (var mat in scene.Raw.Materials)
             {
@@ -65,14 +62,14 @@ namespace open3mod
             Scene.TextureSet.AddCallback((name, tex) =>
                 {
                     // we need to handle this case because texture callbacks may occur late
-                    if (_flow.IsDisposed)
+                    if (Flow.IsDisposed)
                     {
                         return false;
                     }
 
-                    if (_flow.IsHandleCreated)
+                    if (Flow.IsHandleCreated)
                     {
-                        _flow.BeginInvoke(new SetLabelTextDelegate(SetTextureToLoadedStatus),
+                        Flow.BeginInvoke(new SetLabelTextDelegate(SetTextureToLoadedStatus),
                                           new object[] {name, tex}
                             );
                     }
@@ -84,16 +81,7 @@ namespace open3mod
                 });
 
         }
-
-        public bool Empty
-        {
-            get { return _entries.Count == 0; }
-        }
-
-        public TextureThumbnailControl SelectedEntry
-        {
-            get { return _selectedEntry; }
-        }
+      
 
         public Scene Scene
         {
@@ -103,41 +91,13 @@ namespace open3mod
 
         private void AddTextureEntry(string filePath)
         {
-            var control = new TextureThumbnailControl(this, Scene, filePath);
-            control.Click += (sender, args) =>
-            {
-                var v = sender as TextureThumbnailControl;
-                if (v != null)
-                {
-                    SelectEntry(v);
-                }
-            };
-
-            _entries.Add(control);
-            _flow.Controls.Add(control);
+            AddEntry(new TextureThumbnailControl(this, Scene, filePath));
         }
-
-        private void SelectEntry(TextureThumbnailControl thumb)
-        {
-            if(thumb == SelectedEntry)
-            {
-                return;
-            } 
-
-            thumb.IsSelected = true;
-
-            if (_selectedEntry != null)
-            {
-                _selectedEntry.IsSelected = false;
-            }
-            _selectedEntry = thumb;
-        }
-
-      
+   
 
         private void SetTextureToLoadedStatus(string name, Texture tex)
         {
-            var control = _entries.Find(con => con.FilePath == name);
+            var control = Entries.Find(con => con.FilePath == name);
             if(control == null)
             {
                 // this can happen if textures have been replaced -

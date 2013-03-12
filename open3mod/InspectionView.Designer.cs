@@ -43,11 +43,13 @@
             this.tabPageMaterials = new System.Windows.Forms.TabPage();
             this.tabPageAnimations = new System.Windows.Forms.TabPage();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.materialFlowPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.tabControlInfoViewPicker.SuspendLayout();
             this.tabPageTree.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tabPageTextures.SuspendLayout();
+            this.tabPageMaterials.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControlInfoViewPicker
@@ -187,6 +189,7 @@
             // 
             // tabPageMaterials
             // 
+            this.tabPageMaterials.Controls.Add(this.materialFlowPanel);
             this.tabPageMaterials.Location = new System.Drawing.Point(4, 22);
             this.tabPageMaterials.Name = "tabPageMaterials";
             this.tabPageMaterials.Padding = new System.Windows.Forms.Padding(3);
@@ -209,6 +212,18 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // materialFlowPanel
+            // 
+            this.materialFlowPanel.AutoScroll = true;
+            this.materialFlowPanel.AutoScrollMinSize = new System.Drawing.Size(0, 1000);
+            this.materialFlowPanel.AutoSize = true;
+            this.materialFlowPanel.BackColor = System.Drawing.Color.Transparent;
+            this.materialFlowPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.materialFlowPanel.Location = new System.Drawing.Point(3, 3);
+            this.materialFlowPanel.Name = "materialFlowPanel";
+            this.materialFlowPanel.Size = new System.Drawing.Size(340, 656);
+            this.materialFlowPanel.TabIndex = 1;
+            // 
             // InspectionView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -226,6 +241,8 @@
             this.panel1.PerformLayout();
             this.tabPageTextures.ResumeLayout(false);
             this.tabPageTextures.PerformLayout();
+            this.tabPageMaterials.ResumeLayout(false);
+            this.tabPageMaterials.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -247,5 +264,6 @@
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.FlowLayoutPanel textureFlowPanel;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.FlowLayoutPanel materialFlowPanel;
     }
 }

@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////////
 // Open 3D Model Viewer (open3mod) (v0.1)
-// [MaterialInspectionView.cs]
+// [TextureInspectionView.cs]
 // (c) 2012-2013, Alexander C. Gessler
 //
 // Licensed under the terms and conditions of the 3-clause BSD license. See
@@ -21,25 +21,76 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 using System.Windows.Forms;
+using Assimp;
 
 namespace open3mod
 {
-    public class MaterialInspectionView
+    public class MaterialInspectionView : ThumbnailViewBase<MaterialThumbnailControl>
     {
         private readonly Scene _scene;
-        private readonly ListView _list;
+      
+        private delegate void SetLabelTextDelegate(string name, Texture tex);
 
-        public MaterialInspectionView(Scene scene, ListView list)
+        public MaterialInspectionView(Scene scene, FlowLayoutPanel flow)
+            : base(flow)
         {
             _scene = scene;
-            _list = list;
+     
+            foreach (var mat in scene.Raw.Materials)
+            {
+                var dependencies = new HashSet<string>();
+                var textures = mat.GetAllTextures();
+                foreach (var tex in textures)
+                {      
+                    dependencies.Add(tex.FilePath);                  
+                }
+
+                AddMaterialEntry(mat, dependencies);                
+            }
+            /*
+            var countdown = have.Count;
+            Scene.TextureSet.AddCallback((name, tex) =>
+            {
+                // we need to handle this case because texture callbacks may occur late
+                if (Flow.IsDisposed)
+                {
+                    return false;
+                }
+
+                if (_flow.IsHandleCreated)
+                {
+                    _flow.BeginInvoke(new SetLabelTextDelegate(SetTextureToLoadedStatus),
+                                      new object[] { name, tex }
+                        );
+                }
+                else
+                {
+                    SetTextureToLoadedStatus(name, tex);
+                }
+                return --countdown > 0;
+            }); */
+
+        }
+
+      
+
+        public Scene Scene
+        {
+            get { return _scene; }
+        }
+
+
+        private void AddMaterialEntry(Material material, HashSet<string> dependencies)
+        {
+            AddEntry(new MaterialThumbnailControl(this, Scene, material));
         }
     }
 }
 
-/* vi: set shiftwidth=4 tabstop=4: */ 
+/* vi: set shiftwidth=4 tabstop=4: */

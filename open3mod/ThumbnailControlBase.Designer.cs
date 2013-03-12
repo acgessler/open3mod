@@ -1,6 +1,6 @@
 ﻿namespace open3mod
 {
-    partial class TextureThumbnailControl
+    partial class ThumbnailControlBase
     {
         /// <summary> 
         /// Required designer variable.
@@ -79,20 +79,20 @@
             this.replaceToolStripMenuItem1,
             this.exportToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(153, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(116, 70);
             // 
             // replaceToolStripMenuItem
             // 
             this.replaceToolStripMenuItem.Enabled = false;
             this.replaceToolStripMenuItem.Name = "replaceToolStripMenuItem";
-            this.replaceToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.replaceToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
             this.replaceToolStripMenuItem.Text = "Open";
             this.replaceToolStripMenuItem.Click += new System.EventHandler(this.OnContextMenuOpen);
             // 
             // replaceToolStripMenuItem1
             // 
             this.replaceToolStripMenuItem1.Name = "replaceToolStripMenuItem1";
-            this.replaceToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.replaceToolStripMenuItem1.Size = new System.Drawing.Size(115, 22);
             this.replaceToolStripMenuItem1.Text = "Replace";
             this.replaceToolStripMenuItem1.Click += new System.EventHandler(this.OnContextMenuReplace);
             // 
@@ -100,11 +100,11 @@
             // 
             this.exportToolStripMenuItem.Enabled = false;
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
             this.exportToolStripMenuItem.Text = "Export";
             this.exportToolStripMenuItem.Click += new System.EventHandler(this.OnContextMenuExport);
             // 
-            // TextureThumbnailControl
+            // ThumbnailControlBase
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -113,7 +113,7 @@
             this.Controls.Add(this.texCaptionLabel);
             this.Controls.Add(this.pictureBox);
             this.DoubleBuffered = true;
-            this.Name = "TextureThumbnailControl";
+            this.Name = "ThumbnailControlBase";
             this.Size = new System.Drawing.Size(228, 245);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
@@ -124,12 +124,13 @@
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pictureBox;
-        private System.Windows.Forms.Label texCaptionLabel;
-        private System.Windows.Forms.Label labelOldTexture;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem replaceToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem replaceToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
+        protected System.Windows.Forms.PictureBox pictureBox;
+        protected System.Windows.Forms.Label texCaptionLabel;
+        protected System.Windows.Forms.Label labelOldTexture;
+        protected System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        protected System.Windows.Forms.ToolStripMenuItem replaceToolStripMenuItem;
+        protected System.Windows.Forms.ToolStripMenuItem replaceToolStripMenuItem1;
+        protected System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
+
     }
 }

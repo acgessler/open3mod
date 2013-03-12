@@ -86,7 +86,8 @@ namespace open3mod
                 tabControlInfoViewPicker.TabPages.Remove(tabPageAnimations);
             }
 
-            Materials = new MaterialInspectionView(Scene, null);
+            //
+            Materials = new MaterialInspectionView(Scene, materialFlowPanel);
 
             UpdateStatistics();
         }
