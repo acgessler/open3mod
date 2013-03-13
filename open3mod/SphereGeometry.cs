@@ -11,6 +11,8 @@ namespace open3mod
     /// <summary>
     /// Utility class that generates vertices and indices for drawing spheres.
     /// 
+    /// TODO add tangents and bitangents 
+    /// 
     /// This code is almost completely taken from http://www.opentk.com/node/1800
     /// </summary>
     public static class SphereGeometry

@@ -48,19 +48,28 @@ namespace open3mod
 
 
         /// <summary>
-        /// Apply a material to the Gl state machine
+        /// Applies a material to the Gl state machine. Depending on the renderer,
+        /// this either sets GLSL shaders (GL3) or it configures the fixed function pipeline
+        /// (legacy/classic).
         /// </summary>
-        /// <param name="mesh"> </param>
-        /// <param name="mat"></param>
+        /// <param name="mesh">Mesh to be drawn. This parameter may be left null
+        ///    to use a material with geometry other than assimp meshes (i.e.
+        ///    for the material preview tab). In this case, it is assumed that
+        ///    the geometry to be used with the materials specifies normals,
+        ///    one set of UV coordinates but no vertex colors.
+        ///    TODO tangents, bitangents?
+        /// </param>
+        /// <param name="mat">Material to be applied, must be non-null</param>
         public void ApplyMaterial(Mesh mesh, Material mat)
         {
             ApplyFixedFunctionMaterial(mesh, mat);
         }
 
 
+
         private void ApplyFixedFunctionMaterial(Mesh mesh, Material mat)
         {
-            if (mesh.HasNormals)
+            if (mesh != null && mesh.HasNormals)
             {
                 GL.Enable(EnableCap.Lighting);
             }
@@ -69,7 +78,7 @@ namespace open3mod
                 GL.Disable(EnableCap.Lighting);
             }
 
-            bool hasColors = mesh.HasVertexColors(0);
+            var hasColors = mesh != null && mesh.HasVertexColors(0);
             if (hasColors)
             {
                 GL.Enable(EnableCap.ColorMaterial);

@@ -36,7 +36,7 @@ namespace open3mod
             _scene = scene;
             _material = material;
 
-            var renderer = new MaterialPreviewRenderer(owner.Window, material, (uint)pictureBox.Width, (uint)pictureBox.Height);
+            var renderer = new MaterialPreviewRenderer(owner.Window, scene, material, (uint)pictureBox.Width, (uint)pictureBox.Height);
             renderer.PreviewAvailable += me =>
             {
                 var image = renderer.PreviewImage;

@@ -24,6 +24,8 @@ namespace open3mod
     /// </summary>
     public class MaterialPreviewRenderer
     {
+        private readonly Scene _scene;
+        private readonly Material _material;
         private readonly uint _width;
         private readonly uint _height;
 
@@ -60,14 +62,23 @@ namespace open3mod
         /// for one given material.
         /// </summary>
         /// <param name="window">Window instance that hosts the primary Gl context</param>
+        /// <param name="scene">Scene instance that the material belongs to</param>
         /// <param name="material">Material to render a preview image for</param>
         /// <param name="width">Requested width of the preview image, in pixels</param>
         /// <param name="height">Requested height of the preview image, in pixels</param>
-        public MaterialPreviewRenderer(MainWindow window, Material material, uint width, uint height)
+        public MaterialPreviewRenderer(MainWindow window, Scene scene, Material material, uint width, uint height)
         {
+            Debug.Assert(window != null);
+            Debug.Assert(material != null);
+            Debug.Assert(scene != null);
+            Debug.Assert(width >= 1);
+            Debug.Assert(height >= 1);
+
+            _scene = scene;
+            _material = material;
             _width = width;
             _height = height;
-            Debug.Assert(material != null);
+    
             _state = CompletionState.Pending;
 
             window.Renderer.GlExtraDrawJob += () =>
@@ -95,6 +106,7 @@ namespace open3mod
         {
             get { return _state; }
         }
+
 
         /// <summary>
         /// Renders the preview. This performs Gl commands, so it must be called
@@ -248,6 +260,12 @@ namespace open3mod
             {
                 _sphereElements = SphereGeometry.CalculateElements(SphereSegments, SphereSegments);
             }
+
+            _scene.MaterialMapper.ApplyMaterial(null, _material);
+
+            // reset color and alpha blending
+            GL.Color4(Color.White);
+            GL.Disable(EnableCap.Blend);
 
             Debug.Assert(_sphereVertices != null);
             Debug.Assert(_sphereElements != null);
