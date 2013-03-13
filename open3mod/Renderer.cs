@@ -226,6 +226,13 @@ namespace open3mod
         /// </summary>
         private void DrawHud()
         {
+            // sanity check whether the _hoverViewIndex is ok
+            var ui = Window.UiState.ActiveTab;
+            if(ui.ActiveViews[(int)_hoverViewIndex] == null)
+            {
+                return;
+            }
+      
             var x1 = _hoverViewport.X;
             var y1 = _hoverViewport.Y;
             var x2 = _hoverViewport.Z;
@@ -287,9 +294,7 @@ namespace open3mod
                 var x = xPoint;
                 var y = yPoint + 2;
                 var w = (int) (imageWidth*2.0/3);
-                var h = (int) (imageHeight*2.0/3);
-
-                var ui = Window.UiState.ActiveTab;
+                var h = (int) (imageHeight*2.0/3);              
 
                 if (_processHudClick &&
                     _mouseClickPos.X > x && _mouseClickPos.X <= x + w &&
@@ -298,12 +303,13 @@ namespace open3mod
                     _processHudClick = false;
 
                     ui.ChangeCameraModeForView(_hoverViewIndex, (CameraMode) i);
-                    Debug.Assert(ui.ActiveCameraControllerForView(_hoverViewIndex).GetCameraMode() == (CameraMode) i);
+                    Debug.Assert(ui.ActiveCameraControllerForView(_hoverViewIndex).GetCameraMode() == (CameraMode)i);
                 }
 
                 // normal image
                 var imageIndex = 0;
-                if (ui.ActiveCameraControllerForView(_hoverViewIndex).GetCameraMode() == (CameraMode) i)
+
+                if (ui.ActiveCameraControllerForView(_hoverViewIndex).GetCameraMode() == (CameraMode)i)
                 {
                     // selected image
                     imageIndex = 2;
