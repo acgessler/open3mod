@@ -46,6 +46,14 @@ namespace open3mod
         private CompletionState _state;
         private Image _previewImage;
 
+        // shared geometry data to draw a sphere
+        private static SphereGeometry.Vertex[] _sphereVertices;
+        private static ushort[] _sphereElements;
+
+
+        private const float SphereRadius = 0.9f;
+        private const int SphereSegments = 50;
+
 
         /// <summary>
         /// Constructs a MaterialPreviewRenderer to obtain a preview image
@@ -230,7 +238,20 @@ namespace open3mod
         private void Draw()
         {
             GL.ClearColor(Color.Fuchsia);
-            GL.Clear(ClearBufferMask.ColorBufferBit);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+            if (_sphereVertices == null)
+            {
+                _sphereVertices = SphereGeometry.CalculateVertices(SphereRadius, SphereRadius, SphereSegments, SphereSegments);
+            }
+            if (_sphereElements == null)
+            {
+                _sphereElements = SphereGeometry.CalculateElements(SphereSegments, SphereSegments);
+            }
+
+            Debug.Assert(_sphereVertices != null);
+            Debug.Assert(_sphereElements != null);
+            SphereGeometry.Draw(_sphereVertices, _sphereElements);
         }
 
 

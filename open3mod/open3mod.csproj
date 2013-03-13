@@ -129,6 +129,7 @@
     <Compile Include="Scene.cs" />
     <Compile Include="SceneAnimator.cs" />
     <Compile Include="SceneRendererClassicGl.cs" />
+    <Compile Include="SphereGeometry.cs" />
     <Compile Include="Tab.cs" />
     <Compile Include="TabUISkeleton.cs">
       <SubType>UserControl</SubType>
