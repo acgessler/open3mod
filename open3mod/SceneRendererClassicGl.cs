@@ -75,8 +75,11 @@ namespace open3mod
             GL.Enable(EnableCap.DepthTest);
             GL.FrontFace(FrontFaceDirection.Ccw);
 
+            // set fixed-function lighting parameters
             GL.ShadeModel(ShadingModel.Smooth);
             GL.Enable(EnableCap.Light0);
+            GL.Light(LightName.Light0, LightParameter.Position, new float[] { 1, 1, 0 });
+            GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { 1, 1, 1, 1 });
 
             if (flags.HasFlag(RenderFlags.Wireframe))
             {

@@ -69,7 +69,7 @@ namespace open3mod
 
         private void ApplyFixedFunctionMaterial(Mesh mesh, Material mat)
         {
-            if (mesh != null && mesh.HasNormals)
+            if (mesh == null || mesh.HasNormals)
             {
                 GL.Enable(EnableCap.Lighting);
             }
@@ -78,10 +78,11 @@ namespace open3mod
                 GL.Disable(EnableCap.Lighting);
             }
 
-            var hasColors = mesh != null && mesh.HasVertexColors(0);
+            var hasColors = mesh == null || mesh.HasVertexColors(0);
             if (hasColors)
             {
                 GL.Enable(EnableCap.ColorMaterial);
+                GL.ColorMaterial(MaterialFace.FrontAndBack, ColorMaterialParameter.AmbientAndDiffuse);
             }
             else
             {

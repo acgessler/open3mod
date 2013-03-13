@@ -267,6 +267,12 @@ namespace open3mod
             GL.Color4(Color.White);
             GL.Disable(EnableCap.Blend);
 
+            // set fixed-function lighting parameters
+            GL.ShadeModel(ShadingModel.Smooth);
+            GL.Enable(EnableCap.Light0);
+            GL.Light(LightName.Light0, LightParameter.Position, new float[] { 1, 1, -1 });
+            GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { 1, 1, 1, 1 });         
+
             Debug.Assert(_sphereVertices != null);
             Debug.Assert(_sphereElements != null);
             SphereGeometry.Draw(_sphereVertices, _sphereElements);
