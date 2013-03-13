@@ -65,7 +65,13 @@ namespace open3mod
         private void OnGlExtraDrawJob()
         {
             var handler = GlExtraDrawJob;
-            if (handler != null) handler();
+            if (handler != null)
+            {
+                handler();
+                // reset all event handlers - extra draw job get executed only once
+                // TODO: what if handlers re-register themselves?
+                GlExtraDrawJob = null;
+            }
         }
 
 
