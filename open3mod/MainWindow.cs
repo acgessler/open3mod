@@ -79,6 +79,11 @@ namespace open3mod
             get { return _fps; }
         }
 
+        public Renderer Renderer
+        {
+            get { return _renderer; }
+        }
+
 
         public const int MaxRecentItems = 12;
 

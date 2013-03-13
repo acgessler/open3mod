@@ -52,6 +52,23 @@ namespace open3mod
         private Tab.ViewIndex _hoverViewIndex;
         private float _hoverFadeInTime;
 
+        public delegate void GlExtraDrawJobDelegate();
+
+        /// <summary>
+        /// This event is fired every draw frame to allow other editor
+        /// components to access the Gl subsystem in a safe manner.
+        /// 
+        /// This event is always invoced on the single thread that is responsible
+        /// for interacting with Gl.
+        /// </summary>
+        public event GlExtraDrawJobDelegate GlExtraDrawJob;
+        private void OnGlExtraDrawJob()
+        {
+            var handler = GlExtraDrawJob;
+            if (handler != null) handler();
+        }
+
+
         // Some colors and other tweakables
         protected Color HudColor
         {
@@ -87,23 +104,35 @@ namespace open3mod
         /// <summary>
         /// The gl context which is being rendered to
         /// </summary>
-        public GLControl GlControl { get { return _window.GlControl; }} 
+        public GLControl GlControl
+        {
+            get { return _window.GlControl; }
+        }
 
         /// <summary>
         /// Host window
         /// </summary>
-        public MainWindow Window { get { return _window; } }
+        public MainWindow Window
+        {
+            get { return _window; }
+        }
 
 
         /// <summary>
         /// Utility object in charge of maintaining all text overlays
         /// </summary>
-        public TextOverlay TextOverlay { get { return _textOverlay; } }
+        public TextOverlay TextOverlay
+        {
+            get { return _textOverlay; }
+        }
 
         /// <summary>
         /// Obtain actual rendering resolution in pixels
         /// </summary>
-        public Size RenderResolution { get { return GlControl.ClientSize; } }
+        public Size RenderResolution
+        {
+            get { return GlControl.ClientSize; }
+        }
 
 
         /// <summary>
@@ -118,6 +147,9 @@ namespace open3mod
         }
 
 
+      
+
+
         /// <summary>
         /// Perform any non-drawing operations that need to be executed
         /// once per frame and whose implementation resides in Renderer.
@@ -126,7 +158,7 @@ namespace open3mod
         {
             if (_hoverFadeInTime > 0)
             {
-                _hoverFadeInTime -= (float)delta;
+                _hoverFadeInTime -= (float) delta;
                 _hudDirty = true;
             }
         }
@@ -148,7 +180,7 @@ namespace open3mod
             var index = Tab.ViewIndex.Index0;
             foreach (var viewport in ui.ActiveViews)
             {
-              
+
                 // draw the active viewport last (to make sure its contour line is on top)
                 if (viewport == null || ui.ActiveViewIndex == index)
                 {
@@ -163,12 +195,12 @@ namespace open3mod
                 ++index;
             }
 
-            var activeVp = ui.ActiveViews[(int)ui.ActiveViewIndex];
+            var activeVp = ui.ActiveViews[(int) ui.ActiveViewIndex];
             Debug.Assert(activeVp != null);
 
             var activeVpBounds = activeVp.Bounds;
             DrawViewport(ui.ActiveCameraController, activeTab, activeVpBounds.X, activeVpBounds.Y,
-                activeVpBounds.Z, activeVpBounds.W, true);
+                         activeVpBounds.Z, activeVpBounds.W, true);
 
             if (ui.ActiveViewMode != Tab.ViewMode.Single)
             {
@@ -180,8 +212,12 @@ namespace open3mod
                 DrawFps();
             }
 
-            DrawHud();           
+            DrawHud();
             _textOverlay.Draw();
+
+            // handle other Gl jobs such as drawing preview images - components
+            // use this event to register their jobs.
+            OnGlExtraDrawJob();
         }
 
 
@@ -195,11 +231,12 @@ namespace open3mod
             var x2 = _hoverViewport.Z;
             var y2 = _hoverViewport.W;
 
-            if(!_hudDirty)
+            if (!_hudDirty)
             {
-// ReSharper disable CompareOfFloatsByEqualityOperator
-                _hudDirty = x1 != _lastActiveVp[0] || y1 != _lastActiveVp[1] || x2 != _lastActiveVp[2] || y2 != _lastActiveVp[3];
-// ReSharper restore CompareOfFloatsByEqualityOperator
+                // ReSharper disable CompareOfFloatsByEqualityOperator
+                _hudDirty = x1 != _lastActiveVp[0] || y1 != _lastActiveVp[1] || x2 != _lastActiveVp[2] ||
+                            y2 != _lastActiveVp[3];
+                // ReSharper restore CompareOfFloatsByEqualityOperator
             }
 
             _lastActiveVp[0] = x1;
@@ -222,14 +259,14 @@ namespace open3mod
             Debug.Assert(_hudImages != null);
 
             var graphics = _textOverlay.GetDrawableGraphicsContext();
-            var xPoint = (int) (x2*(double)RenderResolution.Width);
-            var yPoint = 3 + (int)((1.0f-y2) * (double)RenderResolution.Height); // note: y is flipped
+            var xPoint = (int) (x2*(double) RenderResolution.Width);
+            var yPoint = 3 + (int) ((1.0f - y2)*(double) RenderResolution.Height); // note: y is flipped
             const int xSpacing = 4;
 
             var imageWidth = _hudImages[0, 0].Width;
             var imageHeight = _hudImages[0, 0].Height;
 
-            var regionWidth = imageWidth * _hudImages.GetLength(0) + xSpacing * (_hudImages.GetLength(0)-1);
+            var regionWidth = imageWidth*_hudImages.GetLength(0) + xSpacing*(_hudImages.GetLength(0) - 1);
             const int regionHeight = 25;
 
             xPoint -= regionWidth;
@@ -238,7 +275,7 @@ namespace open3mod
             var color = HudColor;
             if (_hoverFadeInTime > 0.0f)
             {
-                color = Color.FromArgb((int)(color.A * (1.0f-_hoverFadeInTime/HudHoverTime)), color);
+                color = Color.FromArgb((int) (color.A*(1.0f - _hoverFadeInTime/HudHoverTime)), color);
             }
 
             var brush = new SolidBrush(color);
@@ -254,19 +291,19 @@ namespace open3mod
 
                 var ui = Window.UiState.ActiveTab;
 
-                if (_processHudClick && 
-                    _mouseClickPos.X > x && _mouseClickPos.X <= x + w && 
+                if (_processHudClick &&
+                    _mouseClickPos.X > x && _mouseClickPos.X <= x + w &&
                     _mouseClickPos.Y > y && _mouseClickPos.Y <= y + h)
                 {
                     _processHudClick = false;
 
-                    ui.ChangeCameraModeForView(_hoverViewIndex, (CameraMode)i);
-                    Debug.Assert(ui.ActiveCameraControllerForView(_hoverViewIndex).GetCameraMode() == (CameraMode)i);
+                    ui.ChangeCameraModeForView(_hoverViewIndex, (CameraMode) i);
+                    Debug.Assert(ui.ActiveCameraControllerForView(_hoverViewIndex).GetCameraMode() == (CameraMode) i);
                 }
- 
+
                 // normal image
                 var imageIndex = 0;
-                if (ui.ActiveCameraControllerForView(_hoverViewIndex).GetCameraMode() == (CameraMode)i)
+                if (ui.ActiveCameraControllerForView(_hoverViewIndex).GetCameraMode() == (CameraMode) i)
                 {
                     // selected image
                     imageIndex = 2;
@@ -280,7 +317,7 @@ namespace open3mod
                 var img = _hudImages[i, imageIndex];
                 Debug.Assert(img.Width == imageWidth && img.Height == imageHeight, "all images must be of the same size");
 
-                graphics.DrawImage(img, x,y,w,h);
+                graphics.DrawImage(img, x, y, w, h);
                 xPoint += img.Width;
             }
         }
@@ -289,8 +326,8 @@ namespace open3mod
         public void OnMouseMove(MouseEventArgs mouseEventArgs, Vector4 viewport, Tab.ViewIndex viewIndex)
         {
             _mousePos = mouseEventArgs.Location;
-            if( _mousePos.X > _hoverRegion.Left && _mousePos.X <= _hoverRegion.Right &&
-                _mousePos.Y > _hoverRegion.Top  && _mousePos.Y <= _hoverRegion.Bottom)
+            if (_mousePos.X > _hoverRegion.Left && _mousePos.X <= _hoverRegion.Right &&
+                _mousePos.Y > _hoverRegion.Top && _mousePos.Y <= _hoverRegion.Bottom)
             {
                 _hudDirty = true;
             }
@@ -304,7 +341,7 @@ namespace open3mod
             _hoverFadeInTime = HudHoverTime;
         }
 
-   
+
 
 
         public void OnMouseClick(MouseEventArgs mouseEventArgs, Vector4 viewport, Tab.ViewIndex viewIndex)
@@ -330,20 +367,20 @@ namespace open3mod
             {
                 _hudImages = new Image[5,3];
                 var prefixTable = new[]
-                {
-                    "open3mod.Images.HUD_X",
-                    "open3mod.Images.HUD_Y",
-                    "open3mod.Images.HUD_Z",
-                    "open3mod.Images.HUD_Orbit",
-                    "open3mod.Images.HUD_FPS"
-                };
+                                      {
+                                          "open3mod.Images.HUD_X",
+                                          "open3mod.Images.HUD_Y",
+                                          "open3mod.Images.HUD_Z",
+                                          "open3mod.Images.HUD_Orbit",
+                                          "open3mod.Images.HUD_FPS"
+                                      };
 
                 var postFixTable = new[]
-                {
-                    "_Normal",
-                    "_Hover",
-                    "_Selected"
-                };
+                                       {
+                                           "_Normal",
+                                           "_Hover",
+                                           "_Selected"
+                                       };
 
                 for (var i = 0; i < _hudImages.GetLength(0); ++i)
                 {
@@ -365,7 +402,7 @@ namespace open3mod
 
         public virtual void Dispose(bool disposing)
         {
-            _textOverlay.Dispose();          
+            _textOverlay.Dispose();
         }
 
 
@@ -388,24 +425,24 @@ namespace open3mod
         /// <param name="xe">X-axis end point of the viewport in range [0,1]</param>
         /// <param name="ye">X-axis end point of the viewport in range [0,1]</param>
         /// <param name="active"></param>
-        private void DrawViewport(ICameraController view, Tab activeTab, double xs, double ys, double xe, 
-            double ye, bool active = false)
+        private void DrawViewport(ICameraController view, Tab activeTab, double xs, double ys, double xe,
+                                  double ye, bool active = false)
         {
             // update viewport 
-            var w = (double)RenderResolution.Width;
-            var h = (double)RenderResolution.Height;
+            var w = (double) RenderResolution.Width;
+            var h = (double) RenderResolution.Height;
 
-            var vw = (int) ((xe-xs)*w);
-            var vh = (int) ((ye-ys)*h);
-            GL.Viewport((int)(xs * w), (int)(ys * h), (int)((xe - xs) * w), (int)((ye - ys) * h));
+            var vw = (int) ((xe - xs)*w);
+            var vh = (int) ((ye - ys)*h);
+            GL.Viewport((int) (xs*w), (int) (ys*h), (int) ((xe - xs)*w), (int) ((ye - ys)*h));
 
             DrawViewportColorsPre(active);
-            var aspectRatio = (float) ((xe - xs) / (ye - ys));
+            var aspectRatio = (float) ((xe - xs)/(ye - ys));
 
             // set a proper perspective matrix for rendering
             Matrix4 perspective = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspectRatio, 0.001f, 100.0f);
             GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadMatrix(ref perspective);          
+            GL.LoadMatrix(ref perspective);
 
             if (activeTab.ActiveScene == null)
             {
@@ -427,7 +464,7 @@ namespace open3mod
             {
                 DrawScene(activeTab.ActiveScene, view);
             }
-           
+
             DrawViewportColorsPost(active, vw, vh);
         }
 
@@ -475,8 +512,8 @@ namespace open3mod
             GL.LineWidth(lineWidth);
             GL.Color4(active ? Color.GreenYellow : BorderColor);
 
-            var xofs = lineWidth * 0.5 * texW;
-            var yofs = lineWidth * 0.5 * texH;
+            var xofs = lineWidth*0.5*texW;
+            var yofs = lineWidth*0.5*texH;
 
             GL.Begin(BeginMode.LineStrip);
             GL.Vertex2(-1.0 + xofs, -1.0 + yofs);
@@ -506,10 +543,10 @@ namespace open3mod
             format.LineAlignment = StringAlignment.Center;
             format.Alignment = StringAlignment.Center;
 
-            graphics.DrawString("Drag file here", Window.UiState.DefaultFont16, 
-                new SolidBrush(Color.Black),  
-                new RectangleF(0,0,GlControl.Width,GlControl.Height),
-                format);
+            graphics.DrawString("Drag file here", Window.UiState.DefaultFont16,
+                                new SolidBrush(Color.Black),
+                                new RectangleF(0, 0, GlControl.Width, GlControl.Height),
+                                format);
         }
 
 
@@ -520,9 +557,9 @@ namespace open3mod
             var format = new StringFormat {LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center};
 
             graphics.DrawString("Loading ...", Window.UiState.DefaultFont16,
-                new SolidBrush(Color.Black),
-                new RectangleF(0, 0, GlControl.Width, GlControl.Height),
-                format);
+                                new SolidBrush(Color.Black),
+                                new RectangleF(0, 0, GlControl.Width, GlControl.Height),
+                                format);
         }
 
 
@@ -535,16 +572,17 @@ namespace open3mod
             // hack: re-use the image we use for failed texture imports :-)
             var img = TextureThumbnailControl.GetLoadErrorImage();
 
-            graphics.DrawImage(img, GlControl.Width / 2 - img.Width / 2, GlControl.Height / 2 - img.Height - 30,img.Width,img.Height);
-            graphics.DrawString("Sorry, this scene failed to load.", Window.UiState.DefaultFont16, 
-                new SolidBrush(Color.Red), 
-                new RectangleF(0,0,GlControl.Width,GlControl.Height),
-                format);
+            graphics.DrawImage(img, GlControl.Width/2 - img.Width/2, GlControl.Height/2 - img.Height - 30, img.Width,
+                               img.Height);
+            graphics.DrawString("Sorry, this scene failed to load.", Window.UiState.DefaultFont16,
+                                new SolidBrush(Color.Red),
+                                new RectangleF(0, 0, GlControl.Width, GlControl.Height),
+                                format);
 
             graphics.DrawString("What the importer said went wrong: " + message, Window.UiState.DefaultFont12,
-                new SolidBrush(Color.Black),
-                new RectangleF(0, 100, GlControl.Width, GlControl.Height),
-                format);
+                                new SolidBrush(Color.Black),
+                                new RectangleF(0, 100, GlControl.Width, GlControl.Height),
+                                format);
         }
 
 
@@ -562,15 +600,15 @@ namespace open3mod
             }
 
             if (_accTime >= 0.3333)
-            {              
+            {
                 _displayFps = Window.Fps.LastFps;
-                _accTime = 0.0;      
+                _accTime = 0.0;
             }
-          
+
             var graphics = _textOverlay.GetDrawableGraphicsContext();
             graphics.DrawString("FPS: " + _displayFps.ToString("0.0"), Window.UiState.DefaultFont12,
                                 new SolidBrush(Color.Red), 5, 5);
-        }       
+        }
     }
 }
 
