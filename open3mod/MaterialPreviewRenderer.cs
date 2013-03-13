@@ -209,9 +209,9 @@ namespace open3mod
             var bmp = new Bitmap((int)_width, (int)_height);
             var data = bmp.LockBits(new Rectangle(0,0,(int)_width, (int)_height), 
                 ImageLockMode.WriteOnly, 
-                System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+                System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
-            GL.ReadPixels(0,0,(int)_width,(int)_height,PixelFormat.Bgr, PixelType.UnsignedByte, data.Scan0 );    
+            GL.ReadPixels(0,0,(int)_width,(int)_height,PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0 );    
             bmp.UnlockBits(data);
 
             _previewImage = bmp;
@@ -237,7 +237,7 @@ namespace open3mod
 
         private void Draw()
         {
-            GL.ClearColor(Color.Fuchsia);
+            GL.ClearColor(Color.Transparent);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             if (_sphereVertices == null)
