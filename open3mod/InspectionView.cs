@@ -87,7 +87,7 @@ namespace open3mod
             }
 
             //
-            Materials = new MaterialInspectionView(Scene, materialFlowPanel);
+            Materials = new MaterialInspectionView(Scene, ParentForm as MainWindow, materialFlowPanel);
 
             UpdateStatistics();
         }

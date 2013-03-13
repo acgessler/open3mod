@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Assimp;
 using OpenTK.Graphics.OpenGL;
+using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 using TextureWrapMode = Assimp.TextureWrapMode;
 
 namespace open3mod
@@ -22,6 +24,9 @@ namespace open3mod
     /// </summary>
     public class MaterialPreviewRenderer
     {
+        private readonly uint _width;
+        private readonly uint _height;
+
         public enum CompletionState
         {
             Pending, Failed, Done
@@ -52,6 +57,8 @@ namespace open3mod
         /// <param name="height">Requested height of the preview image, in pixels</param>
         public MaterialPreviewRenderer(MainWindow window, Material material, uint width, uint height)
         {
+            _width = width;
+            _height = height;
             Debug.Assert(material != null);
             _state = CompletionState.Pending;
 
@@ -92,20 +99,26 @@ namespace open3mod
         private bool RenderPreview()
         {
             // based on http://www.opentk.com/doc/graphics/frame-buffer-objects
-            const int fboWidth = 512;
-            const int fboHeight = 512;
+            // use a pow2 FBO even if the hardware supports arbitrary sizes
+            var fboWidth = (int)RoundToNextPowerOfTwo(_width);
+            var fboHeight = (int)RoundToNextPowerOfTwo(_height);
 
-            uint fboHandle;
-            uint colorTexture;
-            uint depthRenderbuffer;
+            int fboHandle = -1;
+            int colorTexture = -1;
+            int depthRenderbuffer = 01;
+
+            // clear error flags
+            GL.GetError();
 
             // Create Color Texture
             GL.GenTextures(1, out colorTexture);
             GL.BindTexture(TextureTarget.Texture2D, colorTexture);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.NearestMipmapNearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Clamp);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Clamp);
+            // note! OpenTK.Graphics.OpenGL.TextureWrapMode clashes with Assimp.TextureWrapMode
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)OpenTK.Graphics.OpenGL.TextureWrapMode.Clamp);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)OpenTK.Graphics.OpenGL.TextureWrapMode.Clamp);
+            
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, 
                 fboWidth, 
                 fboHeight, 
@@ -118,6 +131,9 @@ namespace open3mod
             var error = GL.GetError();
             if (error != ErrorCode.NoError)
             {
+                EnsureTemporaryResourcesReleased(colorTexture, 
+                    depthRenderbuffer, 
+                    fboHandle);
                 return false;
             }
 
@@ -133,6 +149,8 @@ namespace open3mod
             error = GL.GetError();
             if(error != ErrorCode.NoError)
             {
+                EnsureTemporaryResourcesReleased(colorTexture, 
+                    depthRenderbuffer, fboHandle);
                 return false;
             }
 
@@ -152,6 +170,8 @@ namespace open3mod
             var status = GL.Ext.CheckFramebufferStatus(FramebufferTarget.FramebufferExt);
             if (status != FramebufferErrorCode.FramebufferComplete)
             {
+                EnsureTemporaryResourcesReleased(colorTexture, 
+                    depthRenderbuffer, fboHandle);
                 return false;
             }
 
@@ -159,7 +179,10 @@ namespace open3mod
             GL.DrawBuffer((DrawBufferMode)FramebufferAttachment.ColorAttachment0Ext);
 
             GL.PushAttrib(AttribMask.ViewportBit); // stores GL.Viewport() parameters
-            GL.Viewport(0, 0, fboWidth, fboHeight);
+            GL.Viewport(0, 0, (int)_width, (int)_height);
+
+            Draw();
+            CopyToImage();
 
             // restores GL.Viewport() parameters
             GL.PopAttrib(); 
@@ -167,7 +190,53 @@ namespace open3mod
             GL.Ext.BindFramebuffer(FramebufferTarget.FramebufferExt, 0); 
             GL.DrawBuffer(DrawBufferMode.Back);
 
+            EnsureTemporaryResourcesReleased(colorTexture, 
+                depthRenderbuffer, fboHandle);
             return true;
+        }
+
+
+        private void CopyToImage()
+        {
+            var bmp = new Bitmap((int)_width, (int)_height);
+            var data = bmp.LockBits(new Rectangle(0,0,(int)_width, (int)_height), 
+                ImageLockMode.WriteOnly, 
+                System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+
+            GL.ReadPixels(0,0,(int)_width,(int)_height,PixelFormat.Bgr, PixelType.UnsignedByte, data.Scan0 );    
+            bmp.UnlockBits(data);
+
+            _previewImage = bmp;
+        }
+
+
+        private static void EnsureTemporaryResourcesReleased(int colorTexture, int depthRenderbuffer, int fboHandle)
+        {
+            if (colorTexture != -1)
+            {
+                GL.DeleteTexture(colorTexture);
+            }
+            if (depthRenderbuffer != -1)
+            {
+                GL.DeleteRenderbuffers(1, ref depthRenderbuffer);
+            } 
+            if (fboHandle != -1)
+            {
+                GL.DeleteFramebuffers(1, ref fboHandle);
+            }
+        }
+
+
+        private void Draw()
+        {
+            GL.ClearColor(Color.Fuchsia);
+            GL.Clear(ClearBufferMask.ColorBufferBit);
+        }
+
+
+        private static uint RoundToNextPowerOfTwo(uint s)
+        {
+            return (uint)Math.Pow(2, Math.Ceiling(Math.Log(s, 2)));
         }
 
 
