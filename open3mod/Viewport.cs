@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////////////////////
 // Open 3D Model Viewer (open3mod) (v0.1)
 // [Viewport.cs]
 // (c) 2012-2013, Alexander C. Gessler
@@ -30,9 +30,7 @@ using OpenTK;
 namespace open3mod
 {
     /// <summary>
-    /// Encapsulates the state of a 3D viewport. Each tab maintains a list of viewports,
-    /// which are not necessarily all active at a given time. When a viewport is hidden
-    /// in the GUI and is shown again later, the corresponding Viewport instance is
+    /// Encapsulates the state of a 3D viewport. Each tab maintains a list of active viewports.
     /// retained and thus all state preserved.
     /// </summary>
     public class Viewport
