@@ -98,7 +98,7 @@ namespace open3mod
                 {
                     GL.ActiveTexture(TextureUnit.Texture0);
                     GL.BindTexture(TextureTarget.Texture2D, gtex.GlTexture);
-
+           
                     GL.Enable(EnableCap.Texture2D);
                 }
                 else

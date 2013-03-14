@@ -172,6 +172,12 @@ namespace open3mod
                                 TextureParameterName.TextureMagFilter,
                                 (int) TextureMagFilter.Linear);
 
+                // set maximum anisotropic filtering
+                float maxAniso;
+                GL.GetFloat((GetPName)ExtTextureFilterAnisotropic.MaxTextureMaxAnisotropyExt, out maxAniso);
+                GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, maxAniso);
+
+
                 GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Four,
                               textureBitmap.Width,
                               textureBitmap.Height,
