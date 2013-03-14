@@ -398,6 +398,7 @@ namespace open3mod
         private static int _tabCounter;
         private TabPage _tabContextMenuOwner;
         private TabPage _emptyTab;
+        private SettingsDialog _settings;
         private const string LoadingTitlePostfix = " (loading)";
         private const string FailedTitlePostfix = " (failed)";
 
@@ -489,16 +490,19 @@ namespace open3mod
 
         }
 
+
         private void ToolsToolStripMenuItemClick(object sender, EventArgs e)
         {
 
         }
+
 
         private void AboutToolStripMenuItemClick(object sender, EventArgs e)
         {
             var ab = new About();
             ab.ShowDialog();
         }
+
 
         private void OnGlLoad(object sender, EventArgs e)
         {
@@ -524,6 +528,7 @@ namespace open3mod
             _renderer.Resize();
         }
 
+
         private void GlPaint(object sender, PaintEventArgs e)
         {
             if (_renderer == null) // safeguard in case glControl's Load() wasn't fired yet
@@ -533,6 +538,7 @@ namespace open3mod
 
             FrameRender();
         }
+
 
         private void ApplicationIdle(object sender, EventArgs e)
         {
@@ -547,6 +553,7 @@ namespace open3mod
                 FrameRender();
             }
         }
+
 
         private void FrameUpdate()
         {          
@@ -564,6 +571,7 @@ namespace open3mod
 
             ProcessKeys();
         }
+
 
         private void ProcessKeys()
         {
@@ -619,6 +627,7 @@ namespace open3mod
             cam.MovementKey(x, y, z);
         }
 
+
         private void FrameRender()
         {
             _renderer.Draw(_ui.ActiveTab);
@@ -626,41 +635,47 @@ namespace open3mod
         }
 
 
-
         private void ToggleFps(object sender, EventArgs e)
         {
             _ui.ShowFps = !_ui.ShowFps;
         }
+
 
         private void ToggleShading(object sender, EventArgs e)
         {
             _ui.RenderLit = !_ui.RenderLit;
         }
 
+
         private void ToggleTextures(object sender, EventArgs e)
         {
             _ui.RenderTextured = !_ui.RenderTextured;
         }
+
 
         private void ToggleWireframe(object sender, EventArgs e)
         {
             _ui.RenderWireframe = !_ui.RenderWireframe;
         }
 
-        private void ToggleShowBB(object sender, EventArgs e)
+
+        private void ToggleShowBb(object sender, EventArgs e)
         {
             _ui.ShowBBs = !_ui.ShowBBs;
         }
+
 
         private void ToggleShowNormals(object sender, EventArgs e)
         {
             _ui.ShowNormals = !_ui.ShowNormals;
         }
 
+
         private void ToggleShowSkeleton(object sender, EventArgs e)
         {
             _ui.ShowSkeleton = !_ui.ShowSkeleton;
         }
+
 
         private void ToggleFullView(object sender, EventArgs e)
         {
@@ -672,6 +687,7 @@ namespace open3mod
             toolStripButtonFourViews.CheckState = CheckState.Unchecked;
         }
 
+
         private void ToggleTwoViews(object sender, EventArgs e)
         {
             if (UiState.ActiveTab.ActiveViewMode == Tab.ViewMode.Two) return;
@@ -682,6 +698,7 @@ namespace open3mod
             toolStripButtonFourViews.CheckState = CheckState.Unchecked;
         }
 
+
         private void ToggleFourViews(object sender, EventArgs e)
         {
             if (UiState.ActiveTab.ActiveViewMode == Tab.ViewMode.Four) return;
@@ -691,6 +708,7 @@ namespace open3mod
             toolStripButtonTwoViews.CheckState = CheckState.Unchecked;
             toolStripButtonFourViews.CheckState = CheckState.Checked;
         }
+
 
         private void UpdateActiveViewIfNeeded(MouseEventArgs e)
         {
@@ -763,6 +781,7 @@ namespace open3mod
             }
         }
 
+
         private void OnMouseDown(object sender, MouseEventArgs e)
         {
             _mouseDown = true;
@@ -783,10 +802,12 @@ namespace open3mod
             UpdateActiveViewIfNeeded(e);
         }
 
+
         private void OnMouseUp(object sender, MouseEventArgs e)
         {
             _mouseDown = false;
         }
+
 
         private void OnMouseMove(object sender, MouseEventArgs e)
         {       
@@ -818,6 +839,7 @@ namespace open3mod
             _previousMousePosY = e.Y;
         }
 
+
         private void OnMouseLeave(object sender, EventArgs e)
         {
             if (_mouseDown)
@@ -826,10 +848,12 @@ namespace open3mod
             }
         }
 
+
         private void OnMouseEnter(object sender, EventArgs e)
         {
             Capture = false;
         }
+
 
         private void OnDrag(object sender, DragEventArgs e)
         {
@@ -854,7 +878,7 @@ namespace open3mod
                             FileAttributes attr = File.GetAttributes(s);
                             if (attr.HasFlag(FileAttributes.Directory))
                             {
-                                string[] formats = null;
+                                string[] formats;
                                 using (var tempImporter = new Assimp.AssimpImporter())
                                 {
                                     formats = tempImporter.GetSupportedFormats();
@@ -901,16 +925,19 @@ namespace open3mod
             }
         }
 
+
         private void OnDragEnter(object sender, DragEventArgs e)
         {
             // only accept files for drag and drop
             e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.Copy : DragDropEffects.None;
         }
 
+
         protected override bool IsInputKey(Keys keyData)
         {
             return true;
         }
+
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
@@ -945,6 +972,7 @@ namespace open3mod
                     break;
             }
         }
+
 
         private void OnKeyUp(object sender, KeyEventArgs keyEventArgs)
         {
@@ -985,12 +1013,14 @@ namespace open3mod
             e.IsInputKey = true;
         }
 
+
         private void OnTabSelected(object sender, TabControlEventArgs e)
         {
             var tab = tabControl1.SelectedTab;
 
             SelectTab(tab);
         }
+
 
         private void OnShowTabContextMenu(object sender, MouseEventArgs e)
         {
@@ -1012,11 +1042,13 @@ namespace open3mod
             }
         }
 
+
         private void OnCloseTabFromContextMenu(object sender, EventArgs e)
         {
             Debug.Assert(_tabContextMenuOwner != null);
             CloseTab(_tabContextMenuOwner);
         }
+
 
         private void OnCloseAllTabsButThisFromContextMenu(object sender, EventArgs e)
         {
@@ -1030,6 +1062,7 @@ namespace open3mod
             }
         }
 
+
         private void OnCloseTab(object sender, EventArgs e)
         {
             if (tabControl1.SelectedTab != null)
@@ -1037,6 +1070,7 @@ namespace open3mod
                 CloseTab(tabControl1.SelectedTab);
             }
         }
+
 
         private void OnFileMenuOpen(object sender, EventArgs e)
         {
@@ -1052,6 +1086,7 @@ namespace open3mod
             }
         }
 
+
         private void OnFileMenuCloseAll(object sender, EventArgs e)
         {
             while(tabControl1.TabPages.Count > 1)
@@ -1061,10 +1096,12 @@ namespace open3mod
             CloseTab(tabControl1.TabPages[0]);
         }
 
+
         private void OnFileMenuRecent(object sender, EventArgs e)
         {
 
         }
+
 
         private void OnFileMenuQuit(object sender, EventArgs e)
         {
@@ -1078,7 +1115,19 @@ namespace open3mod
             UiState.Dispose();
         }
 
-       
+
+        private void OnShowSettings(object sender, EventArgs e)
+        {
+            if (_settings == null)
+            {
+                _settings = new SettingsDialog();
+            }
+
+            if(!_settings.Visible)
+            {
+                _settings.Show();
+            }
+        }     
     }
 }
 

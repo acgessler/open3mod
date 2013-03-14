@@ -78,11 +78,8 @@ namespace open3mod
             this.closeAllButThisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonTabClose = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.toolStripSelectSkinningMode = new System.Windows.Forms.ToolStripComboBox();
-            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
-            this.toolStripComboBox2 = new System.Windows.Forms.ToolStripComboBox();
             this.glControl1 = new open3mod.RenderControl();
+            this.toolStripButtonShowSettings = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1.SuspendLayout();
             this.toolStripSelectRenderer.SuspendLayout();
             this.tabContextMenuStrip.SuspendLayout();
@@ -227,10 +224,7 @@ namespace open3mod
             this.toolStripButtonShowNormals,
             this.toolStripButtonShowSkeleton,
             this.toolStripSeparator5,
-            this.toolStripLabel2,
-            this.toolStripComboBox2,
-            this.toolStripLabel1,
-            this.toolStripSelectSkinningMode});
+            this.toolStripButtonShowSettings});
             this.toolStripSelectRenderer.Location = new System.Drawing.Point(0, 24);
             this.toolStripSelectRenderer.Name = "toolStripSelectRenderer";
             this.toolStripSelectRenderer.Size = new System.Drawing.Size(1051, 25);
@@ -362,7 +356,7 @@ namespace open3mod
             this.toolStripButtonShowBB.Name = "toolStripButtonShowBB";
             this.toolStripButtonShowBB.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonShowBB.Text = "Show Bounding Boxes";
-            this.toolStripButtonShowBB.Click += new System.EventHandler(this.ToggleShowBB);
+            this.toolStripButtonShowBB.Click += new System.EventHandler(this.ToggleShowBb);
             // 
             // toolStripButtonShowNormals
             // 
@@ -440,37 +434,6 @@ namespace open3mod
             // 
             this.openFileDialog.Multiselect = true;
             // 
-            // toolStripSelectSkinningMode
-            // 
-            this.toolStripSelectSkinningMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.toolStripSelectSkinningMode.Items.AddRange(new object[] {
-            "CPU with Threads",
-            "CPU (exactest)",
-            "GPU (fastest)"});
-            this.toolStripSelectSkinningMode.Name = "toolStripSelectSkinningMode";
-            this.toolStripSelectSkinningMode.Size = new System.Drawing.Size(121, 25);
-            // 
-            // toolStripLabel1
-            // 
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(56, 22);
-            this.toolStripLabel1.Text = "Skinning:";
-            // 
-            // toolStripLabel2
-            // 
-            this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(57, 22);
-            this.toolStripLabel2.Text = "Renderer:";
-            // 
-            // toolStripComboBox2
-            // 
-            this.toolStripComboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.toolStripComboBox2.Items.AddRange(new object[] {
-            "Legacy OpenGl",
-            "OpenGl 3.0"});
-            this.toolStripComboBox2.Name = "toolStripComboBox2";
-            this.toolStripComboBox2.Size = new System.Drawing.Size(121, 25);
-            // 
             // glControl1
             // 
             this.glControl1.AllowDrop = true;
@@ -496,6 +459,16 @@ namespace open3mod
             this.glControl1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.OnMouseUp);
             this.glControl1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.OnPreviewKeyDown);
             this.glControl1.Resize += new System.EventHandler(this.OnGlResize);
+            // 
+            // toolStripButtonShowSettings
+            // 
+            this.toolStripButtonShowSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonShowSettings.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowSettings.Image")));
+            this.toolStripButtonShowSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonShowSettings.Name = "toolStripButtonShowSettings";
+            this.toolStripButtonShowSettings.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonShowSettings.Text = "Settings";
+            this.toolStripButtonShowSettings.Click += new System.EventHandler(this.OnShowSettings);
             // 
             // MainWindow
             // 
@@ -569,10 +542,7 @@ namespace open3mod
         private ToolStripButton toolStripButtonShowNormals;
         private ToolStripButton toolStripButtonShowSkeleton;
         private ToolStripSeparator toolStripSeparator5;
-        private ToolStripLabel toolStripLabel1;
-        private ToolStripComboBox toolStripSelectSkinningMode;
-        private ToolStripLabel toolStripLabel2;
-        private ToolStripComboBox toolStripComboBox2;
+        private ToolStripButton toolStripButtonShowSettings;
     }
 }
 
