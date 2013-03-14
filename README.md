@@ -6,11 +6,11 @@ A general-purpose 3D model viewer aimed to replace the former AssimpView. Based 
 reading about __thirty 3D file formats__, including __FBX, DXF, Collada, Obj, X, PLY, 3DS, LWO, LWS, STL__ 
 and  __IFC__ ([see full list here] (http://assimp.sourceforge.net/main_features_formats.html)).
 
+![Screenshot of open3mod (14-03-2013)](http://www.greentoken.de/download/open3mod1.png)
+
 Currently it is  _work in progress_ and there is no downloadable release yet, but the latest source
 versions are good for productive use. At the time being only Windows is supported even though the 
 long-term goal is to be platform-independent (through Mono).
-
-![Screenshot of open3mod (14-03-2013)](http://www.greentoken.de/download/open3mod1.png)
 
 __Some key features:__
 
