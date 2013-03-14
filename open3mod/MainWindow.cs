@@ -1118,7 +1118,7 @@ namespace open3mod
 
         private void OnShowSettings(object sender, EventArgs e)
         {
-            if (_settings == null)
+            if (_settings == null || _settings.IsDisposed)
             {
                 _settings = new SettingsDialog();
             }
