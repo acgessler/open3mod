@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright (c) 2012 Nicholas Woodfield
+* Copyright (c) 2012-2013 AssimpNet - Nicholas Woodfield
 * 
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@ namespace Assimp.Unmanaged {
     /// <summary>
     /// Represents an aiScene struct.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct AiScene {
         /// <summary>
         /// unsigned int, flags about the state of the scene
@@ -104,7 +104,7 @@ namespace Assimp.Unmanaged {
     /// <summary>
     /// Represents an aiNode struct.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct AiNode {
         /// <summary>
         /// Name of the node.
@@ -145,7 +145,7 @@ namespace Assimp.Unmanaged {
     /// <summary>
     /// Represents an aiMesh struct.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct AiMesh {
         /// <summary>
         /// unsigned int, bitwise flag detailing types of primitives contained.
@@ -186,19 +186,19 @@ namespace Assimp.Unmanaged {
         /// <summary>
         /// aiColor*[Max_Value], array of arrays of vertex colors. Max_Value is a defined constant.
         /// </summary>
-        [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = AiDefines.AI_MAX_NUMBER_OF_COLOR_SETS, ArraySubType = UnmanagedType.SysUInt)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = AiDefines.AI_MAX_NUMBER_OF_COLOR_SETS, ArraySubType = UnmanagedType.SysUInt)]
         public IntPtr[] Colors;
 
         /// <summary>
         /// aiColor*[Max_Value], array of arrays of texture coordinates. Max_Value is a defined constant.
         /// </summary>
-        [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = AiDefines.AI_MAX_NUMBER_OF_TEXTURECOORDS, ArraySubType = UnmanagedType.SysUInt)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = AiDefines.AI_MAX_NUMBER_OF_TEXTURECOORDS, ArraySubType = UnmanagedType.SysUInt)]
         public IntPtr[] TextureCoords;
 
         /// <summary>
         /// unsigned int[4], array of ints denoting the number of components for texture coordinates - UV (2), UVW (3) for example.
         /// </summary>
-        [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = AiDefines.AI_MAX_NUMBER_OF_TEXTURECOORDS, ArraySubType = UnmanagedType.U4)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = AiDefines.AI_MAX_NUMBER_OF_TEXTURECOORDS, ArraySubType = UnmanagedType.U4)]
         public uint[] NumUVComponents;
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace Assimp.Unmanaged {
     /// <summary>
     /// Represents an aiTexture struct.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct AiTexture {
         /// <summary>
         /// Width of the texture.
@@ -255,7 +255,7 @@ namespace Assimp.Unmanaged {
         /// <summary>
         /// char[4], format extension hint.
         /// </summary>
-        [MarshalAsAttribute(UnmanagedType.ByValTStr, SizeConst=4)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst=4)]
         public String FormatHint;
 
         /// <summary>
@@ -267,7 +267,7 @@ namespace Assimp.Unmanaged {
     /// <summary>
     /// Represents an aiFace struct.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct AiFace {
         /// <summary>
         /// Number of indices in the face.
@@ -283,7 +283,7 @@ namespace Assimp.Unmanaged {
     /// <summary>
     /// Represents an aiBone struct.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct AiBone {
         /// <summary>
         /// Name of the bone.
@@ -309,7 +309,7 @@ namespace Assimp.Unmanaged {
     /// <summary>
     /// Represents an aiMaterialProperty struct.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct AiMaterialProperty {
         /// <summary>
         /// Name of the property (key).
@@ -347,7 +347,7 @@ namespace Assimp.Unmanaged {
     /// <summary>
     /// Represents an aiMaterial struct.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct AiMaterial {
         /// <summary>
         /// aiMaterialProperty**, array of material properties.
@@ -368,7 +368,7 @@ namespace Assimp.Unmanaged {
     /// <summary>
     /// Represents an aiNodeAnim struct.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct AiNodeAnim {
         /// <summary>
         /// Name of the node affected by the animation. The node must exist
@@ -424,7 +424,7 @@ namespace Assimp.Unmanaged {
     /// <summary>
     /// Represents an aiMeshAnim struct.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct AiMeshAnim {
         /// <summary>
         /// Name of the mesh to be animated. Empty string not allowed.
@@ -445,7 +445,7 @@ namespace Assimp.Unmanaged {
     /// <summary>
     /// Represents an aiAnimation struct.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct AiAnimation {
         /// <summary>
         /// Name of the animation.
@@ -487,7 +487,7 @@ namespace Assimp.Unmanaged {
     /// <summary>
     /// Represents an aiLight struct.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct AiLight {
         /// <summary>
         /// Name of the light.
@@ -553,7 +553,7 @@ namespace Assimp.Unmanaged {
     /// <summary>
     /// Represents an aiCamera struct.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct AiCamera {
         /// <summary>
         /// Name of the camera.
@@ -599,7 +599,7 @@ namespace Assimp.Unmanaged {
     /// <summary>
     /// Represents an aiString struct.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct AiString {
         /// <summary>
         /// Byte length of the UTF-8 string.
@@ -609,7 +609,7 @@ namespace Assimp.Unmanaged {
         /// <summary>
         /// Actual string.
         /// </summary>
-        [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = AiDefines.MAX_LENGTH)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = AiDefines.MAX_LENGTH)]
         public byte[] Data;
 
         /// <summary>
@@ -659,62 +659,27 @@ namespace Assimp.Unmanaged {
     }
 
     /// <summary>
-    /// Represents a log stream, which receives all log messages and
-    /// streams them somewhere.
+    /// Represents a log stream, which receives all log messages and streams them somewhere.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct AiLogStream {
-        private LogStreamCallback _callback;
-
-        [MarshalAs(UnmanagedType.LPStr)]
-        private String _userData;
+        /// <summary>
+        /// Function pointer that gets called when a message is to be logged.
+        /// </summary>
+        public IntPtr Callback;
 
         /// <summary>
-        /// Callback that is called when a message is logged.
+        /// char*, user defined opaque data.
         /// </summary>
-        public LogStreamCallback Callback {
-            get {
-                return _callback;
-            }
-        }
-
-        /// <summary>
-        /// User data to be passed to the callback.
-        /// </summary>
-        public String UserData {
-            get {
-                return _userData;
-            }
-        }
-
-        /// <summary>
-        /// Constructs a new AiLogStream.
-        /// </summary>
-        /// <param name="callback">Callback called when messages are logged.</param>
-        public AiLogStream(LogStreamCallback callback) {
-            _callback = callback;
-            _userData = null;
-        }
-
-        /// <summary>
-        /// Constructs a new LogStream.
-        /// </summary>
-        /// <param name="callback">Callback called when messages are logged.</param>
-        /// <param name="userData">User-supplied data</param>
-        public AiLogStream(LogStreamCallback callback, String userData) {
-            _callback = callback;
-            _userData = userData;
-        }
+        public IntPtr UserData;
     }
 
     /// <summary>
     /// Represents the memory requirements for the different components of an imported
     /// scene. All sizes in in bytes.
     /// </summary>
-    [Serializable]
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct AiMemoryInfo {
-
         /// <summary>
         /// Size of the storage allocated for texture data, in bytes.
         /// </summary>
@@ -759,9 +724,8 @@ namespace Assimp.Unmanaged {
     /// <summary>
     /// Represents an aiAnimMesh struct.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct AiAnimMesh {
-
         /// <summary>
         /// aiVector3D*, replacement position array.
         /// </summary>
@@ -785,13 +749,13 @@ namespace Assimp.Unmanaged {
         /// <summary>
         /// aiColor4D*[4], replacement vertex colors.
         /// </summary>
-        [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = AiDefines.AI_MAX_NUMBER_OF_COLOR_SETS, ArraySubType = UnmanagedType.SysUInt)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = AiDefines.AI_MAX_NUMBER_OF_COLOR_SETS, ArraySubType = UnmanagedType.SysUInt)]
         public IntPtr[] Colors;
 
         /// <summary>
         /// aiVector3D*[4], replacement texture coordinates.
         /// </summary>
-        [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = AiDefines.AI_MAX_NUMBER_OF_TEXTURECOORDS, ArraySubType = UnmanagedType.SysUInt)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = AiDefines.AI_MAX_NUMBER_OF_TEXTURECOORDS, ArraySubType = UnmanagedType.SysUInt)]
         public IntPtr[] TextureCoords;
 
         /// <summary>
@@ -803,9 +767,8 @@ namespace Assimp.Unmanaged {
     /// <summary>
     /// Describes a file format which Assimp can export to.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct AiExportFormatDesc {
-
         /// <summary>
         /// char*, a short string ID to uniquely identify the export format. e.g. "dae" or "obj"
         /// </summary>
@@ -826,7 +789,7 @@ namespace Assimp.Unmanaged {
     /// Describes a blob of exported scene data. Blobs can be nested, the first blob always has an empty name. Nested
     /// blobs represent auxillary files produced by the exporter (e.g. material files) and are named accordingly.
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct AiExportDataBlob {
         /// <summary>
         /// size_t, size of the data in bytes.
@@ -848,4 +811,144 @@ namespace Assimp.Unmanaged {
         /// </summary>
         public IntPtr NextBlob;
     }
+
+    /// <summary>
+    /// Contains callbacks to implement a custom file system to open and close files.
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct AiFileIO {
+        /// <summary>
+        /// Function pointer to open a new file.
+        /// </summary>
+        public IntPtr OpenProc;
+
+        /// <summary>
+        /// Function pointer used to close an existing file.
+        /// </summary>
+        public IntPtr CloseProc;
+
+        /// <summary>
+        /// Char*, user defined opaque data.
+        /// </summary>
+        public IntPtr UserData;
+    }
+
+    /// <summary>
+    /// Contains callbacks to read and write to a file opened by a custom file system.
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct AiFile {
+        /// <summary>
+        /// Function pointer to read from a file.
+        /// </summary>
+        public IntPtr ReadProc;
+
+        /// <summary>
+        /// Function pointer to write to a file.
+        /// </summary>
+        public IntPtr WriteProc;
+
+        /// <summary>
+        /// Function pointer to retrieve the current position of the file cursor.
+        /// </summary>
+        public IntPtr TellProc;
+
+        /// <summary>
+        /// Function pointer to retrieve the size of the file.
+        /// </summary>
+        public IntPtr FileSizeProc;
+
+        /// <summary>
+        /// Function pointer to set the current position of the file cursor.
+        /// </summary>
+        public IntPtr SeekProc;
+
+        /// <summary>
+        /// Function pointer to flush the file contents.
+        /// </summary>
+        public IntPtr FlushProc;
+
+        /// <summary>
+        /// Char*, user defined opaque data.
+        /// </summary>
+        public IntPtr UserData;
+    }
+
+    #region Delegates
+
+    /// <summary>
+    /// Callback delegate for Assimp's LogStream.
+    /// </summary>
+    /// <param name="msg">Log message</param>
+    /// <param name="userData">char* pointer to user data that is passed to the callback</param>
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void AiLogStreamCallback([In, MarshalAs(UnmanagedType.LPStr)] String msg, IntPtr userData);
+
+    /// <summary>
+    /// Callback delegate for a custom file system, to write to a file.
+    /// </summary>
+    /// <param name="file">Pointer to an AiFile instance</param>
+    /// <param name="dataToWrite">Char* pointer to data to write (casted from a void*)</param>
+    /// <param name="sizeOfElemInBytes">Size of a single element in bytes to write</param>
+    /// <param name="numElements">Number of elements to write</param>
+    /// <returns>Number of elements successfully written. Should be zero if either size or numElements is zero. May be less than numElements if an error occured.</returns>
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate UIntPtr AiFileWriteProc(IntPtr file, IntPtr dataToWrite, UIntPtr sizeOfElemInBytes, UIntPtr numElements);
+
+    /// <summary>
+    /// Callback delegate for a custom file system, to read from a file.
+    /// </summary>
+    /// <param name="file">Pointer to an AiFile instance.</param>
+    /// <param name="dataToRead">Char* pointer that will store the data read (casted from a void*)</param>
+    /// <param name="sizeOfElemInBytes">Size of a single element in bytes to read</param>
+    /// <param name="numElements">Number of elements to read</param>
+    /// <returns>Number of elements succesfully read. Should be zero if either size or numElements is zero. May be less than numElements if end of file is encountered, or if an error occured.</returns>
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate UIntPtr AiFileReadProc(IntPtr file, IntPtr dataToRead, UIntPtr sizeOfElemInBytes, UIntPtr numElements);
+
+    /// <summary>
+    /// Callback delegate for a custom file system, to tell offset/size information about the file.
+    /// </summary>
+    /// <param name="file">Pointer to an AiFile instance.</param>
+    /// <returns>Returns the current file cursor or the file size in bytes. May be -1 if an error has occured.</returns>
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate UIntPtr AiFileTellProc(IntPtr file);
+
+    /// <summary>
+    /// Callback delegate for a custom file system, to flush the contents of the file to the disk.
+    /// </summary>
+    /// <param name="file">Pointer to an AiFile instance.</param>
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void AiFileFlushProc(IntPtr file);
+
+    /// <summary>
+    /// Callback delegate for a custom file system, to set the current position of the file cursor.
+    /// </summary>
+    /// <param name="file">Pointer to An AiFile instance.</param>
+    /// <param name="offset">Offset from the origin.</param>
+    /// <param name="seekOrigin">Position used as a reference</param>
+    /// <returns>Returns success, if successful</returns>
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate ReturnCode AiFileSeek(IntPtr file, UIntPtr offset, Origin seekOrigin);
+
+    /// <summary>
+    /// Callback delegate for a custom file system, to open a given file and create a new AiFile instance.
+    /// </summary>
+    /// <param name="fileIO">Pointer to an AiFileIO instance.</param>
+    /// <param name="pathToFile">Path to the target file</param>
+    /// <param name="mode">Read-write permissions to request</param>
+    /// <returns>Pointer to an AiFile instance.</returns>
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate IntPtr AiFileOpenProc(IntPtr fileIO, [In, MarshalAs(UnmanagedType.LPStr)] String pathToFile, [In, MarshalAs(UnmanagedType.LPStr)] String mode);
+
+    /// <summary>
+    /// Callback delegate for a custom file system, to close a given file and free its memory.
+    /// </summary>
+    /// <param name="fileIO">Pointer to an AiFileIO instance.</param>
+    /// <param name="file">Pointer to an AiFile instance that will be closed.</param>
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void AiFileCloseProc(IntPtr fileIO, IntPtr file);
+
+
+    #endregion
 }

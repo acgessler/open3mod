@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright (c) 2012 Nicholas Woodfield
+* Copyright (c) 2012-2013 AssimpNet - Nicholas Woodfield
 * 
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -29,20 +29,20 @@ namespace Assimp {
     /// A mesh represents geometry with a single material.
     /// </summary>
     public sealed class Mesh {
-        private String _name;
-        private PrimitiveType _primitiveType;
-        private int _materialIndex;
-        private int _vertexCount;
-        private Vector3D[] _vertices;
-        private Vector3D[] _normals;
-        private Vector3D[] _tangents;
-        private Vector3D[] _bitangents;
-        private Face[] _faces;
-        private List<Color4D[]> _colors;
-        private List<Vector3D[]> _texCoords;
-        private List<uint> _texComponentNumber;
-        private Bone[] _bones;
-        private MeshAnimationAttachment[] _meshAttachments;
+        private String m_name;
+        private PrimitiveType m_primitiveType;
+        private int m_materialIndex;
+        private int m_vertexCount;
+        private Vector3D[] m_vertices;
+        private Vector3D[] m_normals;
+        private Vector3D[] m_tangents;
+        private Vector3D[] m_bitangents;
+        private Face[] m_faces;
+        private List<Color4D[]> m_colors;
+        private List<Vector3D[]> m_texCoords;
+        private List<uint> m_texComponentNumber;
+        private Bone[] m_bones;
+        private MeshAnimationAttachment[] m_meshAttachments;
 
         /// <summary>
         /// Gets the mesh name. This tends to be used
@@ -53,7 +53,7 @@ namespace Assimp {
         /// </summary>
         public String Name {
             get {
-                return _name;
+                return m_name;
             }
         }
 
@@ -64,7 +64,7 @@ namespace Assimp {
         /// </summary>
         public PrimitiveType PrimitiveType {
             get {
-                return _primitiveType;
+                return m_primitiveType;
             }
         }
 
@@ -73,7 +73,7 @@ namespace Assimp {
         /// </summary>
         public int MaterialIndex {
             get {
-                return _materialIndex;
+                return m_materialIndex;
             }
         }
 
@@ -83,7 +83,7 @@ namespace Assimp {
         /// </summary>
         public int VertexCount {
             get {
-                return _vertexCount;
+                return m_vertexCount;
             }
         }
 
@@ -93,7 +93,7 @@ namespace Assimp {
         /// </summary>
         public bool HasVertices {
             get {
-                return _vertices != null;
+                return m_vertices != null;
             }
         }
 
@@ -102,7 +102,7 @@ namespace Assimp {
         /// </summary>
         public Vector3D[] Vertices {
             get {
-                return _vertices;
+                return m_vertices;
             }
         }
 
@@ -111,7 +111,7 @@ namespace Assimp {
         /// </summary>
         public bool HasNormals {
             get {
-                return _normals != null;
+                return m_normals != null;
             }
         }
 
@@ -120,7 +120,7 @@ namespace Assimp {
         /// </summary>
         public Vector3D[] Normals {
             get {
-                return _normals;
+                return m_normals;
             }
         }
 
@@ -130,7 +130,7 @@ namespace Assimp {
         /// </summary>
         public bool HasTangentBasis {
             get {
-                return VertexCount > 0 && _tangents != null &&_bitangents != null;
+                return VertexCount > 0 && m_tangents != null &&m_bitangents != null;
             }
         }
 
@@ -139,7 +139,7 @@ namespace Assimp {
         /// </summary>
         public Vector3D[] Tangents {
             get {
-                return _tangents;
+                return m_tangents;
             }
         }
 
@@ -148,7 +148,7 @@ namespace Assimp {
         /// </summary>
         public Vector3D[] BiTangents {
             get {
-                return _bitangents;
+                return m_bitangents;
             }
         }
 
@@ -157,7 +157,7 @@ namespace Assimp {
         /// </summary>
         public int FaceCount {
             get {
-                return (_faces == null) ? 0 : _faces.Length;
+                return (m_faces == null) ? 0 : m_faces.Length;
             }
         }
 
@@ -167,7 +167,7 @@ namespace Assimp {
         /// </summary>
         public bool HasFaces {
             get {
-                return _faces != null;
+                return m_faces != null;
             }
         }
 
@@ -177,7 +177,7 @@ namespace Assimp {
         /// </summary>
         public Face[] Faces {
             get {
-                return _faces;
+                return m_faces;
             }
         }
 
@@ -187,7 +187,7 @@ namespace Assimp {
         /// </summary>
         public int VertexColorChannelCount {
             get {
-                return (_colors == null) ? 0 : _colors.Count;
+                return (m_colors == null) ? 0 : m_colors.Count;
             }
         }
 
@@ -197,7 +197,7 @@ namespace Assimp {
         /// </summary>
         public int TextureCoordsChannelCount {
             get {
-                return (_texCoords == null) ? 0 : _texCoords.Count;
+                return (m_texCoords == null) ? 0 : m_texCoords.Count;
             }
         }
 
@@ -206,7 +206,7 @@ namespace Assimp {
         /// </summary>
         public int BoneCount {
             get {
-                return (_bones == null) ? 0 : _bones.Length;
+                return (m_bones == null) ? 0 : m_bones.Length;
             }
         }
 
@@ -215,7 +215,7 @@ namespace Assimp {
         /// </summary>
         public bool HasBones {
             get {
-                return _bones != null;
+                return m_bones != null;
             }
         }
 
@@ -224,7 +224,7 @@ namespace Assimp {
         /// </summary>
         public Bone[] Bones {
             get {
-                return _bones;
+                return m_bones;
             }
         }
 
@@ -233,43 +233,43 @@ namespace Assimp {
         /// </summary>
         /// <param name="mesh">Unmanaged AiMesh struct.</param>
         internal Mesh(AiMesh mesh) {
-            _name = mesh.Name.GetString();
-            _primitiveType = mesh.PrimitiveTypes;
-            _vertexCount = (int) mesh.NumVertices;
-            _materialIndex = (int) mesh.MaterialIndex;
+            m_name = mesh.Name.GetString();
+            m_primitiveType = mesh.PrimitiveTypes;
+            m_vertexCount = (int) mesh.NumVertices;
+            m_materialIndex = (int) mesh.MaterialIndex;
 
             //Load per-vertex arrays
             if(mesh.NumVertices > 0) {
                 if(mesh.Vertices != IntPtr.Zero) {
-                    _vertices = MemoryHelper.MarshalArray<Vector3D>(mesh.Vertices, _vertexCount);
+                    m_vertices = MemoryHelper.MarshalArray<Vector3D>(mesh.Vertices, m_vertexCount);
                 }
                 if(mesh.Normals != IntPtr.Zero) {
-                    _normals = MemoryHelper.MarshalArray<Vector3D>(mesh.Normals, _vertexCount);
+                    m_normals = MemoryHelper.MarshalArray<Vector3D>(mesh.Normals, m_vertexCount);
                 }
                 if(mesh.Tangents != IntPtr.Zero) {
-                    _tangents = MemoryHelper.MarshalArray<Vector3D>(mesh.Tangents, _vertexCount);
+                    m_tangents = MemoryHelper.MarshalArray<Vector3D>(mesh.Tangents, m_vertexCount);
                 }
                 if(mesh.BiTangents != IntPtr.Zero) {
-                    _bitangents = MemoryHelper.MarshalArray<Vector3D>(mesh.BiTangents, _vertexCount);
+                    m_bitangents = MemoryHelper.MarshalArray<Vector3D>(mesh.BiTangents, m_vertexCount);
                 }
             }
 
             //Load faces
             if(mesh.NumFaces > 0 && mesh.Faces != IntPtr.Zero) {
                 AiFace[] faces = MemoryHelper.MarshalArray<AiFace>(mesh.Faces, (int) mesh.NumFaces);
-                _faces = new Face[faces.Length];
-                for(int i = 0; i < _faces.Length; i++) {
-                    _faces[i] = new Face(faces[i]);
+                m_faces = new Face[faces.Length];
+                for(int i = 0; i < m_faces.Length; i++) {
+                    m_faces[i] = new Face(faces[i]);
                 }
             }
 
             //Load UVW components - this should match the texture coordinate channels
             uint[] components = mesh.NumUVComponents;
             if(components != null) {
-                _texComponentNumber = new List<uint>();
+                m_texComponentNumber = new List<uint>();
                 foreach(uint num in components) {
                     if(num > 0) {
-                        _texComponentNumber.Add(num);
+                        m_texComponentNumber.Add(num);
                     }
                 }
             }
@@ -277,10 +277,10 @@ namespace Assimp {
             //Load texture coordinate channels
             IntPtr[] texCoords = mesh.TextureCoords;
             if(texCoords != null) {
-                _texCoords = new List<Vector3D[]>();
+                m_texCoords = new List<Vector3D[]>();
                 foreach(IntPtr texPtr in texCoords) {
                     if(texPtr != IntPtr.Zero) {
-                        _texCoords.Add(MemoryHelper.MarshalArray<Vector3D>(texPtr, _vertexCount));
+                        m_texCoords.Add(MemoryHelper.MarshalArray<Vector3D>(texPtr, m_vertexCount));
                     }
                 }
             }
@@ -288,10 +288,10 @@ namespace Assimp {
             //Load vertex color channels
             IntPtr[] vertexColors = mesh.Colors;
             if(vertexColors != null) {
-                _colors = new List<Color4D[]>();
+                m_colors = new List<Color4D[]>();
                 foreach(IntPtr colorPtr in vertexColors) {
                     if(colorPtr != IntPtr.Zero) {
-                        _colors.Add(MemoryHelper.MarshalArray<Color4D>(colorPtr, _vertexCount));
+                        m_colors.Add(MemoryHelper.MarshalArray<Color4D>(colorPtr, m_vertexCount));
                     }
                 }
             }
@@ -299,18 +299,18 @@ namespace Assimp {
             //Load bones
             if(mesh.NumBones > 0 && mesh.Bones != IntPtr.Zero) {
                 AiBone[] bones = MemoryHelper.MarshalArray<AiBone>(mesh.Bones, (int) mesh.NumBones, true);
-                _bones = new Bone[bones.Length];
-                for(int i = 0; i < _bones.Length; i++) {
-                    _bones[i] = new Bone(bones[i]);
+                m_bones = new Bone[bones.Length];
+                for(int i = 0; i < m_bones.Length; i++) {
+                    m_bones[i] = new Bone(bones[i]);
                 }
             }
 
             //Load anim meshes (attachment meshes)
             if(mesh.NumAnimMeshes > 0 && mesh.AnimMeshes != IntPtr.Zero) {
                 AiAnimMesh[] animMeshes = MemoryHelper.MarshalArray<AiAnimMesh>(mesh.AnimMeshes, (int) mesh.NumAnimMeshes, true);
-                _meshAttachments = new MeshAnimationAttachment[animMeshes.Length];
-                for(int i = 0; i < _meshAttachments.Length; i++) {
-                    _meshAttachments[i] = new MeshAnimationAttachment(animMeshes[i]);
+                m_meshAttachments = new MeshAnimationAttachment[animMeshes.Length];
+                for(int i = 0; i < m_meshAttachments.Length; i++) {
+                    m_meshAttachments[i] = new MeshAnimationAttachment(animMeshes[i]);
                 }
             }
         }
@@ -323,11 +323,11 @@ namespace Assimp {
         /// <param name="channelIndex">Channel index</param>
         /// <returns>True if vertex colors are present in the channel.</returns>
         public bool HasVertexColors(int channelIndex) {
-            if(_colors != null) {
-                if(channelIndex >= _colors.Count || channelIndex < 0) {
+            if(m_colors != null) {
+                if(channelIndex >= m_colors.Count || channelIndex < 0) {
                     return false;
                 }
-                return VertexCount > 0 && _colors[channelIndex] != null;
+                return VertexCount > 0 && m_colors[channelIndex] != null;
             }
             return false;
         }
@@ -340,11 +340,11 @@ namespace Assimp {
         /// <param name="channelIndex">Channel index</param>
         /// <returns>True if texture coordinates are present in the channel.</returns>
         public bool HasTextureCoords(int channelIndex) {
-            if(_texCoords != null) {
-                if(channelIndex >= _texCoords.Count || channelIndex < 0) {
+            if(m_texCoords != null) {
+                if(channelIndex >= m_texCoords.Count || channelIndex < 0) {
                     return false;
                 }
-                return VertexCount > 0 && _texCoords[channelIndex] != null;
+                return VertexCount > 0 && m_texCoords[channelIndex] != null;
             }
             return false;
         }
@@ -356,7 +356,7 @@ namespace Assimp {
         /// <returns>The vertex color array, or null if it does not exist.</returns>
         public Color4D[] GetVertexColors(int channelIndex) {
             if(HasVertexColors(channelIndex)) {
-                return _colors[channelIndex];
+                return m_colors[channelIndex];
             }
             return null;
         }
@@ -369,7 +369,7 @@ namespace Assimp {
         /// <returns>The texture coordinate array, or null if it does not exist.</returns>
         public Vector3D[] GetTextureCoords(int channelIndex) {
             if(HasTextureCoords(channelIndex)) {
-                return _texCoords[channelIndex];
+                return m_texCoords[channelIndex];
             }
             return null;
         }
@@ -383,8 +383,8 @@ namespace Assimp {
         /// <returns>The number of UV(W) components the texture coordinate channel contains</returns>
         public int GetUVComponentCount(int channelIndex) {
             if(HasTextureCoords(channelIndex)) {
-                if(_texComponentNumber != null) {
-                    return (int)_texComponentNumber[channelIndex];
+                if(m_texComponentNumber != null) {
+                    return (int)m_texComponentNumber[channelIndex];
                 }
             }
             return 0;
@@ -398,7 +398,7 @@ namespace Assimp {
         public uint[] GetIndices() {
             if(HasFaces) {
                 List<uint> indices = new List<uint>();
-                foreach(Face face in _faces) {
+                foreach(Face face in m_faces) {
                     if(face.IndexCount > 0 && face.Indices != null) {
                         indices.AddRange(face.Indices);
                     }
@@ -418,7 +418,7 @@ namespace Assimp {
             //safe just in case
             if(HasFaces) {
                 List<int> indices = new List<int>();
-                foreach(Face face in _faces) {
+                foreach(Face face in m_faces) {
                     if(face.IndexCount > 0 && face.Indices != null) {
                         foreach(uint index in face.Indices) {
                             indices.Add((int) index);
@@ -440,7 +440,7 @@ namespace Assimp {
             //safe just in case
             if(HasFaces) {
                 List<short> indices = new List<short>();
-                foreach(Face face in _faces) {
+                foreach(Face face in m_faces) {
                     if(face.IndexCount > 0 && face.Indices != null) {
                         foreach(uint index in face.Indices) {
                             indices.Add((short) index);

@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright (c) 2012 Nicholas Woodfield
+* Copyright (c) 2012-2013 AssimpNet - Nicholas Woodfield
 * 
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -29,22 +29,22 @@ namespace Assimp {
     /// </summary>
     [Serializable]
     public struct TextureSlot {
-        private String _filePath;
-        private TextureType _type;
-        private uint _index;
-        private TextureMapping _mapping;
-        private uint _uvIndex;
-        private float _blendFactor;
-        private TextureOperation _texOp;
-        private TextureWrapMode _wrapMode;
-        private uint _flags;
+        private String m_filePath;
+        private TextureType m_type;
+        private uint m_index;
+        private TextureMapping m_mapping;
+        private uint m_uvIndex;
+        private float m_blendFactor;
+        private TextureOperation m_texOp;
+        private TextureWrapMode m_wrapMode;
+        private uint m_flags;
 
         /// <summary>
         /// Gets the texture file path.
         /// </summary>
         public String FilePath {
             get {
-                return _filePath;
+                return m_filePath;
             }
         }
 
@@ -53,7 +53,7 @@ namespace Assimp {
         /// </summary>
         public TextureType TextureType {
             get {
-                return _type;
+                return m_type;
             }
         }
 
@@ -62,7 +62,7 @@ namespace Assimp {
         /// </summary>
         public uint TextureIndex {
             get {
-                return _index;
+                return m_index;
             }
         }
 
@@ -71,7 +71,7 @@ namespace Assimp {
         /// </summary>
         public TextureMapping Mapping {
             get {
-                return _mapping;
+                return m_mapping;
             }
         }
 
@@ -80,7 +80,7 @@ namespace Assimp {
         /// </summary>
         public uint UVIndex {
             get {
-                return _uvIndex;
+                return m_uvIndex;
             }
         }
 
@@ -89,7 +89,7 @@ namespace Assimp {
         /// </summary>
         public float BlendFactor {
             get {
-                return _blendFactor;
+                return m_blendFactor;
             }
         }
 
@@ -98,7 +98,7 @@ namespace Assimp {
         /// </summary>
         public TextureOperation Operation {
             get {
-                return _texOp;
+                return m_texOp;
             }
         }
 
@@ -107,7 +107,7 @@ namespace Assimp {
         /// </summary>
         public TextureWrapMode WrapMode {
             get {
-                return _wrapMode;
+                return m_wrapMode;
             }
         }
 
@@ -116,7 +116,7 @@ namespace Assimp {
         /// </summary>
         public uint Flags {
             get {
-                return _flags;
+                return m_flags;
             }
         }
 
@@ -134,15 +134,15 @@ namespace Assimp {
         /// <param name="flags">Misc flags</param>
         public TextureSlot(String filePath, TextureType typeSemantic, uint texIndex, TextureMapping mapping, uint uvIndex, float blendFactor,
             TextureOperation texOp, TextureWrapMode wrapMode, uint flags) {
-                _filePath = (filePath == null) ? String.Empty : filePath;
-                _type = typeSemantic;
-                _index = texIndex;
-                _mapping = mapping;
-                _uvIndex = uvIndex;
-                _blendFactor = blendFactor;
-                _texOp = texOp;
-                _wrapMode = wrapMode;
-                _flags = flags;
+                m_filePath = (filePath == null) ? String.Empty : filePath;
+                m_type = typeSemantic;
+                m_index = texIndex;
+                m_mapping = mapping;
+                m_uvIndex = uvIndex;
+                m_blendFactor = blendFactor;
+                m_texOp = texOp;
+                m_wrapMode = wrapMode;
+                m_flags = flags;
         }
     }
 }

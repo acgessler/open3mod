@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright (c) 2012 Nicholas Woodfield
+* Copyright (c) 2012-2013 AssimpNet - Nicholas Woodfield
 * 
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -60,15 +60,15 @@ namespace Assimp {
     /// description.
     /// </summary>
     public sealed class CompressedTexture : Texture {
-        private byte[] _data;
-        private String _formatHint;
+        private byte[] m_data;
+        private String m_formatHint;
 
         /// <summary>
         /// Gets if the texture data is present - this should always be true.
         /// </summary>
         public bool HasData {
             get {
-                return _data != null;
+                return m_data != null;
             }
         }
 
@@ -77,7 +77,7 @@ namespace Assimp {
         /// </summary>
         public int ByteCount {
             get {
-                return (_data == null) ? 0 : _data.Length;
+                return (m_data == null) ? 0 : m_data.Length;
             }
         }
 
@@ -86,7 +86,7 @@ namespace Assimp {
         /// </summary>
         public byte[] Data {
             get {
-                return _data;
+                return m_data;
             }
         }
 
@@ -96,7 +96,7 @@ namespace Assimp {
         /// </summary>
         public String FormatHint {
             get {
-                return _formatHint;
+                return m_formatHint;
             }
         }
 
@@ -110,10 +110,10 @@ namespace Assimp {
         }
 
         internal CompressedTexture(AiTexture texture) {
-            _formatHint = texture.FormatHint;
+            m_formatHint = texture.FormatHint;
 
             if(texture.Width > 0 && texture.Data != IntPtr.Zero) {
-                _data = MemoryHelper.MarshalArray<byte>(texture.Data, (int) texture.Width);
+                m_data = MemoryHelper.MarshalArray<byte>(texture.Data, (int) texture.Width);
             }
         }
     }
@@ -123,16 +123,16 @@ namespace Assimp {
     /// description.
     /// </summary>
     public sealed class UncompressedTexture : Texture {
-        private int _width;
-        private int _height;
-        private Texel[] _data;
+        private int m_width;
+        private int m_height;
+        private Texel[] m_data;
 
         /// <summary>
         /// Gets the width of the texture in pixels.
         /// </summary>
         public int Width {
             get {
-                return _width;
+                return m_width;
             }
         }
 
@@ -141,7 +141,7 @@ namespace Assimp {
         /// </summary>
         public int Height {
             get {
-                return _height;
+                return m_height;
             }
         }
 
@@ -150,7 +150,7 @@ namespace Assimp {
         /// </summary>
         public bool HasData {
             get {
-                return _data != null;
+                return m_data != null;
             }
         }
 
@@ -159,7 +159,7 @@ namespace Assimp {
         /// </summary>
         public Texel[] Data {
             get {
-                return _data;
+                return m_data;
             }
         }
 
@@ -177,13 +177,13 @@ namespace Assimp {
         /// </summary>
         /// <param name="texture">Unmanaged AiTexture struct.</param>
         internal UncompressedTexture(AiTexture texture) {
-            _width = (int) texture.Width;
-            _height = (int) texture.Height;
+            m_width = (int) texture.Width;
+            m_height = (int) texture.Height;
 
-            int size = _width * _height;
+            int size = m_width * m_height;
 
             if(size > 0 && texture.Data != IntPtr.Zero) {
-                _data = MemoryHelper.MarshalArray<Texel>(texture.Data, size);
+                m_data = MemoryHelper.MarshalArray<Texel>(texture.Data, size);
             }
         }
     }

@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright (c) 2012 Nicholas Woodfield
+* Copyright (c) 2012-2013 AssimpNet - Nicholas Woodfield
 * 
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -29,13 +29,13 @@ namespace Assimp {
     /// A key-value pairing that represents some material property.
     /// </summary>
     public sealed class MaterialProperty {
-        private String _name;
-        private PropertyType _type;
-        private byte[] _value;
-        private TextureType _texType;
-        private int _texIndex;
-        private String _stringValue;
-        private String _fullyQualifiedName;
+        private String m_name;
+        private PropertyType m_type;
+        private byte[] m_value;
+        private TextureType m_texType;
+        private int m_texIndex;
+        private String m_stringValue;
+        private String m_fullyQualifiedName;
 
         /// <summary>
         /// Gets the property key name. E.g. $tex.file. This corresponds to the
@@ -43,7 +43,7 @@ namespace Assimp {
         /// </summary>
         public String Name {
             get {
-                return _name;
+                return m_name;
             }
         }
 
@@ -52,7 +52,7 @@ namespace Assimp {
         /// </summary>
         public PropertyType PropertyType {
             get {
-                return _type;
+                return m_type;
             }
         }
 
@@ -61,7 +61,7 @@ namespace Assimp {
         /// </summary>
         public int ByteCount {
             get {
-                return (_value == null) ? 0 : _value.Length;
+                return (m_value == null) ? 0 : m_value.Length;
             }
         }
 
@@ -70,7 +70,7 @@ namespace Assimp {
         /// </summary>
         public bool HasRawData {
             get {
-                return _value != null;
+                return m_value != null;
             }
         }
 
@@ -79,7 +79,7 @@ namespace Assimp {
         /// </summary>
         public byte[] RawData {
             get {
-                return _value;
+                return m_value;
             }
         }
 
@@ -88,7 +88,7 @@ namespace Assimp {
         /// </summary>
         public TextureType TextureType {
             get {
-                return _texType;
+                return m_texType;
             }
         }
 
@@ -97,7 +97,7 @@ namespace Assimp {
         /// </summary>
         public int TextureIndex {
             get {
-                return _texIndex;
+                return m_texIndex;
             }
         }
 
@@ -107,7 +107,7 @@ namespace Assimp {
         /// </summary>
         public String FullyQualifiedName {
             get {
-                return _fullyQualifiedName;
+                return m_fullyQualifiedName;
             }
         }
 
@@ -116,20 +116,20 @@ namespace Assimp {
         /// </summary>
         /// <param name="property">Umananaged AiMaterialProperty struct</param>
         internal MaterialProperty(AiMaterialProperty property) {
-            _name = property.Key.GetString();
-            _type = property.Type;
-            _texIndex = (int) property.Index;
-            _texType = property.Semantic;
+            m_name = property.Key.GetString();
+            m_type = property.Type;
+            m_texIndex = (int) property.Index;
+            m_texType = property.Semantic;
             
             if(property.DataLength > 0 && property.Data != IntPtr.Zero) {
-                if (_type == Assimp.PropertyType.String) {
-                    _stringValue = Marshal.PtrToStringAnsi(property.Data, (int)property.DataLength);
+                if (m_type == Assimp.PropertyType.String) {
+                    m_stringValue = Marshal.PtrToStringAnsi(property.Data, (int)property.DataLength);
                 } else {
-                    _value = MemoryHelper.MarshalArray<byte>(property.Data, (int)property.DataLength);
+                    m_value = MemoryHelper.MarshalArray<byte>(property.Data, (int)property.DataLength);
                 }
             }
 
-            _fullyQualifiedName = String.Format("{0},{1},{2}", _name, ((uint)_texType).ToString(), _texIndex.ToString());
+            m_fullyQualifiedName = String.Format("{0},{1},{2}", m_name, ((uint)m_texType).ToString(), m_texIndex.ToString());
         }
 
         /// <summary>
@@ -137,8 +137,8 @@ namespace Assimp {
         /// </summary>
         /// <returns>Float</returns>
         public float AsFloat() {
-            if(_type == PropertyType.Float) {
-                return BitConverter.ToSingle(_value, 0);
+            if(m_type == PropertyType.Float) {
+                return BitConverter.ToSingle(m_value, 0);
             }
             return 0;
         }
@@ -148,8 +148,8 @@ namespace Assimp {
         /// </summary>
         /// <returns>Integer</returns>
         public int AsInteger() {
-            if(_type == PropertyType.Integer) {
-                return BitConverter.ToInt32(_value, 0);
+            if(m_type == PropertyType.Integer) {
+                return BitConverter.ToInt32(m_value, 0);
             }
             return 0;
         }
@@ -159,8 +159,8 @@ namespace Assimp {
         /// </summary>
         /// <returns>String</returns>
         public String AsString() {
-            if(_type == PropertyType.String) {
-                return _stringValue;
+            if(m_type == PropertyType.String) {
+                return m_stringValue;
             }
             return null;
         }
@@ -170,7 +170,7 @@ namespace Assimp {
         /// </summary>
         /// <returns>Float array</returns>
         public float[] AsFloatArray() {
-            if(_type == Assimp.PropertyType.Float) {
+            if(m_type == Assimp.PropertyType.Float) {
                 return ValueAsArray<float>();
             }
             return null;
@@ -181,7 +181,7 @@ namespace Assimp {
         /// </summary>
         /// <returns>Integer array</returns>
         public int[] AsIntegerArray() {
-            if(_type == Assimp.PropertyType.Integer) {
+            if(m_type == Assimp.PropertyType.Integer) {
                 return ValueAsArray<int>();
             }
             return null;
@@ -200,7 +200,7 @@ namespace Assimp {
         /// </summary>
         /// <returns>Color3D</returns>
         public Color3D AsColor3D() {
-            if(_type == Assimp.PropertyType.Float) {
+            if(m_type == Assimp.PropertyType.Float) {
                 return ValueAs<Color3D>();
             }
             return new Color3D();
@@ -211,7 +211,7 @@ namespace Assimp {
         /// </summary>
         /// <returns>Color4D</returns>
         public Color4D AsColor4D() {
-            if(_type == Assimp.PropertyType.Float) {
+            if(m_type == Assimp.PropertyType.Float) {
                 return ValueAs<Color4D>();
             }
             return new Color4D();
@@ -237,7 +237,7 @@ namespace Assimp {
             T value = default(T);
             if(HasRawData) {
                 try {
-                    fixed(byte* ptr = _value) {
+                    fixed(byte* ptr = m_value) {
                         value = MemoryHelper.MarshalStructure<T>(new IntPtr(ptr));
                     }
                 } catch(Exception) {
@@ -253,7 +253,7 @@ namespace Assimp {
             if(HasRawData) {
                 try {
                     int size = Marshal.SizeOf(typeof(T));
-                    fixed(byte* ptr = _value) {
+                    fixed(byte* ptr = m_value) {
                         value = MemoryHelper.MarshalArray<T>(new IntPtr(ptr), ByteCount / size);
                     }
                 } catch(Exception) {

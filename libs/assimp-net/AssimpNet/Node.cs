@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright (c) 2012 Nicholas Woodfield
+* Copyright (c) 2012-2013 AssimpNet - Nicholas Woodfield
 * 
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -28,18 +28,18 @@ namespace Assimp {
     /// A node in the imported model hierarchy.
     /// </summary>
     public sealed class Node {
-        private String _name;
-        private Matrix4x4 _transform;
-        private Node _parent;
-        private Node[] _children;
-        private int[] _meshes;
+        private String m_name;
+        private Matrix4x4 m_transform;
+        private Node m_parent;
+        private Node[] m_children;
+        private int[] m_meshes;
 
         /// <summary>
         /// Gets the name of the node.
         /// </summary>
         public String Name {
             get {
-                return _name;
+                return m_name;
             }
         }
 
@@ -48,7 +48,7 @@ namespace Assimp {
         /// </summary>
         public Matrix4x4 Transform {
             get {
-                return _transform;
+                return m_transform;
             }
         }
 
@@ -57,7 +57,7 @@ namespace Assimp {
         /// </summary>
         public Node Parent {
             get {
-                return _parent;
+                return m_parent;
             }
         }
 
@@ -66,7 +66,7 @@ namespace Assimp {
         /// </summary>
         public int ChildCount {
             get {
-                return (_children == null) ? 0 : _children.Length;
+                return (m_children == null) ? 0 : m_children.Length;
             }
         }
 
@@ -75,7 +75,7 @@ namespace Assimp {
         /// </summary>
         public bool HasChildren {
             get {
-                return _children != null;
+                return m_children != null;
             }
         }
 
@@ -84,7 +84,7 @@ namespace Assimp {
         /// </summary>
         public Node[] Children {
             get {
-                return _children;
+                return m_children;
             }
         }
 
@@ -93,7 +93,7 @@ namespace Assimp {
         /// </summary>
         public int MeshCount {
             get {
-                return (_meshes == null) ? 0 : _meshes.Length;
+                return (m_meshes == null) ? 0 : m_meshes.Length;
             }
         }
 
@@ -102,7 +102,7 @@ namespace Assimp {
         /// </summary>
         public bool HasMeshes {
             get {
-                return _meshes != null;
+                return m_meshes != null;
             }
         }
 
@@ -113,7 +113,7 @@ namespace Assimp {
         /// </summary>
         public int[] MeshIndices {
             get {
-                return _meshes;
+                return m_meshes;
             }
         }
 
@@ -123,20 +123,20 @@ namespace Assimp {
         /// <param name="aiNode">Unmanaged AiNode structure</param>
         /// <param name="parent">Parent of this node or null</param>
         internal Node(AiNode aiNode, Node parent) {
-            _name = aiNode.Name.GetString();
-            _transform = aiNode.Transformation;
-            _parent = parent;
+            m_name = aiNode.Name.GetString();
+            m_transform = aiNode.Transformation;
+            m_parent = parent;
 
             if(aiNode.NumChildren > 0 && aiNode.Children != IntPtr.Zero) {
                 AiNode[] childNodes = MemoryHelper.MarshalArray<AiNode>(aiNode.Children, (int) aiNode.NumChildren, true);
-                _children = new Node[childNodes.Length];
-                for(int i = 0; i < _children.Length; i++) {
-                    _children[i] = new Node(childNodes[i], this);
+                m_children = new Node[childNodes.Length];
+                for(int i = 0; i < m_children.Length; i++) {
+                    m_children[i] = new Node(childNodes[i], this);
                 }
             }
 
             if(aiNode.NumMeshes > 0 && aiNode.Meshes != IntPtr.Zero) {
-                _meshes = MemoryHelper.MarshalArray<int>(aiNode.Meshes, (int) aiNode.NumMeshes);
+                m_meshes = MemoryHelper.MarshalArray<int>(aiNode.Meshes, (int) aiNode.NumMeshes);
             }
         }
 
@@ -147,11 +147,11 @@ namespace Assimp {
         /// <param name="name">Node name</param>
         /// <returns>The node or null if it does not exist</returns>
         public Node FindNode(String name) {
-            if(name.Equals(_name)) {
+            if(name.Equals(m_name)) {
                 return this;
             }
             if(HasChildren) {
-                foreach(Node child in _children) {
+                foreach(Node child in m_children) {
                     Node found = child.FindNode(name);
                     if(found != null) {
                         return found;

@@ -1,4 +1,26 @@
-﻿using System;
+﻿/*
+* Copyright (c) 2012-2013 AssimpNet - Nicholas Woodfield
+* 
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+* 
+* The above copyright notice and this permission notice shall be included in
+* all copies or substantial portions of the Software.
+* 
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+* THE SOFTWARE.
+*/
+
+using System;
 using Assimp.Unmanaged;
 
 namespace Assimp {
@@ -10,14 +32,14 @@ namespace Assimp {
     /// animations.
     /// </summary>
     public sealed class Camera {
-        private String _name;
-        private Vector3D _position;
-        private Vector3D _up;
-        private Vector3D _direction;
-        private float _fieldOfView;
-        private float _clipPlaneNear;
-        private float _clipPlaneFar;
-        private float _aspectRatio;
+        private String m_name;
+        private Vector3D m_position;
+        private Vector3D m_up;
+        private Vector3D m_direction;
+        private float m_fieldOfView;
+        private float m_clipPlaneNear;
+        private float m_clipPlaneFar;
+        private float m_aspectRatio;
 
         /// <summary>
         /// Gets the name of the camera. This corresponds to a node in the
@@ -26,7 +48,7 @@ namespace Assimp {
         /// </summary>
         public String Name {
             get {
-                return _name;
+                return m_name;
             }
         }
 
@@ -36,7 +58,7 @@ namespace Assimp {
         /// </summary>
         public Vector3D Position {
             get {
-                return _position;
+                return m_position;
             }
         }
 
@@ -47,7 +69,7 @@ namespace Assimp {
         /// </summary>
         public Vector3D Up {
             get {
-                return _up;
+                return m_up;
             }
         }
 
@@ -57,7 +79,7 @@ namespace Assimp {
         /// </summary>
         public Vector3D Direction {
             get {
-                return _direction;
+                return m_direction;
             }
         }
 
@@ -68,7 +90,7 @@ namespace Assimp {
         /// </summary>
         public float FieldOfview {
             get {
-                return _fieldOfView;
+                return m_fieldOfView;
             }
         }
 
@@ -78,7 +100,7 @@ namespace Assimp {
         /// </summary>
         public float ClipPlaneNear {
             get {
-                return _clipPlaneNear;
+                return m_clipPlaneNear;
             }
         }
 
@@ -90,7 +112,7 @@ namespace Assimp {
         /// </summary>
         public float ClipPlaneFar {
             get {
-                return _clipPlaneFar;
+                return m_clipPlaneFar;
             }
         }
 
@@ -101,7 +123,7 @@ namespace Assimp {
         /// </summary>
         public float AspectRatio {
             get {
-                return _aspectRatio;
+                return m_aspectRatio;
             }
         }
 
@@ -110,11 +132,11 @@ namespace Assimp {
         /// </summary>
         public Matrix4x4 ViewMatrix {
             get {
-                Vector3D zAxis = _direction;
+                Vector3D zAxis = m_direction;
                 zAxis.Normalize();
-                Vector3D yAxis = _up;
+                Vector3D yAxis = m_up;
                 yAxis.Normalize();
-                Vector3D xAxis = Vector3D.Cross(_up, _direction);
+                Vector3D xAxis = Vector3D.Cross(m_up, m_direction);
                 zAxis.Normalize();
 
                 //Assimp docs *say* they deal with Row major matrices,
@@ -135,9 +157,9 @@ namespace Assimp {
                 mat.C3 = zAxis.Z;
                 mat.C4 = 0;
 
-                mat.D1 = -(Vector3D.Dot(xAxis, _position));
-                mat.D2 = -(Vector3D.Dot(yAxis, _position));
-                mat.D3 = -(Vector3D.Dot(zAxis, _position));
+                mat.D1 = -(Vector3D.Dot(xAxis, m_position));
+                mat.D2 = -(Vector3D.Dot(yAxis, m_position));
+                mat.D3 = -(Vector3D.Dot(zAxis, m_position));
                 mat.D4 = 1.0f;
 
                 return mat;
@@ -149,14 +171,14 @@ namespace Assimp {
         /// </summary>
         /// <param name="camera">Unmanaged aiCamera</param>
         internal Camera(AiCamera camera) {
-            _name = camera.Name.GetString();
-            _position = camera.Position;
-            _direction = camera.LookAt;
-            _up = camera.Up;
-            _fieldOfView = camera.HorizontalFOV;
-            _clipPlaneFar = camera.ClipPlaneFar;
-            _clipPlaneNear = camera.ClipPlaneNear;
-            _aspectRatio = camera.Aspect;
+            m_name = camera.Name.GetString();
+            m_position = camera.Position;
+            m_direction = camera.LookAt;
+            m_up = camera.Up;
+            m_fieldOfView = camera.HorizontalFOV;
+            m_clipPlaneFar = camera.ClipPlaneFar;
+            m_clipPlaneNear = camera.ClipPlaneNear;
+            m_aspectRatio = camera.Aspect;
         }
     }
 }

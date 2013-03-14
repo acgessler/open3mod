@@ -816,6 +816,8 @@ namespace open3mod
                 UiState.ActiveTab.ActiveCameraController.Scroll(e.Delta);
             }
 
+            // MousePosToViewportSeparator
+
             // hack: the renderer handles the input for the HUD, so forward the event
             var index = MousePosToViewportIndex(e.X, e.Y);
             if (index == Tab.ViewIndex._Max)
@@ -881,7 +883,7 @@ namespace open3mod
                                 string[] formats;
                                 using (var tempImporter = new Assimp.AssimpImporter())
                                 {
-                                    formats = tempImporter.GetSupportedFormats();
+                                    formats = tempImporter.GetSupportedImportFormats();
                                 }
 
                                 string[] files = Directory.GetFiles(s);

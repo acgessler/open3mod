@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright (c) 2012 Nicholas Woodfield
+* Copyright (c) 2012-2013 AssimpNet - Nicholas Woodfield
 * 
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -33,15 +33,15 @@ namespace Assimp {
     /// post process step flag during import, then each mesh will be homogenous where primitive type is concerned.
     /// </summary>
     public sealed class Face {
-        private uint _numIndices;
-        private uint[] _indices;
+        private uint m_numIndices;
+        private uint[] m_indices;
 
         /// <summary>
         /// Gets the number of indices defined in the face.
         /// </summary>
         public uint IndexCount {
             get {
-                return _numIndices;
+                return m_numIndices;
             }
         }
 
@@ -51,7 +51,7 @@ namespace Assimp {
         /// </summary>
         public uint[] Indices {
             get {
-                return _indices;
+                return m_indices;
             }
         }
 
@@ -60,10 +60,10 @@ namespace Assimp {
         /// </summary>
         /// <param name="face">Unmanaged AiFace structure</param>
         internal Face(AiFace face) {
-            _numIndices = face.NumIndices;
+            m_numIndices = face.NumIndices;
 
-            if(_numIndices > 0 && face.Indices != IntPtr.Zero) {
-                _indices = MemoryHelper.MarshalArray<uint>(face.Indices, (int)_numIndices);
+            if(m_numIndices > 0 && face.Indices != IntPtr.Zero) {
+                m_indices = MemoryHelper.MarshalArray<uint>(face.Indices, (int)m_numIndices);
             }
         }
     }

@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright (c) 2012 Nicholas Woodfield
+* Copyright (c) 2012-2013 AssimpNet - Nicholas Woodfield
 * 
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -34,25 +34,25 @@ namespace Assimp {
     /// then, the transform tracks of the main node make the spot light already point in the right direction.</para>
     /// </summary>
     public sealed class Light {
-        private String _name;
-        private LightSourceType _lightType;
-        private float _angleInnerCone;
-        private float _angleOuterCone;
-        private float _attConstant;
-        private float _attLinear;
-        private float _attQuadratic;
-        private Vector3D _position;
-        private Vector3D _direction;
-        private Color3D _diffuse;
-        private Color3D _specular;
-        private Color3D _ambient;
+        private String m_name;
+        private LightSourceType m_lightType;
+        private float m_angleInnerCone;
+        private float m_angleOuterCone;
+        private float m_attConstant;
+        private float m_attLinear;
+        private float m_attQuadratic;
+        private Vector3D m_position;
+        private Vector3D m_direction;
+        private Color3D m_diffuse;
+        private Color3D m_specular;
+        private Color3D m_ambient;
 
         /// <summary>
         /// Gets the name of the light source. This corresponds to a node present in the scenegraph.
         /// </summary>
         public String Name {
             get {
-                return _name;
+                return m_name;
             }
         }
 
@@ -61,7 +61,7 @@ namespace Assimp {
         /// </summary>
         public LightSourceType LightType {
             get {
-                return _lightType;
+                return m_lightType;
             }
         }
 
@@ -72,7 +72,7 @@ namespace Assimp {
         /// </summary>
         public float AngleInnerCone {
             get {
-                return _angleInnerCone;
+                return m_angleInnerCone;
             }
         }
 
@@ -83,7 +83,7 @@ namespace Assimp {
         /// </summary>
         public float AngleOuterCone {
             get {
-                return _angleOuterCone;
+                return m_angleOuterCone;
             }
         }
 
@@ -94,7 +94,7 @@ namespace Assimp {
         /// </summary>
         public float AttenuationConstant {
             get {
-                return _attConstant;
+                return m_attConstant;
             }
         }
 
@@ -105,7 +105,7 @@ namespace Assimp {
         /// </summary>
         public float AttenuationLinear {
             get {
-                return _attLinear;
+                return m_attLinear;
             }
         }
 
@@ -116,7 +116,7 @@ namespace Assimp {
         /// </summary>
         public float AttenuationQuadratic {
             get {
-                return _attQuadratic;
+                return m_attQuadratic;
             }
         }
 
@@ -127,7 +127,7 @@ namespace Assimp {
         /// </summary>
         public Vector3D Position {
             get {
-                return _position;
+                return m_position;
             }
         }
 
@@ -137,7 +137,7 @@ namespace Assimp {
         /// </summary>
         public Vector3D Direction {
             get {
-                return _direction;
+                return m_direction;
             }
         }
 
@@ -147,7 +147,7 @@ namespace Assimp {
         /// </summary>
         public Color3D ColorDiffuse {
             get {
-                return _diffuse;
+                return m_diffuse;
             }
         }
 
@@ -157,7 +157,7 @@ namespace Assimp {
         /// </summary>
         public Color3D ColorSpecular {
             get {
-                return _specular;
+                return m_specular;
             }
         }
 
@@ -167,7 +167,7 @@ namespace Assimp {
         /// </summary>
         public Color3D ColorAmbient {
             get {
-                return _ambient;
+                return m_ambient;
             }
         }
 
@@ -176,18 +176,18 @@ namespace Assimp {
         /// </summary>
         /// <param name="light">Unmanaged AiLight struct</param>
         internal Light(AiLight light) {
-            _name = light.Name.GetString();
-            _lightType = light.Type;
-            _angleInnerCone = light.AngleInnerCone;
-            _angleOuterCone = light.AngleOuterCone;
-            _attConstant = light.AttenuationConstant;
-            _attLinear = light.AttenuationLinear;
-            _attQuadratic = light.AttenuationQuadratic;
-            _position = light.Position;
-            _direction = light.Direction;
-            _diffuse = light.ColorDiffuse;
-            _specular = light.ColorSpecular;
-            _ambient = light.ColorAmbient;
+            m_name = light.Name.GetString();
+            m_lightType = light.Type;
+            m_angleInnerCone = light.AngleInnerCone;
+            m_angleOuterCone = light.AngleOuterCone;
+            m_attConstant = light.AttenuationConstant;
+            m_attLinear = light.AttenuationLinear;
+            m_attQuadratic = light.AttenuationQuadratic;
+            m_position = light.Position;
+            m_direction = light.Direction;
+            m_diffuse = light.ColorDiffuse;
+            m_specular = light.ColorSpecular;
+            m_ambient = light.ColorAmbient;
         }
     }
 }

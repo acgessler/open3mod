@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright (c) 2012 Nicholas Woodfield
+* Copyright (c) 2012-2013 AssimpNet - Nicholas Woodfield
 * 
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -29,11 +29,11 @@ namespace Assimp {
     /// each node affected by the animation, a separate series of data is given.
     /// </summary>
     public sealed class Animation {
-        private String _name;
-        private double _duration;
-        private double _ticksPerSecond;
-        private NodeAnimationChannel[] _channels;
-        private MeshAnimationChannel[] _meshChannels;
+        private String m_name;
+        private double m_duration;
+        private double m_ticksPerSecond;
+        private NodeAnimationChannel[] m_channels;
+        private MeshAnimationChannel[] m_meshChannels;
 
         /// <summary>
         /// Gets the name of the animation. If the modeling package the
@@ -42,7 +42,7 @@ namespace Assimp {
         /// </summary>
         public String Name {
             get {
-                return _name;
+                return m_name;
             }
         }
 
@@ -51,7 +51,7 @@ namespace Assimp {
         /// </summary>
         public double DurationInTicks {
             get {
-                return _duration;
+                return m_duration;
             }
         }
 
@@ -61,7 +61,7 @@ namespace Assimp {
         /// </summary>
         public double TicksPerSecond {
             get {
-                return _ticksPerSecond;
+                return m_ticksPerSecond;
             }
         }
 
@@ -71,7 +71,7 @@ namespace Assimp {
         /// </summary>
         public int NodeAnimationChannelCount {
             get {
-                return (_channels == null) ? 0 : _channels.Length;
+                return (m_channels == null) ? 0 : m_channels.Length;
             }
         }
 
@@ -80,7 +80,7 @@ namespace Assimp {
         /// </summary>
         public bool HasNodeAnimations {
             get {
-                return _channels != null;
+                return m_channels != null;
             }
         }
 
@@ -89,7 +89,7 @@ namespace Assimp {
         /// </summary>
         public NodeAnimationChannel[] NodeAnimationChannels {
             get {
-                return _channels;
+                return m_channels;
             }
         }
 
@@ -98,7 +98,7 @@ namespace Assimp {
         /// </summary>
         public int MeshAnimationChannelCount {
             get {
-                return (_meshChannels == null) ? 0 : _meshChannels.Length;
+                return (m_meshChannels == null) ? 0 : m_meshChannels.Length;
             }
         }
 
@@ -107,7 +107,7 @@ namespace Assimp {
         /// </summary>
         public bool HasMeshAnimations {
             get {
-                return _meshChannels != null;
+                return m_meshChannels != null;
             }
         }
 
@@ -116,7 +116,7 @@ namespace Assimp {
         /// </summary>
         public MeshAnimationChannel[] MeshAnimationChannels {
             get {
-                return _meshChannels;
+                return m_meshChannels;
             }
         }
 
@@ -125,25 +125,25 @@ namespace Assimp {
         /// </summary>
         /// <param name="animation">Unmanaged AiAnimation.</param>
         internal Animation(AiAnimation animation) {
-            _name = animation.Name.GetString();
-            _duration = animation.Duration;
-            _ticksPerSecond = animation.TicksPerSecond;
+            m_name = animation.Name.GetString();
+            m_duration = animation.Duration;
+            m_ticksPerSecond = animation.TicksPerSecond;
 
             //Load node animations
             if(animation.NumChannels > 0 && animation.Channels != IntPtr.Zero) {
                 AiNodeAnim[] nodeAnims = MemoryHelper.MarshalArray<AiNodeAnim>(animation.Channels, (int) animation.NumChannels, true);
-                _channels = new NodeAnimationChannel[nodeAnims.Length];
-                for(int i = 0; i < _channels.Length; i++) {
-                    _channels[i] = new NodeAnimationChannel(nodeAnims[i]);
+                m_channels = new NodeAnimationChannel[nodeAnims.Length];
+                for(int i = 0; i < m_channels.Length; i++) {
+                    m_channels[i] = new NodeAnimationChannel(nodeAnims[i]);
                 }
             }
 
             //Load mesh animations
             if(animation.NumMeshChannels > 0 && animation.MeshChannels != IntPtr.Zero) {
                 AiMeshAnim[] meshAnims = MemoryHelper.MarshalArray<AiMeshAnim>(animation.MeshChannels, (int) animation.NumMeshChannels, true);
-                _meshChannels = new MeshAnimationChannel[meshAnims.Length];
-                for(int i = 0; i < _meshChannels.Length; i++) {
-                    _meshChannels[i] = new MeshAnimationChannel(meshAnims[i]);
+                m_meshChannels = new MeshAnimationChannel[meshAnims.Length];
+                for(int i = 0; i < m_meshChannels.Length; i++) {
+                    m_meshChannels[i] = new MeshAnimationChannel(meshAnims[i]);
                 }
             }
         }

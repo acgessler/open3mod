@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright (c) 2012 Nicholas Woodfield
+* Copyright (c) 2012-2013 AssimpNet - Nicholas Woodfield
 * 
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -35,12 +35,12 @@ namespace Assimp {
     /// negative time values, but they are not forbidden.</para>
     /// </summary>
     public sealed class NodeAnimationChannel {
-        private String _nodeName;
-        private VectorKey[] _positionKeys;
-        private QuaternionKey[] _rotationKeys;
-        private VectorKey[] _scalingKeys;
-        private AnimationBehaviour _preState;
-        private AnimationBehaviour _postState;
+        private String m_nodeName;
+        private VectorKey[] m_positionKeys;
+        private QuaternionKey[] m_rotationKeys;
+        private VectorKey[] m_scalingKeys;
+        private AnimationBehaviour m_preState;
+        private AnimationBehaviour m_postState;
 
         /// <summary>
         /// Gets the name of the node affected by this animation. It must <c>exist</c> and it <c>must</c>
@@ -48,7 +48,7 @@ namespace Assimp {
         /// </summary>
         public String NodeName {
             get {
-                return _nodeName;
+                return m_nodeName;
             }
         }
 
@@ -57,7 +57,7 @@ namespace Assimp {
         /// </summary>
         public int PositionKeyCount {
             get {
-                return (_positionKeys == null) ? 0 : _positionKeys.Length;
+                return (m_positionKeys == null) ? 0 : m_positionKeys.Length;
             }
         }
 
@@ -66,7 +66,7 @@ namespace Assimp {
         /// </summary>
         public bool HasPositionKeys {
             get {
-                return _positionKeys != null;
+                return m_positionKeys != null;
             }
         }
 
@@ -77,7 +77,7 @@ namespace Assimp {
         /// </summary>
         public VectorKey[] PositionKeys {
             get {
-                return _positionKeys;
+                return m_positionKeys;
             }
         }
 
@@ -86,7 +86,7 @@ namespace Assimp {
         /// </summary>
         public int RotationKeyCount {
             get {
-                return (_rotationKeys == null) ? 0 : _rotationKeys.Length;
+                return (m_rotationKeys == null) ? 0 : m_rotationKeys.Length;
             }
         }
 
@@ -95,7 +95,7 @@ namespace Assimp {
         /// </summary>
         public bool HasRotationKeys {
             get {
-                return _rotationKeys != null;
+                return m_rotationKeys != null;
             }
         }
 
@@ -106,7 +106,7 @@ namespace Assimp {
         /// </summary>
         public QuaternionKey[] RotationKeys {
             get {
-                return _rotationKeys;
+                return m_rotationKeys;
             }
         }
 
@@ -115,7 +115,7 @@ namespace Assimp {
         /// </summary>
         public int ScalingKeyCount {
             get {
-                return (_scalingKeys == null) ? 0 : _scalingKeys.Length;
+                return (m_scalingKeys == null) ? 0 : m_scalingKeys.Length;
             }
         }
 
@@ -124,7 +124,7 @@ namespace Assimp {
         /// </summary>
         public bool HasScalingKeys {
             get {
-                return _scalingKeys != null;
+                return m_scalingKeys != null;
             }
         }
 
@@ -135,7 +135,27 @@ namespace Assimp {
         /// </summary>
         public VectorKey[] ScalingKeys {
             get {
-                return _scalingKeys;
+                return m_scalingKeys;
+            }
+        }
+
+        /// <summary>
+        /// Gets how the animation behaves before the first key is encountered. By default the original
+        /// transformation matrix of the affected node is used.
+        /// </summary>
+        public AnimationBehaviour PreState {
+            get {
+                return m_preState;
+            }
+        }
+
+        /// <summary>
+        /// Gets how the animation behaves after the last key was processed. By default the original
+        /// transformation matrix of the affected node is taken.
+        /// </summary>
+        public AnimationBehaviour PostState {
+            get {
+                return m_postState;
             }
         }
 
@@ -144,23 +164,23 @@ namespace Assimp {
         /// </summary>
         /// <param name="nodeAnim">Unmanaged AiNodeAnim struct</param>
         internal NodeAnimationChannel(AiNodeAnim nodeAnim) {
-            _nodeName = nodeAnim.NodeName.GetString();
-            _preState = nodeAnim.Prestate;
-            _postState = nodeAnim.PostState;
+            m_nodeName = nodeAnim.NodeName.GetString();
+            m_preState = nodeAnim.Prestate;
+            m_postState = nodeAnim.PostState;
 
             //Load position keys
             if(nodeAnim.NumPositionKeys > 0 && nodeAnim.PositionKeys != IntPtr.Zero) {
-                _positionKeys = MemoryHelper.MarshalArray<VectorKey>(nodeAnim.PositionKeys, (int) nodeAnim.NumPositionKeys);
+                m_positionKeys = MemoryHelper.MarshalArray<VectorKey>(nodeAnim.PositionKeys, (int) nodeAnim.NumPositionKeys);
             }
 
             //Load rotation keys
             if(nodeAnim.NumRotationKeys > 0 && nodeAnim.RotationKeys != IntPtr.Zero) {
-                _rotationKeys = MemoryHelper.MarshalArray<QuaternionKey>(nodeAnim.RotationKeys, (int) nodeAnim.NumRotationKeys);
+                m_rotationKeys = MemoryHelper.MarshalArray<QuaternionKey>(nodeAnim.RotationKeys, (int) nodeAnim.NumRotationKeys);
             }
 
             //Load scaling keys
             if(nodeAnim.NumScalingKeys > 0 && nodeAnim.ScalingKeys != IntPtr.Zero) {
-                _scalingKeys = MemoryHelper.MarshalArray<VectorKey>(nodeAnim.ScalingKeys, (int) nodeAnim.NumScalingKeys);
+                m_scalingKeys = MemoryHelper.MarshalArray<VectorKey>(nodeAnim.ScalingKeys, (int) nodeAnim.NumScalingKeys);
             }
         }
     }

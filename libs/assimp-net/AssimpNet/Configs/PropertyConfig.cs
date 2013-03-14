@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright (c) 2012 Nicholas Woodfield
+* Copyright (c) 2012-2013 AssimpNet - Nicholas Woodfield
 * 
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -28,9 +28,8 @@ namespace Assimp.Configs {
     /// <summary>
     /// Base property config.
     /// </summary>
-    public abstract class PropertyConfig : IDisposable {
+    public abstract class PropertyConfig {
         private String m_name;
-        private IntPtr m_propStore;
 
         /// <summary>
         /// Gets the property name.
@@ -47,14 +46,6 @@ namespace Assimp.Configs {
         /// <param name="name">Name of the property.</param>
         protected PropertyConfig(String name) {
             m_name = name;
-            m_propStore = IntPtr.Zero;
-        }
-
-        /// <summary>
-        /// Destructor.
-        /// </summary>
-        ~PropertyConfig() {
-            Dispose(false);
         }
 
         /// <summary>
@@ -63,47 +54,18 @@ namespace Assimp.Configs {
         public abstract void SetDefaultValue();
 
         /// <summary>
-        /// Creates a new Assimp property store and calls subclasses to set their value to it.
+        /// Applies the property value to the given Assimp property store.
         /// </summary>
-        public void CreatePropertyStore() {
-            if(m_propStore == IntPtr.Zero) {
-                m_propStore = AssimpMethods.CreatePropertyStore();
-                if(m_propStore != IntPtr.Zero)
-                    ApplyValue(m_propStore);
-            }
-        }
-
-        /// <summary>
-        /// Releases an Assimp property store.
-        /// </summary>
-        public void ReleasePropertyStore() {
-            if(m_propStore != IntPtr.Zero) {
-                AssimpMethods.ReleasePropertyStore(m_propStore);
-                m_propStore = IntPtr.Zero;
-            }
+        /// <param name="propStore">Assimp property store</param>
+        internal void ApplyValue(IntPtr propStore) {
+            OnApplyValue(propStore);
         }
 
         /// <summary>
         /// Applies the property value to the given Assimp property store.
         /// </summary>
         /// <param name="propStore">Assimp property store</param>
-        protected abstract void ApplyValue(IntPtr propStore);
-
-        /// <summary>
-        /// Disposes the property config, releasing the Assimp property store if there is one.
-        /// </summary>
-        public void Dispose() {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Disposes the property config.
-        /// </summary>
-        /// <param name="disposing">True if Dispose was called, false if called from the destructor.</param>
-        protected virtual void Dispose(bool disposing) {
-            ReleasePropertyStore();
-        }
+        protected abstract void OnApplyValue(IntPtr propStore);
     }
 
     /// <summary>
@@ -165,9 +127,9 @@ namespace Assimp.Configs {
         /// Applies the property value to the given Assimp property store.
         /// </summary>
         /// <param name="propStore">Assimp property store</param>
-        protected override void ApplyValue(IntPtr propStore) {
+        protected override void OnApplyValue(IntPtr propStore) {
             if(propStore != IntPtr.Zero) {
-                AssimpMethods.SetImportPropertyInteger(propStore, Name, m_value);
+                AssimpLibrary.Instance.SetImportPropertyInteger(propStore, Name, m_value);
             }
         }
     }
@@ -231,9 +193,9 @@ namespace Assimp.Configs {
         /// Applies the property value to the given Assimp property store.
         /// </summary>
         /// <param name="propStore">Assimp property store</param>
-        protected override void ApplyValue(IntPtr propStore) {
+        protected override void OnApplyValue(IntPtr propStore) {
             if(propStore != IntPtr.Zero) {
-                AssimpMethods.SetImportPropertyFloat(propStore, Name, m_value);
+                AssimpLibrary.Instance.SetImportPropertyFloat(propStore, Name, m_value);
             }
         }
     }
@@ -297,10 +259,10 @@ namespace Assimp.Configs {
         /// Applies the property value to the given Assimp property store.
         /// </summary>
         /// <param name="propStore">Assimp property store</param>
-        protected override void ApplyValue(IntPtr propStore) {
+        protected override void OnApplyValue(IntPtr propStore) {
             if(propStore != IntPtr.Zero) {
                 int aiBool = (m_value) ? 1 : 0;
-                AssimpMethods.SetImportPropertyInteger(propStore, Name, aiBool);
+                AssimpLibrary.Instance.SetImportPropertyInteger(propStore, Name, aiBool);
             }
         }
     }
@@ -364,9 +326,9 @@ namespace Assimp.Configs {
         /// Applies the property value to the given Assimp property store.
         /// </summary>
         /// <param name="propStore">Assimp property store</param>
-        protected override void ApplyValue(IntPtr propStore) {
+        protected override void OnApplyValue(IntPtr propStore) {
             if(propStore != IntPtr.Zero) {
-                AssimpMethods.SetImportPropertyString(propStore, Name, m_value);
+                AssimpLibrary.Instance.SetImportPropertyString(propStore, Name, m_value);
             }
         }
 
@@ -901,7 +863,7 @@ namespace Assimp.Configs {
     }
 
     /// <summary>
-    /// Configures the maximum bone count per mesh for the <see cref="PostPrcessStep.SplitByBoneCount"/> step. Meshes are
+    /// Configures the maximum bone count per mesh for the <see cref="PostProcessSteps.SplitByBoneCount"/> step. Meshes are
     /// split until the maximum number of bones is reached.
     /// </summary>
     public sealed class MaxBoneCountConfig : IntegerPropertyConfig {
@@ -946,7 +908,7 @@ namespace Assimp.Configs {
     }
 
     /// <summary>
-    /// Configures the <see cref="PostProcessStep.Debone"/> threshold that is used to determine what bones are removed.
+    /// Configures the <see cref="PostProcessSteps.Debone"/> threshold that is used to determine what bones are removed.
     /// </summary>
     public sealed class DeboneThresholdConfig : FloatPropertyConfig {
 

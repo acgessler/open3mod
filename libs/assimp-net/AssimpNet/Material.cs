@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright (c) 2012 Nicholas Woodfield
+* Copyright (c) 2012-2013 AssimpNet - Nicholas Woodfield
 * 
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -33,15 +33,15 @@ namespace Assimp {
     /// and if they aren't a default value will be returned.
     /// </summary>
     public sealed class Material {
-        private Dictionary<String, MaterialProperty> _properties;
-        private Dictionary<int, List<TextureSlot>> _textures;
+        private Dictionary<String, MaterialProperty> m_properties;
+        private Dictionary<int, List<TextureSlot>> m_textures;
 
         /// <summary>
         /// Gets the number of properties contained in the material.
         /// </summary>
         public int PropertyCount {
             get {
-                return _properties.Count;
+                return m_properties.Count;
             }
         }
 
@@ -403,14 +403,14 @@ namespace Assimp {
         /// </summary>
         /// <param name="material">Unmanaged AiMaterial struct.</param>
         internal Material(AiMaterial material) {
-            _properties = new Dictionary<String, MaterialProperty>();
-            _textures = new Dictionary<int, List<TextureSlot>>();
+            m_properties = new Dictionary<String, MaterialProperty>();
+            m_textures = new Dictionary<int, List<TextureSlot>>();
 
             if(material.NumProperties > 0 && material.Properties != IntPtr.Zero) {
                 AiMaterialProperty[] properties = MemoryHelper.MarshalArray<AiMaterialProperty>(material.Properties, (int) material.NumProperties, true);
                 for(int i = 0; i < properties.Length; i++) {
                     MaterialProperty prop = new MaterialProperty(properties[i]);
-                    _properties.Add(prop.FullyQualifiedName, prop);
+                    m_properties.Add(prop.FullyQualifiedName, prop);
                 }
             }
             //Idea is to look at each texture type, and get the "TextureSlot" struct of each one. They're essentially stored in a dictionary where each type contains a bucket
@@ -420,14 +420,14 @@ namespace Assimp {
             foreach(var texType in Enum.GetValues(typeof(TextureType))) {
                 TextureType type = (TextureType) texType;
                 if(type != TextureType.None) {
-                    uint count = AssimpMethods.GetMaterialTextureCount(ref material, type);
+                    uint count = AssimpLibrary.Instance.GetMaterialTextureCount(ref material, type);
                     for(uint i = 0; i < count; i++) {
                         List<TextureSlot> slots;
-                        if(!_textures.TryGetValue((int) type, out slots)) {
+                        if(!m_textures.TryGetValue((int) type, out slots)) {
                             slots = new List<TextureSlot>();
-                            _textures.Add((int) type, slots);
+                            m_textures.Add((int) type, slots);
                         }
-                        slots.Add(AssimpMethods.GetMaterialTexture(ref material, type, i));
+                        slots.Add(AssimpLibrary.Instance.GetMaterialTexture(ref material, type, i));
                     }
                 }
             }
@@ -490,7 +490,7 @@ namespace Assimp {
                 return null;
             }
             MaterialProperty prop;
-            if(!_properties.TryGetValue(fullyQualifiedName, out prop)) {
+            if(!m_properties.TryGetValue(fullyQualifiedName, out prop)) {
                 return null;
             }
             return prop;
@@ -537,7 +537,7 @@ namespace Assimp {
             if(String.IsNullOrEmpty(fullyQualifiedName)) {
                 return false;
             }
-            return _properties.ContainsKey(fullyQualifiedName);
+            return m_properties.ContainsKey(fullyQualifiedName);
         }
 
         /// <summary>
@@ -545,7 +545,7 @@ namespace Assimp {
         /// </summary>
         /// <returns>All properties in the material property map.</returns>
         public MaterialProperty[] GetAllProperties() {
-            return _properties.Values.ToArray<MaterialProperty>();
+            return m_properties.Values.ToArray<MaterialProperty>();
         }
 
         /// <summary>
@@ -556,7 +556,7 @@ namespace Assimp {
         public int GetTextureCount(TextureType texType) {
             if(texType != TextureType.None) {
                 List<TextureSlot> slot;
-                if(_textures.TryGetValue((int) texType, out slot)) {
+                if(m_textures.TryGetValue((int) texType, out slot)) {
                     return slot.Count;
                 }
             }
@@ -573,7 +573,7 @@ namespace Assimp {
             TextureSlot texSlot = new TextureSlot();
             if(texType != TextureType.None) {
                 List<TextureSlot> slotList;
-                if(_textures.TryGetValue((int) texType, out slotList)) {
+                if(m_textures.TryGetValue((int) texType, out slotList)) {
                     //Note: Unsure if the textures will be in the proper index order in our list, so to play it safe we're looking at all of them until
                     //we find the index
                     foreach(TextureSlot slot in slotList) {
@@ -594,7 +594,7 @@ namespace Assimp {
         public TextureSlot[] GetTextures(TextureType texType) {
             if(texType != TextureType.None) {
                 List<TextureSlot> slotList;
-                if(_textures.TryGetValue((int) texType, out slotList)) {
+                if(m_textures.TryGetValue((int) texType, out slotList)) {
                     return slotList.ToArray();
                 }
             }
@@ -607,7 +607,7 @@ namespace Assimp {
         /// <returns>All texture information structs</returns>
         public TextureSlot[] GetAllTextures() {
             List<TextureSlot> textures = new List<TextureSlot>();
-            foreach(KeyValuePair<int, List<TextureSlot>> kv in _textures) {
+            foreach(KeyValuePair<int, List<TextureSlot>> kv in m_textures) {
                 textures.AddRange(kv.Value);
             }
             return textures.ToArray();

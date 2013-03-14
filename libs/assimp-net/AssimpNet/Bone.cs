@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright (c) 2012 Nicholas Woodfield
+* Copyright (c) 2012-2013 AssimpNet - Nicholas Woodfield
 * 
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -30,16 +30,16 @@ namespace Assimp {
     /// influences on vertices.
     /// </summary>
     public sealed class Bone {
-        private String _name;
-        private VertexWeight[] _weights;
-        private Matrix4x4 _offsetMatrix;
+        private String m_name;
+        private VertexWeight[] m_weights;
+        private Matrix4x4 m_offsetMatrix;
 
         /// <summary>
         /// Gets the name of the bone.
         /// </summary>
         public String Name {
             get {
-                return _name;
+                return m_name;
             }
         }
 
@@ -48,7 +48,7 @@ namespace Assimp {
         /// </summary>
         public int VertexWeightCount {
             get {
-                return (_weights == null) ? 0 : _weights.Length;
+                return (m_weights == null) ? 0 : m_weights.Length;
             }
         }
 
@@ -57,7 +57,7 @@ namespace Assimp {
         /// </summary>
         public bool HasVertexWeights {
             get {
-                return _weights != null;
+                return m_weights != null;
             }
         }
 
@@ -66,7 +66,7 @@ namespace Assimp {
         /// </summary>
         public VertexWeight[] VertexWeights {
             get {
-                return _weights;
+                return m_weights;
             }
         }
 
@@ -77,7 +77,7 @@ namespace Assimp {
         {
             get
             {
-                return _offsetMatrix;
+                return m_offsetMatrix;
             }
         }
 
@@ -86,11 +86,11 @@ namespace Assimp {
         /// </summary>
         /// <param name="bone">Unmanaged AiBone struct.</param>
         internal Bone(AiBone bone) {
-            _name = bone.Name.GetString();
-            _offsetMatrix = bone.OffsetMatrix;
+            m_name = bone.Name.GetString();
+            m_offsetMatrix = bone.OffsetMatrix;
 
             if(bone.NumWeights > 0 && bone.Weights != IntPtr.Zero) {
-                _weights = MemoryHelper.MarshalArray<VertexWeight>(bone.Weights, (int) bone.NumWeights);
+                m_weights = MemoryHelper.MarshalArray<VertexWeight>(bone.Weights, (int) bone.NumWeights);
             }
         }
     }

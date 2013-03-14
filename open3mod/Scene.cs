@@ -337,7 +337,7 @@ namespace open3mod
         }
 
 
-        private void LogStreamCallback(string msg, IntPtr userdata)
+        private void LogStreamCallback(string msg, string userdata)
         {
             // Start timing with the very first logging messages. This
             // is relatively reliable because assimp writes a log header

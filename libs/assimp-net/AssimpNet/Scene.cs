@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright (c) 2012 Nicholas Woodfield
+* Copyright (c) 2012-2013 AssimpNet - Nicholas Woodfield
 * 
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -30,14 +30,14 @@ namespace Assimp {
     /// and Assimp's read only copy is released.
     /// </summary>
     public sealed class Scene {
-        private SceneFlags _flags;
-        private Node _rootNode;
-        private Mesh[] _meshes;
-        private Light[] _lights;
-        private Camera[] _cameras;
-        private Texture[] _textures;
-        private Animation[] _animations;
-        private Material[] _materials;
+        private SceneFlags m_flags;
+        private Node m_rootNode;
+        private Mesh[] m_meshes;
+        private Light[] m_lights;
+        private Camera[] m_cameras;
+        private Texture[] m_textures;
+        private Animation[] m_animations;
+        private Material[] m_materials;
 
         /// <summary>
         /// Gets the state of the imported scene. By default no flags are set, but
@@ -45,7 +45,7 @@ namespace Assimp {
         /// </summary>
         public SceneFlags SceneFlags {
             get {
-                return _flags;
+                return m_flags;
             }
         }
 
@@ -56,7 +56,7 @@ namespace Assimp {
         /// </summary>
         public Node RootNode {
             get {
-                return _rootNode;
+                return m_rootNode;
             }
         }
 
@@ -65,7 +65,7 @@ namespace Assimp {
         /// </summary>
         public int MeshCount {
             get {
-                return (_meshes == null) ? 0 : _meshes.Length;
+                return (m_meshes == null) ? 0 : m_meshes.Length;
             }
         }
 
@@ -75,7 +75,7 @@ namespace Assimp {
         /// </summary>
         public bool HasMeshes {
             get {
-                return _meshes != null;
+                return m_meshes != null;
             }
         }
 
@@ -84,7 +84,7 @@ namespace Assimp {
         /// </summary>
         public Mesh[] Meshes {
             get {
-                return _meshes;
+                return m_meshes;
             }
         }
 
@@ -93,7 +93,7 @@ namespace Assimp {
         /// </summary>
         public int LightCount {
             get {
-                return (_lights == null) ? 0 : _lights.Length;
+                return (m_lights == null) ? 0 : m_lights.Length;
             }
         }
 
@@ -102,7 +102,7 @@ namespace Assimp {
         /// </summary>
         public bool HasLights {
             get {
-                return _lights != null;
+                return m_lights != null;
             }
         }
 
@@ -111,7 +111,7 @@ namespace Assimp {
         /// </summary>
         public Light[] Lights {
             get {
-                return _lights;
+                return m_lights;
             }
         }
 
@@ -120,7 +120,7 @@ namespace Assimp {
         /// </summary>
         public int CameraCount {
             get {
-                return (_cameras == null) ? 0 : _cameras.Length;
+                return (m_cameras == null) ? 0 : m_cameras.Length;
             }
         }
 
@@ -129,7 +129,7 @@ namespace Assimp {
         /// </summary>
         public bool HasCameras {
             get {
-                return _cameras != null;
+                return m_cameras != null;
             }
         }
 
@@ -138,7 +138,7 @@ namespace Assimp {
         /// </summary>
         public Camera[] Cameras {
             get {
-                return _cameras;
+                return m_cameras;
             }
         }
 
@@ -147,7 +147,7 @@ namespace Assimp {
         /// </summary>
         public int TextureCount {
             get {
-                return (_textures == null) ? 0 : _textures.Length;
+                return (m_textures == null) ? 0 : m_textures.Length;
             }
         }
 
@@ -156,7 +156,7 @@ namespace Assimp {
         /// </summary>
         public bool HasTextures {
             get {
-                return _textures != null;
+                return m_textures != null;
             }
         }
 
@@ -165,7 +165,7 @@ namespace Assimp {
         /// </summary>
         public Texture[] Textures {
             get {
-                return _textures;
+                return m_textures;
             }
         }
 
@@ -174,7 +174,7 @@ namespace Assimp {
         /// </summary>
         public int AnimationCount {
             get {
-                return (_animations == null) ? 0 : _animations.Length;
+                return (m_animations == null) ? 0 : m_animations.Length;
             }
         }
 
@@ -183,7 +183,7 @@ namespace Assimp {
         /// </summary>
         public bool HasAnimations {
             get {
-                return _animations != null;
+                return m_animations != null;
             }
         }
 
@@ -192,7 +192,7 @@ namespace Assimp {
         /// </summary>
         public Animation[] Animations {
             get {
-                return _animations;
+                return m_animations;
             }
         }
 
@@ -202,7 +202,7 @@ namespace Assimp {
         /// </summary>
         public int MaterialCount {
             get {
-                return (_materials == null) ? 0 : _materials.Length;
+                return (m_materials == null) ? 0 : m_materials.Length;
             }
         }
 
@@ -212,7 +212,7 @@ namespace Assimp {
         /// </summary>
         public bool HasMaterials {
             get {
-                return _materials != null;
+                return m_materials != null;
             }
         }
 
@@ -221,7 +221,7 @@ namespace Assimp {
         /// </summary>
         public Material[] Materials {
             get {
-                return _materials;
+                return m_materials;
             }
         }
 
@@ -230,64 +230,64 @@ namespace Assimp {
         /// </summary>
         /// <param name="scene">Unmanaged AiScene struct.</param>
         internal Scene(AiScene scene) {
-            _flags = scene.Flags;
+            m_flags = scene.Flags;
 
             //Read materials
             if(scene.NumMaterials > 0 && scene.Materials != IntPtr.Zero) {
                 AiMaterial[] materials = MemoryHelper.MarshalArray<AiMaterial>(scene.Materials, (int) scene.NumMaterials, true);
-                _materials = new Material[materials.Length];
-                for(int i = 0; i < _materials.Length; i++) {
-                    _materials[i] = new Material(materials[i]);
+                m_materials = new Material[materials.Length];
+                for(int i = 0; i < m_materials.Length; i++) {
+                    m_materials[i] = new Material(materials[i]);
                 }
             }
 
             //Read scenegraph
             if(scene.RootNode != IntPtr.Zero) {
-                _rootNode = new Node(MemoryHelper.MarshalStructure<AiNode>(scene.RootNode), null);
+                m_rootNode = new Node(MemoryHelper.MarshalStructure<AiNode>(scene.RootNode), null);
             }
 
             //Read meshes
             if(scene.NumMeshes > 0 && scene.Meshes != IntPtr.Zero) {
                 AiMesh[] meshes = MemoryHelper.MarshalArray<AiMesh>(scene.Meshes, (int) scene.NumMeshes, true);
-                _meshes = new Mesh[meshes.Length];
-                for(int i = 0; i < _meshes.Length; i++) {
-                    _meshes[i] = new Mesh(meshes[i]);
+                m_meshes = new Mesh[meshes.Length];
+                for(int i = 0; i < m_meshes.Length; i++) {
+                    m_meshes[i] = new Mesh(meshes[i]);
                 }
             }
 
             //Read lights
             if(scene.NumLights > 0 && scene.Lights != IntPtr.Zero) {
                 AiLight[] lights = MemoryHelper.MarshalArray<AiLight>(scene.Lights, (int) scene.NumLights, true);
-                _lights = new Light[lights.Length];
-                for(int i = 0; i < _lights.Length; i++) {
-                    _lights[i] = new Light(lights[i]);
+                m_lights = new Light[lights.Length];
+                for(int i = 0; i < m_lights.Length; i++) {
+                    m_lights[i] = new Light(lights[i]);
                 }
             }
 
             //Read cameras
             if(scene.NumCameras > 0 && scene.Cameras != IntPtr.Zero) {
                 AiCamera[] cameras = MemoryHelper.MarshalArray<AiCamera>(scene.Cameras, (int) scene.NumCameras, true);
-                _cameras = new Camera[cameras.Length];
-                for(int i = 0; i < _cameras.Length; i++) {
-                    _cameras[i] = new Camera(cameras[i]);
+                m_cameras = new Camera[cameras.Length];
+                for(int i = 0; i < m_cameras.Length; i++) {
+                    m_cameras[i] = new Camera(cameras[i]);
                 }
             }
 
             //Read Textures
             if(scene.NumTextures > 0 && scene.Textures != IntPtr.Zero) {
                 AiTexture[] textures = MemoryHelper.MarshalArray<AiTexture>(scene.Textures, (int) scene.NumTextures, true);
-                _textures = new Texture[textures.Length];
-                for(int i = 0; i < _textures.Length; i++) {
-                    _textures[i] = Texture.CreateTexture(textures[i]);
+                m_textures = new Texture[textures.Length];
+                for(int i = 0; i < m_textures.Length; i++) {
+                    m_textures[i] = Texture.CreateTexture(textures[i]);
                 }
             }
 
             //Read animations
             if(scene.NumAnimations > 0 && scene.Animations != IntPtr.Zero) {
                 AiAnimation[] animations = MemoryHelper.MarshalArray<AiAnimation>(scene.Animations, (int) scene.NumAnimations, true);
-                _animations = new Animation[animations.Length];
-                for(int i = 0; i < _animations.Length; i++) {
-                    _animations[i] = new Animation(animations[i]);
+                m_animations = new Animation[animations.Length];
+                for(int i = 0; i < m_animations.Length; i++) {
+                    m_animations[i] = new Animation(animations[i]);
                 }
             }
         }

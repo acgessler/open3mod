@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright (c) 2012 Nicholas Woodfield
+* Copyright (c) 2012-2013 AssimpNet - Nicholas Woodfield
 * 
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -30,8 +30,8 @@ namespace Assimp {
     /// keyframes, linking each mesh attachment to a particular point in a time.
     /// </summary>
     public sealed class MeshAnimationChannel {
-        private String _name;
-        private MeshKey[] _meshKeys;
+        private String m_name;
+        private MeshKey[] m_meshKeys;
 
         /// <summary>
         /// Gets the name of the mesh to be animated. Empty strings are not allowed,
@@ -40,7 +40,7 @@ namespace Assimp {
         /// </summary>
         public String MeshName {
             get {
-                return _name;
+                return m_name;
             }
         }
 
@@ -50,7 +50,7 @@ namespace Assimp {
         /// </summary>
         public int MeshKeyCount {
             get {
-                return (_meshKeys == null) ? 0 : _meshKeys.Length;
+                return (m_meshKeys == null) ? 0 : m_meshKeys.Length;
             }
         }
 
@@ -59,7 +59,7 @@ namespace Assimp {
         /// </summary>
         public bool HasMeshKeys {
             get {
-                return _meshKeys != null;
+                return m_meshKeys != null;
             }
         }
 
@@ -68,7 +68,7 @@ namespace Assimp {
         /// </summary>
         public MeshKey[] MeshKeys {
             get {
-                return _meshKeys;
+                return m_meshKeys;
             }
         }
 
@@ -77,11 +77,11 @@ namespace Assimp {
         /// </summary>
         /// <param name="meshAnim">Unmanaged AiMeshAnim struct.</param>
         internal MeshAnimationChannel(AiMeshAnim meshAnim) {
-            _name = meshAnim.Name.GetString();
+            m_name = meshAnim.Name.GetString();
             
             //Load mesh keys
             if(meshAnim.NumKeys > 0 && meshAnim.Keys != IntPtr.Zero) {
-                _meshKeys = MemoryHelper.MarshalArray<MeshKey>(meshAnim.Keys, (int) meshAnim.NumKeys);
+                m_meshKeys = MemoryHelper.MarshalArray<MeshKey>(meshAnim.Keys, (int) meshAnim.NumKeys);
             }
         }
     }
