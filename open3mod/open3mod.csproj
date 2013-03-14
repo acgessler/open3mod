@@ -129,6 +129,12 @@
     <Compile Include="Scene.cs" />
     <Compile Include="SceneAnimator.cs" />
     <Compile Include="SceneRendererClassicGl.cs" />
+    <Compile Include="SettingsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingsDialog.Designer.cs">
+      <DependentUpon>SettingsDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="SphereGeometry.cs" />
     <Compile Include="Tab.cs" />
     <Compile Include="TabUISkeleton.cs">
@@ -186,6 +192,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="SettingsDialog.resx">
+      <DependentUpon>SettingsDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TabUISkeleton.resx">
       <DependentUpon>TabUISkeleton.cs</DependentUpon>
     </EmbeddedResource>
