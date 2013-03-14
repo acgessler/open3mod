@@ -157,14 +157,21 @@ namespace open3mod
             GL.PushMatrix();        
             GL.MultMatrix(ref m);
 
-            
-
-            if (node.HasMeshes && (visibleNodes == null || visibleNodes.Contains(node)))
+            var showGhost = false;
+            if (node.HasMeshes && (visibleNodes == null || visibleNodes.Contains(node) || (flags.HasFlag(RenderFlags.ShowGhosts) && (showGhost = true))))
             {
                 foreach (var index in node.MeshIndices)
                 {
                     var mesh = _owner.Raw.Meshes[index];
-                    _owner.MaterialMapper.ApplyMaterial(mesh,_owner.Raw.Materials[mesh.MaterialIndex]);
+
+                    if (showGhost)
+                    {
+                        _owner.MaterialMapper.ApplyGhostMaterial(mesh, _owner.Raw.Materials[mesh.MaterialIndex]);
+                    }
+                    else
+                    {
+                        _owner.MaterialMapper.ApplyMaterial(mesh,_owner.Raw.Materials[mesh.MaterialIndex]);
+                    }
                
                     var hasColors = mesh.HasVertexColors(0);              
                     var hasTexCoords = mesh.HasTextureCoords(0);
@@ -197,14 +204,7 @@ namespace open3mod
                             if (hasColors)
                             {
                                 var vertColor = AssimpToOpenTk.FromColor(mesh.GetVertexColors(0)[indice]);
-                                if (flags.HasFlag(RenderFlags.Shaded))
-                                {
-                                    GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, vertColor);
-                                }
-                                else
-                                {
-                                    GL.Color4(vertColor);
-                                }
+                                GL.Color4(vertColor);
                             }
                             if (mesh.HasNormals)
                             {

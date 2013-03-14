@@ -66,9 +66,16 @@ namespace open3mod
         }
 
 
+        public void ApplyGhostMaterial(Mesh mesh, Material material)
+        {
+            ApplyFixedFunctionGhostMaterial(mesh, material);
+        }
+
 
         private void ApplyFixedFunctionMaterial(Mesh mesh, Material mat)
         {
+            GL.Disable(EnableCap.Blend);
+ 
             if (mesh == null || mesh.HasNormals)
             {
                 GL.Enable(EnableCap.Lighting);
@@ -151,6 +158,39 @@ namespace open3mod
             }
 
             GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Shininess, shininess * strength);
+        }
+
+
+        private void ApplyFixedFunctionGhostMaterial(Mesh mesh, Material mat)
+        {
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+
+            if (mesh == null || mesh.HasNormals)
+            {
+                GL.Enable(EnableCap.Lighting);
+            }
+            else
+            {
+                GL.Disable(EnableCap.Lighting);
+            }
+
+            GL.Disable(EnableCap.ColorMaterial);
+            GL.Disable(EnableCap.Texture2D);
+
+            var color = new Color4(.6f, .6f, .9f, 0.15f);           
+            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, color);
+
+            color = new Color4(1, 1, 1, 0.4f);
+            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Specular, color);
+
+            color = new Color4(.2f, .2f, .2f, 0.1f);
+            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, color);
+
+            color = new Color4(0, 0, 0, 0.0f);       
+            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, color);
+
+            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Shininess, 16.0f);
         }
     }
 }

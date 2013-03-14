@@ -241,6 +241,8 @@ namespace open3mod
                 flags |= RenderFlags.Wireframe;
             }
 
+            flags |= RenderFlags.ShowGhosts;
+
             _renderer.Render(cam, _nodesToShow, _nodesToShowChanged, _texturesChanged, flags);
 
             _texturesChanged = false;

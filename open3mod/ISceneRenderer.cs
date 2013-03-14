@@ -36,7 +36,8 @@ namespace open3mod
         ShowBoundingBoxes = 0x4,
         ShowNormals = 0x8,
         ShowSkeleton = 0x10,
-        Textured = 0x20
+        Textured = 0x20,
+        ShowGhosts = 0x40, // show ghost (i.e. semi-transparent) shapes for filtered meshes
     }
 
 
