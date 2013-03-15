@@ -178,6 +178,7 @@ namespace open3mod
         /// <param name="activeTab">Tab containing the scene to be drawn</param>
         public void Draw(Tab activeTab)
         {
+            GL.DepthMask(true);
             GL.ClearColor(BackgroundColor);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 

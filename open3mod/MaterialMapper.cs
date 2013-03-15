@@ -158,6 +158,7 @@ namespace open3mod
             }
 
             GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Shininess, shininess * strength);
+            GL.DepthMask(true);
         }
 
 
@@ -165,6 +166,7 @@ namespace open3mod
         {
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.DepthMask(false);
 
             if (mesh == null || mesh.HasNormals)
             {

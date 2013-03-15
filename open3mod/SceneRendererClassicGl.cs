@@ -164,82 +164,8 @@ namespace open3mod
                 {
                     var mesh = _owner.Raw.Meshes[index];
 
-                    if (showGhost)
-                    {
-                        _owner.MaterialMapper.ApplyGhostMaterial(mesh, _owner.Raw.Materials[mesh.MaterialIndex]);
-                    }
-                    else
-                    {
-                        _owner.MaterialMapper.ApplyMaterial(mesh,_owner.Raw.Materials[mesh.MaterialIndex]);
-                    }
-               
-                    var hasColors = mesh.HasVertexColors(0);              
-                    var hasTexCoords = mesh.HasTextureCoords(0);
+                    var skinning = DrawMesh(node, animated, showGhost, index, mesh);
 
-                    var skinning = mesh.HasBones && animated;
-
-                    foreach (var face in mesh.Faces)
-                    {
-                        BeginMode faceMode;
-                        switch (face.IndexCount)
-                        {
-                            case 1:
-                                faceMode = BeginMode.Points;
-                                break;
-                            case 2:
-                                faceMode = BeginMode.Lines;
-                                break;
-                            case 3:
-                                faceMode = BeginMode.Triangles;
-                                break;
-                            default:
-                                faceMode = BeginMode.Polygon;
-                                break;
-                        }
-
-                        GL.Begin(faceMode);
-                        for (var i = 0; i < face.IndexCount; i++)
-                        {
-                            var indice = face.Indices[i];
-                            if (hasColors)
-                            {
-                                var vertColor = AssimpToOpenTk.FromColor(mesh.GetVertexColors(0)[indice]);
-                                GL.Color4(vertColor);
-                            }
-                            if (mesh.HasNormals)
-                            {
-                                Vector3 normal;
-                                if (skinning)
-                                {
-                                    _skinner.GetTransformedVertexNormal(node, index, indice, out normal);
-                                }
-                                else
-                                {
-                                    normal = AssimpToOpenTk.FromVector(mesh.Normals[indice]);
-                                }
-                               
-                                GL.Normal3(normal);
-                            }
-                            if (hasTexCoords)
-                            {
-                                var uvw = AssimpToOpenTk.FromVector(mesh.GetTextureCoords(0)[indice]);
-                                GL.TexCoord2(uvw.X, 1 - uvw.Y);
-                            }
- 
-                            Vector3 pos;
-                            if (skinning)
-                            {
-                                _skinner.GetTransformedVertexPosition(node, index, indice, out pos);
-                            }
-                            else
-                            {
-                                pos = AssimpToOpenTk.FromVector(mesh.Vertices[indice]);
-                            }
-                            GL.Vertex3(pos);
-                        }
-                        GL.End();
-                    }
-                   
                     if (flags.HasFlag(RenderFlags.ShowBoundingBoxes))
                     {
                         DrawBoundingBox(node, index, mesh, skinning);
@@ -253,6 +179,87 @@ namespace open3mod
             }
 
             GL.PopMatrix();
+        }
+
+
+        private bool DrawMesh(Node node, bool animated, bool showGhost, int index, Mesh mesh)
+        {
+            if (showGhost)
+            {
+                _owner.MaterialMapper.ApplyGhostMaterial(mesh, _owner.Raw.Materials[mesh.MaterialIndex]);
+            }
+            else
+            {
+                _owner.MaterialMapper.ApplyMaterial(mesh, _owner.Raw.Materials[mesh.MaterialIndex]);
+            }
+
+            var hasColors = mesh.HasVertexColors(0);
+            var hasTexCoords = mesh.HasTextureCoords(0);
+
+            var skinning = mesh.HasBones && animated;
+
+            foreach (var face in mesh.Faces)
+            {
+                BeginMode faceMode;
+                switch (face.IndexCount)
+                {
+                    case 1:
+                        faceMode = BeginMode.Points;
+                        break;
+                    case 2:
+                        faceMode = BeginMode.Lines;
+                        break;
+                    case 3:
+                        faceMode = BeginMode.Triangles;
+                        break;
+                    default:
+                        faceMode = BeginMode.Polygon;
+                        break;
+                }
+
+                GL.Begin(faceMode);
+                for (var i = 0; i < face.IndexCount; i++)
+                {
+                    var indice = face.Indices[i];
+                    if (hasColors)
+                    {
+                        var vertColor = AssimpToOpenTk.FromColor(mesh.GetVertexColors(0)[indice]);
+                        GL.Color4(vertColor);
+                    }
+                    if (mesh.HasNormals)
+                    {
+                        Vector3 normal;
+                        if (skinning)
+                        {
+                            _skinner.GetTransformedVertexNormal(node, index, indice, out normal);
+                        }
+                        else
+                        {
+                            normal = AssimpToOpenTk.FromVector(mesh.Normals[indice]);
+                        }
+
+                        GL.Normal3(normal);
+                    }
+                    if (hasTexCoords)
+                    {
+                        var uvw = AssimpToOpenTk.FromVector(mesh.GetTextureCoords(0)[indice]);
+                        GL.TexCoord2(uvw.X, 1 - uvw.Y);
+                    }
+
+                    Vector3 pos;
+                    if (skinning)
+                    {
+                        _skinner.GetTransformedVertexPosition(node, index, indice, out pos);
+                    }
+                    else
+                    {
+                        pos = AssimpToOpenTk.FromVector(mesh.Vertices[indice]);
+                    }
+                    GL.Vertex3(pos);
+                }
+                GL.End();
+            }
+            return skinning;
         }
 
 
