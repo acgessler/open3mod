@@ -85,7 +85,7 @@ namespace Assimp {
         /// Constructs a new Bone.
         /// </summary>
         /// <param name="bone">Unmanaged AiBone struct.</param>
-        internal Bone(AiBone bone) {
+        internal Bone(ref AiBone bone) {
             m_name = bone.Name.GetString();
             m_offsetMatrix = bone.OffsetMatrix;
 

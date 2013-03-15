@@ -124,7 +124,7 @@ namespace Assimp {
         /// Constructs a new Animation.
         /// </summary>
         /// <param name="animation">Unmanaged AiAnimation.</param>
-        internal Animation(AiAnimation animation) {
+        internal Animation(ref AiAnimation animation) {
             m_name = animation.Name.GetString();
             m_duration = animation.Duration;
             m_ticksPerSecond = animation.TicksPerSecond;
@@ -134,7 +134,7 @@ namespace Assimp {
                 AiNodeAnim[] nodeAnims = MemoryHelper.MarshalArray<AiNodeAnim>(animation.Channels, (int) animation.NumChannels, true);
                 m_channels = new NodeAnimationChannel[nodeAnims.Length];
                 for(int i = 0; i < m_channels.Length; i++) {
-                    m_channels[i] = new NodeAnimationChannel(nodeAnims[i]);
+                    m_channels[i] = new NodeAnimationChannel(ref nodeAnims[i]);
                 }
             }
 
@@ -143,7 +143,7 @@ namespace Assimp {
                 AiMeshAnim[] meshAnims = MemoryHelper.MarshalArray<AiMeshAnim>(animation.MeshChannels, (int) animation.NumMeshChannels, true);
                 m_meshChannels = new MeshAnimationChannel[meshAnims.Length];
                 for(int i = 0; i < m_meshChannels.Length; i++) {
-                    m_meshChannels[i] = new MeshAnimationChannel(meshAnims[i]);
+                    m_meshChannels[i] = new MeshAnimationChannel(ref meshAnims[i]);
                 }
             }
         }

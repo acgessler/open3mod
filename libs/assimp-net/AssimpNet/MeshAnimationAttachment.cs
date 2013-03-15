@@ -123,7 +123,7 @@ namespace Assimp {
         /// Constructs a new MeshAttachment.
         /// </summary>
         /// <param name="animMesh">Unmanaged AiAnimMesh struct.</param>
-        internal MeshAnimationAttachment(AiAnimMesh animMesh) {
+        internal MeshAnimationAttachment(ref AiAnimMesh animMesh) {
             m_vertexCount = (int) animMesh.NumVertices;
 
             //Load per-vertex arrays

@@ -175,7 +175,7 @@ namespace Assimp {
         /// Constructs a new Light.
         /// </summary>
         /// <param name="light">Unmanaged AiLight struct</param>
-        internal Light(AiLight light) {
+        internal Light(ref AiLight light) {
             m_name = light.Name.GetString();
             m_lightType = light.Type;
             m_angleInnerCone = light.AngleInnerCone;

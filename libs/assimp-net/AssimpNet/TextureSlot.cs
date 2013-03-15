@@ -36,7 +36,8 @@ namespace Assimp {
         private uint m_uvIndex;
         private float m_blendFactor;
         private TextureOperation m_texOp;
-        private TextureWrapMode m_wrapMode;
+        private TextureWrapMode m_wrapModeU;
+        private TextureWrapMode m_wrapModeV;
         private uint m_flags;
 
         /// <summary>
@@ -103,11 +104,20 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Gets the texture wrap mode.
+        /// Gets the texture wrap mode for the U coordinate.
         /// </summary>
-        public TextureWrapMode WrapMode {
+        public TextureWrapMode WrapModeU {
             get {
-                return m_wrapMode;
+                return m_wrapModeU;
+            }
+        }
+
+        /// <summary>
+        /// Gets the texture wrap mode for the V coordinate.
+        /// </summary>
+        public TextureWrapMode WrapModeV {
+            get {
+                return m_wrapModeV;
             }
         }
 
@@ -130,10 +140,11 @@ namespace Assimp {
         /// <param name="uvIndex">UV channel in mesh that corresponds to this texture</param>
         /// <param name="blendFactor">Blend factor</param>
         /// <param name="texOp">Texture operation</param>
-        /// <param name="wrapMode">Texture wrap mode</param>
+        /// <param name="wrapModeU">Texture wrap mode for U coordinate</param>
+        /// <param name="wrapModeV">Texture wrap mode for V coordinate</param>
         /// <param name="flags">Misc flags</param>
         public TextureSlot(String filePath, TextureType typeSemantic, uint texIndex, TextureMapping mapping, uint uvIndex, float blendFactor,
-            TextureOperation texOp, TextureWrapMode wrapMode, uint flags) {
+            TextureOperation texOp, TextureWrapMode wrapModeU, TextureWrapMode wrapModeV, uint flags) {
                 m_filePath = (filePath == null) ? String.Empty : filePath;
                 m_type = typeSemantic;
                 m_index = texIndex;
@@ -141,7 +152,8 @@ namespace Assimp {
                 m_uvIndex = uvIndex;
                 m_blendFactor = blendFactor;
                 m_texOp = texOp;
-                m_wrapMode = wrapMode;
+                m_wrapModeU = wrapModeU;
+                m_wrapModeV = wrapModeV;
                 m_flags = flags;
         }
     }

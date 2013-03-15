@@ -626,10 +626,10 @@ namespace Assimp.Unmanaged {
             uint uvIndex;
             float blendFactor;
             TextureOperation texOp;
-            TextureWrapMode wrapMode;
+            TextureWrapMode[] wrapModes = new TextureWrapMode[2];
             uint flags;
 
-            ReturnCode code = func(ref mat, type, index, out str, out mapping, out uvIndex, out blendFactor, out texOp, out wrapMode, out flags);
+            ReturnCode code = func(ref mat, type, index, out str, out mapping, out uvIndex, out blendFactor, out texOp, wrapModes, out flags);
             
             if(code == ReturnCode.Success) {
                 return str.GetString();
@@ -655,12 +655,12 @@ namespace Assimp.Unmanaged {
             uint uvIndex;
             float blendFactor;
             TextureOperation texOp;
-            TextureWrapMode wrapMode;
+            TextureWrapMode[] wrapModes = new TextureWrapMode[2];
             uint flags;
 
-            ReturnCode code = func(ref mat, type, index, out str, out mapping, out uvIndex, out blendFactor, out texOp, out wrapMode, out flags);
+            ReturnCode code = func(ref mat, type, index, out str, out mapping, out uvIndex, out blendFactor, out texOp, wrapModes, out flags);
             
-            return new TextureSlot(str.GetString(), type, index, mapping, uvIndex, blendFactor, texOp, wrapMode, flags);
+            return new TextureSlot(str.GetString(), type, index, mapping, uvIndex, blendFactor, texOp, wrapModes[0], wrapModes[1], flags);
         }
 
         #endregion
@@ -1048,7 +1048,7 @@ namespace Assimp.Unmanaged {
         public delegate ReturnCode aiGetMaterialString(ref AiMaterial mat, [In, MarshalAs(UnmanagedType.LPStr)] String key, uint texType, uint texIndex, out AiString str);
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate ReturnCode aiGetMaterialTexture(ref AiMaterial mat, TextureType type, uint index, out AiString path, out TextureMapping mapping, out uint uvIndex, out float blendFactor, out TextureOperation textureOp, out TextureWrapMode wrapMode, out uint flags);
+        public delegate ReturnCode aiGetMaterialTexture(ref AiMaterial mat, TextureType type, uint index, out AiString path, out TextureMapping mapping, out uint uvIndex, out float blendFactor, out TextureOperation textureOp, [In, Out] TextureWrapMode[] wrapModes, out uint flags);
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate uint aiGetMaterialTextureCount(ref AiMaterial mat, TextureType type);

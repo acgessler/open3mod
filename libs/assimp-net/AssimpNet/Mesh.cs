@@ -232,7 +232,7 @@ namespace Assimp {
         /// Constructs a new Mesh.
         /// </summary>
         /// <param name="mesh">Unmanaged AiMesh struct.</param>
-        internal Mesh(AiMesh mesh) {
+        internal Mesh(ref AiMesh mesh) {
             m_name = mesh.Name.GetString();
             m_primitiveType = mesh.PrimitiveTypes;
             m_vertexCount = (int) mesh.NumVertices;
@@ -259,7 +259,7 @@ namespace Assimp {
                 AiFace[] faces = MemoryHelper.MarshalArray<AiFace>(mesh.Faces, (int) mesh.NumFaces);
                 m_faces = new Face[faces.Length];
                 for(int i = 0; i < m_faces.Length; i++) {
-                    m_faces[i] = new Face(faces[i]);
+                    m_faces[i] = new Face(ref faces[i]);
                 }
             }
 
@@ -301,7 +301,7 @@ namespace Assimp {
                 AiBone[] bones = MemoryHelper.MarshalArray<AiBone>(mesh.Bones, (int) mesh.NumBones, true);
                 m_bones = new Bone[bones.Length];
                 for(int i = 0; i < m_bones.Length; i++) {
-                    m_bones[i] = new Bone(bones[i]);
+                    m_bones[i] = new Bone(ref bones[i]);
                 }
             }
 
@@ -310,7 +310,7 @@ namespace Assimp {
                 AiAnimMesh[] animMeshes = MemoryHelper.MarshalArray<AiAnimMesh>(mesh.AnimMeshes, (int) mesh.NumAnimMeshes, true);
                 m_meshAttachments = new MeshAnimationAttachment[animMeshes.Length];
                 for(int i = 0; i < m_meshAttachments.Length; i++) {
-                    m_meshAttachments[i] = new MeshAnimationAttachment(animMeshes[i]);
+                    m_meshAttachments[i] = new MeshAnimationAttachment(ref animMeshes[i]);
                 }
             }
         }

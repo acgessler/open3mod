@@ -115,7 +115,7 @@ namespace Assimp {
         /// Constructs a new MaterialProperty.
         /// </summary>
         /// <param name="property">Umananaged AiMaterialProperty struct</param>
-        internal MaterialProperty(AiMaterialProperty property) {
+        internal MaterialProperty(ref AiMaterial material, ref AiMaterialProperty property) {
             m_name = property.Key.GetString();
             m_type = property.Type;
             m_texIndex = (int) property.Index;
@@ -123,7 +123,8 @@ namespace Assimp {
             
             if(property.DataLength > 0 && property.Data != IntPtr.Zero) {
                 if (m_type == Assimp.PropertyType.String) {
-                    m_stringValue = Marshal.PtrToStringAnsi(property.Data, (int)property.DataLength);
+                    //Use GetMaterialString since Assimp does a funny way of storing the string length/string data.
+                    m_stringValue = AssimpLibrary.Instance.GetMaterialString(ref material, m_name, TextureType.None, 0);
                 } else {
                     m_value = MemoryHelper.MarshalArray<byte>(property.Data, (int)property.DataLength);
                 }

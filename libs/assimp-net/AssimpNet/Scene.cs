@@ -237,13 +237,14 @@ namespace Assimp {
                 AiMaterial[] materials = MemoryHelper.MarshalArray<AiMaterial>(scene.Materials, (int) scene.NumMaterials, true);
                 m_materials = new Material[materials.Length];
                 for(int i = 0; i < m_materials.Length; i++) {
-                    m_materials[i] = new Material(materials[i]);
+                    m_materials[i] = new Material(ref materials[i]);
                 }
             }
 
             //Read scenegraph
             if(scene.RootNode != IntPtr.Zero) {
-                m_rootNode = new Node(MemoryHelper.MarshalStructure<AiNode>(scene.RootNode), null);
+                AiNode aiRootNode = MemoryHelper.MarshalStructure<AiNode>(scene.RootNode);
+                m_rootNode = new Node(ref aiRootNode, null);
             }
 
             //Read meshes
@@ -251,7 +252,7 @@ namespace Assimp {
                 AiMesh[] meshes = MemoryHelper.MarshalArray<AiMesh>(scene.Meshes, (int) scene.NumMeshes, true);
                 m_meshes = new Mesh[meshes.Length];
                 for(int i = 0; i < m_meshes.Length; i++) {
-                    m_meshes[i] = new Mesh(meshes[i]);
+                    m_meshes[i] = new Mesh(ref meshes[i]);
                 }
             }
 
@@ -260,7 +261,7 @@ namespace Assimp {
                 AiLight[] lights = MemoryHelper.MarshalArray<AiLight>(scene.Lights, (int) scene.NumLights, true);
                 m_lights = new Light[lights.Length];
                 for(int i = 0; i < m_lights.Length; i++) {
-                    m_lights[i] = new Light(lights[i]);
+                    m_lights[i] = new Light(ref lights[i]);
                 }
             }
 
@@ -269,7 +270,7 @@ namespace Assimp {
                 AiCamera[] cameras = MemoryHelper.MarshalArray<AiCamera>(scene.Cameras, (int) scene.NumCameras, true);
                 m_cameras = new Camera[cameras.Length];
                 for(int i = 0; i < m_cameras.Length; i++) {
-                    m_cameras[i] = new Camera(cameras[i]);
+                    m_cameras[i] = new Camera(ref cameras[i]);
                 }
             }
 
@@ -278,7 +279,7 @@ namespace Assimp {
                 AiTexture[] textures = MemoryHelper.MarshalArray<AiTexture>(scene.Textures, (int) scene.NumTextures, true);
                 m_textures = new Texture[textures.Length];
                 for(int i = 0; i < m_textures.Length; i++) {
-                    m_textures[i] = Texture.CreateTexture(textures[i]);
+                    m_textures[i] = Texture.CreateTexture(ref textures[i]);
                 }
             }
 
@@ -287,7 +288,7 @@ namespace Assimp {
                 AiAnimation[] animations = MemoryHelper.MarshalArray<AiAnimation>(scene.Animations, (int) scene.NumAnimations, true);
                 m_animations = new Animation[animations.Length];
                 for(int i = 0; i < m_animations.Length; i++) {
-                    m_animations[i] = new Animation(animations[i]);
+                    m_animations[i] = new Animation(ref animations[i]);
                 }
             }
         }

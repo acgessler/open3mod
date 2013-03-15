@@ -122,7 +122,7 @@ namespace Assimp {
         /// </summary>
         /// <param name="aiNode">Unmanaged AiNode structure</param>
         /// <param name="parent">Parent of this node or null</param>
-        internal Node(AiNode aiNode, Node parent) {
+        internal Node(ref AiNode aiNode, Node parent) {
             m_name = aiNode.Name.GetString();
             m_transform = aiNode.Transformation;
             m_parent = parent;
@@ -131,7 +131,7 @@ namespace Assimp {
                 AiNode[] childNodes = MemoryHelper.MarshalArray<AiNode>(aiNode.Children, (int) aiNode.NumChildren, true);
                 m_children = new Node[childNodes.Length];
                 for(int i = 0; i < m_children.Length; i++) {
-                    m_children[i] = new Node(childNodes[i], this);
+                    m_children[i] = new Node(ref childNodes[i], this);
                 }
             }
 

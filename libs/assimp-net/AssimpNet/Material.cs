@@ -402,14 +402,14 @@ namespace Assimp {
         /// Constructs a new Material.
         /// </summary>
         /// <param name="material">Unmanaged AiMaterial struct.</param>
-        internal Material(AiMaterial material) {
+        internal Material(ref AiMaterial material) {
             m_properties = new Dictionary<String, MaterialProperty>();
             m_textures = new Dictionary<int, List<TextureSlot>>();
 
             if(material.NumProperties > 0 && material.Properties != IntPtr.Zero) {
                 AiMaterialProperty[] properties = MemoryHelper.MarshalArray<AiMaterialProperty>(material.Properties, (int) material.NumProperties, true);
                 for(int i = 0; i < properties.Length; i++) {
-                    MaterialProperty prop = new MaterialProperty(properties[i]);
+                    MaterialProperty prop = new MaterialProperty(ref material, ref properties[i]);
                     m_properties.Add(prop.FullyQualifiedName, prop);
                 }
             }

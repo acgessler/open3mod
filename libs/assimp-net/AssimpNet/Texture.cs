@@ -46,11 +46,11 @@ namespace Assimp {
         /// </summary>
         /// <param name="texture">Unmanaged AiTexture struct</param>
         /// <returns>The embededded texture</returns>
-        internal static Texture CreateTexture(AiTexture texture) {
+        internal static Texture CreateTexture(ref AiTexture texture) {
             if(texture.Height == 0) {
-                return new CompressedTexture(texture);
+                return new CompressedTexture(ref texture);
             } else {
-                return new UncompressedTexture(texture);
+                return new UncompressedTexture(ref texture);
             }
         }
     }
@@ -109,7 +109,7 @@ namespace Assimp {
             }
         }
 
-        internal CompressedTexture(AiTexture texture) {
+        internal CompressedTexture(ref AiTexture texture) {
             m_formatHint = texture.FormatHint;
 
             if(texture.Width > 0 && texture.Data != IntPtr.Zero) {
@@ -176,7 +176,7 @@ namespace Assimp {
         /// Constructs a new UnCompressedTexture.
         /// </summary>
         /// <param name="texture">Unmanaged AiTexture struct.</param>
-        internal UncompressedTexture(AiTexture texture) {
+        internal UncompressedTexture(ref AiTexture texture) {
             m_width = (int) texture.Width;
             m_height = (int) texture.Height;
 

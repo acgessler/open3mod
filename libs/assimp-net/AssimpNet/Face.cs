@@ -59,7 +59,7 @@ namespace Assimp {
         /// Constructs a new Face.
         /// </summary>
         /// <param name="face">Unmanaged AiFace structure</param>
-        internal Face(AiFace face) {
+        internal Face(ref AiFace face) {
             m_numIndices = face.NumIndices;
 
             if(m_numIndices > 0 && face.Indices != IntPtr.Zero) {
