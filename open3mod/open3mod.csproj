@@ -86,6 +86,12 @@
       <DependentUpon>CoreSettings.settings</DependentUpon>
     </Compile>
     <Compile Include="CpuSkinningEvaluator.cs" />
+    <Compile Include="ExportDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExportDialog.Designer.cs">
+      <DependentUpon>ExportDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="FpsCameraController.cs" />
     <Compile Include="FpsTracker.cs" />
     <Compile Include="HierarchyInspectionView.cs" />
@@ -172,6 +178,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AnimationInspectionView.resx">
       <DependentUpon>AnimationInspectionView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExportDialog.resx">
+      <DependentUpon>ExportDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="InspectionView.resx">
       <DependentUpon>InspectionView.cs</DependentUpon>

@@ -1129,6 +1129,12 @@ namespace open3mod
             {
                 _settings.Show();
             }
+        }
+
+        private void OnExport(object sender, EventArgs e)
+        {
+            var exp = new ExportDialog();
+            exp.Show();
         }     
     }
 }

@@ -72,6 +72,7 @@ namespace open3mod
             this.toolStripButtonShowNormals = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonShowSkeleton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonShowSettings = new System.Windows.Forms.ToolStripButton();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -79,7 +80,8 @@ namespace open3mod
             this.buttonTabClose = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.glControl1 = new open3mod.RenderControl();
-            this.toolStripButtonShowSettings = new System.Windows.Forms.ToolStripButton();
+            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStripSelectRenderer.SuspendLayout();
             this.tabContextMenuStrip.SuspendLayout();
@@ -168,7 +170,9 @@ namespace open3mod
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.logViewerToolStripMenuItem});
+            this.logViewerToolStripMenuItem,
+            this.exportToolStripMenuItem,
+            this.exportAllToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -177,7 +181,7 @@ namespace open3mod
             // logViewerToolStripMenuItem
             // 
             this.logViewerToolStripMenuItem.Name = "logViewerToolStripMenuItem";
-            this.logViewerToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.logViewerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.logViewerToolStripMenuItem.Text = "Log Viewer";
             this.logViewerToolStripMenuItem.Click += new System.EventHandler(this.OnShowLogViewer);
             // 
@@ -385,6 +389,16 @@ namespace open3mod
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
             // 
+            // toolStripButtonShowSettings
+            // 
+            this.toolStripButtonShowSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonShowSettings.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowSettings.Image")));
+            this.toolStripButtonShowSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonShowSettings.Name = "toolStripButtonShowSettings";
+            this.toolStripButtonShowSettings.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonShowSettings.Text = "Settings";
+            this.toolStripButtonShowSettings.Click += new System.EventHandler(this.OnShowSettings);
+            // 
             // tabControl1
             // 
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -460,15 +474,18 @@ namespace open3mod
             this.glControl1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.OnPreviewKeyDown);
             this.glControl1.Resize += new System.EventHandler(this.OnGlResize);
             // 
-            // toolStripButtonShowSettings
+            // exportToolStripMenuItem
             // 
-            this.toolStripButtonShowSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonShowSettings.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowSettings.Image")));
-            this.toolStripButtonShowSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonShowSettings.Name = "toolStripButtonShowSettings";
-            this.toolStripButtonShowSettings.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonShowSettings.Text = "Settings";
-            this.toolStripButtonShowSettings.Click += new System.EventHandler(this.OnShowSettings);
+            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exportToolStripMenuItem.Text = "Export";
+            this.exportToolStripMenuItem.Click += new System.EventHandler(this.OnExport);
+            // 
+            // exportAllToolStripMenuItem
+            // 
+            this.exportAllToolStripMenuItem.Name = "exportAllToolStripMenuItem";
+            this.exportAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exportAllToolStripMenuItem.Text = "Export all";
             // 
             // MainWindow
             // 
@@ -543,6 +560,8 @@ namespace open3mod
         private ToolStripButton toolStripButtonShowSkeleton;
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripButton toolStripButtonShowSettings;
+        private ToolStripMenuItem exportToolStripMenuItem;
+        private ToolStripMenuItem exportAllToolStripMenuItem;
     }
 }
 
