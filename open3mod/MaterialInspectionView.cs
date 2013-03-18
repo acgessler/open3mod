@@ -56,13 +56,13 @@ namespace open3mod
                 AddMaterialEntry(mat, dependencies);                
             }         
         }
-
       
 
         public Scene Scene
         {
             get { return _scene; }
         }
+
 
         public MainWindow Window
         {

@@ -23,11 +23,13 @@ namespace open3mod
 
         private bool _replaced;
         private string _newFileId;
+        private object _lock = new object();
 
         private static Image _loadError;
         private static Image _background;
         private static Image _loadAnimImage;
         private MaterialPreviewRenderer _renderer;
+        private bool _wantUpdate;
 
 
         public MaterialThumbnailControl(MaterialInspectionView owner, Scene scene, Material material)
@@ -51,23 +53,45 @@ namespace open3mod
         /// </summary>
         public void UpdatePreview()
         {
-            if(_renderer != null)
+            lock (_lock)
             {
-                return;
-            }
-            _renderer = new MaterialPreviewRenderer(_owner.Window, _scene, _material, 
-                (uint) pictureBox.Width,
-                (uint) pictureBox.Height);
+                _wantUpdate = true;
+                if (_renderer != null)
+                {
+                    return;
+                }
+                _renderer = new MaterialPreviewRenderer(_owner.Window, _scene, _material,
+                    (uint)pictureBox.Width,
+                    (uint)pictureBox.Height);
 
+                _wantUpdate = false;
+            }
             _renderer.PreviewAvailable += me =>
             {
-                var image = _renderer.PreviewImage;
-                if (image != null)
+                var renderer = _renderer;
+                lock (_lock)
                 {
-                    pictureBox.Image = image;
+                    _renderer = null;
+                    if (_wantUpdate)
+                    {
+                        UpdatePreview();
+                    }
                 }
+        
+                BeginInvoke(new MethodInvoker(() =>
+                {
 
-                _renderer = null;
+                    var image = renderer.PreviewImage;
+                    if (image != null)
+                    {
+                        pictureBox.Image = image;
+                    }
+                    else
+                    {
+                        pictureBox.Image = GetLoadErrorImage();
+                    }                  
+                }));
+
             };
         }
 
