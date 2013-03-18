@@ -40,13 +40,13 @@
             this.label3 = new System.Windows.Forms.Label();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.textBox4 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkBox5 = new System.Windows.Forms.CheckBox();
+            this.checkBox4 = new System.Windows.Forms.CheckBox();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.button2 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -154,20 +154,13 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Output";
             // 
-            // groupBox2
+            // textBox4
             // 
-            this.groupBox2.Controls.Add(this.checkBox5);
-            this.groupBox2.Controls.Add(this.checkBox4);
-            this.groupBox2.Controls.Add(this.checkBox3);
-            this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Controls.Add(this.comboBox1);
-            this.groupBox2.Controls.Add(this.textBox2);
-            this.groupBox2.Location = new System.Drawing.Point(31, 12);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(569, 135);
-            this.groupBox2.TabIndex = 11;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Export ";
+            this.textBox4.Location = new System.Drawing.Point(184, 132);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(314, 20);
+            this.textBox4.TabIndex = 11;
+            this.textBox4.Text = "textures/";
             // 
             // label4
             // 
@@ -190,23 +183,30 @@
             this.checkBox2.Text = "Copy textures to sub-folder";
             this.checkBox2.UseVisualStyleBackColor = true;
             // 
-            // checkBox3
+            // groupBox2
             // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(21, 71);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(146, 17);
-            this.checkBox3.TabIndex = 8;
-            this.checkBox3.Text = "Use relative texture paths";
-            this.checkBox3.UseVisualStyleBackColor = true;
+            this.groupBox2.Controls.Add(this.checkBox5);
+            this.groupBox2.Controls.Add(this.checkBox4);
+            this.groupBox2.Controls.Add(this.checkBox3);
+            this.groupBox2.Controls.Add(this.label1);
+            this.groupBox2.Controls.Add(this.comboBox1);
+            this.groupBox2.Controls.Add(this.textBox2);
+            this.groupBox2.Location = new System.Drawing.Point(31, 12);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(569, 135);
+            this.groupBox2.TabIndex = 11;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Export ";
             // 
-            // textBox4
+            // checkBox5
             // 
-            this.textBox4.Location = new System.Drawing.Point(184, 132);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(314, 20);
-            this.textBox4.TabIndex = 11;
-            this.textBox4.Text = "textures/";
+            this.checkBox5.AutoSize = true;
+            this.checkBox5.Location = new System.Drawing.Point(148, 94);
+            this.checkBox5.Name = "checkBox5";
+            this.checkBox5.Size = new System.Drawing.Size(139, 17);
+            this.checkBox5.TabIndex = 10;
+            this.checkBox5.Text = "Include scene hierarchy";
+            this.checkBox5.UseVisualStyleBackColor = true;
             // 
             // checkBox4
             // 
@@ -218,15 +218,15 @@
             this.checkBox4.Text = "Include animations";
             this.checkBox4.UseVisualStyleBackColor = true;
             // 
-            // checkBox5
+            // checkBox3
             // 
-            this.checkBox5.AutoSize = true;
-            this.checkBox5.Location = new System.Drawing.Point(148, 94);
-            this.checkBox5.Name = "checkBox5";
-            this.checkBox5.Size = new System.Drawing.Size(139, 17);
-            this.checkBox5.TabIndex = 10;
-            this.checkBox5.Text = "Include scene hierarchy";
-            this.checkBox5.UseVisualStyleBackColor = true;
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Location = new System.Drawing.Point(21, 71);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(146, 17);
+            this.checkBox3.TabIndex = 8;
+            this.checkBox3.Text = "Use relative texture paths";
+            this.checkBox3.UseVisualStyleBackColor = true;
             // 
             // button2
             // 
@@ -248,7 +248,9 @@
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.checkBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
             this.Name = "ExportDialog";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Export";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
