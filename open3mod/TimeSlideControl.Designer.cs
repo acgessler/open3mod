@@ -28,31 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.panelTime = new System.Windows.Forms.Panel();
             this.SuspendLayout();
-            // 
-            // panelTime
-            // 
-            this.panelTime.BackColor = System.Drawing.SystemColors.ButtonShadow;
-            this.panelTime.Location = new System.Drawing.Point(3, 8);
-            this.panelTime.Name = "panelTime";
-            this.panelTime.Size = new System.Drawing.Size(356, 52);
-            this.panelTime.TabIndex = 0;
-            this.panelTime.Paint += new System.Windows.Forms.PaintEventHandler(this.OnPaint);
             // 
             // TimeSlideControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.panelTime);
+            this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.DoubleBuffered = true;
             this.Name = "TimeSlideControl";
-            this.Size = new System.Drawing.Size(362, 63);
+            this.Size = new System.Drawing.Size(360, 61);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Panel panelTime;
     }
 }

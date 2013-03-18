@@ -34,9 +34,9 @@ namespace open3mod
 {
     public partial class TimeSlideControl : UserControl
     {
-        private float _rangeMin;
-        private float _rangeMax;
-        private float _pos;
+        private double _rangeMin;
+        private double _rangeMax;
+        private double _pos;
 
 
         public TimeSlideControl()
@@ -45,7 +45,7 @@ namespace open3mod
         }
 
 
-        public float RangeMin
+        public double RangeMin
         {
             get { return _rangeMin; }
             set 
@@ -61,7 +61,7 @@ namespace open3mod
         }
 
 
-        public float RangeMax
+        public double RangeMax
         {
             get { return _rangeMax; }
             set
@@ -77,7 +77,7 @@ namespace open3mod
         }
 
 
-        public float Position
+        public double Position
         {
             get { return _pos; }
             set
@@ -88,11 +88,36 @@ namespace open3mod
         }
 
 
-        private void OnPaint(object sender, PaintEventArgs e)
+        public double Range
         {
-   
+            get { return _rangeMax - _rangeMin; }
+        }
+
+
+        public double RelativePosition
+        {
+            get
+            {
+                var d = Range;
+                if (d < 1e-7) // prevent divide by zero
+                {
+                    return 0.0;
+                }
+                return (_pos - _rangeMin) / d;
+            }
+        }
+
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
             var graphics = e.Graphics;
-            graphics.DrawLine(new Pen(new SolidBrush(Color.Red),2), 10, 10, 100, 20 );
+            var rect = ClientRectangle;
+            graphics.FillRectangle(new SolidBrush(Color.LightGray), rect );
+
+            var pos = RelativePosition;
+            var xdraw = rect.Left + (int) (rect.Width*pos);
+            graphics.DrawLine(new Pen(new SolidBrush(Color.Red),1), xdraw, 15, xdraw, rect.Bottom );
         }
     }
 }
