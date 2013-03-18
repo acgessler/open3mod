@@ -152,13 +152,15 @@ namespace open3mod
                     _raw = imp.ImportFile(file, PostProcessPreset.TargetRealTimeMaximumQuality);
                     if (_raw == null)
                     {
+                        Dispose();
                         throw new Exception("failed to read file: " + file);
                     }
                 }
             }
             catch(AssimpException ex)
             {
-                throw new Exception("failed to read file: " + file + " (" + ex.Message + ")");
+                Dispose();
+                throw new Exception("failed to read file: " + file + " (" + ex.Message + ")");               
             }
 
             _mapper = new MaterialMapper(this); 
@@ -313,8 +315,15 @@ namespace open3mod
 
         public void Dispose()
         {
-            TextureSet.Dispose();
-            _renderer.Dispose();
+            if (_textureSet != null)
+            {
+                _textureSet.Dispose();
+            }
+
+            if (_renderer != null)
+            {
+                _renderer.Dispose();
+            }
 
             GC.SuppressFinalize(this);
         }
@@ -322,7 +331,8 @@ namespace open3mod
 
         ~Scene()
         {
-            Dispose();
+            // OpenTk is unsafe from here, explicit Dispose() is required.
+            Debug.Assert(false);
         }
     }
 

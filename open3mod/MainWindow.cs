@@ -343,7 +343,7 @@ namespace open3mod
             if (tab == tabControl1.SelectedTab)
             {
                 // need to select another tab first
-                for (var i = 0; i < tabControl1.TabCount; ++i)
+                for (var i = 0; i < tabControl1.TabCount; ++i) 
                 {
                     if (tabControl1.TabPages[i] == tab)
                     {

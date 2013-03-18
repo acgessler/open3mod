@@ -262,8 +262,19 @@ namespace open3mod
             if (ActiveScene != null)
             {
                 ActiveScene.Dispose();
+                ActiveScene = null;
             }
+
+            GC.SuppressFinalize(this);
         }
+
+
+        ~Tab()
+        {
+            // OpenTk is unsafe from here, explicit Dispose() is required.
+            Debug.Assert(false);
+        }
+
 
         /// <summary>
         /// Sets the tab to a permanent "failed to load" state. In this
