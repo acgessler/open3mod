@@ -147,15 +147,15 @@
             // 
             // timeSlideControl
             // 
-            this.timeSlideControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.timeSlideControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.timeSlideControl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.timeSlideControl.Location = new System.Drawing.Point(0, 113);
             this.timeSlideControl.Name = "timeSlideControl";
-            this.timeSlideControl.Position = 0F;
-            this.timeSlideControl.RangeMax = 0F;
-            this.timeSlideControl.RangeMin = 0F;
-            this.timeSlideControl.Size = new System.Drawing.Size(335, 67);
+            this.timeSlideControl.Position = 0D;
+            this.timeSlideControl.RangeMax = 0D;
+            this.timeSlideControl.RangeMin = 0D;
+            this.timeSlideControl.Size = new System.Drawing.Size(332, 67);
             this.timeSlideControl.TabIndex = 17;
             // 
             // AnimationInspectionView
