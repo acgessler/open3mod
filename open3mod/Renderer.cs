@@ -182,43 +182,62 @@ namespace open3mod
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             var ui = Window.UiState.ActiveTab;
-
-            var index = Tab.ViewIndex.Index0;
-            foreach (var viewport in ui.ActiveViews)
+            if (ui.ActiveScene != null)
             {
-
-                // draw the active viewport last (to make sure its contour line is on top)
-                if (viewport == null || ui.ActiveViewIndex == index)
+                var index = Tab.ViewIndex.Index0;
+                foreach (var viewport in ui.ActiveViews)
                 {
+
+                    // draw the active viewport last (to make sure its contour line is on top)
+                    if (viewport == null || ui.ActiveViewIndex == index)
+                    {
+                        ++index;
+                        continue;
+                    }
+
+                    var view = viewport.Bounds;
+
+                    var cam = viewport.ActiveCameraControllerForView();
+                    DrawViewport(cam, activeTab, view.X, view.Y, view.Z, view.W, false);
                     ++index;
-                    continue;
                 }
 
-                var view = viewport.Bounds;
+                var activeVp = ui.ActiveViews[(int) ui.ActiveViewIndex];
+                Debug.Assert(activeVp != null);
 
-                var cam = viewport.ActiveCameraControllerForView();
-                DrawViewport(cam, activeTab, view.X, view.Y, view.Z, view.W, false);
-                ++index;
+                var activeVpBounds = activeVp.Bounds;
+                DrawViewport(ui.ActiveCameraController, activeTab, activeVpBounds.X, activeVpBounds.Y,
+                             activeVpBounds.Z, activeVpBounds.W, true);
+
+                if (ui.ActiveViewMode != Tab.ViewMode.Single)
+                {
+                    SetFullViewport();
+                }
+
+                if (Window.UiState.ShowFps)
+                {
+                    DrawFps();
+                }
+
+                DrawHud();
             }
-
-            var activeVp = ui.ActiveViews[(int) ui.ActiveViewIndex];
-            Debug.Assert(activeVp != null);
-
-            var activeVpBounds = activeVp.Bounds;
-            DrawViewport(ui.ActiveCameraController, activeTab, activeVpBounds.X, activeVpBounds.Y,
-                         activeVpBounds.Z, activeVpBounds.W, true);
-
-            if (ui.ActiveViewMode != Tab.ViewMode.Single)
+            else
             {
                 SetFullViewport();
+                if (activeTab.State == Tab.TabState.Failed)
+                {
+                    DrawFailureSplash(activeTab.ErrorMessage);
+                }
+                else if (activeTab.State == Tab.TabState.Loading)
+                {
+                    DrawLoadingSplash();
+                }
+                else
+                {
+                    Debug.Assert(activeTab.State == Tab.TabState.Empty);
+                    DrawNoSceneSplash();
+                }
             }
-
-            if (Window.UiState.ShowFps)
-            {
-                DrawFps();
-            }
-
-            DrawHud();
             _textOverlay.Draw();
 
             // handle other Gl jobs such as drawing preview images - components
@@ -456,23 +475,7 @@ namespace open3mod
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadMatrix(ref perspective);
 
-            if (activeTab.ActiveScene == null)
-            {
-                if (activeTab.State == Tab.TabState.Failed)
-                {
-                    DrawFailureSplash(activeTab.ErrorMessage);
-                }
-                else if (activeTab.State == Tab.TabState.Loading)
-                {
-                    DrawLoadingSplash();
-                }
-                else
-                {
-                    Debug.Assert(activeTab.State == Tab.TabState.Empty);
-                    DrawNoSceneSplash();
-                }
-            }
-            else
+            if (activeTab.ActiveScene != null)
             {
                 DrawScene(activeTab.ActiveScene, view);
             }
