@@ -106,6 +106,7 @@
             this.buttonPlay.TabIndex = 11;
             this.buttonPlay.Text = "Play/Stop";
             this.buttonPlay.UseVisualStyleBackColor = true;
+            this.buttonPlay.Click += new System.EventHandler(this.OnPlay);
             // 
             // label3
             // 

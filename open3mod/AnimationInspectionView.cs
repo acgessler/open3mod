@@ -34,6 +34,11 @@ namespace open3mod
     public sealed partial class AnimationInspectionView : UserControl
     {
         private readonly Scene _scene;
+        private Timer _timer;
+        private double _duration;
+        private bool _playing;
+
+        private const int TimerInterval = 30;
 
         public AnimationInspectionView(Scene scene, TabPage tabPageAnimations)
         {
@@ -55,12 +60,61 @@ namespace open3mod
                 }                
             }
             listBoxAnimations.SelectedIndex = 0;
+            _playing = true;
         }
 
 
         public bool Empty
         {
             get { return _scene.Raw.AnimationCount == 0; }
+        }
+
+
+        public bool Playing
+        {
+            get { return _playing; }
+            set
+            {
+                if (value == (_timer != null))
+                {
+                    return;
+                }
+                _playing = value;
+                if (value)
+                {
+                    StartPlayingTimer();            
+                }
+                else
+                {
+                    StopPlayingTimer();                  
+                }
+            }
+        }
+
+
+        private void StopPlayingTimer()
+        {
+            if (_timer != null)
+            {
+                _timer.Stop();
+                _timer = null;
+            }
+        }
+
+
+        private void StartPlayingTimer()
+        {
+            if (!Playing)
+            {
+                return;
+            }
+
+            _timer = new Timer { Interval = (TimerInterval) };
+            _timer.Tick += (o, args) =>
+            {
+                timeSlideControl.Position = _scene.SceneAnimator.AnimationCursor % _duration;
+            };
+            _timer.Start();
         }
 
 
@@ -74,6 +128,14 @@ namespace open3mod
                 {
                     ((Control)control).Enabled = true;
                 }
+
+                _duration = _scene.SceneAnimator.AnimationDuration;
+
+                timeSlideControl.RangeMin = 0.0;
+                timeSlideControl.RangeMax = _duration;
+                timeSlideControl.Position = 0.0;
+
+                StartPlayingTimer();
             }
             else
             {
@@ -81,7 +143,15 @@ namespace open3mod
                 {
                     ((Control) control).Enabled = false;
                 }
+
+                StopPlayingTimer();
             }
+        }
+
+
+        private void OnPlay(object sender, EventArgs e)
+        {
+            Playing = !Playing;          
         }
     }
 }
