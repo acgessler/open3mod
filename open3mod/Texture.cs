@@ -198,9 +198,7 @@ namespace open3mod
 
         ~Texture()
         {
-            // this should not happen, OpenTK is not safe to use from
-            // within Finalizers - for this reason, a manual Dispose()
-            // is needed upfront.
+            // OpenTk is unsafe from here, explicit Dispose() is required.
             Debug.Assert(false);
         }
 

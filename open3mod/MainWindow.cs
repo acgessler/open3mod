@@ -1112,9 +1112,9 @@ namespace open3mod
 
 
         private void OnCloseForm(object sender, FormClosedEventArgs e)
-        {
-            _renderer.Dispose();
+        {           
             UiState.Dispose();
+            _renderer.Dispose();
         }
 
 

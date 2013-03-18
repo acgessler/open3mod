@@ -118,6 +118,9 @@ namespace open3mod
                 {
                     Debug.Assert(ActiveTab != ts, "active tab cannot be removed: " + id.ToString());
                     Tabs.Remove(ts);
+
+                    // strictly necessary to Dispose() because this has OpenTk resources
+                    ts.Dispose();
                     return;
                 }
             }

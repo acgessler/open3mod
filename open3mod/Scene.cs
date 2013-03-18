@@ -314,6 +314,15 @@ namespace open3mod
         public void Dispose()
         {
             TextureSet.Dispose();
+            _renderer.Dispose();
+
+            GC.SuppressFinalize(this);
+        }
+
+
+        ~Scene()
+        {
+            Dispose();
         }
     }
 

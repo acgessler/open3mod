@@ -38,7 +38,7 @@ namespace open3mod
     /// Render a Scene using old-school OpenGl, that is, display lists,
     /// matrix stacks and glVertexN-family calls.
     /// </summary>
-    public class SceneRendererClassicGl : ISceneRenderer
+    public sealed class SceneRendererClassicGl : ISceneRenderer
     {
         private readonly Scene _owner;
         private readonly Vector3 _initposeMin;
@@ -49,7 +49,7 @@ namespace open3mod
 
 
         private readonly CpuSkinningEvaluator _skinner;
-        private bool[] _isAlphaMaterial;
+        private readonly bool[] _isAlphaMaterial;
 
 
         internal SceneRendererClassicGl(Scene owner, Vector3 initposeMin, Vector3 initposeMax)
@@ -66,6 +66,29 @@ namespace open3mod
             {
                 _isAlphaMaterial[i] = _owner.MaterialMapper.IsAlphaMaterial(owner.Raw.Materials[i]);
             }
+        }
+
+
+        public void Dispose()
+        {
+            if (_displayList != 0)
+            {
+                GL.DeleteLists(_displayList, 1);
+                _displayList = 0;
+            }
+            if (_displayListAlpha != 0)
+            {
+                GL.DeleteLists(_displayListAlpha, 1);
+                _displayListAlpha = 0;
+            }
+            GC.SuppressFinalize(this);
+        }
+
+
+        ~SceneRendererClassicGl()
+        {
+            // OpenTk is unsafe from here, explicit Dispose() is required.
+            Debug.Assert(false);
         }
 
 

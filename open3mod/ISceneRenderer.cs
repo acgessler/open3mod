@@ -47,7 +47,7 @@ namespace open3mod
     /// lifetime. Renderers are expected to handle all view filters requested by
     /// a scene.
     /// </summary>
-    public interface ISceneRenderer
+    public interface ISceneRenderer : IDisposable
     {
         /// <summary>
         /// Called once per frame to update per-frame data.
