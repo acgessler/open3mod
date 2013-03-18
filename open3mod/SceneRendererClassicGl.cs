@@ -64,44 +64,8 @@ namespace open3mod
             _isAlphaMaterial = new bool[owner.Raw.MaterialCount];
             for (int i = 0; i < _isAlphaMaterial.Length; ++i)
             {
-                _isAlphaMaterial[i] = IsAlphaMaterial(owner.Raw.Materials[i]);
+                _isAlphaMaterial[i] = _owner.MaterialMapper.IsAlphaMaterial(owner.Raw.Materials[i]);
             }
-        }
-
-
-        private static bool IsAlphaMaterial(Material material)
-        {
-            if(material.HasOpacity && material.Opacity < 1.0f)
-            {
-                return true;
-            }
-
-            // Also treat material as (potentially) semi-transparent if the alpha
-            // components of any of the diffuse, specular, ambient and emissive
-            // colors are non-1. It is not very well-defined how assimp handles
-            // these values. It is better to assume opaque meshes transparent
-            // than vice versa.
-            if (material.HasColorDiffuse && material.ColorDiffuse.A < 1.0f)
-            {
-                return true;
-            }
-
-            if (material.HasColorSpecular && material.ColorSpecular.A < 1.0f)
-            {
-                return true;
-            }
-
-            if (material.HasColorAmbient && material.ColorAmbient.A < 1.0f)
-            {
-                return true;
-            }
-
-            if (material.HasColorEmissive && material.ColorEmissive.A < 1.0f)
-            {
-                return true;
-            }
-
-            return false;
         }
 
 

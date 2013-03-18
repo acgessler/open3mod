@@ -48,6 +48,63 @@ namespace open3mod
 
 
         /// <summary>
+        /// Threshold below which alpha values are silently ignored and treated as
+        /// erroneous input data. If this heuristic is wrong, the worst case is 
+        /// that otherwise invisible geometry becomes visible, which is not that
+        /// bad considering this is a 3D viewer.
+        /// </summary>
+        public const float AlphaSuppressionThreshold = 1e-5f;
+
+        /// <summary>
+        /// Check if a given assimp material requires alpha-blending for rendering
+        /// </summary>
+        /// <param name="material"></param>
+        /// <returns></returns>
+        public bool IsAlphaMaterial(Material material)
+        {
+            if (material.HasOpacity && IsTransparent(material.Opacity))
+            {
+                return true;
+            }
+
+            // Also treat material as (potentially) semi-transparent if the alpha
+            // components of any of the diffuse, specular, ambient and emissive
+            // colors are non-1. It is not very well-defined how assimp handles
+            // these values so better count them into transparency as well.
+            //
+            // Ignore color values with alpha=0, however. These are most likely
+            // not intended to be fully transparent.
+            if (material.HasColorDiffuse && IsTransparent(material.ColorDiffuse.A))
+            {
+                return true;
+            }
+
+            if (material.HasColorSpecular && IsTransparent(material.ColorSpecular.A))
+            {
+                return true;
+            }
+
+            if (material.HasColorAmbient && IsTransparent(material.ColorAmbient.A))
+            {
+                return true;
+            }
+
+            if (material.HasColorEmissive && IsTransparent(material.ColorEmissive.A))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+
+        private static bool IsTransparent(float f)
+        {
+            return f < 1.0f && f > AlphaSuppressionThreshold;
+        }
+
+
+        /// <summary>
         /// Applies a material to the Gl state machine. Depending on the renderer,
         /// this either sets GLSL shaders (GL3) or it configures the fixed function pipeline
         /// (legacy/classic).
@@ -74,8 +131,6 @@ namespace open3mod
 
         private void ApplyFixedFunctionMaterial(Mesh mesh, Material mat)
         {
-            GL.Disable(EnableCap.Blend);
- 
             if (mesh == null || mesh.HasNormals)
             {
                 GL.Enable(EnableCap.Lighting);
@@ -118,32 +173,69 @@ namespace open3mod
                 GL.Disable(EnableCap.Texture2D);
             }
 
+            // note: keep semantics of hasAlpha consistent with IsAlphaMaterial()
+            var hasAlpha = false;
+
+            var alpha = 1.0f;
+            if (mat.HasOpacity)
+            {
+                alpha = mat.Opacity;
+                if (alpha < AlphaSuppressionThreshold) // suppress zero opacity, this is likely wrong input data
+                {
+                    alpha = 1.0f;
+                }
+            }
+
             var color = new Color4(.8f, .8f, .8f, 1.0f);
             if (mat.HasColorDiffuse)
             {
                 color = AssimpToOpenTk.FromColor(mat.ColorDiffuse);
+                if (color.A < AlphaSuppressionThreshold) // s.a.
+                {
+                    color.A = 1.0f;
+                }
             }
+            color.A *= alpha;
+            hasAlpha = color.A < 1.0f;
             GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, color);
 
             color = new Color4(0, 0, 0, 1.0f);
             if (mat.HasColorSpecular)
             {
                 color = AssimpToOpenTk.FromColor(mat.ColorSpecular);
+                if (color.A < AlphaSuppressionThreshold) // s.a.
+                {
+                    color.A = 1.0f;
+                }
             }
+            color.A *= alpha;
+            hasAlpha = hasAlpha || color.A < 1.0f;
             GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Specular, color);
 
             color = new Color4(.2f, .2f, .2f, 1.0f);
             if (mat.HasColorAmbient)
             {
                 color = AssimpToOpenTk.FromColor(mat.ColorAmbient);
+                if (color.A < AlphaSuppressionThreshold) // s.a.
+                {
+                    color.A = 1.0f;
+                }
             }
+            color.A *= alpha;
+            hasAlpha = hasAlpha || color.A < 1.0f;
             GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, color);
 
             color = new Color4(0, 0, 0, 1.0f);
             if (mat.HasColorEmissive)
             {
                 color = AssimpToOpenTk.FromColor(mat.ColorEmissive);
+                if (color.A < AlphaSuppressionThreshold) // s.a.
+                {
+                    color.A = 1.0f;
+                }
             }
+            color.A *= alpha;
+            hasAlpha = hasAlpha || color.A < 1.0f;
             GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, color);
 
             float shininess = 1;
@@ -158,7 +250,18 @@ namespace open3mod
             }
 
             GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Shininess, shininess * strength);
-            GL.DepthMask(true);
+
+            if (hasAlpha)
+            {
+                GL.Enable(EnableCap.Blend);
+                GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+                GL.DepthMask(false);
+            }
+            else
+            {
+                GL.Disable(EnableCap.Blend);
+                GL.DepthMask(true);
+            }
         }
 
 
