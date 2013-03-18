@@ -57,6 +57,7 @@ namespace open3mod
             listBoxAnimations.SelectedIndex = 0;
         }
 
+
         public bool Empty
         {
             get { return _scene.Raw.AnimationCount == 0; }
@@ -66,6 +67,21 @@ namespace open3mod
         private void OnChangeSelectedAnimation(object sender, EventArgs e)
         {
             _scene.SceneAnimator.ActiveAnimation = listBoxAnimations.SelectedIndex - 1;
+            if (_scene.SceneAnimator.ActiveAnimation >= 0)
+            {
+                var anim = _scene.Raw.Animations[_scene.SceneAnimator.ActiveAnimation];
+                foreach (var control in panelAnimTools.Controls)
+                {
+                    ((Control)control).Enabled = true;
+                }
+            }
+            else
+            {
+                foreach(var control in panelAnimTools.Controls)
+                {
+                    ((Control) control).Enabled = false;
+                }
+            }
         }
     }
 }

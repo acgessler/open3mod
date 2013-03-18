@@ -36,11 +36,14 @@
             this.buttonPlay = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.listBoxAnimations = new System.Windows.Forms.ListBox();
+            this.panelAnimTools = new System.Windows.Forms.Panel();
+            this.timeSlideControl = new open3mod.TimeSlideControl();
+            this.panelAnimTools.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBoxGoto
             // 
-            this.textBoxGoto.Location = new System.Drawing.Point(65, 452);
+            this.textBoxGoto.Location = new System.Drawing.Point(41, 193);
             this.textBoxGoto.Name = "textBoxGoto";
             this.textBoxGoto.Size = new System.Drawing.Size(78, 20);
             this.textBoxGoto.TabIndex = 16;
@@ -48,7 +51,7 @@
             // labelGoto
             // 
             this.labelGoto.AutoSize = true;
-            this.labelGoto.Location = new System.Drawing.Point(26, 455);
+            this.labelGoto.Location = new System.Drawing.Point(2, 196);
             this.labelGoto.Name = "labelGoto";
             this.labelGoto.Size = new System.Drawing.Size(33, 13);
             this.labelGoto.TabIndex = 15;
@@ -60,7 +63,7 @@
             this.buttonFaster.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Gray;
             this.buttonFaster.FlatAppearance.MouseOverBackColor = System.Drawing.Color.WhiteSmoke;
             this.buttonFaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonFaster.Location = new System.Drawing.Point(212, 266);
+            this.buttonFaster.Location = new System.Drawing.Point(206, 52);
             this.buttonFaster.Name = "buttonFaster";
             this.buttonFaster.Size = new System.Drawing.Size(60, 40);
             this.buttonFaster.TabIndex = 14;
@@ -73,7 +76,7 @@
             this.buttonSlower.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Gray;
             this.buttonSlower.FlatAppearance.MouseOverBackColor = System.Drawing.Color.WhiteSmoke;
             this.buttonSlower.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSlower.Location = new System.Drawing.Point(65, 266);
+            this.buttonSlower.Location = new System.Drawing.Point(59, 52);
             this.buttonSlower.Name = "buttonSlower";
             this.buttonSlower.Size = new System.Drawing.Size(60, 40);
             this.buttonSlower.TabIndex = 13;
@@ -83,7 +86,7 @@
             // checkBoxLoop
             // 
             this.checkBoxLoop.AutoSize = true;
-            this.checkBoxLoop.Location = new System.Drawing.Point(12, 215);
+            this.checkBoxLoop.Location = new System.Drawing.Point(6, 1);
             this.checkBoxLoop.Name = "checkBoxLoop";
             this.checkBoxLoop.Size = new System.Drawing.Size(50, 17);
             this.checkBoxLoop.TabIndex = 12;
@@ -96,7 +99,7 @@
             this.buttonPlay.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Gray;
             this.buttonPlay.FlatAppearance.MouseOverBackColor = System.Drawing.Color.WhiteSmoke;
             this.buttonPlay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonPlay.Location = new System.Drawing.Point(131, 253);
+            this.buttonPlay.Location = new System.Drawing.Point(125, 39);
             this.buttonPlay.MaximumSize = new System.Drawing.Size(100, 100);
             this.buttonPlay.Name = "buttonPlay";
             this.buttonPlay.Size = new System.Drawing.Size(75, 68);
@@ -125,20 +128,47 @@
             this.listBoxAnimations.TabIndex = 9;
             this.listBoxAnimations.SelectedIndexChanged += new System.EventHandler(this.OnChangeSelectedAnimation);
             // 
+            // panelAnimTools
+            // 
+            this.panelAnimTools.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelAnimTools.Controls.Add(this.textBoxGoto);
+            this.panelAnimTools.Controls.Add(this.timeSlideControl);
+            this.panelAnimTools.Controls.Add(this.buttonPlay);
+            this.panelAnimTools.Controls.Add(this.checkBoxLoop);
+            this.panelAnimTools.Controls.Add(this.labelGoto);
+            this.panelAnimTools.Controls.Add(this.buttonSlower);
+            this.panelAnimTools.Controls.Add(this.buttonFaster);
+            this.panelAnimTools.Location = new System.Drawing.Point(6, 215);
+            this.panelAnimTools.Name = "panelAnimTools";
+            this.panelAnimTools.Size = new System.Drawing.Size(332, 458);
+            this.panelAnimTools.TabIndex = 18;
+            // 
+            // timeSlideControl
+            // 
+            this.timeSlideControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.timeSlideControl.Location = new System.Drawing.Point(0, 113);
+            this.timeSlideControl.Name = "timeSlideControl";
+            this.timeSlideControl.Position = 0F;
+            this.timeSlideControl.RangeMax = 0F;
+            this.timeSlideControl.RangeMin = 0F;
+            this.timeSlideControl.Size = new System.Drawing.Size(335, 67);
+            this.timeSlideControl.TabIndex = 17;
+            // 
             // AnimationInspectionView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.textBoxGoto);
-            this.Controls.Add(this.labelGoto);
-            this.Controls.Add(this.buttonFaster);
-            this.Controls.Add(this.buttonSlower);
-            this.Controls.Add(this.checkBoxLoop);
-            this.Controls.Add(this.buttonPlay);
+            this.Controls.Add(this.panelAnimTools);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.listBoxAnimations);
             this.Name = "AnimationInspectionView";
             this.Size = new System.Drawing.Size(341, 676);
+            this.panelAnimTools.ResumeLayout(false);
+            this.panelAnimTools.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -154,6 +184,8 @@
         private System.Windows.Forms.Button buttonPlay;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ListBox listBoxAnimations;
+        private TimeSlideControl timeSlideControl;
+        private System.Windows.Forms.Panel panelAnimTools;
 
     }
 }

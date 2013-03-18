@@ -38,6 +38,7 @@
             this.panelTime.Name = "panelTime";
             this.panelTime.Size = new System.Drawing.Size(356, 52);
             this.panelTime.TabIndex = 0;
+            this.panelTime.Paint += new System.Windows.Forms.PaintEventHandler(this.OnPaint);
             // 
             // TimeSlideControl
             // 

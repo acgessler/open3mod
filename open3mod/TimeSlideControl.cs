@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Data;
 using System.Linq;
@@ -33,9 +34,65 @@ namespace open3mod
 {
     public partial class TimeSlideControl : UserControl
     {
+        private float _rangeMin;
+        private float _rangeMax;
+        private float _pos;
+
+
         public TimeSlideControl()
         {
             InitializeComponent();
+        }
+
+
+        public float RangeMin
+        {
+            get { return _rangeMin; }
+            set 
+            { 
+                Debug.Assert(value <= _rangeMax);
+                _rangeMin = value;
+                if (_pos < _rangeMin)
+                {
+                    _pos = _rangeMin;
+                }
+                Invalidate();
+            }
+        }
+
+
+        public float RangeMax
+        {
+            get { return _rangeMax; }
+            set
+            {
+                Debug.Assert(_rangeMin <= value);
+                _rangeMax = value;
+                if (_pos > _rangeMax)
+                {
+                    _pos = _rangeMax;
+                }
+                Invalidate();
+            }
+        }
+
+
+        public float Position
+        {
+            get { return _pos; }
+            set
+            {
+                _pos = value;
+                Invalidate();
+            }
+        }
+
+
+        private void OnPaint(object sender, PaintEventArgs e)
+        {
+   
+            var graphics = e.Graphics;
+            graphics.DrawLine(new Pen(new SolidBrush(Color.Red),2), 10, 10, 100, 20 );
         }
     }
 }
