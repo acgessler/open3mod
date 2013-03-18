@@ -44,12 +44,14 @@ namespace open3mod
         private readonly Vector3 _initposeMin;
         private readonly Vector3 _initposeMax;
         private int _displayList;
+        private int _displayListAlpha;
         private RenderFlags _lastFlags;
 
 
         private readonly CpuSkinningEvaluator _skinner;
+        private bool[] _isAlphaMaterial;
 
-        
+
         internal SceneRendererClassicGl(Scene owner, Vector3 initposeMin, Vector3 initposeMax)
         {
             _owner = owner;
@@ -58,6 +60,48 @@ namespace open3mod
 
             Debug.Assert(_owner.Raw != null);    
             _skinner = new CpuSkinningEvaluator(owner);
+
+            _isAlphaMaterial = new bool[owner.Raw.MaterialCount];
+            for (int i = 0; i < _isAlphaMaterial.Length; ++i)
+            {
+                _isAlphaMaterial[i] = IsAlphaMaterial(owner.Raw.Materials[i]);
+            }
+        }
+
+
+        private static bool IsAlphaMaterial(Material material)
+        {
+            if(material.HasOpacity && material.Opacity < 1.0f)
+            {
+                return true;
+            }
+
+            // Also treat material as (potentially) semi-transparent if the alpha
+            // components of any of the diffuse, specular, ambient and emissive
+            // colors are non-1. It is not very well-defined how assimp handles
+            // these values. It is better to assume opaque meshes transparent
+            // than vice versa.
+            if (material.HasColorDiffuse && material.ColorDiffuse.A < 1.0f)
+            {
+                return true;
+            }
+
+            if (material.HasColorSpecular && material.ColorSpecular.A < 1.0f)
+            {
+                return true;
+            }
+
+            if (material.HasColorAmbient && material.ColorAmbient.A < 1.0f)
+            {
+                return true;
+            }
+
+            if (material.HasColorEmissive && material.ColorEmissive.A < 1.0f)
+            {
+                return true;
+            }
+
+            return false;
         }
 
 
@@ -99,7 +143,7 @@ namespace open3mod
 
             GL.Translate(-(_initposeMin + _initposeMax) * 0.5f);
 
-            // build and cache opengl displaylist and update only when the scene changes.
+            // Build and cache Gl displaylists and update only when the scene changes.
             // when the scene is being animated, this is bad because it changes every
             // frame anyway. In this case  we don't use a displist.
             var animated = _owner.SceneAnimator.IsAnimationActive;
@@ -107,28 +151,60 @@ namespace open3mod
             {
                 _lastFlags = flags;
 
+                // handle opaque geometry
                 if (!animated)
                 {
                     if (_displayList == 0)
                     {
                         _displayList = GL.GenLists(1);
                     }
-                    GL.NewList(_displayList, ListMode.Compile);
+                    GL.NewList(_displayList, ListMode.Compile);                    
                 }
 
-                RecursiveRender(_owner.Raw.RootNode, visibleNodes, flags, animated);
+                var needAlpha = RecursiveRender(_owner.Raw.RootNode, visibleNodes, flags, animated);
 
                 if (flags.HasFlag(RenderFlags.ShowSkeleton) || flags.HasFlag(RenderFlags.ShowNormals))
                 {
                     RecursiveRenderNoScale(_owner.Raw.RootNode, visibleNodes, flags, 1.0f / tmp, animated);
                 }
 
-                GL.EndList();
+                if (!animated)
+                {
+                    GL.EndList();
+                }
+
+                if (needAlpha)
+                {
+                    // handle semi-transparent geometry
+                    if (!animated)
+                    {
+                        if (_displayListAlpha == 0)
+                        {
+                            _displayListAlpha = GL.GenLists(1);
+                        }
+                        GL.NewList(_displayListAlpha, ListMode.Compile);
+                    }
+                    RecursiveRenderWithAlpha(_owner.Raw.RootNode, visibleNodes, flags, animated);
+
+                    if (!animated)
+                    {
+                        GL.EndList();
+                    }
+                }
+                else if (_displayListAlpha != 0)
+                {
+                    GL.DeleteLists(_displayListAlpha, 1);
+                    _displayListAlpha = 0;
+                }
             }
 
             if (!animated)
             {
                 GL.CallList(_displayList);
+                if (_displayListAlpha != 0)
+                {
+                    GL.CallList(_displayListAlpha);
+                }
             }
 
             // always switch back to FILL
@@ -140,8 +216,18 @@ namespace open3mod
         }
 
 
-        private void RecursiveRender(Node node, HashSet<Node> visibleNodes, RenderFlags flags, bool animated)
+        /// <summary>
+        /// Recursive rendering function
+        /// </summary>
+        /// <param name="node">Current node</param>
+        /// <param name="visibleNodes">Set of visible nodes</param>
+        /// <param name="flags">Rendering flags</param>
+        /// <param name="animated">Play animation?</param>
+        /// <returns>whether there is any need to do a second render pass with alpha blending enabled</returns>
+        private bool RecursiveRender(Node node, HashSet<Node> visibleNodes, RenderFlags flags, bool animated)
         {
+            var needAlpha = false;
+
             Matrix4 m;
             if (animated)
             {
@@ -160,28 +246,102 @@ namespace open3mod
             var showGhost = false;
             if (node.HasMeshes && (visibleNodes == null || visibleNodes.Contains(node) || (flags.HasFlag(RenderFlags.ShowGhosts) && (showGhost = true))))
             {
-                foreach (var index in node.MeshIndices)
+                if (!showGhost)
                 {
-                    var mesh = _owner.Raw.Meshes[index];
-
-                    var skinning = DrawMesh(node, animated, showGhost, index, mesh);
-
-                    if (flags.HasFlag(RenderFlags.ShowBoundingBoxes))
+                    foreach (var index in node.MeshIndices)
                     {
-                        DrawBoundingBox(node, index, mesh, skinning);
+                        var mesh = _owner.Raw.Meshes[index];
+                        if (_isAlphaMaterial[mesh.MaterialIndex])
+                        {
+                            needAlpha = true;
+                            continue;
+                        }
+
+                        var skinning = DrawMesh(node, animated, false, index, mesh);
+                        if (flags.HasFlag(RenderFlags.ShowBoundingBoxes))
+                        {
+                            DrawBoundingBox(node, index, mesh, skinning);
+                        }
                     }
+                }
+                else
+                {
+                    needAlpha = true;
                 }
             }
                       
             for (var i = 0; i < node.ChildCount; i++)
-            {              
-                RecursiveRender(node.Children[i], visibleNodes, flags, animated);
+            {
+                needAlpha = RecursiveRender(node.Children[i], visibleNodes, flags, animated) || needAlpha;
+            }
+
+            GL.PopMatrix();
+            return needAlpha;
+        }
+
+
+        /// <summary>
+        /// Recursive rendering function for semi-transparent (i.e. alpha-blended) meshes.
+        /// 
+        /// Alpha blending is not globally on, meshes need to do that on their own. 
+        /// 
+        /// This render function is called _after_ solid geometry has been drawn, so the 
+        /// relative order between transparent and opaque geometry is maintained. There
+        /// is no further ordering within the alpha rendering pass.
+        /// </summary>
+        /// <param name="node">Current node</param>
+        /// <param name="visibleNodes">Set of visible nodes</param>
+        /// <param name="flags">Rendering flags</param>
+        /// <param name="animated">Play animation?</param>
+        private void RecursiveRenderWithAlpha(Node node, HashSet<Node> visibleNodes, RenderFlags flags, bool animated)
+        {
+            Matrix4 m;
+            if (animated)
+            {
+                _owner.SceneAnimator.GetLocalTransform(node, out m);
+            }
+            else
+            {
+                m = AssimpToOpenTk.FromMatrix(node.Transform);
+            }
+            // TODO for some reason, all OpenTk matrices need a ^T - clarify our conventions somewhere
+            m.Transpose();
+
+            GL.PushMatrix();
+            GL.MultMatrix(ref m);
+
+            var showGhost = false;
+            if (node.HasMeshes && (visibleNodes == null || visibleNodes.Contains(node) || (flags.HasFlag(RenderFlags.ShowGhosts) && (showGhost = true))))
+            {
+                foreach (var index in node.MeshIndices)
+                {
+                    var mesh = _owner.Raw.Meshes[index];
+                    if (_isAlphaMaterial[mesh.MaterialIndex] || showGhost)
+                    {
+                        DrawMesh(node, animated, showGhost, index, mesh);
+                    }
+                }
+            }
+
+            for (var i = 0; i < node.ChildCount; i++)
+            {
+                RecursiveRenderWithAlpha(node.Children[i], visibleNodes, flags, animated);
             }
 
             GL.PopMatrix();
         }
 
 
+        /// <summary>
+        /// Draw a mesh using either its given material or a transparent "ghost" material.
+        /// </summary>
+        /// <param name="node">Current node</param>
+        /// <param name="animated">Specifies whether animations should be played</param>
+        /// <param name="showGhost">Indicates whether to substitute the mesh' material with a
+        ///    "ghost" surrogate material that allows looking through the geometry.</param>
+        /// <param name="index">Mesh index in the scene</param>
+        /// <param name="mesh">Mesh instance</param>
+        /// <returns></returns>
         private bool DrawMesh(Node node, bool animated, bool showGhost, int index, Mesh mesh)
         {
             if (showGhost)
@@ -263,6 +423,16 @@ namespace open3mod
         }
 
 
+        /// <summary>
+        /// Recursive render function for drawing opaque geometry with no scaling 
+        /// in the transformation chain. This is used for overlays, such as drawing
+        /// normal vectors or the skeleton.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="visibleNodes"></param>
+        /// <param name="flags"></param>
+        /// <param name="invGlobalScale"></param>
+        /// <param name="animated"></param>
         private void RecursiveRenderNoScale(Node node, HashSet<Node> visibleNodes, RenderFlags flags, 
             float invGlobalScale, 
             bool animated)
