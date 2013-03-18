@@ -62,6 +62,7 @@ namespace open3mod
 
         private readonly Dictionary<string, KeyValuePair<string,string>> _replacements;
         private bool _disposed;
+        private readonly List<TextureCallback> _replaceCallbacks;
 
 
         public TextureSet(string baseDir)
@@ -71,13 +72,36 @@ namespace open3mod
             _replacements = new Dictionary<string, KeyValuePair<string, string> >();
 
             _loaded = new List<string>();
+
+            // TODO use events
             _textureCallbacks = new List<TextureCallback>();
+            _replaceCallbacks = new List<TextureCallback>();
+        }
+
+
+        /// <summary>
+        /// Register a callback method that will be invoked every time a texture
+        /// is being replaced. The callback is not invoked for previously
+        /// replaced textures.
+        /// </summary>
+        /// <param name="callback">A callback that is safe to be invoked
+        ///    from any thread. The callback receives the previous name of
+        ///    the texture as first parameter, but the texture instance
+        ///    that is passed for the second parameter is already the
+        ///    new texture.</param>
+        public void AddReplaceCallback(TextureCallback callback)
+        {
+            Debug.Assert(callback != null);
+
+            _replaceCallbacks.Add(callback);
         }
 
    
         /// <summary>
         /// Register a callback method that will be invoked once a texture
-        /// has finished loading. 
+        /// has finished loading. Upon adding the callback, it will
+        /// immediately be invoked with the names of all textures that
+        /// have already been loaded in the past.
         /// </summary>
         /// <param name="callback">A callback that is safe to be invoked
         ///    from any thread.</param>
@@ -263,7 +287,17 @@ namespace open3mod
                 Add(newPath);
             }
 
-            _replacements[path] = new KeyValuePair<string, string>(newId, newPath);          
+            _replacements[path] = new KeyValuePair<string, string>(newId, newPath);
+
+            
+            if (_replaceCallbacks.Count > 0)
+            {
+                var tex = GetOriginalOrReplacement(path);
+                foreach (var v in _replaceCallbacks)
+                {
+                    v(path, tex);
+                }
+            }
             return newId;
         }
 

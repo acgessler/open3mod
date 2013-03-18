@@ -155,7 +155,6 @@ namespace open3mod
 
       
 
-
         /// <summary>
         /// Perform any non-drawing operations that need to be executed
         /// once per frame and whose implementation resides in Renderer.

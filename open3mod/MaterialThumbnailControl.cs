@@ -27,6 +27,7 @@ namespace open3mod
         private static Image _loadError;
         private static Image _background;
         private static Image _loadAnimImage;
+        private MaterialPreviewRenderer _renderer;
 
 
         public MaterialThumbnailControl(MaterialInspectionView owner, Scene scene, Material material)
@@ -36,17 +37,38 @@ namespace open3mod
             _scene = scene;
             _material = material;
 
-            var renderer = new MaterialPreviewRenderer(owner.Window, scene, material, (uint)pictureBox.Width, (uint)pictureBox.Height);
-            renderer.PreviewAvailable += me =>
+            UpdatePreview();
+
+            SetLoadingState();
+        }
+
+
+        /// <summary>
+        /// Requests the control to update the preview image.
+        /// 
+        /// This should be called when the source material changes in any way, for
+        /// example if a texture is replaced.
+        /// </summary>
+        public void UpdatePreview()
+        {
+            if(_renderer != null)
             {
-                var image = renderer.PreviewImage;
+                return;
+            }
+            _renderer = new MaterialPreviewRenderer(_owner.Window, _scene, _material, 
+                (uint) pictureBox.Width,
+                (uint) pictureBox.Height);
+
+            _renderer.PreviewAvailable += me =>
+            {
+                var image = _renderer.PreviewImage;
                 if (image != null)
                 {
                     pictureBox.Image = image;
                 }
-            };
 
-            SetLoadingState();
+                _renderer = null;
+            };
         }
 
 
@@ -54,8 +76,6 @@ namespace open3mod
         {
             get { return _material; }
         }
-
-
 
 
         protected override State GetState()

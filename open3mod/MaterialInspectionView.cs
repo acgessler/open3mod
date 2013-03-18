@@ -54,30 +54,7 @@ namespace open3mod
                 }
 
                 AddMaterialEntry(mat, dependencies);                
-            }
-            /*
-            var countdown = have.Count;
-            Scene.TextureSet.AddCallback((name, tex) =>
-            {
-                // we need to handle this case because texture callbacks may occur late
-                if (Flow.IsDisposed)
-                {
-                    return false;
-                }
-
-                if (_flow.IsHandleCreated)
-                {
-                    _flow.BeginInvoke(new SetLabelTextDelegate(SetTextureToLoadedStatus),
-                                      new object[] { name, tex }
-                        );
-                }
-                else
-                {
-                    SetTextureToLoadedStatus(name, tex);
-                }
-                return --countdown > 0;
-            }); */
-
+            }         
         }
 
       
@@ -95,7 +72,31 @@ namespace open3mod
 
         private void AddMaterialEntry(Material material, HashSet<string> dependencies)
         {
-            AddEntry(new MaterialThumbnailControl(this, Scene, material));
+            var entry = AddEntry(new MaterialThumbnailControl(this, Scene, material));
+            if(dependencies.Count == 0)
+            {
+                return;
+            }
+            // listen for changes to any textures that this material depends on
+            var changeHandler = new TextureSet.TextureCallback((name, tex) =>
+            {
+                // we need to handle this case because texture callbacks may occur late
+                if (Flow.IsDisposed)
+                {
+                    return false;
+                }
+
+                if (dependencies.Contains(name))
+                {
+                    entry.UpdatePreview();
+                    dependencies.Add(tex.FileName);
+                }
+
+                return true;
+            });
+
+            Scene.TextureSet.AddCallback(changeHandler);
+            Scene.TextureSet.AddReplaceCallback(changeHandler); 
         }
     }
 }

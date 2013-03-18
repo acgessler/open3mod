@@ -69,7 +69,7 @@ namespace open3mod
         /// </summary>
         /// <param name="control">Entry to be added, it may not be contained in the
         /// thumbnail view yet</param>
-        protected void AddEntry(TThumbnailType control)
+        protected TThumbnailType AddEntry(TThumbnailType control)
         {
             Debug.Assert(!Entries.Contains(control));
 
@@ -84,6 +84,7 @@ namespace open3mod
 
             Entries.Add(control);
             Flow.Controls.Add(control);
+            return control;
         }
     }
 }
