@@ -1,0 +1,8 @@
+# git ignore file
+libs/
+_Resharper*
+obj/
+bin/
+*.suo
+*.user
+*.pyc
