@@ -39,8 +39,9 @@
             this.panelAnimTools = new System.Windows.Forms.Panel();
             this.labelSpeed = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.timeSlideControl = new open3mod.TimeSlideControl();
             this.labelSpeedValue = new System.Windows.Forms.Label();
+            this.timeSlideControl = new open3mod.TimeSlideControl();
+            this.labelGotoError = new System.Windows.Forms.Label();
             this.panelAnimTools.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -51,6 +52,7 @@
             this.textBoxGoto.Name = "textBoxGoto";
             this.textBoxGoto.Size = new System.Drawing.Size(78, 20);
             this.textBoxGoto.TabIndex = 16;
+            this.textBoxGoto.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnGoTo);
             // 
             // labelGoto
             // 
@@ -141,6 +143,7 @@
             this.panelAnimTools.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelAnimTools.Controls.Add(this.labelGotoError);
             this.panelAnimTools.Controls.Add(this.labelSpeedValue);
             this.panelAnimTools.Controls.Add(this.panel1);
             this.panelAnimTools.Controls.Add(this.labelSpeed);
@@ -176,6 +179,15 @@
             this.panel1.Size = new System.Drawing.Size(242, 77);
             this.panel1.TabIndex = 19;
             // 
+            // labelSpeedValue
+            // 
+            this.labelSpeedValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelSpeedValue.AutoSize = true;
+            this.labelSpeedValue.Location = new System.Drawing.Point(291, 2);
+            this.labelSpeedValue.Name = "labelSpeedValue";
+            this.labelSpeedValue.Size = new System.Drawing.Size(0, 13);
+            this.labelSpeedValue.TabIndex = 20;
+            // 
             // timeSlideControl
             // 
             this.timeSlideControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -189,14 +201,13 @@
             this.timeSlideControl.Size = new System.Drawing.Size(332, 67);
             this.timeSlideControl.TabIndex = 17;
             // 
-            // labelSpeedValue
+            // labelGotoError
             // 
-            this.labelSpeedValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelSpeedValue.AutoSize = true;
-            this.labelSpeedValue.Location = new System.Drawing.Point(291, 2);
-            this.labelSpeedValue.Name = "labelSpeedValue";
-            this.labelSpeedValue.Size = new System.Drawing.Size(0, 13);
-            this.labelSpeedValue.TabIndex = 20;
+            this.labelGotoError.AutoSize = true;
+            this.labelGotoError.Location = new System.Drawing.Point(125, 196);
+            this.labelGotoError.Name = "labelGotoError";
+            this.labelGotoError.Size = new System.Drawing.Size(0, 13);
+            this.labelGotoError.TabIndex = 21;
             // 
             // AnimationInspectionView
             // 
@@ -230,6 +241,7 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label labelSpeed;
         private System.Windows.Forms.Label labelSpeedValue;
+        private System.Windows.Forms.Label labelGotoError;
 
     }
 }

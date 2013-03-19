@@ -236,6 +236,34 @@ namespace open3mod
         {
             _scene.SceneAnimator.Loop = checkBoxLoop.Checked;
         }
+
+
+        private void OnGoTo(object sender, KeyEventArgs e)
+        {
+            labelGotoError.Text = "";
+            if (e.KeyCode != Keys.Enter)
+            {               
+                return;
+            }
+
+            var text = textBoxGoto.Text;
+            double pos;
+            try
+            {
+                pos = Double.Parse(text);
+                if (pos < 0 || pos > _duration)
+                {
+                    throw new FormatException();
+                }
+            }
+            catch(FormatException ex)
+            {
+                labelGotoError.Text = "Not a valid time";
+                return;
+            }
+            Debug.Assert(pos >= 0);
+            _scene.SceneAnimator.AnimationCursor = pos;
+        }
     }
 }
 
