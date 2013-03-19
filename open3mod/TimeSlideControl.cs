@@ -37,11 +37,16 @@ namespace open3mod
         private double _rangeMin;
         private double _rangeMax;
         private double _pos;
+        private double _mouseRelativePos;
+        private bool _mouseEntered;
+        private readonly Font _font;
 
 
         public TimeSlideControl()
         {
             InitializeComponent();
+
+            _font = new Font(FontFamily.GenericMonospace,9);
         }
 
 
@@ -115,6 +120,35 @@ namespace open3mod
         }
 
 
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+
+            var rect = ClientRectangle;
+            _mouseRelativePos = (e.X - rect.Left) / (double)rect.Width;
+
+            Invalidate();
+        }
+
+
+        protected override void OnMouseEnter(EventArgs e)
+        {
+            base.OnMouseEnter(e);
+            _mouseEntered = true;
+
+            Invalidate();
+        }
+
+
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            base.OnMouseLeave(e);
+            _mouseEntered = false;
+
+            Invalidate();
+        }
+
+
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
@@ -129,6 +163,12 @@ namespace open3mod
             var pos = RelativePosition;
             var xdraw = rect.Left + (int) (rect.Width*pos);
             graphics.DrawLine(new Pen(new SolidBrush(Color.Red),1), xdraw, 15, xdraw, rect.Bottom );
+
+            if (_mouseEntered)
+            {
+                graphics.DrawString((_mouseRelativePos*Range).ToString("0.000") + "s", _font, new SolidBrush(Color.DimGray), 5,1);
+            }
+            graphics.DrawString(RelativePosition.ToString("0.000") + "s", _font, new SolidBrush(Color.Red), rect.Width-70, 1);
         }
     }
 }
