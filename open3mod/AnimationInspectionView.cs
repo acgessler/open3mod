@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Data;
 using System.Linq;
@@ -41,6 +42,10 @@ namespace open3mod
 
         private const int TimerInterval = 30;
         private const double PlaybackSpeedAdjustFactor = 0.6666;
+
+        private int _speedAdjust;
+        private const int MaxSpeedAdjustLevels = 8;
+
 
 
         public AnimationInspectionView(Scene scene, TabPage tabPageAnimations)
@@ -103,11 +108,24 @@ namespace open3mod
         {
             get { return _animPlaybackSpeed; }
             private set { 
+                Debug.Assert(value > 1e-6, "use Playing=false to not play animations");
                 _animPlaybackSpeed = value;
+
+                // avoid float noise close to 1
+                if (Math.Abs(_animPlaybackSpeed-1) < 1e-7)
+                {
+                    _animPlaybackSpeed = 1.0;
+                }
+
                 if (_playing)
                 {
                     _scene.SceneAnimator.AnimationPlaybackSpeed = AnimPlaybackSpeed;
                 }
+
+                BeginInvoke(new MethodInvoker(() =>
+                {
+                    labelSpeedValue.Text = _animPlaybackSpeed.ToString("0.00") + "x";
+                }));
             }
         }
 
@@ -151,6 +169,11 @@ namespace open3mod
                 var anim = _scene.Raw.Animations[_scene.SceneAnimator.ActiveAnimation];
                 foreach (var control in panelAnimTools.Controls)
                 {
+                    if (control == buttonSlower && _speedAdjust == -MaxSpeedAdjustLevels ||
+                        control == buttonFaster && _speedAdjust ==  MaxSpeedAdjustLevels)
+                    {
+                        continue;
+                    }
                     ((Control)control).Enabled = true;
                 }
 
@@ -187,12 +210,24 @@ namespace open3mod
 
         private void OnSlower(object sender, EventArgs e)
         {
+            Debug.Assert(_speedAdjust > -MaxSpeedAdjustLevels);
+            if (--_speedAdjust == -MaxSpeedAdjustLevels)
+            {
+                buttonSlower.Enabled = false;
+            }
+            buttonFaster.Enabled = true;
             AnimPlaybackSpeed *= PlaybackSpeedAdjustFactor;            
         }
 
 
         private void OnFaster(object sender, EventArgs e)
         {
+            Debug.Assert(_speedAdjust < MaxSpeedAdjustLevels);
+            if (++_speedAdjust == MaxSpeedAdjustLevels)
+            {
+                buttonFaster.Enabled = false;
+            }
+            buttonSlower.Enabled = true;
             AnimPlaybackSpeed /= PlaybackSpeedAdjustFactor;
         }
 
