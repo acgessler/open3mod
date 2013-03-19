@@ -76,10 +76,14 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this._tree.BackColor = System.Drawing.Color.White;
+            this._tree.FullRowSelect = true;
+            this._tree.HotTracking = true;
             this._tree.Location = new System.Drawing.Point(0, 33);
             this._tree.Name = "_tree";
+            this._tree.ShowNodeToolTips = true;
             this._tree.Size = new System.Drawing.Size(311, 573);
             this._tree.TabIndex = 5;
+            
             this._tree.NodeMouseHover += new System.Windows.Forms.TreeNodeMouseHoverEventHandler(this.OnNodeHover);
             this._tree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.AfterSelect);
             this._tree.MouseEnter += new System.EventHandler(this.OnMouseEnter);

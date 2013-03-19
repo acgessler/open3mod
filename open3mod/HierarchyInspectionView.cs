@@ -276,7 +276,8 @@ namespace open3mod
             // XXX
 
             _scene.SetVisibleNodes(_filter);
-            UpdateHighlighting(_tree.Nodes[0]);
+
+            //UpdateHighlighting(_tree.Nodes[0]);
 
             _visibleNodes = _filter.Count;
             UpdateStatistics();
