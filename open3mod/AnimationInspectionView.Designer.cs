@@ -40,8 +40,8 @@
             this.labelSpeed = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.labelSpeedValue = new System.Windows.Forms.Label();
-            this.timeSlideControl = new open3mod.TimeSlideControl();
             this.labelGotoError = new System.Windows.Forms.Label();
+            this.timeSlideControl = new open3mod.TimeSlideControl();
             this.panelAnimTools.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -113,7 +113,6 @@
             this.buttonPlay.Name = "buttonPlay";
             this.buttonPlay.Size = new System.Drawing.Size(75, 68);
             this.buttonPlay.TabIndex = 11;
-            this.buttonPlay.Text = "Play/Stop";
             this.buttonPlay.UseVisualStyleBackColor = true;
             this.buttonPlay.Click += new System.EventHandler(this.OnPlay);
             // 
@@ -188,6 +187,14 @@
             this.labelSpeedValue.Size = new System.Drawing.Size(0, 13);
             this.labelSpeedValue.TabIndex = 20;
             // 
+            // labelGotoError
+            // 
+            this.labelGotoError.AutoSize = true;
+            this.labelGotoError.Location = new System.Drawing.Point(125, 196);
+            this.labelGotoError.Name = "labelGotoError";
+            this.labelGotoError.Size = new System.Drawing.Size(0, 13);
+            this.labelGotoError.TabIndex = 21;
+            // 
             // timeSlideControl
             // 
             this.timeSlideControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -200,14 +207,6 @@
             this.timeSlideControl.RangeMin = 0D;
             this.timeSlideControl.Size = new System.Drawing.Size(332, 67);
             this.timeSlideControl.TabIndex = 17;
-            // 
-            // labelGotoError
-            // 
-            this.labelGotoError.AutoSize = true;
-            this.labelGotoError.Location = new System.Drawing.Point(125, 196);
-            this.labelGotoError.Name = "labelGotoError";
-            this.labelGotoError.Size = new System.Drawing.Size(0, 13);
-            this.labelGotoError.TabIndex = 21;
             // 
             // AnimationInspectionView
             // 

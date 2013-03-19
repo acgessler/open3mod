@@ -46,7 +46,8 @@ namespace open3mod
         private int _speedAdjust;
         private const int MaxSpeedAdjustLevels = 8;
 
-
+        private readonly Image _imagePlay;
+        private readonly Image _imageStop;
 
         public AnimationInspectionView(Scene scene, TabPage tabPageAnimations)
         {
@@ -68,9 +69,15 @@ namespace open3mod
                 }                
             }
             listBoxAnimations.SelectedIndex = 0;
-            _playing = true;
 
             checkBoxLoop.Checked = _scene.SceneAnimator.Loop;
+            _imagePlay = ImageFromResource.Get("open3mod.Images.PlayAnim.png");
+            _imageStop = ImageFromResource.Get("open3mod.Images.StopAnim.png");
+            buttonPlay.Image = _imagePlay;
+
+            // initially, animations are disabled.
+            _scene.SceneAnimator.AnimationPlaybackSpeed = 0.0;
+            labelSpeedValue.Text = "1.0x";
         }
 
 
@@ -204,7 +211,8 @@ namespace open3mod
 
         private void OnPlay(object sender, EventArgs e)
         {
-            Playing = !Playing;          
+            Playing = !Playing;
+            buttonPlay.Image = Playing ? _imageStop : _imagePlay;
         }
 
 
