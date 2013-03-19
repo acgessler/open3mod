@@ -196,9 +196,23 @@ namespace open3mod
         {
             get { return _loop; }
             set { 
+                if(_loop == value)
+                {
+                    return;
+                }
                 _loop = value;
+                if (!value)
+                {
+                    return;
+                }
                 // necessary to update animations if needed
-                AnimationCursor = _animCursor; 
+                var d = _animCursor;
+                if (AnimationDuration > 1e-6)
+                {
+                    d %= AnimationDuration;
+                }
+                AnimationCursor = d;
+                _isInEndPosition = false;
             }
         }
 
@@ -210,6 +224,16 @@ namespace open3mod
         public bool IsAnimationActive
         {
             get { return ActiveAnimation > -1; }
+        }
+
+
+        /// <summary>
+        /// Returns whether the animation system is in a non-looping state 
+        /// and in the final position of the animation.
+        /// </summary>
+        public bool IsInEndPosition
+        {
+            get { return _isInEndPosition; }
         }
 
 

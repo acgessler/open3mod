@@ -132,7 +132,12 @@ namespace open3mod
             _timer = new Timer { Interval = (TimerInterval) };
             _timer.Tick += (o, args) =>
             {
-                timeSlideControl.Position = _scene.SceneAnimator.AnimationCursor % _duration;
+                var d = _scene.SceneAnimator.AnimationCursor;
+                if (!_scene.SceneAnimator.IsInEndPosition)
+                {
+                    d %= _duration;
+                }
+                timeSlideControl.Position = d;
             };
             _timer.Start();
         }
