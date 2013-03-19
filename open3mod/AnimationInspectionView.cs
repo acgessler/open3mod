@@ -65,7 +65,12 @@ namespace open3mod
             {
                 foreach (var anim in scene.Raw.Animations)
                 {
-                    listBoxAnimations.Items.Add(anim.Name);
+                    var dur = anim.DurationInTicks;
+                    if (anim.TicksPerSecond > 1e-10)
+                    {
+                        dur /= anim.TicksPerSecond;
+                    }
+                    listBoxAnimations.Items.Add(string.Format("{0} ({1}s)", anim.Name, dur.ToString("0.000")));
                 }                
             }
             listBoxAnimations.SelectedIndex = 0;
