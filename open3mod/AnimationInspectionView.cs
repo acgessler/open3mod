@@ -189,6 +189,7 @@ namespace open3mod
                 timeSlideControl.RangeMin = 0.0;
                 timeSlideControl.RangeMax = _duration;
                 timeSlideControl.Position = 0.0;
+                _scene.SceneAnimator.AnimationCursor = 0;
 
                 timeSlideControl.Rewind += (o, args) =>
                 {
