@@ -43,9 +43,7 @@ namespace open3mod
     {
         private readonly Scene _scene;
  
-
         private int _nodeCount;
-
         private readonly HashSet<Node> _filter = new HashSet<Node>();
 
 
@@ -237,9 +235,10 @@ namespace open3mod
             }
         }
 
-        public void UpdateFilters()
+
+        public void UpdateFilters(object hoverTag = null)
         {
-            var item = _tree.SelectedNode.Tag;
+            object item = hoverTag ?? (_tree.SelectedNode == null ? _scene.Raw.RootNode : _tree.SelectedNode.Tag);
             _filter.Clear();
 
             if (item == _scene.Raw.RootNode)
@@ -280,7 +279,9 @@ namespace open3mod
             UpdateHighlighting(_tree.Nodes[0]);
 
             _visibleNodes = _filter.Count;
+            UpdateStatistics();
         }
+
 
         private void ResetHighlighting(TreeNode n)
         {
@@ -291,6 +292,7 @@ namespace open3mod
                 ResetHighlighting(n.Nodes[i]);
             }
         }
+
 
         private void UpdateHighlighting(TreeNode n)
         {
@@ -326,15 +328,29 @@ namespace open3mod
             }
         }
 
+
+        private void OnMouseLeave(object sender, EventArgs e)
+        {
+            UpdateFilters();
+            //Capture = false;
+        }
+
+
+        private void OnMouseEnter(object sender, EventArgs e)
+        {
+            //Capture = true;
+        }
+
+
         private void OnNodeHover(object sender, TreeNodeMouseHoverEventArgs e)
         {
-            UpdateFilters();           
+            UpdateFilters(e.Node.Tag);           
         }
 
 
         private void AfterSelect(object sender, TreeViewEventArgs e)
         {
-            UpdateStatistics();
+            
         }
     }
 }

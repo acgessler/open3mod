@@ -82,6 +82,8 @@
             this._tree.TabIndex = 5;
             this._tree.NodeMouseHover += new System.Windows.Forms.TreeNodeMouseHoverEventHandler(this.OnNodeHover);
             this._tree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.AfterSelect);
+            this._tree.MouseEnter += new System.EventHandler(this.OnMouseEnter);
+            this._tree.MouseLeave += new System.EventHandler(this.OnMouseLeave);
             // 
             // labelNodeStats
             // 
