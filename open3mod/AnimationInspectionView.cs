@@ -83,6 +83,14 @@ namespace open3mod
             // initially, animations are disabled.
             _scene.SceneAnimator.AnimationPlaybackSpeed = 0.0;
             labelSpeedValue.Text = "1.0x";
+
+            timeSlideControl.Rewind += (o, args) =>
+            {
+                if (_scene.SceneAnimator.ActiveAnimation >= 0)
+                {
+                    _scene.SceneAnimator.AnimationCursor = args.NewPosition;
+                }
+            };
         }
 
 
@@ -194,12 +202,7 @@ namespace open3mod
                 timeSlideControl.RangeMin = 0.0;
                 timeSlideControl.RangeMax = _duration;
                 timeSlideControl.Position = 0.0;
-                _scene.SceneAnimator.AnimationCursor = 0;
-
-                timeSlideControl.Rewind += (o, args) =>
-                {
-                    _scene.SceneAnimator.AnimationCursor = args.NewPosition;                    
-                };
+                _scene.SceneAnimator.AnimationCursor = 0;   
 
                 StartPlayingTimer();
             }
