@@ -108,6 +108,13 @@ namespace open3mod
         }
 
 
+        protected override void OnEnabledChanged(EventArgs e)
+        {
+            base.OnEnabledChanged(e);
+            Invalidate();
+        }
+
+
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
@@ -115,6 +122,10 @@ namespace open3mod
             var rect = ClientRectangle;
             graphics.FillRectangle(new SolidBrush(Color.LightGray), rect );
 
+            if(!Enabled)
+            {
+                return;
+            }
             var pos = RelativePosition;
             var xdraw = rect.Left + (int) (rect.Width*pos);
             graphics.DrawLine(new Pen(new SolidBrush(Color.Red),1), xdraw, 15, xdraw, rect.Bottom );
