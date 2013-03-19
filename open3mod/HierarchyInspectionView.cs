@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////////////////////
 // Open 3D Model Viewer (open3mod) (v0.1)
 // [HierarchyInspectionView.cs]
 // (c) 2012-2013, Alexander C. Gessler
@@ -39,14 +39,14 @@ namespace open3mod
     /// scene hierarchy and allows selection of arbitrary nodes to 
     /// limit the rendering to them and their children.
     /// </summary>
-    public class HierarchyInspectionView
+    public sealed partial class HierarchyInspectionView : UserControl
     {
         private readonly Scene _scene;
-        private readonly TreeView _tree;
+ 
 
         private int _nodeCount;
 
-        private readonly HashSet<Node> _filter = new HashSet<Node>(); 
+        private readonly HashSet<Node> _filter = new HashSet<Node>();
 
 
         private const int AutoExpandLevels = 4;
@@ -59,25 +59,42 @@ namespace open3mod
         private int _meshCountFullScene;
         private int _instancedMeshCountFullScene;
 
-        public HierarchyInspectionView(Scene scene, TreeView tree)
+
+        public HierarchyInspectionView(Scene scene, TabPage tabPageHierarchy)
         {
+            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+            Dock = DockStyle.Fill;
+
+            InitializeComponent();
+
             _scene = scene;
-            _tree = tree;
+            tabPageHierarchy.Controls.Add(this);
 
             Debug.Assert(_scene != null);
-            Debug.Assert(_tree != null);
-         
+
             AddNodes();
-            CountMeshes();           
+            CountMeshes();
+            UpdateStatistics();
         }
-        
+
+
+        private void UpdateStatistics()
+        {
+            labelNodeStats.Text = string.Format("Showing {0} of {1} nodes ({2} meshes, {3} instances)",
+                CountVisible,
+                CountNodes,
+                CountVisibleMeshes,
+                CountVisibleInstancedMeshes);
+        }
+
 
         /// <summary>
         /// Get the number of nodes currently selected for rendering
         /// </summary>
         public int CountVisible
         {
-            get {
+            get
+            {
                 return _visibleNodes;
             }
         }
@@ -111,11 +128,11 @@ namespace open3mod
         private void CountMeshes()
         {
             var counters = new List<int>(_scene.Raw.MeshCount);
-            for (int i = 0; i < _scene.Raw.MeshCount; ++i )
+            for (int i = 0; i < _scene.Raw.MeshCount; ++i)
             {
-                counters.Add(0);    
+                counters.Add(0);
             }
-            
+
             CountMeshes(_scene.Raw.RootNode, counters);
 
             _visibleInstancedMeshes = _instancedMeshCountFullScene = counters.Sum();
@@ -156,8 +173,8 @@ namespace open3mod
         {
             Debug.Assert(node != null);
 
-            var root = new TreeNode(node.Name) {Tag = node};
-            if(uiNode == null)
+            var root = new TreeNode(node.Name) { Tag = node };
+            if (uiNode == null)
             {
                 _tree.Nodes.Add(root);
             }
@@ -165,7 +182,7 @@ namespace open3mod
             {
                 uiNode.Nodes.Add(root);
             }
-            
+
             ++_nodeCount;
 
             // add children
@@ -203,7 +220,7 @@ namespace open3mod
                 ? ("\"" + mesh.Name + "\"")
                 : id.ToString(CultureInfo.InvariantCulture));
 
-            var nod = new TreeNode(desc) {Tag = new KeyValuePair<Node, Mesh>(owner, mesh)};
+            var nod = new TreeNode(desc) { Tag = new KeyValuePair<Node, Mesh>(owner, mesh) };
 
             uiNode.Nodes.Add(nod);
 
@@ -225,9 +242,9 @@ namespace open3mod
             var item = _tree.SelectedNode.Tag;
             _filter.Clear();
 
-            if(item == _scene.Raw.RootNode)
+            if (item == _scene.Raw.RootNode)
             {
-                _scene.SetVisibleNodes(null);              
+                _scene.SetVisibleNodes(null);
                 ResetHighlighting(_tree.Nodes[0]);
 
                 // update statistics
@@ -262,7 +279,7 @@ namespace open3mod
             _scene.SetVisibleNodes(_filter);
             UpdateHighlighting(_tree.Nodes[0]);
 
-            _visibleNodes = _filter.Count;                     
+            _visibleNodes = _filter.Count;
         }
 
         private void ResetHighlighting(TreeNode n)
@@ -276,7 +293,7 @@ namespace open3mod
         }
 
         private void UpdateHighlighting(TreeNode n)
-        {            
+        {
             if (n.Tag != null)
             {
                 var node = n.Tag as Node ?? ((KeyValuePair<Node, Mesh>)n.Tag).Key;
@@ -303,12 +320,23 @@ namespace open3mod
                 return;
             }
 
-            foreach(Node n in itemAsNode.Children)
+            foreach (Node n in itemAsNode.Children)
             {
                 AddNodeToSet(filter, n);
             }
         }
+
+        private void OnNodeHover(object sender, TreeNodeMouseHoverEventArgs e)
+        {
+            UpdateFilters();           
+        }
+
+
+        private void AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            UpdateStatistics();
+        }
     }
 }
 
-/* vi: set shiftwidth=4 tabstop=4: */ 
+/* vi: set shiftwidth=4 tabstop=4: */

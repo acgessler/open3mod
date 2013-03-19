@@ -69,7 +69,7 @@ namespace open3mod
 
             Enabled = true;
            
-            Hierarchy = new HierarchyInspectionView(Scene, treeViewNodeGraph);
+            Hierarchy = new HierarchyInspectionView(Scene, tabPageTree);
             Textures = new TextureInspectionView(Scene, textureFlowPanel);
             if(Textures.Empty)
             {
@@ -88,8 +88,6 @@ namespace open3mod
 
             //
             Materials = new MaterialInspectionView(Scene, ParentForm as MainWindow, materialFlowPanel);
-
-            UpdateStatistics();
         }
 
 
@@ -98,25 +96,8 @@ namespace open3mod
         /// </summary>
         private void Clear()
         {
-            treeViewNodeGraph.Nodes.Clear();
+            //treeViewNodeGraph.Nodes.Clear();
         }
-
-
-        private void AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            Hierarchy.UpdateFilters();
-            UpdateStatistics();
-        }
-
-        private void UpdateStatistics()
-        {
-            labelNodeStats.Text = string.Format("Showing {0} of {1} nodes ({2} meshes, {3} instances)", 
-                Hierarchy.CountVisible, 
-                Hierarchy.CountNodes, 
-                Hierarchy.CountVisibleMeshes, 
-                Hierarchy.CountVisibleInstancedMeshes);
-        }
-
     }
 }
 
