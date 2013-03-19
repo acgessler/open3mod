@@ -40,6 +40,10 @@ namespace open3mod
         private double _mouseRelativePos;
         private bool _mouseEntered;
         private readonly Font _font;
+        private readonly Pen _redPen;
+        private readonly SolidBrush _lightGray;
+        private readonly Pen _dimGrayPen;
+        private readonly Pen _blackPen;
 
 
         public TimeSlideControl()
@@ -47,9 +51,16 @@ namespace open3mod
             InitializeComponent();
 
             _font = new Font(FontFamily.GenericMonospace,9);
+            _redPen = new Pen(new SolidBrush(Color.Red), 1);
+            _lightGray = new SolidBrush(Color.LightGray);
+            _dimGrayPen = new Pen(new SolidBrush(Color.DimGray), 1);
+            _blackPen = new Pen(new SolidBrush(Color.Black), 1);
         }
 
 
+        /// <summary>
+        /// Minimum cursor value
+        /// </summary>
         public double RangeMin
         {
             get { return _rangeMin; }
@@ -66,6 +77,9 @@ namespace open3mod
         }
 
 
+        /// <summary>
+        /// Maximum cursor value
+        /// </summary>
         public double RangeMax
         {
             get { return _rangeMax; }
@@ -82,23 +96,40 @@ namespace open3mod
         }
 
 
+        /// <summary>
+        /// Cursor position in [RangeMin, RangeMax]
+        /// </summary>
         public double Position
         {
             get { return _pos; }
             set
             {
                 _pos = value;
+                if (_pos > RangeMax)
+                {
+                    _pos = RangeMax;
+                }
+                if (_pos < RangeMin)
+                {
+                    _pos = RangeMin;
+                }
                 Invalidate();
             }
         }
 
 
+        /// <summary>
+        /// Valid cursor range (RangeMax-RangeMin)
+        /// </summary>
         public double Range
         {
             get { return _rangeMax - _rangeMin; }
         }
 
 
+        /// <summary>
+        /// Cursor position in [0,1]
+        /// </summary>
         public double RelativePosition
         {
             get
@@ -113,10 +144,41 @@ namespace open3mod
         }
 
 
+        public delegate void RewindDelegate(object sender, RewindDelegateArgs args);
+        public struct RewindDelegateArgs
+        {
+            public double OldPosition;
+            public double NewPosition;
+        }
+
+        /// <summary>
+        /// Invoked when the user manually rewinds the slider thumb.
+        /// </summary>
+        public event RewindDelegate Rewind;
+
+        public virtual void OnRewind(RewindDelegateArgs args)
+        {
+            RewindDelegate handler = Rewind;
+            if (handler != null) handler(this, args);
+        }
+
+
         protected override void OnEnabledChanged(EventArgs e)
         {
             base.OnEnabledChanged(e);
             Invalidate();
+        }
+
+
+        protected override void OnMouseClick(MouseEventArgs e)
+        {
+            base.OnMouseClick(e);
+
+            var rect = ClientRectangle;
+            var newPos = ((e.X - rect.Left) * Range / (double)rect.Width) + _rangeMin;
+
+            OnRewind(new RewindDelegateArgs { OldPosition = _pos, NewPosition = newPos });
+            Position = newPos;
         }
 
 
@@ -154,23 +216,36 @@ namespace open3mod
             base.OnPaint(e);
             var graphics = e.Graphics;
             var rect = ClientRectangle;
-            graphics.FillRectangle(new SolidBrush(Color.LightGray), rect );
+            graphics.FillRectangle(_lightGray, rect );
 
             if(!Enabled)
             {
                 return;
             }
+
             var pos = RelativePosition;
             var xdraw = rect.Left + (int) (rect.Width*pos);
-            graphics.DrawLine(new Pen(new SolidBrush(Color.Red),1), xdraw, 15, xdraw, rect.Bottom );
+            graphics.DrawLine(_redPen, xdraw, 15, xdraw, rect.Bottom );
+
+            var widthPerSecond = rect.Width / Range;
+            var nextSecondX = 0.0;
+            for (var i = 0; i < (int)Range + 1; ++i, nextSecondX += widthPerSecond)
+            {
+                xdraw = (int)nextSecondX;
+                graphics.DrawLine(_dimGrayPen, xdraw, 55, xdraw, rect.Bottom);
+            }
 
             if (_mouseEntered)
             {
-                graphics.DrawString((_mouseRelativePos*Range).ToString("0.000") + "s", _font, new SolidBrush(Color.DimGray), 5,1);
+                graphics.DrawString((_mouseRelativePos * Range).ToString("0.000") + "s", _font, _blackPen.Brush, 5, 1);
+                xdraw = rect.Left + (int)(rect.Width * _mouseRelativePos);
+                graphics.DrawLine(_blackPen, xdraw, 40, xdraw, rect.Bottom);
             }
-            graphics.DrawString(RelativePosition.ToString("0.000") + "s", _font, new SolidBrush(Color.Red), rect.Width-70, 1);
+            graphics.DrawString(Position.ToString("0.000") + "s", _font, _redPen.Brush, rect.Width-70, 1);
         }
     }
+
+    
 }
 
 /* vi: set shiftwidth=4 tabstop=4: */ 

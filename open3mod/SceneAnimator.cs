@@ -122,7 +122,8 @@ namespace open3mod
 
         /// <summary>
         /// Animation playback speed factor. A factor of 1 means that the current
-        /// animation is played in its original speed.
+        /// animation is played in its original speed. A value of 0
+        /// animation playback.
         /// </summary>
         public double AnimationPlaybackSpeed
         {

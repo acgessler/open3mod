@@ -37,8 +37,11 @@
             this.label3 = new System.Windows.Forms.Label();
             this.listBoxAnimations = new System.Windows.Forms.ListBox();
             this.panelAnimTools = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.timeSlideControl = new open3mod.TimeSlideControl();
             this.panelAnimTools.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBoxGoto
@@ -63,12 +66,13 @@
             this.buttonFaster.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Gray;
             this.buttonFaster.FlatAppearance.MouseOverBackColor = System.Drawing.Color.WhiteSmoke;
             this.buttonFaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonFaster.Location = new System.Drawing.Point(206, 52);
+            this.buttonFaster.Location = new System.Drawing.Point(163, 18);
             this.buttonFaster.Name = "buttonFaster";
             this.buttonFaster.Size = new System.Drawing.Size(60, 40);
             this.buttonFaster.TabIndex = 14;
             this.buttonFaster.Text = "Faster";
             this.buttonFaster.UseVisualStyleBackColor = true;
+            this.buttonFaster.Click += new System.EventHandler(this.OnFaster);
             // 
             // buttonSlower
             // 
@@ -76,12 +80,13 @@
             this.buttonSlower.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Gray;
             this.buttonSlower.FlatAppearance.MouseOverBackColor = System.Drawing.Color.WhiteSmoke;
             this.buttonSlower.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSlower.Location = new System.Drawing.Point(59, 52);
+            this.buttonSlower.Location = new System.Drawing.Point(16, 18);
             this.buttonSlower.Name = "buttonSlower";
             this.buttonSlower.Size = new System.Drawing.Size(60, 40);
             this.buttonSlower.TabIndex = 13;
             this.buttonSlower.Text = "Slower";
             this.buttonSlower.UseVisualStyleBackColor = true;
+            this.buttonSlower.Click += new System.EventHandler(this.OnSlower);
             // 
             // checkBoxLoop
             // 
@@ -92,6 +97,7 @@
             this.checkBoxLoop.TabIndex = 12;
             this.checkBoxLoop.Text = "Loop";
             this.checkBoxLoop.UseVisualStyleBackColor = true;
+            this.checkBoxLoop.CheckedChanged += new System.EventHandler(this.OnChangeLooping);
             // 
             // buttonPlay
             // 
@@ -99,7 +105,7 @@
             this.buttonPlay.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Gray;
             this.buttonPlay.FlatAppearance.MouseOverBackColor = System.Drawing.Color.WhiteSmoke;
             this.buttonPlay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonPlay.Location = new System.Drawing.Point(125, 39);
+            this.buttonPlay.Location = new System.Drawing.Point(82, 3);
             this.buttonPlay.MaximumSize = new System.Drawing.Size(100, 100);
             this.buttonPlay.Name = "buttonPlay";
             this.buttonPlay.Size = new System.Drawing.Size(75, 68);
@@ -134,17 +140,38 @@
             this.panelAnimTools.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelAnimTools.Controls.Add(this.panel1);
+            this.panelAnimTools.Controls.Add(this.label1);
             this.panelAnimTools.Controls.Add(this.textBoxGoto);
             this.panelAnimTools.Controls.Add(this.timeSlideControl);
-            this.panelAnimTools.Controls.Add(this.buttonPlay);
             this.panelAnimTools.Controls.Add(this.checkBoxLoop);
             this.panelAnimTools.Controls.Add(this.labelGoto);
-            this.panelAnimTools.Controls.Add(this.buttonSlower);
-            this.panelAnimTools.Controls.Add(this.buttonFaster);
             this.panelAnimTools.Location = new System.Drawing.Point(6, 215);
             this.panelAnimTools.Name = "panelAnimTools";
             this.panelAnimTools.Size = new System.Drawing.Size(332, 458);
             this.panelAnimTools.TabIndex = 18;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(266, 2);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(41, 13);
+            this.label1.TabIndex = 18;
+            this.label1.Text = "Speed:";
+            // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.AutoSize = true;
+            this.panel1.Controls.Add(this.buttonFaster);
+            this.panel1.Controls.Add(this.buttonSlower);
+            this.panel1.Controls.Add(this.buttonPlay);
+            this.panel1.Location = new System.Drawing.Point(41, 30);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(242, 77);
+            this.panel1.TabIndex = 19;
             // 
             // timeSlideControl
             // 
@@ -170,6 +197,7 @@
             this.Size = new System.Drawing.Size(341, 676);
             this.panelAnimTools.ResumeLayout(false);
             this.panelAnimTools.PerformLayout();
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -187,6 +215,8 @@
         private System.Windows.Forms.ListBox listBoxAnimations;
         private TimeSlideControl timeSlideControl;
         private System.Windows.Forms.Panel panelAnimTools;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label label1;
 
     }
 }

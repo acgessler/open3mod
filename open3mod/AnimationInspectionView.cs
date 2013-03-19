@@ -37,8 +37,11 @@ namespace open3mod
         private Timer _timer;
         private double _duration;
         private bool _playing;
+        private double _animPlaybackSpeed = 1.0;
 
         private const int TimerInterval = 30;
+        private const double PlaybackSpeedAdjustFactor = 0.6666;
+
 
         public AnimationInspectionView(Scene scene, TabPage tabPageAnimations)
         {
@@ -61,6 +64,8 @@ namespace open3mod
             }
             listBoxAnimations.SelectedIndex = 0;
             _playing = true;
+
+            checkBoxLoop.Checked = _scene.SceneAnimator.Loop;
         }
 
 
@@ -75,18 +80,33 @@ namespace open3mod
             get { return _playing; }
             set
             {
-                if (value == (_timer != null))
+                if (value == _playing)
                 {
                     return;
                 }
                 _playing = value;
                 if (value)
                 {
-                    StartPlayingTimer();            
+                    StartPlayingTimer();
+                    _scene.SceneAnimator.AnimationPlaybackSpeed = _scene.SceneAnimator.ActiveAnimation >= 0 ? AnimPlaybackSpeed : 0.0;
                 }
                 else
                 {
-                    StopPlayingTimer();                  
+                    StopPlayingTimer();
+                    _scene.SceneAnimator.AnimationPlaybackSpeed = 0.0;
+                }
+            }
+        }
+
+
+        public double AnimPlaybackSpeed
+        {
+            get { return _animPlaybackSpeed; }
+            private set { 
+                _animPlaybackSpeed = value;
+                if (_playing)
+                {
+                    _scene.SceneAnimator.AnimationPlaybackSpeed = AnimPlaybackSpeed;
                 }
             }
         }
@@ -135,6 +155,11 @@ namespace open3mod
                 timeSlideControl.RangeMax = _duration;
                 timeSlideControl.Position = 0.0;
 
+                timeSlideControl.Rewind += (o, args) =>
+                {
+                    _scene.SceneAnimator.AnimationCursor = args.NewPosition;                    
+                };
+
                 StartPlayingTimer();
             }
             else
@@ -152,6 +177,24 @@ namespace open3mod
         private void OnPlay(object sender, EventArgs e)
         {
             Playing = !Playing;          
+        }
+
+
+        private void OnSlower(object sender, EventArgs e)
+        {
+            AnimPlaybackSpeed *= PlaybackSpeedAdjustFactor;            
+        }
+
+
+        private void OnFaster(object sender, EventArgs e)
+        {
+            AnimPlaybackSpeed /= PlaybackSpeedAdjustFactor;
+        }
+
+
+        private void OnChangeLooping(object sender, EventArgs e)
+        {
+            _scene.SceneAnimator.Loop = checkBoxLoop.Checked;
         }
     }
 }
