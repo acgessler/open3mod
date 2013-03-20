@@ -385,13 +385,24 @@ namespace open3mod
             return ViewSeparator._Max;
         }
 
+        private const float MinimumViewportSplit = 0.1f;
+
 
         /// <summary>
         /// Sets a new position for the horizontal split between viewports.
         /// </summary>
-        /// <param name="f">New splitter bar position, in [0,1]</param>
+        /// <param name="f">New splitter bar position, in [0,1]. Positions outside
+        ///   [MinimumViewportSplit,1-MinimumViewportSplit] are clamped.</param>
         public void SetViewportSplitH(float f)
         {
+            if (f < MinimumViewportSplit)
+            {
+                f = MinimumViewportSplit;
+            }
+            else if (f > 1.0f-MinimumViewportSplit)
+            {
+                f = 1.0f-MinimumViewportSplit;
+            }
             foreach (var viewport in ActiveViews.Where(viewport => viewport != null))
             {
                 var b = viewport.Bounds;
@@ -412,9 +423,18 @@ namespace open3mod
         /// <summary>
         /// Sets a new position for the vertical split between viewports.
         /// </summary>
-        /// <param name="f">New splitter bar position, in [0,1]</param>
+        /// <param name="f">New splitter bar position, in [0,1]. Positions outside
+        ///   [MinimumViewportSplit,1-MinimumViewportSplit] are clamped.</param>
         public void SetViewportSplitV(float f)
         {
+            if (f < MinimumViewportSplit)
+            {
+                f = MinimumViewportSplit;
+            }
+            else if (f > 1.0f - MinimumViewportSplit)
+            {
+                f = 1.0f - MinimumViewportSplit;
+            }
             foreach (var viewport in ActiveViews.Where(viewport => viewport != null))
             {
                 var b = viewport.Bounds;
