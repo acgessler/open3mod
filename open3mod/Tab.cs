@@ -141,9 +141,9 @@ namespace open3mod
                     case ViewMode.Two:
                         ActiveViews = new []
                         {
-                            new Viewport(new Vector4(0.0f, 0.0f, 0.5f, 1.0f), CameraMode.Orbit), 
+                            new Viewport(new Vector4(0.0f, 0.0f, 1.0f, 0.5f), CameraMode.Orbit), 
                             null,
-                            new Viewport(new Vector4(0.5f, 0.0f, 1.0f, 1.0f), CameraMode.X), 
+                            new Viewport(new Vector4(0.0f, 0.5f, 1.0f, 1.0f), CameraMode.X), 
                             null
                         };            
                         break;
@@ -390,11 +390,17 @@ namespace open3mod
 
         /// <summary>
         /// Sets a new position for the horizontal split between viewports.
+        /// 
+        /// This is only possible (and otherwise ignored) if all the four viewports are enabled.
         /// </summary>
         /// <param name="f">New splitter bar position, in [0,1]. Positions outside
         ///   [MinimumViewportSplit,1-MinimumViewportSplit] are clamped.</param>
         public void SetViewportSplitH(float f)
         {
+            if (ActiveViewMode != ViewMode.Four)
+            {
+                return;
+            }
             if (f < MinimumViewportSplit)
             {
                 f = MinimumViewportSplit;
@@ -422,11 +428,17 @@ namespace open3mod
 
         /// <summary>
         /// Sets a new position for the vertical split between viewports.
+        /// 
+        /// This is only possible (and otherwise ignored) if at least two viewports are enabled.
         /// </summary>
         /// <param name="f">New splitter bar position, in [0,1]. Positions outside
         ///   [MinimumViewportSplit,1-MinimumViewportSplit] are clamped.</param>
         public void SetViewportSplitV(float f)
         {
+            if (ActiveViewMode != ViewMode.Two && ActiveViewMode != ViewMode.Four)
+            {
+                return;
+            }
             if (f < MinimumViewportSplit)
             {
                 f = MinimumViewportSplit;
