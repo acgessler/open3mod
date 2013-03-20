@@ -35,7 +35,7 @@ namespace open3mod
     /// </summary>
     public class Viewport
     {
-        private readonly Vector4 _bounds;
+        private Vector4 _bounds;
         private CameraMode _camMode;
 
         /// <summary>
@@ -56,11 +56,30 @@ namespace open3mod
         public Vector4 Bounds
         {
             get { return _bounds; }
+            set
+            {
+                Debug.Assert(value.X < value.Z);
+                Debug.Assert(value.Y < value.W);
+                _bounds = value;
+                // TODO verify we don't overlap any other viewports
+            }
         }
 
         public CameraMode CameraMode
         {
             get { return _camMode; }
+        }
+
+
+        public double RelativeWidth
+        {
+            get { return _bounds.Z - _bounds.X; }
+        }
+
+
+        public double RelativeHeight
+        {
+            get { return _bounds.W - _bounds.Y; }
         }
 
 

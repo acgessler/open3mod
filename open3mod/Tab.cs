@@ -68,6 +68,17 @@ namespace open3mod
         }
 
         /// <summary>
+        /// Enumerates all the separator bars that can be dragged in order to
+        /// resize viewports.
+        /// </summary>
+        public enum ViewSeparator
+        {
+            Horizontal = 0,
+            Vertical,
+            _Max
+        }
+
+        /// <summary>
         /// Supported arrangements of 3D views. Right now only the number of
         /// 3d windows.
         /// </summary>
@@ -311,6 +322,113 @@ namespace open3mod
             var view = ActiveViews[(int) viewIndex];
 
             view.ChangeCameraModeForView(cameraMode);           
+        }
+
+
+        /// <summary>
+        /// Converts a (mouse) hit position to a viewport index - in other words,
+        /// it calculates the index of the viewport that is hit by a click
+        /// on a given mouse position.
+        /// </summary>
+        /// <param name="x">Hit position x, in normalized [0,1] range</param>
+        /// <param name="y">Hit position y, in normalized [0,1] range</param>
+        /// <returns>Tab.ViewIndex._Max if the hit coordinate doesn't hit a
+        /// viewport. If not, the ViewIndex of the tab that was hit.</returns>
+        public ViewIndex GetViewportIndexHit(float x, float y)
+        {
+            var index = ViewIndex.Index0;
+            foreach (var viewport in ActiveViews)
+            {
+                if (viewport == null)
+                {
+                    ++index;
+                    continue;
+                }
+
+                var view = viewport.Bounds;
+
+                if (x >= view.X && x <= view.Z &&
+                    y >= view.Y && y <= view.W)
+                {
+                    break;
+                }
+                ++index;
+            }
+            return index;
+        }
+
+
+        /// <summary>
+        /// Converts a mouse position to a viewport separator. It therefore
+        /// checks whether the mouse is in a region where dragging viewport
+        /// borders is possible.
+        /// </summary>
+        /// <param name="x">Mouse x, in relative coordinates</param>
+        /// <param name="y">Mouse y, in relative coordinates</param>
+        /// <returns>Tab.ViewSeparator._Max if the mouse coordinate doesn't hit a
+        /// viewport separator. If not, the separator that was hit.</returns>
+        public ViewSeparator GetViewportSeparatorHit(float x, float y)
+        {
+            var vp = ActiveViews[0];
+            Debug.Assert(vp != null);
+
+            const float threshold = 0.01f;
+
+            if (Math.Abs(x - vp.Bounds.Z) < threshold)
+            {
+                return ViewSeparator.Vertical;
+            }
+            if (Math.Abs(y - vp.Bounds.W) < threshold)
+            {
+                return ViewSeparator.Horizontal;
+            }
+            return ViewSeparator._Max;
+        }
+
+
+        /// <summary>
+        /// Sets a new position for the horizontal split between viewports.
+        /// </summary>
+        /// <param name="f">New splitter bar position, in [0,1]</param>
+        public void SetViewportSplitH(float f)
+        {
+            foreach (var viewport in ActiveViews.Where(viewport => viewport != null))
+            {
+                var b = viewport.Bounds;
+                if (Math.Abs(b.X - f) < Math.Abs(b.Z - f))
+                {                
+                    b.X = f;
+                    viewport.Bounds = b;
+                }
+                else 
+                {
+                    b.Z = f;
+                    viewport.Bounds = b;
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Sets a new position for the vertical split between viewports.
+        /// </summary>
+        /// <param name="f">New splitter bar position, in [0,1]</param>
+        public void SetViewportSplitV(float f)
+        {
+            foreach (var viewport in ActiveViews.Where(viewport => viewport != null))
+            {
+                var b = viewport.Bounds;
+                if (Math.Abs(b.Y - f) < Math.Abs(b.W - f))
+                {
+                    b.Y = f;
+                    viewport.Bounds = b;
+                }
+                else 
+                {
+                    b.W = f;
+                    viewport.Bounds = b;
+                }
+            }
         }
     }
 }

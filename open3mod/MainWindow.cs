@@ -399,6 +399,7 @@ namespace open3mod
         private TabPage _tabContextMenuOwner;
         private TabPage _emptyTab;
         private SettingsDialog _settings;
+        private Tab.ViewSeparator _dragSeparator = Tab.ViewSeparator._Max;
         private const string LoadingTitlePostfix = " (loading)";
         private const string FailedTitlePostfix = " (failed)";
 
@@ -717,38 +718,6 @@ namespace open3mod
         }
 
 
-        /// <summary>
-        /// Converts a mouse position to a viewport index - in other words,
-        /// it calculates the index of the viewport that is hit by a click
-        /// on a given mouse position.
-        /// </summary>
-        /// <param name="x">Mouse x, in normalized [0,1] range</param>
-        /// <param name="y">Mouse y, in normalized [0,1] range</param>
-        /// <returns>Tab.ViewIndex._Max if the mouse coordinate doesn't hit a
-        /// viewport. If not, the ViewIndex of the tab that was hit.</returns>
-        private Tab.ViewIndex MousePosToViewportIndex(float x, float y)
-        {
-            var index = Tab.ViewIndex.Index0;
-            foreach (var viewport in _ui.ActiveTab.ActiveViews)
-            {
-                if (viewport == null)
-                {
-                    ++index;
-                    continue;
-                }
-
-                var view = viewport.Bounds;
-
-                if (x >= view.X && x <= view.Z &&
-                    y >= view.Y && y <= view.W)
-                {
-                    break;
-                }
-                ++index;
-            }
-            return index;
-        }
-
 
         /// <summary>
         /// Converts a mouse position to a viewport index - in other words,
@@ -764,7 +733,38 @@ namespace open3mod
             var xf = x / (float)glControl1.ClientSize.Width;
             var yf = 1.0f - y / (float)glControl1.ClientSize.Height;
 
-            return MousePosToViewportIndex(xf, yf);
+            return _ui.ActiveTab.GetViewportIndexHit(xf, yf);
+        }
+
+
+
+        private void SetViewportSplitH(float f)
+        {
+            _ui.ActiveTab.SetViewportSplitH(f);
+        }
+
+
+        private void SetViewportSplitV(float f)
+        {
+            _ui.ActiveTab.SetViewportSplitV(f);
+        }
+
+
+        /// <summary>
+        /// Converts a mouse position to a viewport separator. It therefore
+        /// checks whether the mouse is in a region where dragging viewport
+        /// borders is possible.
+        /// </summary>
+        /// <param name="x">Mouse x, in client (pixel) coordinates</param>
+        /// <param name="y">Mouse y, in client (pixel) coordinates</param>
+        /// <returns>Tab.ViewSeparator._Max if the mouse coordinate doesn't hit a
+        /// viewport separator. If not, the separator that was hit.</returns>
+        private Tab.ViewSeparator MousePosToViewportSeparator(int x, int y)
+        {
+            var xf = x / (float)glControl1.ClientSize.Width;
+            var yf = 1.0f - y / (float)glControl1.ClientSize.Height;
+
+            return _ui.ActiveTab.GetViewportSeparatorHit(xf, yf);
         }
 
 
@@ -789,15 +789,27 @@ namespace open3mod
             _previousMousePosX = e.X;
             _previousMousePosY = e.Y;
 
+            var sep = MousePosToViewportSeparator(e.X,e.Y);
+            if (sep != Tab.ViewSeparator._Max)
+            {
+                // start dragging viewport separators
+                _dragSeparator = sep;
+                Cursor = sep == Tab.ViewSeparator.Horizontal ? Cursors.HSplit : Cursors.VSplit;
+            }
+
             // hack: the renderer handles the input for the HUD, so forward the event
             var index = MousePosToViewportIndex(e.X, e.Y);
             if (index == Tab.ViewIndex._Max)
             {
                 return;
             }
-            var view = UiState.ActiveTab.ActiveViews[(int)index];
-            Debug.Assert(view != null);
-            _renderer.OnMouseClick(e, view.Bounds, index);
+
+            if (sep != Tab.ViewSeparator._Max)
+            {
+                var view = UiState.ActiveTab.ActiveViews[(int) index];
+                Debug.Assert(view != null);
+                _renderer.OnMouseClick(e, view.Bounds, index);
+            }
 
             UpdateActiveViewIfNeeded(e);
         }
@@ -806,17 +818,54 @@ namespace open3mod
         private void OnMouseUp(object sender, MouseEventArgs e)
         {
             _mouseDown = false;
+            if (!IsDraggingViewportSeparator)
+            {
+                return;
+            }
+            _dragSeparator = Tab.ViewSeparator._Max;
+            Cursor = Cursors.Default;
+        }
+
+
+        private bool IsDraggingViewportSeparator
+        {
+            get { return _dragSeparator != Tab.ViewSeparator._Max; }
         }
 
 
         private void OnMouseMove(object sender, MouseEventArgs e)
-        {       
+        {
+            var sep = _dragSeparator != Tab.ViewSeparator._Max ? _dragSeparator : MousePosToViewportSeparator(e.X, e.Y);
+            if (sep != Tab.ViewSeparator._Max)
+            {
+                // show resize cursor
+                Cursor = sep == Tab.ViewSeparator.Horizontal ? Cursors.HSplit : Cursors.VSplit;
+
+                // and adjust viewport separators
+                if (IsDraggingViewportSeparator)
+                {
+                    if(sep == Tab.ViewSeparator.Horizontal)
+                    {
+                        SetViewportSplitV(1.0f - e.Y / (float)glControl1.ClientSize.Height);    
+                    }
+                    else if (sep == Tab.ViewSeparator.Vertical)
+                    {
+                        SetViewportSplitH(e.X / (float)glControl1.ClientSize.Width);    
+                    }
+                    else
+                    {
+                        Debug.Assert(false);
+                    }
+                }
+                return;
+            }
+
+            Cursor = Cursors.Default;
             if (e.Delta != 0 && UiState.ActiveTab.ActiveCameraController != null)
             {
                 UiState.ActiveTab.ActiveCameraController.Scroll(e.Delta);
             }
-
-            // MousePosToViewportSeparator
+        
 
             // hack: the renderer handles the input for the HUD, so forward the event
             var index = MousePosToViewportIndex(e.X, e.Y);
