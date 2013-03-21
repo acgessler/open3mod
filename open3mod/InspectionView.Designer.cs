@@ -51,6 +51,7 @@
             this.tabControlInfoViewPicker.Controls.Add(this.tabPageMaterials);
             this.tabControlInfoViewPicker.Controls.Add(this.tabPageAnimations);
             this.tabControlInfoViewPicker.Location = new System.Drawing.Point(3, 3);
+            this.tabControlInfoViewPicker.Margin = new System.Windows.Forms.Padding(0);
             this.tabControlInfoViewPicker.Multiline = true;
             this.tabControlInfoViewPicker.Name = "tabControlInfoViewPicker";
             this.tabControlInfoViewPicker.SelectedIndex = 0;

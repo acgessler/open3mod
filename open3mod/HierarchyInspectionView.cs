@@ -56,6 +56,9 @@ namespace open3mod
         private int _visibleInstancedMeshes;
         private int _meshCountFullScene;
         private int _instancedMeshCountFullScene;
+        private string _searchText = "";
+
+        private bool _hitSearchBoxOnce;
 
 
         public HierarchyInspectionView(Scene scene, TabPage tabPageHierarchy)
@@ -70,6 +73,7 @@ namespace open3mod
 
             Debug.Assert(_scene != null);
 
+            
             AddNodes();
             CountMeshes();
             UpdateStatistics();
@@ -162,8 +166,10 @@ namespace open3mod
 
         private void AddNodes()
         {
+            _tree.BeginUpdate();
             AddNodes(_scene.Raw.RootNode, null, 0);
             _visibleNodes = _nodeCount;
+            _tree.EndUpdate();
         }
 
 
@@ -244,7 +250,6 @@ namespace open3mod
             if (item == _scene.Raw.RootNode)
             {
                 _scene.SetVisibleNodes(null);
-                ResetHighlighting(_tree.Nodes[0]);
 
                 // update statistics
                 _visibleNodes = _nodeCount;
@@ -272,15 +277,28 @@ namespace open3mod
                 _visibleMeshes = counters.Count(i => i != 0);
             }
 
-            //var itemAsMesh = (KeyValuePair<Node, Mesh>)item;
+            // var itemAsMesh = (KeyValuePair<Node, Mesh>)item;
             // XXX
 
             _scene.SetVisibleNodes(_filter);
-
-            //UpdateHighlighting(_tree.Nodes[0]);
-
+        
             _visibleNodes = _filter.Count;
-            UpdateStatistics();
+            UpdateStatistics();            
+        }
+
+
+        private void UpdateTextSearch()
+        {
+            if (_searchText != "")
+            {
+                var hits = UpdateHighlighting(_tree.Nodes[0]);
+                labelHitCount.Text = string.Format("{0} hits", hits.ToString(CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                ResetHighlighting(_tree.Nodes[0]);
+                labelHitCount.Text = "";
+            }
         }
 
 
@@ -295,25 +313,45 @@ namespace open3mod
         }
 
 
-        private void UpdateHighlighting(TreeNode n)
+        private int UpdateHighlighting(TreeNode n)
         {
+            int hits = 0;
             if (n.Tag != null)
             {
-                var node = n.Tag as Node ?? ((KeyValuePair<Node, Mesh>)n.Tag).Key;
-                if (_filter.Contains(node))
+                var node = n.Tag as Node;
+                if (node != null)
                 {
-                    n.BackColor = PositiveBackColor;
+                    if (node.Name.Contains(_searchText))
+                    {
+                        n.BackColor = PositiveBackColor;
+                        ++hits;
+                    }
+                    else
+                    {
+                        n.BackColor = DefaultBackColor;
+                    }
                 }
                 else
                 {
-                    n.BackColor = DefaultBackColor;
+                    var nodeMesh = (KeyValuePair<Node, Mesh>) n.Tag;
+                    if (nodeMesh.Key.Name.Contains(_searchText) || nodeMesh.Value.Name.Contains(_searchText))
+                    {
+                        n.BackColor = PositiveBackColor;
+                        ++hits;
+                    }
+                    else
+                    {
+                        n.BackColor = DefaultBackColor;
+                    }
                 }
             }
             for (var i = 0; i < n.Nodes.Count; ++i)
             {
-                UpdateHighlighting(n.Nodes[i]);
+                hits += UpdateHighlighting(n.Nodes[i]);
             }
+            return hits;
         }
+
 
         private void AddNodeToSet(HashSet<Node> filter, Node itemAsNode)
         {
@@ -349,9 +387,34 @@ namespace open3mod
         }
 
 
+
         private void AfterSelect(object sender, TreeViewEventArgs e)
         {
             
+        }
+
+
+        private void OnChangeFilterText(object sender, EventArgs e)
+        {
+            var str = textBoxFilter.Text.Trim();
+            if (str != _searchText)
+            {
+                _searchText = str;
+                UpdateTextSearch();
+            }
+        }
+
+      
+        private void OnClickSearchBox(object sender, EventArgs e)
+        {
+            if (_hitSearchBoxOnce)
+            {
+                return;
+            }
+
+            _hitSearchBoxOnce = true;
+            textBoxFilter.ForeColor = Color.Black;
+            textBoxFilter.Text = "";
         }
     }
 }
