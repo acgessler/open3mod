@@ -321,7 +321,7 @@ namespace open3mod
                 var node = n.Tag as Node;
                 if (node != null)
                 {
-                    if (node.Name.Contains(_searchText))
+                    if (node.Name.ToLower().Contains(_searchText))
                     {
                         n.BackColor = PositiveBackColor;
                         ++hits;
@@ -334,7 +334,7 @@ namespace open3mod
                 else
                 {
                     var nodeMesh = (KeyValuePair<Node, Mesh>) n.Tag;
-                    if (nodeMesh.Key.Name.Contains(_searchText) || nodeMesh.Value.Name.Contains(_searchText))
+                    if (nodeMesh.Key.Name.ToLower().Contains(_searchText) || nodeMesh.Value.Name.ToLower().Contains(_searchText))
                     {
                         n.BackColor = PositiveBackColor;
                         ++hits;
@@ -396,7 +396,7 @@ namespace open3mod
 
         private void OnChangeFilterText(object sender, EventArgs e)
         {
-            var str = textBoxFilter.Text.Trim();
+            var str = textBoxFilter.Text.ToLower().Trim();
             if (str != _searchText)
             {
                 _searchText = str;
