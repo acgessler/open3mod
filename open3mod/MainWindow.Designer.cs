@@ -506,7 +506,6 @@ namespace open3mod
             this.Name = "MainWindow";
             this.Text = "Open 3D Model Viewer ";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OnCloseForm);
-            this.Load += new System.EventHandler(this.Form1Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.toolStripSelectRenderer.ResumeLayout(false);

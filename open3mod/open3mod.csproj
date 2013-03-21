@@ -122,6 +122,9 @@
     <Compile Include="MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="MainWindow_Input.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="MaterialInspectionView.cs" />
     <Compile Include="MaterialMapper.cs" />
     <Compile Include="MaterialPreviewRenderer.cs" />
