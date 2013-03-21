@@ -75,7 +75,8 @@ namespace open3mod
         {
             Horizontal = 0,
             Vertical,
-            _Max
+            _Max,
+            Both
         }
 
         /// <summary>
@@ -376,6 +377,10 @@ namespace open3mod
 
             if (Math.Abs(x - vp.Bounds.Z) < threshold)
             {
+                if (Math.Abs(y - vp.Bounds.W) < threshold)
+                {
+                    return ViewSeparator.Both;
+                }
                 return ViewSeparator.Vertical;
             }
             if (Math.Abs(y - vp.Bounds.W) < threshold)

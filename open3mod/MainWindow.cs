@@ -794,7 +794,7 @@ namespace open3mod
             {
                 // start dragging viewport separators
                 _dragSeparator = sep;
-                Cursor = sep == Tab.ViewSeparator.Horizontal ? Cursors.HSplit : Cursors.VSplit;
+                SetViewportDragCursor(sep);
             }
 
             // hack: the renderer handles the input for the HUD, so forward the event
@@ -839,7 +839,7 @@ namespace open3mod
             if (sep != Tab.ViewSeparator._Max)
             {
                 // show resize cursor
-                Cursor = sep == Tab.ViewSeparator.Horizontal ? Cursors.HSplit : Cursors.VSplit;
+                SetViewportDragCursor(sep);
 
                 // and adjust viewport separators
                 if (IsDraggingViewportSeparator)
@@ -851,6 +851,11 @@ namespace open3mod
                     else if (sep == Tab.ViewSeparator.Vertical)
                     {
                         SetViewportSplitH(e.X / (float)glControl1.ClientSize.Width);    
+                    }
+                    else if (sep == Tab.ViewSeparator.Both)
+                    {
+                        SetViewportSplitV(1.0f - e.Y / (float)glControl1.ClientSize.Height);    
+                        SetViewportSplitH(e.X / (float)glControl1.ClientSize.Width);
                     }
                     else
                     {
@@ -888,6 +893,25 @@ namespace open3mod
             }
             _previousMousePosX = e.X;
             _previousMousePosY = e.Y;
+        }
+
+
+        private void SetViewportDragCursor(Tab.ViewSeparator sep)
+        {
+            switch (sep)
+            {
+                case Tab.ViewSeparator.Horizontal:
+                    Cursor = Cursors.HSplit;
+                    break;
+                case Tab.ViewSeparator.Vertical:
+                    Cursor = Cursors.VSplit;
+                    break;
+                case Tab.ViewSeparator.Both:
+                    Cursor = Cursors.SizeAll;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
 
