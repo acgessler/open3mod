@@ -57,8 +57,10 @@ namespace open3mod
         private int _meshCountFullScene;
         private int _instancedMeshCountFullScene;
         private string _searchText = "";
+        private readonly string _searchInfoText;
+        private readonly Color _searchInfoColor;
 
-        private bool _hitSearchBoxOnce;
+        private bool _isInSearchMode;
 
 
         public HierarchyInspectionView(Scene scene, TabPage tabPageHierarchy)
@@ -67,6 +69,8 @@ namespace open3mod
             Dock = DockStyle.Fill;
 
             InitializeComponent();
+            _searchInfoText = textBoxFilter.Text;
+            _searchInfoColor = textBoxFilter.ForeColor;
 
             _scene = scene;
             tabPageHierarchy.Controls.Add(this);
@@ -396,7 +400,7 @@ namespace open3mod
 
         private void OnChangeFilterText(object sender, EventArgs e)
         {
-            var str = textBoxFilter.Text.ToLower().Trim();
+            var str = _isInSearchMode ? textBoxFilter.Text.ToLower().Trim() : "";
             if (str != _searchText)
             {
                 _searchText = str;
@@ -407,14 +411,22 @@ namespace open3mod
       
         private void OnClickSearchBox(object sender, EventArgs e)
         {
-            if (_hitSearchBoxOnce)
+            if (_isInSearchMode)
             {
                 return;
             }
 
-            _hitSearchBoxOnce = true;
+            _isInSearchMode = true;
             textBoxFilter.ForeColor = Color.Black;
             textBoxFilter.Text = "";
+        }
+
+
+        private void OnStopFocusingOnSearch(object sender, EventArgs e)
+        {
+            _isInSearchMode = false;
+            textBoxFilter.Text = _searchInfoText;
+            textBoxFilter.ForeColor = _searchInfoColor;
         }
     }
 }

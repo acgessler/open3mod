@@ -58,11 +58,12 @@
             this.textBoxFilter.ForeColor = System.Drawing.SystemColors.ButtonShadow;
             this.textBoxFilter.Location = new System.Drawing.Point(12, 7);
             this.textBoxFilter.Name = "textBoxFilter";
-            this.textBoxFilter.Size = new System.Drawing.Size(286, 20);
+            this.textBoxFilter.Size = new System.Drawing.Size(287, 20);
             this.textBoxFilter.TabIndex = 7;
             this.textBoxFilter.Text = "Type to search";
             this.textBoxFilter.Click += new System.EventHandler(this.OnClickSearchBox);
             this.textBoxFilter.TextChanged += new System.EventHandler(this.OnChangeFilterText);
+            this.textBoxFilter.Leave += new System.EventHandler(this.OnStopFocusingOnSearch);
             // 
             // _tree
             // 
