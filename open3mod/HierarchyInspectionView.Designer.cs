@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HierarchyInspectionView));
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.textBoxFilter = new System.Windows.Forms.TextBox();
             this._tree = new System.Windows.Forms.TreeView();
@@ -36,6 +38,7 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.labelHitCount = new System.Windows.Forms.Label();
+            this.imageListIconsHierarchy = new System.Windows.Forms.ImageList(this.components);
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -73,8 +76,11 @@
             this._tree.BackColor = System.Drawing.Color.White;
             this._tree.FullRowSelect = true;
             this._tree.HotTracking = true;
+            this._tree.ImageIndex = 0;
+            this._tree.ImageList = this.imageListIconsHierarchy;
             this._tree.Location = new System.Drawing.Point(0, 33);
             this._tree.Name = "_tree";
+            this._tree.SelectedImageIndex = 0;
             this._tree.ShowNodeToolTips = true;
             this._tree.Size = new System.Drawing.Size(311, 573);
             this._tree.TabIndex = 5;
@@ -132,6 +138,15 @@
             this.labelHitCount.Size = new System.Drawing.Size(0, 13);
             this.labelHitCount.TabIndex = 10;
             // 
+            // imageListIconsHierarchy
+            // 
+            this.imageListIconsHierarchy.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListIconsHierarchy.ImageStream")));
+            this.imageListIconsHierarchy.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageListIconsHierarchy.Images.SetKeyName(0, "HierarchyIconGenerated.png");
+            this.imageListIconsHierarchy.Images.SetKeyName(1, "HierarchyIconGenericNode.png");
+            this.imageListIconsHierarchy.Images.SetKeyName(2, "HierarchyIconJoint.png");
+            this.imageListIconsHierarchy.Images.SetKeyName(3, "HierarchyIconMesh.png");
+            // 
             // HierarchyInspectionView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -164,5 +179,6 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label labelHitCount;
+        private System.Windows.Forms.ImageList imageListIconsHierarchy;
     }
 }

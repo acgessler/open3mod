@@ -105,6 +105,7 @@ namespace open3mod
             }
         }
 
+
         /// <summary>
         /// Get the total number of nodes in the scene
         /// </summary>
@@ -113,6 +114,7 @@ namespace open3mod
             get { return _nodeCount; }
         }
 
+
         /// <summary>
         /// Get the number of unique visible meshes 
         /// </summary>
@@ -120,6 +122,7 @@ namespace open3mod
         {
             get { return _visibleMeshes; }
         }
+
 
         /// <summary>
         /// Get the number of visible mesh instances:
@@ -177,11 +180,28 @@ namespace open3mod
         }
 
 
-        private void AddNodes(Node node, TreeNode uiNode, int level)
+        private bool AddNodes(Node node, TreeNode uiNode, int level)
         {
             Debug.Assert(node != null);
 
-            var root = new TreeNode(node.Name) { Tag = node };
+            // default node icon
+            var index = 1;
+            var isSkeletonNode = false;
+
+            // mark nodes introduced by assimp (i.e. nodes not present in the source file)
+            if (node.Name.StartsWith("<") && node.Name.EndsWith(">"))
+            {
+                index = 0;
+            }
+            else
+            {
+                // mark skeleton nodes (joints) with a special icon. The algorithm to
+                // detect them is easy: check whether if this node or any children 
+                // carry meshes. if not, assume this is a joint.
+                isSkeletonNode = node.MeshCount == 0;
+            }
+
+            var root = new TreeNode(node.Name) {Tag = node};
             if (uiNode == null)
             {
                 _tree.Nodes.Add(root);
@@ -199,12 +219,12 @@ namespace open3mod
 
                 foreach (var c in node.Children)
                 {
-                    AddNodes(c, root, level + 1);
+                    isSkeletonNode = AddNodes(c, root, level + 1) && isSkeletonNode;
                 }
             }
 
             // add mesh nodes
-            if (node.MeshIndices != null)
+            if (node.MeshCount != 0)
             {
                 foreach (var m in node.MeshIndices)
                 {
@@ -212,11 +232,21 @@ namespace open3mod
                 }
             }
 
+            if(isSkeletonNode)
+            {
+                index = 2;
+            }
+
+            root.ImageIndex = root.SelectedImageIndex = index;
+
             if (level < AutoExpandLevels)
             {
                 root.Expand();
             }
+
+            return isSkeletonNode;
         }
+
 
         private void AddMeshNode(Node owner, Mesh mesh, int id, TreeNode uiNode)
         {
@@ -228,7 +258,7 @@ namespace open3mod
                 ? ("\"" + mesh.Name + "\"")
                 : id.ToString(CultureInfo.InvariantCulture));
 
-            var nod = new TreeNode(desc) { Tag = new KeyValuePair<Node, Mesh>(owner, mesh) };
+            var nod = new TreeNode(desc) {Tag = new KeyValuePair<Node, Mesh>(owner, mesh), ImageIndex = 3};
 
             uiNode.Nodes.Add(nod);
 
