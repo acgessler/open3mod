@@ -33,12 +33,14 @@
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.textBoxFilter = new System.Windows.Forms.TextBox();
             this._tree = new System.Windows.Forms.TreeView();
+            this.imageListIconsHierarchy = new System.Windows.Forms.ImageList(this.components);
             this.labelNodeStats = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.labelHitCount = new System.Windows.Forms.Label();
-            this.imageListIconsHierarchy = new System.Windows.Forms.ImageList(this.components);
+            this.meshInfoPopup1 = new open3mod.MeshInfoPopup();
+            this.nodeInfoPopup1 = new open3mod.NodeInfoPopup();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -89,6 +91,15 @@
             this._tree.MouseEnter += new System.EventHandler(this.OnMouseEnter);
             this._tree.MouseLeave += new System.EventHandler(this.OnMouseLeave);
             // 
+            // imageListIconsHierarchy
+            // 
+            this.imageListIconsHierarchy.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListIconsHierarchy.ImageStream")));
+            this.imageListIconsHierarchy.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageListIconsHierarchy.Images.SetKeyName(0, "HierarchyIconGenerated.png");
+            this.imageListIconsHierarchy.Images.SetKeyName(1, "HierarchyIconGenericNode.png");
+            this.imageListIconsHierarchy.Images.SetKeyName(2, "HierarchyIconJoint.png");
+            this.imageListIconsHierarchy.Images.SetKeyName(3, "HierarchyIconMesh.png");
+            // 
             // labelNodeStats
             // 
             this.labelNodeStats.AutoSize = true;
@@ -138,20 +149,27 @@
             this.labelHitCount.Size = new System.Drawing.Size(0, 13);
             this.labelHitCount.TabIndex = 10;
             // 
-            // imageListIconsHierarchy
+            // meshInfoPopup1
             // 
-            this.imageListIconsHierarchy.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListIconsHierarchy.ImageStream")));
-            this.imageListIconsHierarchy.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageListIconsHierarchy.Images.SetKeyName(0, "HierarchyIconGenerated.png");
-            this.imageListIconsHierarchy.Images.SetKeyName(1, "HierarchyIconGenericNode.png");
-            this.imageListIconsHierarchy.Images.SetKeyName(2, "HierarchyIconJoint.png");
-            this.imageListIconsHierarchy.Images.SetKeyName(3, "HierarchyIconMesh.png");
+            this.meshInfoPopup1.Location = new System.Drawing.Point(157, 341);
+            this.meshInfoPopup1.Name = "meshInfoPopup1";
+            this.meshInfoPopup1.Size = new System.Drawing.Size(115, 271);
+            this.meshInfoPopup1.TabIndex = 12;
+            // 
+            // nodeInfoPopup1
+            // 
+            this.nodeInfoPopup1.Location = new System.Drawing.Point(157, 53);
+            this.nodeInfoPopup1.Name = "nodeInfoPopup1";
+            this.nodeInfoPopup1.Size = new System.Drawing.Size(115, 282);
+            this.nodeInfoPopup1.TabIndex = 11;
             // 
             // HierarchyInspectionView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.CornflowerBlue;
+            this.Controls.Add(this.meshInfoPopup1);
+            this.Controls.Add(this.nodeInfoPopup1);
             this.Controls.Add(this.labelHitCount);
             this.Controls.Add(this.textBoxFilter);
             this.Controls.Add(this._tree);
@@ -180,5 +198,7 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label labelHitCount;
         private System.Windows.Forms.ImageList imageListIconsHierarchy;
+        private NodeInfoPopup nodeInfoPopup1;
+        private MeshInfoPopup meshInfoPopup1;
     }
 }
