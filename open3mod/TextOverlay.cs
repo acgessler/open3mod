@@ -127,13 +127,14 @@ namespace open3mod
             _tempContext.Clear(Color.Transparent);
         }
 
-
+#if DEBUG
         ~TextOverlay()
         {
             // bad, OpenTK is not safe to use from within finalizers.
             // Dispose() should be called manually.
             Debug.Assert(false);
         }
+#endif
 
 
         public void Dispose()

@@ -84,13 +84,13 @@ namespace open3mod
             GC.SuppressFinalize(this);
         }
 
-
+#if DEBUG
         ~SceneRendererClassicGl()
         {
             // OpenTk is unsafe from here, explicit Dispose() is required.
             Debug.Assert(false);
         }
-
+#endif
 
         public void Update(double delta)
         {

@@ -196,12 +196,13 @@ namespace open3mod
         }
 
 
+#if DEBUG
         ~Texture()
         {
             // OpenTk is unsafe from here, explicit Dispose() is required.
             Debug.Assert(false);
         }
-
+#endif
 
         public void Dispose()
         {

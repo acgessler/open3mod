@@ -280,13 +280,13 @@ namespace open3mod
             GC.SuppressFinalize(this);
         }
 
-
+#if DEBUG
         ~Tab()
         {
             // OpenTk is unsafe from here, explicit Dispose() is required.
             Debug.Assert(false);
         }
-
+#endif
 
         /// <summary>
         /// Sets the tab to a permanent "failed to load" state. In this
