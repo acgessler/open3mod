@@ -69,5 +69,17 @@ namespace CoreSettings {
                 this["Maximized"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("506")]
+        public int InspectorSplitterPos {
+            get {
+                return ((int)(this["InspectorSplitterPos"]));
+            }
+            set {
+                this["InspectorSplitterPos"] = value;
+            }
+        }
     }
 }

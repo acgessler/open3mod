@@ -36,6 +36,8 @@ namespace open3mod
 {
     public partial class TabUiSkeleton : UserControl
     {
+        private bool _loadCalled;
+
         public TabUiSkeleton()
         {
             InitializeComponent();
@@ -44,8 +46,9 @@ namespace open3mod
 
         public SplitContainer GetSplitter()
         {
-            return splitContainer1;
+            return splitContainer;
         }
+
 
         public InspectionView GetInspector()
         {
@@ -55,7 +58,7 @@ namespace open3mod
 
         public void InjectGlControl(GLControl gl)
         {
-            var s = splitContainer1.Controls[0];
+            var s = splitContainer.Controls[0];
 
             s.Controls.Add(gl);
             gl.Left = s.Left;
@@ -65,15 +68,17 @@ namespace open3mod
             gl.Height = s.Height;
         }
 
-        private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
+     
+        private void OnLoad(object sender, EventArgs e)
         {
-
         }
 
-        private void inspectionView1_Load(object sender, EventArgs e)
-        {
 
-        }
+        private void OnSplitterMove(object sender, SplitterEventArgs e)
+        {
+            // for some reason this is necessary to keep the layout from breaking up.
+            inspectionView1.ClientSize = splitContainer.Panel2.ClientSize;
+        }    
     }
 }
 
