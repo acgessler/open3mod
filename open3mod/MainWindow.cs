@@ -849,6 +849,44 @@ namespace open3mod
             // only accept files for drag and drop
             e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.Copy : DragDropEffects.None;
         }
+
+
+        private void OnLoad(object sender, EventArgs e)
+        {
+            if (CoreSettings.CoreSettings.Default.Maximized)
+            {
+                WindowState = FormWindowState.Maximized;
+                Location = CoreSettings.CoreSettings.Default.Location;
+                Size = CoreSettings.CoreSettings.Default.Size;
+            }
+            else
+            {
+                var size = CoreSettings.CoreSettings.Default.Size;
+                if (size.Width != 0) // first-time run
+                {
+                    Location = CoreSettings.CoreSettings.Default.Location;
+                    Size = size;
+                }
+            }
+        }
+
+
+        private void OnClosing(object sender, FormClosingEventArgs e)
+        {
+            if (WindowState == FormWindowState.Maximized)
+            {
+                CoreSettings.CoreSettings.Default.Location = RestoreBounds.Location;
+                CoreSettings.CoreSettings.Default.Size = RestoreBounds.Size;
+                CoreSettings.CoreSettings.Default.Maximized = true;
+            }
+            else
+            {
+                CoreSettings.CoreSettings.Default.Location = Location;
+                CoreSettings.CoreSettings.Default.Size = Size;
+                CoreSettings.CoreSettings.Default.Maximized = false;
+            }
+            CoreSettings.CoreSettings.Default.Save();
+        }
     }
 }
 

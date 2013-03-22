@@ -51,6 +51,8 @@ namespace open3mod
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -80,8 +82,6 @@ namespace open3mod
             this.buttonTabClose = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.glControl1 = new open3mod.RenderControl();
-            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exportAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStripSelectRenderer.SuspendLayout();
             this.tabContextMenuStrip.SuspendLayout();
@@ -181,9 +181,22 @@ namespace open3mod
             // logViewerToolStripMenuItem
             // 
             this.logViewerToolStripMenuItem.Name = "logViewerToolStripMenuItem";
-            this.logViewerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.logViewerToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.logViewerToolStripMenuItem.Text = "Log Viewer";
             this.logViewerToolStripMenuItem.Click += new System.EventHandler(this.OnShowLogViewer);
+            // 
+            // exportToolStripMenuItem
+            // 
+            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.exportToolStripMenuItem.Text = "Export";
+            this.exportToolStripMenuItem.Click += new System.EventHandler(this.OnExport);
+            // 
+            // exportAllToolStripMenuItem
+            // 
+            this.exportAllToolStripMenuItem.Name = "exportAllToolStripMenuItem";
+            this.exportAllToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.exportAllToolStripMenuItem.Text = "Export all";
             // 
             // toolStripMenuItem1
             // 
@@ -474,19 +487,6 @@ namespace open3mod
             this.glControl1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.OnPreviewKeyDown);
             this.glControl1.Resize += new System.EventHandler(this.OnGlResize);
             // 
-            // exportToolStripMenuItem
-            // 
-            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.exportToolStripMenuItem.Text = "Export";
-            this.exportToolStripMenuItem.Click += new System.EventHandler(this.OnExport);
-            // 
-            // exportAllToolStripMenuItem
-            // 
-            this.exportAllToolStripMenuItem.Name = "exportAllToolStripMenuItem";
-            this.exportAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.exportAllToolStripMenuItem.Text = "Export all";
-            // 
             // MainWindow
             // 
             this.AllowDrop = true;
@@ -505,7 +505,9 @@ namespace open3mod
             this.MinimumSize = new System.Drawing.Size(600, 500);
             this.Name = "MainWindow";
             this.Text = "Open 3D Model Viewer ";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OnCloseForm);
+            this.Load += new System.EventHandler(this.OnLoad);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.toolStripSelectRenderer.ResumeLayout(false);
