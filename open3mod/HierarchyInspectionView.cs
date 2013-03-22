@@ -263,18 +263,6 @@ namespace open3mod
             var nod = new TreeNode(desc) {Tag = new KeyValuePair<Node, Mesh>(owner, mesh), ImageIndex = 3};
 
             uiNode.Nodes.Add(nod);
-
-            var verts = new TreeNode(mesh.VertexCount + " Vertices");
-            nod.Nodes.Add(verts);
-
-            var triangles = new TreeNode(mesh.FaceCount + " Faces");
-            nod.Nodes.Add(triangles);
-
-            if (mesh.BoneCount > 0)
-            {
-                var bones = new TreeNode(mesh.BoneCount + " Bones");
-                nod.Nodes.Add(bones);
-            }
         }
 
 
