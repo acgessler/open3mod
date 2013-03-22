@@ -74,6 +74,7 @@ namespace open3mod
             Event.Set();
         }
 
+
         public static void Terminate()
         {
             if (_thread == null || !_thread.IsAlive)
@@ -88,11 +89,13 @@ namespace open3mod
             Event.Set();
         }
 
+
         private static void StartThread()
         {
             _thread = new Thread(ThreadProc);
             _thread.Start();
         }
+
 
         private static void ThreadProc()
         {

@@ -261,7 +261,7 @@ namespace open3mod
                 _sphereElements = SphereGeometry.CalculateElements(SphereSegments, SphereSegments);
             }
 
-            _scene.MaterialMapper.ApplyMaterial(null, _material);
+            _scene.MaterialMapper.ApplyMaterial(null, _material, true, true);
 
             // reset color and alpha blending
             GL.Color4(Color.White);

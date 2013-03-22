@@ -117,9 +117,9 @@ namespace open3mod
         ///    TODO tangents, bitangents?
         /// </param>
         /// <param name="mat">Material to be applied, must be non-null</param>
-        public void ApplyMaterial(Mesh mesh, Material mat)
+        public void ApplyMaterial(Mesh mesh, Material mat, bool textured, bool shaded)
         {
-            ApplyFixedFunctionMaterial(mesh, mat);
+            ApplyFixedFunctionMaterial(mesh, mat, textured, shaded);
         }
 
 
@@ -129,9 +129,9 @@ namespace open3mod
         }
 
 
-        private void ApplyFixedFunctionMaterial(Mesh mesh, Material mat)
+        private void ApplyFixedFunctionMaterial(Mesh mesh, Material mat, bool textured, bool shaded)
         {
-            if (mesh == null || mesh.HasNormals)
+            if ((mesh == null || mesh.HasNormals) && shaded)
             {
                 GL.Enable(EnableCap.Lighting);
             }
@@ -151,7 +151,7 @@ namespace open3mod
                 GL.Disable(EnableCap.ColorMaterial);
             }
 
-            if (mat.GetTextureCount(TextureType.Diffuse) > 0)
+            if (textured && mat.GetTextureCount(TextureType.Diffuse) > 0)
             {
                 TextureSlot tex = mat.GetTexture(TextureType.Diffuse, 0);
                 var gtex = _scene.TextureSet.GetOriginalOrReplacement(tex.FilePath);

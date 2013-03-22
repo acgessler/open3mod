@@ -235,7 +235,6 @@ namespace open3mod
             GL.MultMatrix(ref m);
 
             var showGhost = false;
-            List<Mesh> meshList = null;
 
             // the following permutations could be compacted into one big loop with lots of
             // condition magic, but at the cost of readability and also performance.
@@ -254,27 +253,7 @@ namespace open3mod
                             continue;
                         }
 
-                        var skinning = DrawMesh(node, animated, false, index, mesh);
-                        if (flags.HasFlag(RenderFlags.ShowBoundingBoxes))
-                        {
-                            DrawBoundingBox(node, index, mesh, skinning);
-                        }
-                    }
-                }
-                else if (visibleMeshesByNode.TryGetValue(node, out meshList))
-                {
-                    // some meshes of this node are visible. alpha-blended materials are delayed for 2nd pass
-                    foreach (var index in node.MeshIndices)
-                    {
-                        var mesh = _owner.Raw.Meshes[index];
-
-                        if (_isAlphaMaterial[mesh.MaterialIndex] || (meshList != null && !meshList.Contains(mesh)))
-                        {
-                            needAlpha = true;
-                            continue;
-                        }
-
-                        var skinning = DrawMesh(node, animated, false, index, mesh);
+                        var skinning = DrawMesh(node, animated, false, index, mesh, flags);
                         if (flags.HasFlag(RenderFlags.ShowBoundingBoxes))
                         {
                             DrawBoundingBox(node, index, mesh, skinning);
@@ -283,8 +262,32 @@ namespace open3mod
                 }
                 else
                 {
-                    // node not visible, draw ghosts in 2nd pass
-                    needAlpha = true;
+                    List<Mesh> meshList;
+                    if (visibleMeshesByNode.TryGetValue(node, out meshList))
+                    {
+                        // some meshes of this node are visible. alpha-blended materials are delayed for 2nd pass
+                        foreach (var index in node.MeshIndices)
+                        {
+                            var mesh = _owner.Raw.Meshes[index];
+
+                            if (_isAlphaMaterial[mesh.MaterialIndex] || (meshList != null && !meshList.Contains(mesh)))
+                            {
+                                needAlpha = true;
+                                continue;
+                            }
+
+                            var skinning = DrawMesh(node, animated, false, index, mesh, flags);
+                            if (flags.HasFlag(RenderFlags.ShowBoundingBoxes))
+                            {
+                                DrawBoundingBox(node, index, mesh, skinning);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // node not visible, draw ghosts in 2nd pass
+                        needAlpha = true;
+                    }
                 }
             }
 
@@ -336,7 +339,7 @@ namespace open3mod
             // we therefore keep it redundant and stupid.
             if (node.HasMeshes)
             {
-                List<Mesh> meshList = null;
+                List<Mesh> meshList;
                 if (visibleNodes == null)
                 {
                     // render everything with alpha materials
@@ -345,7 +348,7 @@ namespace open3mod
                         var mesh = _owner.Raw.Meshes[index];
                         if (_isAlphaMaterial[mesh.MaterialIndex])
                         {
-                            DrawMesh(node, animated, false, index, mesh);
+                            DrawMesh(node, animated, false, index, mesh, flags);
                         }
                     }
                 }
@@ -359,7 +362,7 @@ namespace open3mod
                             var mesh = _owner.Raw.Meshes[index];
                             if (_isAlphaMaterial[mesh.MaterialIndex])
                             {
-                                DrawMesh(node, animated, false, index, mesh);
+                                DrawMesh(node, animated, false, index, mesh, flags);
                             }
                         }
                     }
@@ -372,12 +375,12 @@ namespace open3mod
                             var mesh = _owner.Raw.Meshes[index];
                             if (!meshList.Contains(mesh))
                             {
-                                DrawMesh(node, animated, true, index, mesh);
+                                DrawMesh(node, animated, true, index, mesh, flags);
                                 continue;
                             }
                             if (_isAlphaMaterial[mesh.MaterialIndex])
                             {
-                                DrawMesh(node, animated, false, index, mesh);
+                                DrawMesh(node, animated, false, index, mesh, flags);
                             }
                         }
                     }
@@ -388,7 +391,7 @@ namespace open3mod
                     foreach (var index in node.MeshIndices)
                     {
                         var mesh = _owner.Raw.Meshes[index];
-                        DrawMesh(node, animated, true, index, mesh);
+                        DrawMesh(node, animated, true, index, mesh, flags);
                     }
                 }
             }
@@ -409,11 +412,12 @@ namespace open3mod
         /// <param name="node">Current node</param>
         /// <param name="animated">Specifies whether animations should be played</param>
         /// <param name="showGhost">Indicates whether to substitute the mesh' material with a
-        ///    "ghost" surrogate material that allows looking through the geometry.</param>
+        /// "ghost" surrogate material that allows looking through the geometry.</param>
         /// <param name="index">Mesh index in the scene</param>
         /// <param name="mesh">Mesh instance</param>
+        /// <param name="flags"> </param>
         /// <returns></returns>
-        private bool DrawMesh(Node node, bool animated, bool showGhost, int index, Mesh mesh)
+        private bool DrawMesh(Node node, bool animated, bool showGhost, int index, Mesh mesh, RenderFlags flags)
         {
             if (showGhost)
             {
@@ -421,7 +425,9 @@ namespace open3mod
             }
             else
             {
-                _owner.MaterialMapper.ApplyMaterial(mesh, _owner.Raw.Materials[mesh.MaterialIndex]);
+                _owner.MaterialMapper.ApplyMaterial(mesh, _owner.Raw.Materials[mesh.MaterialIndex], 
+                    flags.HasFlag(RenderFlags.Textured), 
+                    flags.HasFlag(RenderFlags.Shaded));
             }
 
             var hasColors = mesh.HasVertexColors(0);
