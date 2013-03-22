@@ -131,6 +131,18 @@
     <Compile Include="MaterialThumbnailControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="MeshInfoPopup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MeshInfoPopup.Designer.cs">
+      <DependentUpon>MeshInfoPopup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NodeInfoPopup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="NodeInfoPopup.Designer.cs">
+      <DependentUpon>NodeInfoPopup.cs</DependentUpon>
+    </Compile>
     <Compile Include="OpenTkToAssimp.cs" />
     <Compile Include="OrbitCameraController.cs" />
     <Compile Include="Program.cs" />
@@ -201,6 +213,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MeshInfoPopup.resx">
+      <DependentUpon>MeshInfoPopup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NodeInfoPopup.resx">
+      <DependentUpon>NodeInfoPopup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
