@@ -81,7 +81,7 @@ namespace open3mod
     
             _state = CompletionState.Pending;
 
-            window.Renderer.GlExtraDrawJob += () =>
+            window.Renderer.GlExtraDrawJob += (sender) =>
             {
                 _state = !RenderPreview() ? CompletionState.Failed : CompletionState.Done;
                 OnPreviewAvailable();

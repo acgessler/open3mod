@@ -52,7 +52,7 @@ namespace open3mod
         private Tab.ViewIndex _hoverViewIndex;
         private float _hoverFadeInTime;
 
-        public delegate void GlExtraDrawJobDelegate();
+        public delegate void GlExtraDrawJobDelegate(object sender);
 
         /// <summary>
         /// This event is fired every draw frame to allow other editor
@@ -67,7 +67,7 @@ namespace open3mod
             var handler = GlExtraDrawJob;
             if (handler != null)
             {
-                handler();
+                handler(this);
                 // reset all event handlers - extra draw job get executed only once
                 // TODO: what if handlers re-register themselves?
                 GlExtraDrawJob = null;
@@ -431,7 +431,7 @@ namespace open3mod
         }
 
 
-        public virtual void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             _textOverlay.Dispose();
         }

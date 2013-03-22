@@ -144,7 +144,7 @@ namespace open3mod
         }
 
 
-        public virtual void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (_textTexture > 0)
             {
