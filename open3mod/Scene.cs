@@ -86,41 +86,49 @@ namespace open3mod
             get { return _raw; }
         }
 
+
         public Vector3 SceneCenter
         {
             get { return _sceneCenter; }
         }
+
 
         public LogStore LogStore
         {
             get { return _logStore; }
         }
 
+
         public MaterialMapper MaterialMapper
         {
             get { return _mapper; }
         }
+
 
         public SceneAnimator SceneAnimator
         {
             get { return _animator; }
         }
 
-        public HashSet<Node> VisibleNodes
+
+        public Dictionary<Node, List<Mesh>> VisibleMeshesByNode
         {
-            get { return _nodesToShow; }
+            get { return _meshesToShow; }
         }
+
 
         public TextureSet TextureSet
         {
             get { return _textureSet; }
         }
 
-        private bool _nodesToShowChanged = true;
-        private HashSet<Node> _nodesToShow;
+        
         private bool _texturesChanged = false;
-        private SceneAnimator _animator;
+        private readonly SceneAnimator _animator;
         private double _accumulatedTimeDelta;
+
+        private bool _nodesToShowChanged = true;
+        private Dictionary<Node, List<Mesh>> _meshesToShow;
 
 
         /// <summary>
@@ -176,20 +184,22 @@ namespace open3mod
 
 
         /// <summary>
-        /// Set the nodes of the scene that are visible. Visibility is not
-        /// automatically inherited by children, so all children need to
-        /// be included in the filter list if they should be visible.
+        /// Sets which parts of the scene are visible.
+        /// 
+        /// See ISceneRenderer.Render (visibleNodesByMesh parameters)
+        /// for a description of how the visible set is determined.
+        /// 
         /// </summary>
-        /// <param name="filter">Node list or null to disable filtering</param>
-        public void SetVisibleNodes(HashSet<Node> filter)
+        /// <param name="meshFilter">See ISceneRenderer.Render (visibleNodesByMesh parameter)</param>
+        public void SetVisibleNodes(Dictionary<Node, List<Mesh>> meshFilter)
         {
-            _nodesToShow = filter;
+            _meshesToShow = meshFilter;
             _nodesToShowChanged = true;
         }
 
 
         /// <summary>
-        /// Call once per frame to do non-rendering jobs such as updating 
+        /// To be called once per frame to do non-rendering jobs such as updating 
         /// animations.
         /// </summary>
         /// <param name="delta">Real-world time delta in seconds</param>
@@ -213,7 +223,6 @@ namespace open3mod
         /// <summary>
         /// Call once per frame to render the scene to the current viewport.
         /// </summary>
-        /// <param name="delta">Real-world time delta in seconds</param>
         public void Render(UiState state, ICameraController cam)
         {
             RenderFlags flags = 0;
@@ -245,7 +254,7 @@ namespace open3mod
 
             flags |= RenderFlags.ShowGhosts;
 
-            _renderer.Render(cam, _nodesToShow, _nodesToShowChanged, _texturesChanged, flags);
+            _renderer.Render(cam, _meshesToShow, _nodesToShowChanged, _texturesChanged, flags);
 
             _texturesChanged = false;
             _nodesToShowChanged = false;

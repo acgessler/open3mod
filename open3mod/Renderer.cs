@@ -398,20 +398,20 @@ namespace open3mod
             {
                 _hudImages = new Image[5,3];
                 var prefixTable = new[]
-                                      {
-                                          "open3mod.Images.HUD_X",
-                                          "open3mod.Images.HUD_Y",
-                                          "open3mod.Images.HUD_Z",
-                                          "open3mod.Images.HUD_Orbit",
-                                          "open3mod.Images.HUD_FPS"
-                                      };
+                {
+                    "open3mod.Images.HUD_X",
+                    "open3mod.Images.HUD_Y",
+                    "open3mod.Images.HUD_Z",
+                    "open3mod.Images.HUD_Orbit",
+                    "open3mod.Images.HUD_FPS"
+                };
 
                 var postFixTable = new[]
-                                       {
-                                           "_Normal",
-                                           "_Hover",
-                                           "_Selected"
-                                       };
+                {
+                    "_Normal",
+                    "_Hover",
+                    "_Selected"
+                };
 
                 for (var i = 0; i < _hudImages.GetLength(0); ++i)
                 {

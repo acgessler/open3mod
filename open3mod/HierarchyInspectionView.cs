@@ -44,8 +44,7 @@ namespace open3mod
         private readonly Scene _scene;
  
         private int _nodeCount;
-        private readonly HashSet<Node> _filter = new HashSet<Node>();
-
+        private readonly Dictionary<Node, List<Mesh>> _filterByMesh;
 
         private const int AutoExpandLevels = 4;
         private static Color DefaultBackColor = Color.White;
@@ -61,10 +60,13 @@ namespace open3mod
         private readonly Color _searchInfoColor;
 
         private bool _isInSearchMode;
+        
 
 
         public HierarchyInspectionView(Scene scene, TabPage tabPageHierarchy)
         {
+            _filterByMesh = new Dictionary<Node, List<Mesh>>();
+            
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
             Dock = DockStyle.Fill;
 
@@ -77,6 +79,7 @@ namespace open3mod
 
             Debug.Assert(_scene != null);
 
+            labelHitCount.BackColor = PositiveBackColor;
             
             AddNodes();
             CountMeshes();
@@ -216,7 +219,6 @@ namespace open3mod
             // add children
             if (node.Children != null)
             {
-
                 foreach (var c in node.Children)
                 {
                     isSkeletonNode = AddNodes(c, root, level + 1) && isSkeletonNode;
@@ -279,7 +281,7 @@ namespace open3mod
         public void UpdateFilters(object hoverTag = null)
         {
             object item = hoverTag ?? (_tree.SelectedNode == null ? _scene.Raw.RootNode : _tree.SelectedNode.Tag);
-            _filter.Clear();
+            _filterByMesh.Clear();
 
             if (item == _scene.Raw.RootNode)
             {
@@ -303,20 +305,26 @@ namespace open3mod
                     counters.Add(0);
                 }
 
-                AddNodeToSet(_filter, itemAsNode);
+                AddNodeToSet(_filterByMesh, itemAsNode);
                 CountMeshes(itemAsNode, counters);
 
                 // update statistics
                 _visibleInstancedMeshes = counters.Sum();
                 _visibleMeshes = counters.Count(i => i != 0);
             }
+            else if (item is KeyValuePair<Node, Mesh>)
+            {
+                var itemAsMesh = (KeyValuePair<Node, Mesh>) item;
+                var arr = new List<Mesh> {itemAsMesh.Value};
+                _filterByMesh.Add(itemAsMesh.Key, arr);
 
-            // var itemAsMesh = (KeyValuePair<Node, Mesh>)item;
-            // XXX
+                _visibleMeshes = 1;
+                _visibleInstancedMeshes = 1;
+            }
 
-            _scene.SetVisibleNodes(_filter);
+            _scene.SetVisibleNodes(_filterByMesh);
         
-            _visibleNodes = _filter.Count;
+            _visibleNodes = _filterByMesh.Count;
             UpdateStatistics();            
         }
 
@@ -387,9 +395,9 @@ namespace open3mod
         }
 
 
-        private void AddNodeToSet(HashSet<Node> filter, Node itemAsNode)
+        private void AddNodeToSet(Dictionary<Node, List<Mesh>> filter, Node itemAsNode)
         {
-            filter.Add(itemAsNode);
+            filter.Add(itemAsNode, null);
             if (itemAsNode.Children == null)
             {
                 return;

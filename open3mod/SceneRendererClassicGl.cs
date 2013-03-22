@@ -98,7 +98,9 @@ namespace open3mod
         }
 
 
-        public void Render(ICameraController cam, HashSet<Node> visibleNodes, bool visibleSetChanged, bool texturesChanged,
+        public void Render(ICameraController cam, Dictionary<Node, List<Mesh>> visibleMeshesByNode, 
+            bool visibleSetChanged, 
+            bool texturesChanged,
             RenderFlags flags)
         {
             GL.Disable(EnableCap.Texture2D);
@@ -148,11 +150,11 @@ namespace open3mod
                     GL.NewList(_displayList, ListMode.Compile);                    
                 }
 
-                var needAlpha = RecursiveRender(_owner.Raw.RootNode, visibleNodes, flags, animated);
+                var needAlpha = RecursiveRender(_owner.Raw.RootNode, visibleMeshesByNode, flags, animated);
 
                 if (flags.HasFlag(RenderFlags.ShowSkeleton) || flags.HasFlag(RenderFlags.ShowNormals))
                 {
-                    RecursiveRenderNoScale(_owner.Raw.RootNode, visibleNodes, flags, 1.0f / tmp, animated);
+                    RecursiveRenderNoScale(_owner.Raw.RootNode, visibleMeshesByNode, flags, 1.0f / tmp, animated);
                 }
 
                 if (!animated)
@@ -171,7 +173,7 @@ namespace open3mod
                         }
                         GL.NewList(_displayListAlpha, ListMode.Compile);
                     }
-                    RecursiveRenderWithAlpha(_owner.Raw.RootNode, visibleNodes, flags, animated);
+                    RecursiveRenderWithAlpha(_owner.Raw.RootNode, visibleMeshesByNode, flags, animated);
 
                     if (!animated)
                     {
@@ -207,11 +209,13 @@ namespace open3mod
         /// Recursive rendering function
         /// </summary>
         /// <param name="node">Current node</param>
-        /// <param name="visibleNodes">Set of visible nodes</param>
+        /// <param name="visibleMeshesByNode"> </param>
         /// <param name="flags">Rendering flags</param>
         /// <param name="animated">Play animation?</param>
         /// <returns>whether there is any need to do a second render pass with alpha blending enabled</returns>
-        private bool RecursiveRender(Node node, HashSet<Node> visibleNodes, RenderFlags flags, bool animated)
+        private bool RecursiveRender(Node node, 
+            Dictionary<Node, List<Mesh>> visibleMeshesByNode, 
+            RenderFlags flags, bool animated)
         {
             var needAlpha = false;
 
@@ -231,10 +235,16 @@ namespace open3mod
             GL.MultMatrix(ref m);
 
             var showGhost = false;
-            if (node.HasMeshes && (visibleNodes == null || visibleNodes.Contains(node) || (flags.HasFlag(RenderFlags.ShowGhosts) && (showGhost = true))))
+            List<Mesh> meshList = null;
+
+            // the following permutations could be compacted into one big loop with lots of
+            // condition magic, but at the cost of readability and also performance.
+            // we therefore keep it redundant and stupid.
+            if (node.HasMeshes)
             {
-                if (!showGhost)
+                if (visibleMeshesByNode == null)
                 {
+                    // everything is visible. alpha-blended materials are delayed for 2nd pass
                     foreach (var index in node.MeshIndices)
                     {
                         var mesh = _owner.Raw.Meshes[index];
@@ -251,15 +261,37 @@ namespace open3mod
                         }
                     }
                 }
+                else if (visibleMeshesByNode.TryGetValue(node, out meshList))
+                {
+                    // some meshes of this node are visible. alpha-blended materials are delayed for 2nd pass
+                    foreach (var index in node.MeshIndices)
+                    {
+                        var mesh = _owner.Raw.Meshes[index];
+
+                        if (_isAlphaMaterial[mesh.MaterialIndex] || (meshList != null && !meshList.Contains(mesh)))
+                        {
+                            needAlpha = true;
+                            continue;
+                        }
+
+                        var skinning = DrawMesh(node, animated, false, index, mesh);
+                        if (flags.HasFlag(RenderFlags.ShowBoundingBoxes))
+                        {
+                            DrawBoundingBox(node, index, mesh, skinning);
+                        }
+                    }
+                }
                 else
                 {
+                    // node not visible, draw ghosts in 2nd pass
                     needAlpha = true;
                 }
             }
-                      
+
+         
             for (var i = 0; i < node.ChildCount; i++)
             {
-                needAlpha = RecursiveRender(node.Children[i], visibleNodes, flags, animated) || needAlpha;
+                needAlpha = RecursiveRender(node.Children[i], visibleMeshesByNode, flags, animated) || needAlpha;
             }
 
             GL.PopMatrix();
@@ -277,10 +309,12 @@ namespace open3mod
         /// is no further ordering within the alpha rendering pass.
         /// </summary>
         /// <param name="node">Current node</param>
-        /// <param name="visibleNodes">Set of visible nodes</param>
+        /// <param name="visibleNodes">Set of visible meshes</param>
         /// <param name="flags">Rendering flags</param>
         /// <param name="animated">Play animation?</param>
-        private void RecursiveRenderWithAlpha(Node node, HashSet<Node> visibleNodes, RenderFlags flags, bool animated)
+        private void RecursiveRenderWithAlpha(Node node, Dictionary<Node, List<Mesh>> visibleNodes, 
+            RenderFlags flags, 
+            bool animated)
         {
             Matrix4 m;
             if (animated)
@@ -297,19 +331,69 @@ namespace open3mod
             GL.PushMatrix();
             GL.MultMatrix(ref m);
 
-            var showGhost = false;
-            if (node.HasMeshes && (visibleNodes == null || visibleNodes.Contains(node) || (flags.HasFlag(RenderFlags.ShowGhosts) && (showGhost = true))))
+            // the following permutations could be compacted into one big loop with lots of
+            // condition magic, but at the cost of readability and also performance.
+            // we therefore keep it redundant and stupid.
+            if (node.HasMeshes)
             {
-                foreach (var index in node.MeshIndices)
+                List<Mesh> meshList = null;
+                if (visibleNodes == null)
                 {
-                    var mesh = _owner.Raw.Meshes[index];
-                    if (_isAlphaMaterial[mesh.MaterialIndex] || showGhost)
+                    // render everything with alpha materials
+                    foreach (var index in node.MeshIndices)
                     {
-                        DrawMesh(node, animated, showGhost, index, mesh);
+                        var mesh = _owner.Raw.Meshes[index];
+                        if (_isAlphaMaterial[mesh.MaterialIndex])
+                        {
+                            DrawMesh(node, animated, false, index, mesh);
+                        }
+                    }
+                }
+                else if(visibleNodes.TryGetValue(node, out meshList))
+                {
+                    if (meshList == null)
+                    {
+                        // render everything with alpha materials 
+                        foreach (var index in node.MeshIndices)
+                        {
+                            var mesh = _owner.Raw.Meshes[index];
+                            if (_isAlphaMaterial[mesh.MaterialIndex])
+                            {
+                                DrawMesh(node, animated, false, index, mesh);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // render everything that has either alpha materials or is not in the
+                        // list of visible meshes for this node.
+                        foreach (var index in node.MeshIndices)
+                        {
+                            var mesh = _owner.Raw.Meshes[index];
+                            if (!meshList.Contains(mesh))
+                            {
+                                DrawMesh(node, animated, true, index, mesh);
+                                continue;
+                            }
+                            if (_isAlphaMaterial[mesh.MaterialIndex])
+                            {
+                                DrawMesh(node, animated, false, index, mesh);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    // node not visible, render only ghosts
+                    foreach (var index in node.MeshIndices)
+                    {
+                        var mesh = _owner.Raw.Meshes[index];
+                        DrawMesh(node, animated, true, index, mesh);
                     }
                 }
             }
 
+  
             for (var i = 0; i < node.ChildCount; i++)
             {
                 RecursiveRenderWithAlpha(node.Children[i], visibleNodes, flags, animated);
@@ -416,11 +500,11 @@ namespace open3mod
         /// normal vectors or the skeleton.
         /// </summary>
         /// <param name="node"></param>
-        /// <param name="visibleNodes"></param>
+        /// <param name="visibleMeshesByNode"></param>
         /// <param name="flags"></param>
         /// <param name="invGlobalScale"></param>
         /// <param name="animated"></param>
-        private void RecursiveRenderNoScale(Node node, HashSet<Node> visibleNodes, RenderFlags flags, 
+        private void RecursiveRenderNoScale(Node node, Dictionary<Node, List<Mesh>> visibleMeshesByNode, RenderFlags flags, 
             float invGlobalScale, 
             bool animated)
         {
@@ -460,13 +544,20 @@ namespace open3mod
             GL.PushMatrix();
             GL.MultMatrix(ref mConv);
 
-            if (node.HasMeshes && (visibleNodes == null || visibleNodes.Contains(node)))
+            if (flags.HasFlag(RenderFlags.ShowNormals))
             {
-                foreach (var index in node.MeshIndices)
+                List<Mesh> meshList = null;
+                if (node.HasMeshes &&
+                    (visibleMeshesByNode == null || visibleMeshesByNode.TryGetValue(node, out meshList)))
                 {
-                    var mesh = _owner.Raw.Meshes[index];           
-                    if (flags.HasFlag(RenderFlags.ShowNormals))
+                    foreach (var index in node.MeshIndices)
                     {
+                        var mesh = _owner.Raw.Meshes[index];
+                        if(meshList != null && !meshList.Contains(mesh))
+                        {
+                            continue;
+                        }
+
                         DrawNormals(node, index, mesh, mesh.HasBones && animated, invGlobalScale);
                     }
                 }
@@ -474,9 +565,8 @@ namespace open3mod
 
             for (int i = 0; i < node.ChildCount; i++)
             {
-                RecursiveRenderNoScale(node.Children[i], visibleNodes, flags, invGlobalScale, animated);
+                RecursiveRenderNoScale(node.Children[i], visibleMeshesByNode, flags, invGlobalScale, animated);
             }
-
             GL.PopMatrix();
         }
 

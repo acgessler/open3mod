@@ -59,14 +59,19 @@ namespace open3mod
         /// Draws the scene
         /// </summary>
         /// <param name="cam">Camera controller to be used</param>
-        /// <param name="visibleNodes">Set of nodes to render or null to render them all</param>
-        /// <param name="visibleSetChanged">true if the visible is different to the last
-        /// time this method was invoked.</param>
+        /// <param name="visibleMeshesByNode">Set of meshes to be drawn for specific nodes.
+        ///   If a node has a null entry, all of its meshes should be drawn. Otherwise
+        ///   only the meshes in the list. If this parameter is null, all nodes with all
+        ///   meshes should be drawn.</param>
+        /// <param name="visibleSetChanged">true if the visible set is different to the last
+        ///    time this method was invoked (this refers to changes in either the visibleNodes
+        ///    and the visibleMeshesByNode parameters.</param>
         /// <param name="texturesChanged">true if one or more textures were changed since
         /// the last time this method was invoked. This happens when textures are being
         /// replaced by the user, or during asynchronous loading.</param>
         /// <param name="flags">Selected set of rendering overlays</param>
-        void Render(ICameraController cam, HashSet<Node> visibleNodes,
+        void Render(ICameraController cam, 
+            Dictionary<Node, List<Mesh>> visibleMeshesByNode,
             bool visibleSetChanged, bool texturesChanged, 
             RenderFlags flags);
     }
