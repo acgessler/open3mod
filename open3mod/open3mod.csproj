@@ -161,6 +161,7 @@
     <Compile Include="SettingsDialog.Designer.cs">
       <DependentUpon>SettingsDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Shader.cs" />
     <Compile Include="SphereGeometry.cs" />
     <Compile Include="Tab.cs" />
     <Compile Include="TabUISkeleton.cs">
