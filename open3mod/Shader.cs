@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,7 +25,67 @@ namespace open3mod
         private readonly int _program;
         private readonly int _vs;
         private readonly int _fs;
-        private bool _disposed = false;
+        private bool _disposed;
+
+        private static readonly Dictionary<string, string> _textCache = new Dictionary<string, string>(); 
+
+
+        /// <summary>
+        /// Constructs a shader program given the source code for the single stages.
+        /// 
+        /// An exception will be thrown if constructing the Gl program fails.
+        /// </summary>
+        /// <param name="vertexShaderResName">Resource location for the source code for
+        ///    the vertex shader stage</param>
+        /// <param name="fragmentShaderResName">Resource location for the source code for 
+        ///    the fragment shader stage</param>
+        /// <param name="defines">(Preprocessor) stub to prepend to both stages. This
+        ///    must be valid GLSL source code.</param>
+        public static Shader FromResource(string vertexShaderResName, string fragmentShaderResName, string defines)
+        {
+            string vs, fs;
+
+            var assembly = Assembly.GetExecutingAssembly();
+
+            lock (_textCache)
+            {
+                if (!_textCache.TryGetValue(vertexShaderResName, out vs))
+                {
+                    using (var stream = assembly.GetManifestResourceStream(vertexShaderResName))
+                    {
+                        if (stream == null)
+                        {
+                            throw new Exception("failed to locate resource containing the vertex stage source code: " +
+                                                vertexShaderResName);
+                        }
+                        using (var reader = new StreamReader(stream))
+                        {
+                            vs = reader.ReadToEnd();
+                            _textCache.Add(vertexShaderResName, vs);
+                        }
+                    }
+                }
+
+                if (!_textCache.TryGetValue(fragmentShaderResName, out fs))
+                {
+                    using (var stream = assembly.GetManifestResourceStream(fragmentShaderResName))
+                    {
+                        if (stream == null)
+                        {
+                            throw new Exception("failed to locate resource containing the fragment stage source code " +
+                                                fragmentShaderResName);
+                        }
+                        using (var reader = new StreamReader(stream))
+                        {
+                            fs = reader.ReadToEnd();
+                            _textCache.Add(fragmentShaderResName, fs);
+                        }
+                    }
+                }
+            }
+            return new Shader(vs, fs, defines);
+        }
+
 
         /// <summary>
         /// Constructs a shader program given the source code for the single stages.
