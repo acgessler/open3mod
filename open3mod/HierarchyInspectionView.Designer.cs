@@ -39,8 +39,8 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.labelHitCount = new System.Windows.Forms.Label();
-            this.meshInfoPopup1 = new open3mod.MeshInfoPopup();
-            this.nodeInfoPopup1 = new open3mod.NodeInfoPopup();
+            this.meshInfoPopup = new open3mod.MeshInfoPopup();
+            this.nodeInfoPopup = new open3mod.NodeInfoPopup();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -149,27 +149,29 @@
             this.labelHitCount.Size = new System.Drawing.Size(0, 13);
             this.labelHitCount.TabIndex = 10;
             // 
-            // meshInfoPopup1
+            // meshInfoPopup
             // 
-            this.meshInfoPopup1.Location = new System.Drawing.Point(157, 341);
-            this.meshInfoPopup1.Name = "meshInfoPopup1";
-            this.meshInfoPopup1.Size = new System.Drawing.Size(115, 271);
-            this.meshInfoPopup1.TabIndex = 12;
+            this.meshInfoPopup.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.meshInfoPopup.Location = new System.Drawing.Point(191, 335);
+            this.meshInfoPopup.Name = "meshInfoPopup";
+            this.meshInfoPopup.Size = new System.Drawing.Size(115, 271);
+            this.meshInfoPopup.TabIndex = 12;
             // 
-            // nodeInfoPopup1
+            // nodeInfoPopup
             // 
-            this.nodeInfoPopup1.Location = new System.Drawing.Point(157, 53);
-            this.nodeInfoPopup1.Name = "nodeInfoPopup1";
-            this.nodeInfoPopup1.Size = new System.Drawing.Size(115, 282);
-            this.nodeInfoPopup1.TabIndex = 11;
+            this.nodeInfoPopup.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.nodeInfoPopup.Location = new System.Drawing.Point(191, 43);
+            this.nodeInfoPopup.Name = "nodeInfoPopup";
+            this.nodeInfoPopup.Size = new System.Drawing.Size(115, 282);
+            this.nodeInfoPopup.TabIndex = 11;
             // 
             // HierarchyInspectionView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.CornflowerBlue;
-            this.Controls.Add(this.meshInfoPopup1);
-            this.Controls.Add(this.nodeInfoPopup1);
+            this.Controls.Add(this.meshInfoPopup);
+            this.Controls.Add(this.nodeInfoPopup);
             this.Controls.Add(this.labelHitCount);
             this.Controls.Add(this.textBoxFilter);
             this.Controls.Add(this._tree);
@@ -198,7 +200,7 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label labelHitCount;
         private System.Windows.Forms.ImageList imageListIconsHierarchy;
-        private NodeInfoPopup nodeInfoPopup1;
-        private MeshInfoPopup meshInfoPopup1;
+        private NodeInfoPopup nodeInfoPopup;
+        private MeshInfoPopup meshInfoPopup;
     }
 }

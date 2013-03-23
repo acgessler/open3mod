@@ -34,6 +34,15 @@ using Assimp;
 
 namespace open3mod
 {
+    public enum NodePurpose
+    {
+        // note: this maps one by one to the TreeView's image indices
+        Joint = 2,
+        ImporterGenerated = 0,
+        GenericMeshHolder = 1,
+    }
+
+
     /// <summary>
     /// Populates the tree view in the scene inspector that shows the
     /// scene hierarchy and allows selection of arbitrary nodes to 
@@ -62,10 +71,6 @@ namespace open3mod
         private bool _isInSearchMode;
 
 
-        private const int SkeletonNodeAnimIndex = 2;
-        
-
-
         public HierarchyInspectionView(Scene scene, TabPage tabPageHierarchy)
         {
             _filterByMesh = new Dictionary<Node, List<Mesh>>();
@@ -83,7 +88,11 @@ namespace open3mod
             Debug.Assert(_scene != null);
 
             labelHitCount.BackColor = PositiveBackColor;
-            
+
+            nodeInfoPopup.Owner = this;
+            meshInfoPopup.Owner = this;
+
+            HidePopups();
             AddNodes();
             CountMeshes();
             UpdateStatistics();
@@ -191,13 +200,13 @@ namespace open3mod
             Debug.Assert(node != null);
 
             // default node icon
-            var index = 1;
+            var index = (int)NodePurpose.GenericMeshHolder;
             var isSkeletonNode = false;
 
             // mark nodes introduced by assimp (i.e. nodes not present in the source file)
             if (node.Name.StartsWith("<") && node.Name.EndsWith(">"))
             {
-                index = 0;
+                index = (int)NodePurpose.ImporterGenerated;
             }
             else
             {
@@ -239,7 +248,7 @@ namespace open3mod
 
             if(isSkeletonNode)
             {
-                index = SkeletonNodeAnimIndex;
+                index = (int)NodePurpose.Joint;
             }
 
             root.ImageIndex = root.SelectedImageIndex = index;
@@ -253,7 +262,7 @@ namespace open3mod
         }
 
 
-        private void AddMeshNode(Node owner, Mesh mesh, int id, TreeNode uiNode)
+        private static void AddMeshNode(Node owner, Mesh mesh, int id, TreeNode uiNode)
         {
             Debug.Assert(uiNode != null);
             Debug.Assert(mesh != null);
@@ -286,6 +295,8 @@ namespace open3mod
                 _visibleNodes = _nodeCount;
                 _visibleMeshes = _meshCountFullScene;
                 _visibleInstancedMeshes = _instancedMeshCountFullScene;
+
+                HidePopups();
                 return;
             }
 
@@ -307,19 +318,37 @@ namespace open3mod
                 _visibleInstancedMeshes = counters.Sum();
                 _visibleMeshes = counters.Count(i => i != 0);
 
-                if (node != null && node.ImageIndex == SkeletonNodeAnimIndex)
+                if (node != null && GetNodePurpose(node) == NodePurpose.Joint)
                 {
                     overrideSkeleton = true;           
+                }
+
+                if (node != null)
+                {
+                    PopulateNodeInfoPopup(node);
+                }
+                else
+                {
+                    HidePopups();
                 }
             }
             else if (item is KeyValuePair<Node, Mesh>)
             {
                 var itemAsMesh = (KeyValuePair<Node, Mesh>) item;
+                Debug.Assert(itemAsMesh.Key != null);
+                Debug.Assert(itemAsMesh.Value != null);
+
                 var arr = new List<Mesh> {itemAsMesh.Value};
                 _filterByMesh.Add(itemAsMesh.Key, arr);
 
                 _visibleMeshes = 1;
                 _visibleInstancedMeshes = 1;
+
+                PopulateMeshInfoPopup(node);
+            }
+            else
+            {
+                HidePopups();
             }
 
             _scene.SetVisibleNodes(_filterByMesh);
@@ -328,6 +357,55 @@ namespace open3mod
             UpdateStatistics();
 
             _scene.SetSkeletonVisibleOverride(overrideSkeleton);
+        }
+
+
+        private void HidePopups()
+        {
+            nodeInfoPopup.Visible = false;
+            meshInfoPopup.Visible = false;
+        }
+
+
+        private void PopulateNodeInfoPopup(TreeNode node)
+        {
+            Debug.Assert(node != null && node.Tag is Node);
+
+            meshInfoPopup.Visible = false;
+            nodeInfoPopup.Visible = true;
+
+            var loc = nodeInfoPopup.Location;
+            loc.Y = node.Bounds.Top;
+            nodeInfoPopup.Location = loc;
+
+            nodeInfoPopup.Populate((Node)node.Tag, GetNodePurpose(node));
+        }
+
+
+        private void PopulateMeshInfoPopup(TreeNode node)
+        {
+            Debug.Assert(node != null && node.Tag is KeyValuePair<Node, Mesh>);
+
+            meshInfoPopup.Visible = true;
+            nodeInfoPopup.Visible = false;
+
+            var loc = meshInfoPopup.Location;
+            loc.Y = node.Bounds.Top;
+            meshInfoPopup.Location = loc;
+
+            meshInfoPopup.Populate(((KeyValuePair<Node, Mesh>)node.Tag).Value);
+        }
+
+
+        private static NodePurpose GetNodePurpose(TreeNode node)
+        {
+            return ImageIndexToNodePurpose(node.ImageIndex);
+        }
+
+
+        private static NodePurpose ImageIndexToNodePurpose(int imageIndex)
+        {
+            return (NodePurpose) imageIndex;
         }
 
 
