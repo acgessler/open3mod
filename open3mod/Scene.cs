@@ -129,6 +129,7 @@ namespace open3mod
 
         private bool _nodesToShowChanged = true;
         private Dictionary<Node, List<Mesh>> _meshesToShow;
+        private bool _overrideSkeleton;
 
 
         /// <summary>
@@ -235,7 +236,7 @@ namespace open3mod
             {
                 flags |= RenderFlags.ShowBoundingBoxes;
             }
-            if (state.ShowSkeleton)
+            if (state.ShowSkeleton || _overrideSkeleton)
             {
                 flags |= RenderFlags.ShowSkeleton;
             }
@@ -344,6 +345,17 @@ namespace open3mod
             Debug.Assert(false);
         }
 #endif
+
+
+        /// <summary>
+        /// Turns skeleton visualization on even if it is off in the UI.
+        /// </summary>
+        /// <param name="overrideSkeleton">true to always show skeleton
+        ///    visualization, false to take the UI's settings</param>
+        public void SetSkeletonVisibleOverride(bool overrideSkeleton)
+        {
+            _overrideSkeleton = overrideSkeleton;
+        }
     }
 
 

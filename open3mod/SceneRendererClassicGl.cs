@@ -84,6 +84,7 @@ namespace open3mod
             GC.SuppressFinalize(this);
         }
 
+
 #if DEBUG
         ~SceneRendererClassicGl()
         {

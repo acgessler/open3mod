@@ -60,6 +60,9 @@ namespace open3mod
         private readonly Color _searchInfoColor;
 
         private bool _isInSearchMode;
+
+
+        private const int SkeletonNodeAnimIndex = 2;
         
 
 
@@ -236,7 +239,7 @@ namespace open3mod
 
             if(isSkeletonNode)
             {
-                index = 2;
+                index = SkeletonNodeAnimIndex;
             }
 
             root.ImageIndex = root.SelectedImageIndex = index;
@@ -266,10 +269,14 @@ namespace open3mod
         }
 
 
-        public void UpdateFilters(object hoverTag = null)
+        public void UpdateFilters(TreeNode hoverNode = null)
         {
-            object item = hoverTag ?? (_tree.SelectedNode == null ? _scene.Raw.RootNode : _tree.SelectedNode.Tag);
+            var node = hoverNode ?? _tree.SelectedNode;
+            var item = node == null ? _scene.Raw.RootNode : node.Tag;
+
             _filterByMesh.Clear();
+
+            var overrideSkeleton = false;
 
             if (item == _scene.Raw.RootNode)
             {
@@ -299,6 +306,11 @@ namespace open3mod
                 // update statistics
                 _visibleInstancedMeshes = counters.Sum();
                 _visibleMeshes = counters.Count(i => i != 0);
+
+                if (node != null && node.ImageIndex == SkeletonNodeAnimIndex)
+                {
+                    overrideSkeleton = true;           
+                }
             }
             else if (item is KeyValuePair<Node, Mesh>)
             {
@@ -313,7 +325,9 @@ namespace open3mod
             _scene.SetVisibleNodes(_filterByMesh);
         
             _visibleNodes = _filterByMesh.Count;
-            UpdateStatistics();            
+            UpdateStatistics();
+
+            _scene.SetSkeletonVisibleOverride(overrideSkeleton);
         }
 
 
@@ -413,7 +427,7 @@ namespace open3mod
 
         private void OnNodeHover(object sender, TreeNodeMouseHoverEventArgs e)
         {
-            UpdateFilters(e.Node.Tag);           
+            UpdateFilters(e.Node);           
         }
 
 
