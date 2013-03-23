@@ -511,7 +511,7 @@ namespace open3mod
         /// <param name="invGlobalScale"></param>
         /// <param name="animated"></param>
         private void RecursiveRenderNoScale(Node node, Dictionary<Node, List<Mesh>> visibleMeshesByNode, RenderFlags flags, 
-            float invGlobalScale, 
+            float invGlobalScale,
             bool animated)
         {
             // TODO unify our use of OpenTK and Assimp matrices 
@@ -543,8 +543,27 @@ namespace open3mod
             mConv.Transpose();
 
             if (flags.HasFlag(RenderFlags.ShowSkeleton))
-            {
-                DrawSkeletonBone(node, invGlobalScale);
+            {           
+                var highlight = false;
+                if (visibleMeshesByNode != null)
+                {
+                    List<Mesh> meshList;
+                    if (visibleMeshesByNode.TryGetValue(node, out meshList) && meshList == null)
+                    {
+                        // If the user hovers over a node in the tab view, all of its descendants
+                        // are added to the visible set as well. This is not the intended 
+                        // behavior for skeleton joints, though! Here we only want to show the
+                        // joint corresponding to the node being hovered over.
+
+                        // Therefore, only highlight nodes whose parents either don't exist
+                        // or are not in the visible set.
+                        if (node.Parent == null || !visibleMeshesByNode.TryGetValue(node.Parent, out meshList) || meshList != null)
+                        {
+                            highlight = true;
+                        }
+                    }
+                }
+                DrawSkeletonBone(node, invGlobalScale,highlight);
             }
 
             GL.PushMatrix();
@@ -577,7 +596,7 @@ namespace open3mod
         }
 
 
-        private void DrawSkeletonBone(Node node, float invGlobalScale)
+        private void DrawSkeletonBone(Node node, float invGlobalScale, bool highlight)
         {
             var target = new Vector3(node.Transform.A4, node.Transform.B4, node.Transform.C4);
             if (target.LengthSquared > 1e-6f)
@@ -587,7 +606,7 @@ namespace open3mod
                 GL.Enable(EnableCap.ColorMaterial);
                 GL.Disable(EnableCap.DepthTest);
 
-                GL.Color4(new Color4(0.0f, 0.5f, 1.0f, 1.0f));
+                GL.Color4(highlight ? new Color4(0.0f, 1.0f, 0.5f, 1.0f) : new Color4(0.0f, 0.5f, 1.0f, 1.0f));
 
                 var right = new Vector3(1, 0, 0);
                 var targetNorm = target;
@@ -597,10 +616,10 @@ namespace open3mod
                 Vector3.Cross(ref targetNorm, ref right, out up);
                 Vector3.Cross(ref up, ref targetNorm, out right);
 
-                const float jointWidth = 0.03f;
-
                 up *= invGlobalScale;
                 right *= invGlobalScale;
+
+                const float jointWidth = 0.03f;
 
                 GL.Begin(BeginMode.LineLoop);
                 GL.Vertex3(-jointWidth*up + -jointWidth*right);
@@ -619,7 +638,8 @@ namespace open3mod
                 GL.Vertex3(jointWidth*up + -jointWidth*right);
                 GL.Vertex3(target);
 
-                GL.Color4(new Color4(1.0f, 1.0f, 0.0f, 1.0f));
+                GL.Color4(highlight ? new Color4(1.0f, 0.0f, 0.0f, 1.0f) : new Color4(1.0f, 1.0f, 0.0f, 1.0f));
+
                 GL.Vertex3(Vector3.Zero);
                 GL.Vertex3(target);
                 GL.End();
