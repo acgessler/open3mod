@@ -40,6 +40,7 @@
             this.linkLabel3 = new System.Windows.Forms.LinkLabel();
             this.pageSetupDialog1 = new System.Windows.Forms.PageSetupDialog();
             this.process1 = new System.Diagnostics.Process();
+            this.label5 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -140,11 +141,20 @@
             this.process1.StartInfo.UserName = "";
             this.process1.SynchronizingObject = this;
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(50, 185);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(0, 13);
+            this.label5.TabIndex = 12;
+            // 
             // About
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(610, 555);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.linkLabel3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.richTextBox1);
@@ -183,6 +193,7 @@
         private System.Windows.Forms.LinkLabel linkLabel3;
         private System.Windows.Forms.PageSetupDialog pageSetupDialog1;
         private System.Diagnostics.Process process1;
+        private System.Windows.Forms.Label label5;
 
 
     }
