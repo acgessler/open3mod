@@ -134,7 +134,7 @@ namespace open3mod
         /// <param name="name"></param>
         /// <param name="basedir"></param>
         /// <returns>A valid stream</returns>
-        private Stream ObtainStream(string name, string basedir)
+        private static Stream ObtainStream(string name, string basedir)
         {
             Debug.Assert(name != null);
             Debug.Assert(basedir != null);

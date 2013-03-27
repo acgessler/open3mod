@@ -51,35 +51,31 @@ namespace open3mod
             {
                 if (!_textCache.TryGetValue(vertexShaderResName, out vs))
                 {
-                    using (var stream = assembly.GetManifestResourceStream(vertexShaderResName))
+                    var stream = assembly.GetManifestResourceStream(vertexShaderResName);
+                    if (stream == null)
                     {
-                        if (stream == null)
-                        {
-                            throw new Exception("failed to locate resource containing the vertex stage source code: " +
-                                                vertexShaderResName);
-                        }
-                        using (var reader = new StreamReader(stream))
-                        {
-                            vs = reader.ReadToEnd();
-                            _textCache.Add(vertexShaderResName, vs);
-                        }
+                        throw new Exception("failed to locate resource containing the vertex stage source code: " +
+                                            vertexShaderResName);
+                    }
+                    using (var reader = new StreamReader(stream))
+                    {
+                        vs = reader.ReadToEnd();
+                        _textCache.Add(vertexShaderResName, vs);
                     }
                 }
 
                 if (!_textCache.TryGetValue(fragmentShaderResName, out fs))
                 {
-                    using (var stream = assembly.GetManifestResourceStream(fragmentShaderResName))
+                    var stream = assembly.GetManifestResourceStream(fragmentShaderResName);                
+                    if (stream == null)
                     {
-                        if (stream == null)
-                        {
-                            throw new Exception("failed to locate resource containing the fragment stage source code " +
-                                                fragmentShaderResName);
-                        }
-                        using (var reader = new StreamReader(stream))
-                        {
-                            fs = reader.ReadToEnd();
-                            _textCache.Add(fragmentShaderResName, fs);
-                        }
+                        throw new Exception("failed to locate resource containing the fragment stage source code " +
+                                            fragmentShaderResName);
+                    }
+                    using (var reader = new StreamReader(stream))
+                    {
+                        fs = reader.ReadToEnd();
+                        _textCache.Add(fragmentShaderResName, fs);
                     }
                 }
             }

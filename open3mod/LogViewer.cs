@@ -215,16 +215,14 @@ namespace open3mod
             {
                 return;
             }
-            using (var openFile = saveFileDialog.OpenFile())
+
+            using (var stream = new StreamWriter(saveFileDialog.OpenFile()))
             {
-                using (var stream = new StreamWriter(openFile))
+                foreach (var entry in _currentLogStore.Messages)
                 {
-                    foreach (var entry in _currentLogStore.Messages)
-                    {                       
-                        stream.Write(LogEntryToPlainText(entry) + "\r\n");
-                    }
-                }               
-            }
+                    stream.Write(LogEntryToPlainText(entry) + "\r\n");
+                }
+            }               
         }
 
 

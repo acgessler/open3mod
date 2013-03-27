@@ -146,6 +146,11 @@ namespace open3mod
 
         protected virtual void Dispose(bool disposing)
         {
+            if (disposing)
+            {
+                _textBmp.Dispose();
+                _textBmp = null;
+            }
             if (_textTexture > 0)
             {
                 GL.DeleteTexture(_textTexture);
