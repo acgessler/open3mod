@@ -44,8 +44,7 @@ namespace open3mod
                 }
 
                 // note: have to keep the stream open for the lifetime of the image, so don't Dispose()
-                _image = Image.FromStream(new MemoryStream(compTex.Data));
-                _result = _image != null ? LoadResult.Good : LoadResult.UnknownFileFormat;
+                SetFromStream(new MemoryStream(compTex.Data));
                 return;
             }
 

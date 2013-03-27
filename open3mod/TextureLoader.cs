@@ -25,11 +25,15 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
+using DevIL;
+using Image = System.Drawing.Image;
+
 
 namespace open3mod
 {
@@ -60,34 +64,67 @@ namespace open3mod
         {
             try
             {
-                using (var stream = ObtainStream(name, basedir))
-                {
-                    Debug.Assert(stream != null);
-
-                    // try loading using standard .net first
-                    try
-                    {
-                        _image = Image.FromStream(stream);
-                        if (_image != null)
-                        {
-                            _result = LoadResult.Good;
-                        }
-                        else
-                        {
-                            _result = LoadResult.UnknownFileFormat;   
-                        }
-                    }     
-                    catch (Exception)
-                    {
-                        // TODO try using DevIL
-                    }
-                }
+                // note: we need to keep the stream open during the lifetime
+                // of the Image (see docs for Image.FromStream). Therefore,
+                // no Dispose().
+                var stream = ObtainStream(name, basedir);
+                Debug.Assert(stream != null);
+                SetFromStream(stream);                  
             }
             catch(Exception) 
             {
                 _result = LoadResult.FileNotFound;
             }
         }
+
+
+        protected void SetFromStream(Stream stream)
+        {
+            // try loading using standard .net first
+            try
+            {
+                _image = Image.FromStream(stream);
+                if (_image != null)
+                {
+                    _result = LoadResult.Good;
+                }
+                else
+                {
+                    throw new Exception();
+                }
+            }
+            catch (Exception)
+            {
+                // if this fails, load using DevIL
+                using (var imp = new DevIL.ImageImporter())
+                {
+                    try
+                    {
+                        using(var devilImage = imp.LoadImageFromStream(stream))
+                        {
+                            devilImage.Bind();
+
+                            var info = DevIL.Unmanaged.IL.GetImageInfo();
+                            var bitmap = new Bitmap(info.Width, info.Height, PixelFormat.Format32bppArgb);
+                            var rect = new Rectangle(0, 0, info.Width, info.Height);
+                            var data = bitmap.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+
+                            DevIL.Unmanaged.IL.CopyPixels(0, 0, 0, info.Width, info.Height, 1, DataFormat.BGRA, DataType.UnsignedByte, data.Scan0);
+
+                            bitmap.UnlockBits(data);
+                            _image = bitmap;
+                            _result = LoadResult.Good;
+                        }                
+                    }
+                    catch (Exception)
+                    {
+                        // TODO any other viable fall back image loaders?
+                        _result = LoadResult.UnknownFileFormat;
+                    }
+                }
+            }
+        }
+
 
         /// <summary>
         /// Try to obtain a read stream to a given file, looking at some alternative
