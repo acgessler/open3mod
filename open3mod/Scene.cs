@@ -270,7 +270,23 @@ namespace open3mod
                 var textures = mat.GetAllTextures();
                 foreach (var tex in textures)
                 {
-                    TextureSet.Add(tex.FilePath);
+                    var path = tex.FilePath;
+                    Assimp.Texture embeddedSource = null;
+                    if(path.StartsWith("*"))
+                    {
+                        // Embedded texture, following the asterisk is the zero-based
+                        // index of the data source in Assimp.Scene.Textures
+                        uint index;
+                        if(Raw.HasTextures && uint.TryParse(path.Substring(1), out index) && index < Raw.TextureCount)
+                        {
+                            embeddedSource = Raw.Textures[index];
+                        }
+                        // else: just add the name to the texture set without specifying
+                        // a data source, the texture will then be in a failed state 
+                        // but users can still replace it manually.
+                    }
+
+                    TextureSet.Add(tex.FilePath, embeddedSource);
                 }
             }
 

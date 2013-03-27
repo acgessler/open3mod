@@ -52,6 +52,7 @@ namespace open3mod
 
         private readonly object _lock = new object();
         private readonly string _baseDir;
+        private Assimp.Texture _dataSource;
 
         /// <summary>
         /// Possible states of a Texture object during its lifetime
@@ -73,16 +74,35 @@ namespace open3mod
         }
 
         /// <summary>
-        /// Start loading a texture from a given file name
+        /// Start loading a texture from a given file path
         /// </summary>
         /// <param name="file">File to load from</param>
+        /// <param name="baseDir">Scene root folder </param>
         /// <param name="callback">Optional callback to be invoked
-        ///   when loading to memory is either complete or in definitely
-        ///   failed state.)</param>
+        ///   when loading to memory is either complete or is definitely
+        ///   failed.)</param>
         public Texture(string file, string baseDir, CompletionCallback callback)
         {
             _file = file;
             _baseDir = baseDir;
+            _callback = (s, image, status) => callback(this);
+            LoadAsync();
+        }
+
+
+        /// <summary>
+        /// Start loading a texture from a given embedded texture
+        /// </summary>
+        /// <param name="dataSource">Source texture from assimp</param>
+        /// <param name="refName">Sentinel name of the texture. This is the name
+        ///    that is set as FileName.</param>
+        /// <param name="callback">Optional callback to be invoked
+        ///   when loading to memory is either complete or is definitely
+        ///   failed.)</param>
+        public Texture(Assimp.Texture dataSource, string refName, CompletionCallback callback)
+        {
+            _file = refName;
+            _dataSource = dataSource;
             _callback = (s, image, status) => callback(this);
             LoadAsync();
         }
@@ -116,21 +136,30 @@ namespace open3mod
 
         private void LoadAsync()
         {
-            lock (_lock) {
-                State = TextureState.LoadingPending;
-                TextureQueue.Enqueue(_file, _baseDir , (file, image, result) =>
+            TextureQueue.CompletionCallback callback = (file, image, result) =>
                 {
-                    
-                    Debug.Assert(_file.Equals(file));
+
+                    Debug.Assert(_file == file);
                     SetImage(image, result);
 
                     if (_callback != null)
                     {
                         _callback(_file, _image, result);
                     }
-                });
+                };
+
+            lock (_lock) {
+                State = TextureState.LoadingPending;
+                if (_dataSource != null)
+                {
+                    TextureQueue.Enqueue(_dataSource, _file, callback);
+                    return;
+                }
+                
+                TextureQueue.Enqueue(_file, _baseDir, callback);
             }
         }
+
 
         private void SetImage(Image image, TextureLoader.LoadResult result)
         {

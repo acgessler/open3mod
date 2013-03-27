@@ -46,8 +46,15 @@ namespace open3mod
             UnknownFileFormat
         }
 
-        private readonly LoadResult _result;
-        private readonly Image _image;
+        protected LoadResult _result;
+        protected Image _image;
+
+
+        protected TextureLoader()
+        {
+            _result = LoadResult.UnknownFileFormat;
+        }
+
 
         public TextureLoader(string name, string basedir)
         {

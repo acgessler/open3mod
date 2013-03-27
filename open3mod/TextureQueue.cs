@@ -21,6 +21,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -32,44 +33,121 @@ namespace open3mod
     /// <summary>
     /// Class that handles asynchronous texture loading. Users enqueue
     /// their requests using Enqueue(), which takes a delegate that it
-    /// invokes as soon as loading completes. 
-    /// 
-    /// In the current implementation, textures are loaded in FIFO order 
+    /// invokes as soon as loading completes.
+    /// In the current implementation, textures are loaded in FIFO order
     /// using a single background thread.
     /// </summary>
     public static class TextureQueue
     {
         public delegate void CompletionCallback(string file, Image image, TextureLoader.LoadResult result);
 
-        private struct Task
+        private abstract class Task
         {
-            public readonly string File;
-            public readonly string BaseDir;
             public readonly CompletionCallback Callback;
 
-            public Task(string file, string baseDir, CompletionCallback callback) : this()
+            public abstract void Load();
+
+            protected Task(CompletionCallback callback)
             {
-                File = file;
-                BaseDir = baseDir;
                 Callback = callback;
             }
         }
+
+
+        private class TextureFromFileTask : Task
+        {
+            private readonly string _file;
+            private readonly string _baseDir;
+
+            public TextureFromFileTask (string file, string baseDir, CompletionCallback callback) 
+                : base(callback)
+            {
+                _file = file;
+                _baseDir = baseDir;
+            }
+
+
+            public override void Load()
+            {
+                var loader = new TextureLoader(_file, _baseDir);
+                Callback(_file, loader.Image, loader.Result);
+            }
+        }
+
+
+        private class TextureFromMemoryTask : Task
+        {
+            private readonly Assimp.Texture _dataSource;
+            private readonly string _refName;
+
+            public TextureFromMemoryTask(Assimp.Texture dataSource, string refName, CompletionCallback callback)
+                : base(callback)
+            {
+                _dataSource = dataSource;
+                _refName = refName;
+            }
+
+            public override void Load()
+            {
+                var loader = new EmbeddedTextureLoader(_dataSource);
+                Callback(_refName, loader.Image, loader.Result);
+            }
+        }
+
 
         private static Thread _thread;
         private static readonly Queue<Task> Queue = new Queue<Task>();
         private static readonly AutoResetEvent Event = new AutoResetEvent(false);
 
-        private static volatile bool _break = false;
+        private static volatile bool _break;
 
+
+
+        /// <summary>
+        /// Enqueues an from-file texture loading job to the queue.
+        /// </summary>
+        /// <param name="file">Path / file name of the texture to be loaded</param>
+        /// <param name="baseDir">Base folder for the current scene. This is used
+        ///    to locate the file in case it is not found at the exact path given.</param>
+        /// <param name="callback">Callback to be invoked when loading is complete</param>
         public static void Enqueue(string file, string baseDir, CompletionCallback callback)
         {
+            Debug.Assert(file != null);
+            Debug.Assert(baseDir != null);
+            Debug.Assert(callback != null);
+
             if (_thread == null)
             {
                 StartThread();
             }
 
             lock (Queue) {
-                Queue.Enqueue(new Task(file, baseDir, callback));
+                Queue.Enqueue(new TextureFromFileTask(file, baseDir, callback));
+            }
+            Event.Set();
+        }
+
+
+        /// <summary>
+        /// Enqueues an in-memory (embedded) texture loading job to the queue.
+        /// </summary>
+        /// <param name="dataSource">Assimp texture to read from</param>
+        /// <param name="refName">Name to report to the callback</param>
+        /// <param name="callback">Callback to be invoked when loading is complete</param>
+        public static void Enqueue(Assimp.Texture dataSource, string refName, CompletionCallback callback)
+        {
+            Debug.Assert(dataSource != null);
+            Debug.Assert(refName != null);
+            Debug.Assert(callback != null);
+
+            if (_thread == null)
+            {
+                StartThread();
+            }
+
+            lock (Queue)
+            {
+                Queue.Enqueue(new TextureFromMemoryTask(dataSource, refName, callback));
             }
             Event.Set();
         }
@@ -92,6 +170,7 @@ namespace open3mod
 
         private static void StartThread()
         {
+            Debug.Assert(_thread == null);
             _thread = new Thread(ThreadProc);
             _thread.Start();
         }
@@ -118,9 +197,7 @@ namespace open3mod
                         continue;
                     }
 
-                    // XXX support more file formats (such as dds, tga ..)
-                    var loader = new TextureLoader(task.File, task.BaseDir);
-                    task.Callback(task.File, loader.Image, loader.Result);
+                    task.Load();
                 }
             }
             catch(ThreadInterruptedException)

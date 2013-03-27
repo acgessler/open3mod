@@ -143,61 +143,70 @@ namespace open3mod
 
         /// <summary>
         /// Add a texture to the TextureSet. This is the only place where
-        /// Texture instances are actually created. This also schedules
-        /// the texture for loading, which then happens asynchronously.
+        /// Texture instances are actually created. The actual image for textures
+        /// added to the set is loaded using a background thread.
         /// </summary>
-        /// <param name="path">Texture's given path</param>
-        public void Add(string path)
+        /// <param name="path">Texture's given path or, in case an embedded data source
+        ///    is specified for the texture, an arbitrary but unique value to identify 
+        ///    the texture (preferably not a file path)
+        /// </param>
+        /// <param name="embeddedDataSource">Optional parameter that specifies
+        ///    an in-memory, embedded data source for the texture. </param>
+        public void Add(string path, Assimp.Texture embeddedDataSource = null)
         {
             if(_dict.ContainsKey(path))
             {
                 return;
             }
-            _dict.Add(path, new Texture(path, _baseDir, self =>
-            {               
-                lock(_loaded)
-                {
-                    if (_disposed)
+            Texture.CompletionCallback closure = self =>
+                {               
+                    lock(_loaded)
                     {
-                        return;
-                    }
-
-                    Debug.Assert(_dict.ContainsKey(path));
-                    _loaded.Add(path);
-
-                    // if this texture is being used as replacement for another texture,
-                    // we need to invoke callbacks for its ID too
-                    // TODO obviously, all the replacement code needs a re-design.
-                    foreach (var kv in _replacements)
-                    {
-                        if (kv.Value.Value == path)
+                        if (_disposed)
                         {
-                            for (int i = 0, e = _textureCallbacks.Count; i < e; )
+                            return;
+                        }
+
+                        Debug.Assert(_dict.ContainsKey(path));
+                        _loaded.Add(path);
+
+                        // if this texture is being used as replacement for another texture,
+                        // we need to invoke callbacks for its ID too
+                        // TODO obviously, all the replacement code needs a re-design.
+                        foreach (var kv in _replacements)
+                        {
+                            if (kv.Value.Value == path)
                             {
-                                var callback = _textureCallbacks[i];
-                                if (!callback(kv.Value.Key, self))
+                                for (int i = 0, e = _textureCallbacks.Count; i < e; )
                                 {
-                                    _textureCallbacks.RemoveAt(i);
-                                    --e;
-                                    continue;
+                                    var callback = _textureCallbacks[i];
+                                    if (!callback(kv.Value.Key, self))
+                                    {
+                                        _textureCallbacks.RemoveAt(i);
+                                        --e;
+                                        continue;
+                                    }
+                                    ++i;
                                 }
-                                ++i;
                             }
                         }
-                    }
-                    for (int i = 0, e = _textureCallbacks.Count; i < e; )
-                    {
-                        var callback = _textureCallbacks[i];
-                        if (!callback(path, self))
+                        for (int i = 0, e = _textureCallbacks.Count; i < e; )
                         {
-                            _textureCallbacks.RemoveAt(i);
-                            --e;
-                            continue;
+                            var callback = _textureCallbacks[i];
+                            if (!callback(path, self))
+                            {
+                                _textureCallbacks.RemoveAt(i);
+                                --e;
+                                continue;
+                            }
+                            ++i;
                         }
-                        ++i;
-                    }
-                }               
-            }));
+                    }               
+                };
+ 
+            _dict.Add(path, embeddedDataSource == null 
+                ? new Texture(path, _baseDir, closure) 
+                : new Texture(embeddedDataSource, path, closure));
         }
 
 
