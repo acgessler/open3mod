@@ -86,10 +86,10 @@ namespace open3mod
             var n = 0;
             foreach(var texel in texels)
             {
-                tempBuffer[n++] = texel.A;
-                tempBuffer[n++] = texel.R;
-                tempBuffer[n++] = texel.G;
                 tempBuffer[n++] = texel.B;
+                tempBuffer[n++] = texel.G;
+                tempBuffer[n++] = texel.R;
+                tempBuffer[n++] = texel.A;
 
                 if(n % dataLineLength == 0)
                 {

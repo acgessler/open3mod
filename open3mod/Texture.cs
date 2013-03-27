@@ -138,7 +138,6 @@ namespace open3mod
         {
             TextureQueue.CompletionCallback callback = (file, image, result) =>
                 {
-
                     Debug.Assert(_file == file);
                     SetImage(image, result);
 
