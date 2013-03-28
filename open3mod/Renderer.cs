@@ -291,6 +291,11 @@ namespace open3mod
             Debug.Assert(_hudImages != null);
 
             var graphics = _textOverlay.GetDrawableGraphicsContext();
+            if (graphics == null)
+            {
+                return;
+            }
+
             var xPoint = (int) (x2*(double) RenderResolution.Width);
             var yPoint = 3 + (int) ((1.0f - y2)*(double) RenderResolution.Height); // note: y is flipped
             const int xSpacing = 4;
@@ -553,6 +558,10 @@ namespace open3mod
         private void DrawNoSceneSplash()
         {
             var graphics = _textOverlay.GetDrawableGraphicsContext();
+            if(graphics == null)
+            {
+                return;
+            }
 
             var format = new StringFormat();
             format.LineAlignment = StringAlignment.Center;
@@ -568,6 +577,10 @@ namespace open3mod
         private void DrawLoadingSplash()
         {
             var graphics = _textOverlay.GetDrawableGraphicsContext();
+            if (graphics == null)
+            {
+                return;
+            }
 
             var format = new StringFormat {LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center};
 
@@ -581,6 +594,10 @@ namespace open3mod
         private void DrawFailureSplash(string message)
         {
             var graphics = _textOverlay.GetDrawableGraphicsContext();
+            if (graphics == null)
+            {
+                return;
+            }
 
             var format = new StringFormat {LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center};
 
@@ -621,6 +638,10 @@ namespace open3mod
             }
 
             var graphics = _textOverlay.GetDrawableGraphicsContext();
+            if (graphics == null)
+            {
+                return;
+            }
             graphics.DrawString("FPS: " + _displayFps.ToString("0.0"), Window.UiState.DefaultFont12,
                                 new SolidBrush(Color.Red), 5, 5);
         }

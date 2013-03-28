@@ -49,6 +49,7 @@ namespace open3mod
 
         private Graphics _tempContext;
         private uint _frameIndex;
+        private bool _disposed;
 
 
         public bool WantRedraw
@@ -103,6 +104,10 @@ namespace open3mod
         /// <returns>Context to draw to</returns>
         public Graphics GetDrawableGraphicsContext()
         {
+            if(_disposed)
+            {
+                return null;
+            }
             if(_tempContext == null)
             {
                 _tempContext = Graphics.FromImage(_textBmp);
@@ -127,6 +132,8 @@ namespace open3mod
             _tempContext.Clear(Color.Transparent);
         }
 
+
+
 #if DEBUG
         ~TextOverlay()
         {
@@ -146,10 +153,24 @@ namespace open3mod
 
         protected virtual void Dispose(bool disposing)
         {
+            if (_disposed)
+            {
+                return;
+            }
+            _disposed = true;
             if (disposing)
             {
-                _textBmp.Dispose();
-                _textBmp = null;
+                if (_textBmp != null)
+                {
+                    _textBmp.Dispose();
+                    _textBmp = null;
+                }
+
+                if (_tempContext != null)
+                {
+                    _tempContext.Dispose();
+                    _tempContext = null;
+                }
             }
             if (_textTexture > 0)
             {
