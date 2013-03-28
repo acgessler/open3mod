@@ -100,6 +100,7 @@ namespace open3mod
             image.UnlockBits(bmpData);
 
             _image = image;
+            _result = LoadResult.Good;
         }
     }
 }
