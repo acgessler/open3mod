@@ -470,7 +470,7 @@ namespace open3mod
                 else
                 {
                     var nodeMesh = (KeyValuePair<Node, Mesh>) n.Tag;
-                    if (nodeMesh.Key.Name.ToLower().Contains(_searchText) || nodeMesh.Value.Name.ToLower().Contains(_searchText))
+                    if (nodeMesh.Value.Name.Length > 0 && nodeMesh.Value.Name.ToLower().Contains(_searchText))
                     {
                         n.BackColor = PositiveBackColor;
                         if (searchHitNodes != null)
