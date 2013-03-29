@@ -58,6 +58,7 @@ namespace open3mod
         private const int AutoExpandLevels = 4;
         private static Color DefaultBackColor = Color.White;
         private static Color PositiveBackColor = Color.GreenYellow;
+        private static Color SearchIterateBackColor = Color.Gold;
         private static Color NegativeBackColor = Color.OrangeRed;
         private int _visibleNodes;
         private int _visibleMeshes;
@@ -70,6 +71,8 @@ namespace open3mod
 
         private bool _isInSearchMode;
         private bool _searchLocked;
+        private int _hitNodeCursor;
+        private List<TreeNode> _hitNodes;
 
 
         public HierarchyInspectionView(Scene scene, TabPage tabPageHierarchy)
@@ -414,13 +417,21 @@ namespace open3mod
         {
             if (_searchText != "")
             {
-                var hits = UpdateHighlighting(_tree.Nodes[0]);
-                labelHitCount.Text = string.Format("{0} hits", hits.ToString(CultureInfo.InvariantCulture));
+                var nodes = new List<TreeNode>();
+                UpdateHighlighting(_tree.Nodes[0], nodes);
+
+                _hitNodes = nodes;
+                _hitNodeCursor = 0;
+
+                labelHitCount.Text = string.Format("{0} hits", nodes.Count.ToString(CultureInfo.InvariantCulture));
             }
             else
             {
                 ResetHighlighting(_tree.Nodes[0]);
                 labelHitCount.Text = "";
+
+                _hitNodes = null;
+                _hitNodeCursor = -1;
             }
         }
 
@@ -436,9 +447,8 @@ namespace open3mod
         }
 
 
-        private int UpdateHighlighting(TreeNode n)
+        private void UpdateHighlighting(TreeNode n, List<TreeNode> searchHitNodes = null)
         {
-            int hits = 0;
             if (n.Tag != null)
             {
                 var node = n.Tag as Node;
@@ -447,7 +457,10 @@ namespace open3mod
                     if (node.Name.ToLower().Contains(_searchText))
                     {
                         n.BackColor = PositiveBackColor;
-                        ++hits;
+                        if (searchHitNodes != null)
+                        {
+                            searchHitNodes.Add(n);
+                        }
                     }
                     else
                     {
@@ -460,7 +473,10 @@ namespace open3mod
                     if (nodeMesh.Key.Name.ToLower().Contains(_searchText) || nodeMesh.Value.Name.ToLower().Contains(_searchText))
                     {
                         n.BackColor = PositiveBackColor;
-                        ++hits;
+                        if (searchHitNodes != null)
+                        {
+                            searchHitNodes.Add(n);
+                        }
                     }
                     else
                     {
@@ -470,9 +486,8 @@ namespace open3mod
             }
             for (var i = 0; i < n.Nodes.Count; ++i)
             {
-                hits += UpdateHighlighting(n.Nodes[i]);
+                UpdateHighlighting(n.Nodes[i], searchHitNodes);
             }
-            return hits;
         }
 
 
@@ -553,20 +568,42 @@ namespace open3mod
             textBoxFilter.ForeColor = _searchInfoColor;
         }
 
+
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
             if(e.KeyCode == Keys.Enter)
             {
-                e.SuppressKeyPress = false;
+                e.SuppressKeyPress = false;  
             }
         }
+
 
         private void OnKeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == 13) // 13 is newline and thus corresponds to the Enter key
             {
                 e.Handled = true;
-                _searchLocked = true;
+
+                if (sender == textBoxFilter)
+                {
+                    _searchLocked = true;
+                }
+
+                if (_searchLocked)
+                {
+                    Debug.Assert(_hitNodes != null);
+
+                    // fix the last iterated element's background color
+                    _hitNodes[_hitNodeCursor > 0 ? _hitNodeCursor - 1 : _hitNodes.Count-1].BackColor = PositiveBackColor;
+
+                    // select next search item
+                    _tree.SelectedNode = _hitNodes[_hitNodeCursor];
+                    _tree.SelectedNode.EnsureVisible();
+                    _tree.SelectedNode.BackColor = SearchIterateBackColor;
+
+                    UpdateFilters();
+                    _hitNodeCursor = (_hitNodeCursor + 1)%_hitNodes.Count;
+                }
             }
         }
     }
