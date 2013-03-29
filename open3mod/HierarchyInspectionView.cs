@@ -69,6 +69,7 @@ namespace open3mod
         private readonly Color _searchInfoColor;
 
         private bool _isInSearchMode;
+        private bool _searchLocked;
 
 
         public HierarchyInspectionView(Scene scene, TabPage tabPageHierarchy)
@@ -522,6 +523,7 @@ namespace open3mod
             if (str != _searchText)
             {
                 _searchText = str;
+                _searchLocked = false;
                 UpdateTextSearch();
             }
         }
@@ -542,9 +544,30 @@ namespace open3mod
 
         private void OnStopFocusingOnSearch(object sender, EventArgs e)
         {
+            if (_searchLocked)
+            {
+                return;
+            }
             _isInSearchMode = false;
             textBoxFilter.Text = _searchInfoText;
             textBoxFilter.ForeColor = _searchInfoColor;
+        }
+
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = false;
+            }
+        }
+
+        private void OnKeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 13) // 13 is newline and thus corresponds to the Enter key
+            {
+                e.Handled = true;
+                _searchLocked = true;
+            }
         }
     }
 }

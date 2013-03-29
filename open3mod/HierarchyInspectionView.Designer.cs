@@ -68,6 +68,8 @@
             this.textBoxFilter.Text = "Type to search";
             this.textBoxFilter.Click += new System.EventHandler(this.OnClickSearchBox);
             this.textBoxFilter.TextChanged += new System.EventHandler(this.OnChangeFilterText);
+            this.textBoxFilter.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDown);
+            this.textBoxFilter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
             this.textBoxFilter.Leave += new System.EventHandler(this.OnStopFocusingOnSearch);
             // 
             // _tree
