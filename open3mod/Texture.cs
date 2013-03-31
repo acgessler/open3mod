@@ -180,8 +180,22 @@ namespace open3mod
             Debug.Assert(State == TextureState.WinFormsImageCreated);
             lock (_lock) { // this is a long CS, but at this time we don't expect concurrent action.
                 // http://www.opentk.com/node/259
-                using(var textureBitmap = new Bitmap(_image))
-                {
+                Bitmap textureBitmap = null;
+                bool shouldDisposeBitmap = false;
+
+                // in order to LockBits(), we need to create a Bitmap. In case the given Image
+                // *is* already a Bitmap however, we can directly re-use it.
+                try {
+                    if (_image is Bitmap)
+                    {
+                        textureBitmap = (Bitmap)_image;
+                    }
+                    else
+                    {
+                        textureBitmap = new Bitmap(_image);
+                        shouldDisposeBitmap = true;
+                    }
+
                     System.Drawing.Imaging.BitmapData textureData =
                         textureBitmap.LockBits(
                             new Rectangle(0, 0, textureBitmap.Width, textureBitmap.Height),
@@ -225,7 +239,13 @@ namespace open3mod
                     // TODO handle glError
                     _gl = tex;
                     State = TextureState.GlTextureCreated;
-                }                
+                }       
+                finally {
+                    if (shouldDisposeBitmap && textureBitmap != null)
+                    {
+                        textureBitmap.Dispose();
+                    }
+                }
             }
         }
 
