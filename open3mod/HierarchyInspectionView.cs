@@ -423,6 +423,11 @@ namespace open3mod
                 _hitNodes = nodes;
                 _hitNodeCursor = 0;
 
+                if (_hitNodes.Count > 0)
+                {
+                    _hitNodes[0].EnsureVisible();
+                }
+
                 labelHitCount.Text = string.Format("{0} hits", nodes.Count.ToString(CultureInfo.InvariantCulture));
             }
             else
