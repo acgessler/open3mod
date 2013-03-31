@@ -18,6 +18,9 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///////////////////////////////////////////////////////////////////////////////////
 
+// this means we use Application.OnIdle to power the rendering "loop".
+// if this is commented, a Forms.Timer with an interval of 20ms is used instead.
+#define USE_APP_IDLE
 
 using System;
 using System.Collections.Specialized;
@@ -499,6 +502,7 @@ namespace open3mod
         }
 
 
+        private System.Windows.Forms.Timer _timer;
         private void OnGlLoad(object sender, EventArgs e)
         {
             if (_renderer != null)
@@ -508,8 +512,15 @@ namespace open3mod
 
             _renderer = new Renderer(this);           
 
+#if USE_APP_IDLE
             // register Idle event so we get regular callbacks for drawing
             Application.Idle += ApplicationIdle;
+#else
+            _timer = new System.Windows.Forms.Timer();
+            _timer.Interval = 20;
+            _timer.Tick += ApplicationIdle;
+            _timer.Start();
+#endif
         }
 
 
@@ -536,13 +547,14 @@ namespace open3mod
 
 
         private void ApplicationIdle(object sender, EventArgs e)
-        {
+        {           
             if(IsDisposed)
             {
                 return;
             }
-            // no guard needed -- we hooked into the event in Load handler
+#if USE_APP_IDLE
             while (glControl1.IsIdle)
+#endif
             {
                 FrameUpdate();
                 FrameRender();
