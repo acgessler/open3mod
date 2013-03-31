@@ -420,12 +420,17 @@ namespace open3mod
                 var nodes = new List<TreeNode>();
                 UpdateHighlighting(_tree.Nodes[0], nodes);
 
-                _hitNodes = nodes;
-                _hitNodeCursor = 0;
-
-                if (_hitNodes.Count > 0)
+                if (nodes.Count > 0)
                 {
-                    _hitNodes[0].EnsureVisible();
+                    nodes[0].EnsureVisible();
+
+                    _hitNodes = nodes;
+                    _hitNodeCursor = 0;
+                }
+                else
+                {
+                    _hitNodes = null;
+                    _hitNodeCursor = -1;
                 }
 
                 labelHitCount.Text = string.Format("{0} hits", nodes.Count.ToString(CultureInfo.InvariantCulture));
@@ -589,7 +594,7 @@ namespace open3mod
             {
                 e.Handled = true;
 
-                if (sender == textBoxFilter)
+                if (sender == textBoxFilter && _hitNodes != null)
                 {
                     _searchLocked = true;
                 }
