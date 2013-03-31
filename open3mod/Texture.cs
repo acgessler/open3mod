@@ -265,6 +265,11 @@ namespace open3mod
                 GL.DeleteTexture(_gl);
                 _gl = 0;
             }
+            if (_image != null)
+            {
+                _image.Dispose();
+                _image = null;
+            }
             GC.SuppressFinalize(this);
         }
     }
