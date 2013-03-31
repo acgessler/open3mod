@@ -290,7 +290,10 @@ namespace open3mod
                 }
             }
 
-            TextureSet.AddCallback((name, tex) => _texturesChanged = true);
+            TextureSet.AddCallback((name, tex) => {
+                _texturesChanged = true;
+                return true;
+            });
         }
 
 
