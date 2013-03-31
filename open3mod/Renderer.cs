@@ -282,6 +282,7 @@ namespace open3mod
                 {
                     _textOverlay.WantRedrawNextFrame = true;
                 }
+                
                 return;
             }
 
@@ -315,46 +316,49 @@ namespace open3mod
                 color = Color.FromArgb((int) (color.A*(1.0f - _hoverFadeInTime/HudHoverTime)), color);
             }
 
-            var brush = new SolidBrush(color);
-            graphics.FillRectangle(brush, _hoverRegion);
-
-            xPoint += _hudImages.GetLength(0)/2;
-            for (var i = 0; i < _hudImages.GetLength(0); ++i)
+            using (var brush = new SolidBrush(color))
             {
-                var x = xPoint;
-                var y = yPoint + 2;
-                var w = (int) (imageWidth*2.0/3);
-                var h = (int) (imageHeight*2.0/3);              
+                graphics.FillRectangle(brush, _hoverRegion);
 
-                if (_processHudClick &&
-                    _mouseClickPos.X > x && _mouseClickPos.X <= x + w &&
-                    _mouseClickPos.Y > y && _mouseClickPos.Y <= y + h)
+                xPoint += _hudImages.GetLength(0) / 2;
+                for (var i = 0; i < _hudImages.GetLength(0); ++i)
                 {
-                    _processHudClick = false;
+                    var x = xPoint;
+                    var y = yPoint + 2;
+                    var w = (int)(imageWidth * 2.0 / 3);
+                    var h = (int)(imageHeight * 2.0 / 3);
 
-                    ui.ChangeCameraModeForView(_hoverViewIndex, (CameraMode) i);
-                    Debug.Assert(ui.ActiveCameraControllerForView(_hoverViewIndex).GetCameraMode() == (CameraMode)i);
+                    if (_processHudClick &&
+                        _mouseClickPos.X > x && _mouseClickPos.X <= x + w &&
+                        _mouseClickPos.Y > y && _mouseClickPos.Y <= y + h)
+                    {
+                        _processHudClick = false;
+
+                        ui.ChangeCameraModeForView(_hoverViewIndex, (CameraMode)i);
+                        Debug.Assert(ui.ActiveCameraControllerForView(_hoverViewIndex).GetCameraMode() == (CameraMode)i);
+                    }
+
+                    // normal image
+                    var imageIndex = 0;
+
+                    if (ui.ActiveCameraControllerForView(_hoverViewIndex).GetCameraMode() == (CameraMode)i)
+                    {
+                        // selected image
+                        imageIndex = 2;
+                    }
+                    else if (_mousePos.X > x && _mousePos.X <= x + w && _mousePos.Y > y && _mousePos.Y <= y + h)
+                    {
+                        // hover image
+                        imageIndex = 1;
+                    }
+
+                    var img = _hudImages[i, imageIndex];
+                    Debug.Assert(img.Width == imageWidth && img.Height == imageHeight, 
+                        "all images must be of the same size");
+
+                    graphics.DrawImage(img, x, y, w, h);
+                    xPoint += img.Width;
                 }
-
-                // normal image
-                var imageIndex = 0;
-
-                if (ui.ActiveCameraControllerForView(_hoverViewIndex).GetCameraMode() == (CameraMode)i)
-                {
-                    // selected image
-                    imageIndex = 2;
-                }
-                else if (_mousePos.X > x && _mousePos.X <= x + w && _mousePos.Y > y && _mousePos.Y <= y + h)
-                {
-                    // hover image
-                    imageIndex = 1;
-                }
-
-                var img = _hudImages[i, imageIndex];
-                Debug.Assert(img.Width == imageWidth && img.Height == imageHeight, "all images must be of the same size");
-
-                graphics.DrawImage(img, x, y, w, h);
-                xPoint += img.Width;
             }
         }
 
@@ -394,6 +398,24 @@ namespace open3mod
         }
 
 
+        static string[] prefixTable = new[]
+        {
+            "open3mod.Images.HUD_X",
+            "open3mod.Images.HUD_Y",
+            "open3mod.Images.HUD_Z",
+            "open3mod.Images.HUD_Orbit",
+            "open3mod.Images.HUD_FPS"
+        };
+
+
+        static string[] postFixTable = new[]
+        {
+            "_Normal",
+            "_Hover",
+            "_Selected"
+        };
+
+
         /// <summary>
         /// Populate _hudImages
         /// </summary>
@@ -402,21 +424,7 @@ namespace open3mod
             if (_hudImages == null)
             {
                 _hudImages = new Image[5,3];
-                var prefixTable = new[]
-                {
-                    "open3mod.Images.HUD_X",
-                    "open3mod.Images.HUD_Y",
-                    "open3mod.Images.HUD_Z",
-                    "open3mod.Images.HUD_Orbit",
-                    "open3mod.Images.HUD_FPS"
-                };
-
-                var postFixTable = new[]
-                {
-                    "_Normal",
-                    "_Hover",
-                    "_Selected"
-                };
+                
 
                 for (var i = 0; i < _hudImages.GetLength(0); ++i)
                 {
