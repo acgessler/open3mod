@@ -56,7 +56,7 @@ namespace open3mod
         private readonly Dictionary<Node, List<Mesh>> _filterByMesh;
 
         private const int AutoExpandLevels = 4;
-        private static Color DefaultBackColor = Color.White;
+        private static new Color DefaultBackColor = Color.White;
         private static Color PositiveBackColor = Color.GreenYellow;
         private static Color SearchIterateBackColor = Color.Gold;
         private static Color NegativeBackColor = Color.OrangeRed;

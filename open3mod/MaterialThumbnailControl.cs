@@ -18,11 +18,7 @@ namespace open3mod
         private readonly MaterialInspectionView _owner;
         private readonly Scene _scene;
         private readonly Material _material;
-        private readonly string _filePath;
-        private Texture _texture;
-
-        private bool _replaced;
-        private string _newFileId;
+       
         private object _lock = new object();
 
         private static Image _loadError;
@@ -110,7 +106,6 @@ namespace open3mod
 
         private void SetLoadingState()
         {
-            _texture = null;
             pictureBox.Image = GetLoadingImage();
             pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
         }

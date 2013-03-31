@@ -273,7 +273,7 @@ namespace open3mod
                     throw new FormatException();
                 }
             }
-            catch(FormatException ex)
+            catch(FormatException)
             {
                 labelGotoError.Text = "Not a valid time";
                 return;

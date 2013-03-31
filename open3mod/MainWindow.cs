@@ -64,6 +64,11 @@ namespace open3mod
 
         private readonly bool _initialized;
 
+#if !USE_APP_IDLE
+        private System.Windows.Forms.Timer _timer;
+#endif
+
+
         public delegate void TabAddRemoveHandler (Tab tab, bool add);
         public event TabAddRemoveHandler TabChanged;
 
@@ -502,7 +507,6 @@ namespace open3mod
         }
 
 
-        private System.Windows.Forms.Timer _timer;
         private void OnGlLoad(object sender, EventArgs e)
         {
             if (_renderer != null)

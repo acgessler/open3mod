@@ -36,8 +36,6 @@ namespace open3mod
 {
     public partial class TabUiSkeleton : UserControl
     {
-        private bool _loadCalled;
-
         public TabUiSkeleton()
         {
             InitializeComponent();

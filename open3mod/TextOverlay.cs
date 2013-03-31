@@ -48,7 +48,6 @@ namespace open3mod
         private int _textTexture;
 
         private Graphics _tempContext;
-        private uint _frameIndex;
         private bool _disposed;
 
 
