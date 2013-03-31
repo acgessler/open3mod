@@ -148,7 +148,7 @@ namespace open3mod
                     {
                         _displayList = GL.GenLists(1);
                     }
-                    GL.NewList(_displayList, ListMode.Compile);                    
+                    GL.NewList(_displayList, ListMode.Compile); 
                 }
 
                 var needAlpha = RecursiveRender(_owner.Raw.RootNode, visibleMeshesByNode, flags, animated);
@@ -229,13 +229,11 @@ namespace open3mod
             {
                 m = AssimpToOpenTk.FromMatrix(node.Transform);
             }
-            // TODO for some reason, all OpenTk matrices need a ^T - clarify our conventions somewhere
+            // TODO for some reason, all OpenTk matrices need a ^T - we should clarify our conventions somewhere
             m.Transpose();
      
             GL.PushMatrix();        
             GL.MultMatrix(ref m);
-
-            var showGhost = false;
 
             // the following permutations could be compacted into one big loop with lots of
             // condition magic, but at the cost of readability and also performance.
