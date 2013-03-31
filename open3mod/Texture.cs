@@ -118,17 +118,12 @@ namespace open3mod
 
 
         /// <summary>
-        /// Get the OpenGl texture object associated with the Texture
-        /// or 0 if the texture has not yet been created or if an
-        /// error occurred during loading.
+        /// Get the Gl texture object associated with the Texture or 0 if the texture has not 
+        /// been created yet. Use Upload() to create the Gl texture.
         /// </summary>
         public int GlTexture
         {
-            get { 
-                if (_gl == 0)
-                {
-                    CreateGlTexture();
-                }
+            get {       
                 return _gl; 
             }
         }
@@ -173,53 +168,64 @@ namespace open3mod
             }
         }
 
-        private void CreateGlTexture()
+
+        /// <summary>
+        /// Upload the texture to video RAM.
+        /// 
+        /// This requires that State == TextureState.WinFormsImageCreated, i.e. the
+        /// RAM texture image must be ready for use.
+        /// </summary>
+        public void Upload()
         {
-            if(State != TextureState.WinFormsImageCreated)
-            {
-                return;
-            }
-            lock (_lock) {
+            Debug.Assert(State == TextureState.WinFormsImageCreated);
+            lock (_lock) { // this is a long CS, but at this time we don't expect concurrent action.
                 // http://www.opentk.com/node/259
-                var textureBitmap = new Bitmap(_image);
+                using(var textureBitmap = new Bitmap(_image))
+                {
+                    System.Drawing.Imaging.BitmapData textureData =
+                        textureBitmap.LockBits(
+                            new Rectangle(0, 0, textureBitmap.Width, textureBitmap.Height),
+                            System.Drawing.Imaging.ImageLockMode.ReadOnly,
+                            System.Drawing.Imaging.PixelFormat.Format24bppRgb
+                            );
+                    int tex;
+                    GL.GenTextures(1, out tex);
 
-                System.Drawing.Imaging.BitmapData textureData =
-                    textureBitmap.LockBits(
-                        new Rectangle(0, 0, textureBitmap.Width, textureBitmap.Height),
-                        System.Drawing.Imaging.ImageLockMode.ReadOnly,
-                        System.Drawing.Imaging.PixelFormat.Format24bppRgb
-                        );
+                    GL.ActiveTexture(TextureUnit.Texture0);
+                    GL.BindTexture(TextureTarget.Texture2D, tex);
+                    
+                    GL.TexParameter(TextureTarget.Texture2D,
+                                    TextureParameterName.TextureMinFilter,
+                                    (int)TextureMinFilter.LinearMipmapLinear);
+                    GL.TexParameter(TextureTarget.Texture2D,
+                                    TextureParameterName.TextureMagFilter,
+                                    (int)TextureMagFilter.Linear);
 
-                GL.GenTextures(1, out _gl);
-                GL.BindTexture(TextureTarget.Texture2D, _gl);
+                    // generate MIPs
+                    GL.TexParameter(TextureTarget.Texture2D, 
+                        TextureParameterName.GenerateMipmap, 1);
 
-                GL.TexParameter(TextureTarget.Texture2D,
-                                TextureParameterName.TextureMinFilter,
-                                (int) TextureMinFilter.LinearMipmapLinear);
-                GL.TexParameter(TextureTarget.Texture2D,
-                                TextureParameterName.TextureMagFilter,
-                                (int) TextureMagFilter.Linear);
+                    // set maximum anisotropic filtering
+                    float maxAniso;
+                    GL.GetFloat((GetPName)ExtTextureFilterAnisotropic.MaxTextureMaxAnisotropyExt, out maxAniso);
+                    GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, maxAniso);
 
-                // set maximum anisotropic filtering
-                float maxAniso;
-                GL.GetFloat((GetPName)ExtTextureFilterAnisotropic.MaxTextureMaxAnisotropyExt, out maxAniso);
-                GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, maxAniso);
+                    // upload
+                    GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Four,
+                                  textureBitmap.Width,
+                                  textureBitmap.Height,
+                                  0,
+                                  PixelFormat.Bgr,
+                                  PixelType.UnsignedByte,
+                                  textureData.Scan0);
 
+                    textureBitmap.UnlockBits(textureData);
 
-                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Four,
-                              textureBitmap.Width,
-                              textureBitmap.Height,
-                              0,
-                              PixelFormat.Bgr,
-                              PixelType.UnsignedByte,
-                              textureData.Scan0);
-
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, 1);
-
-                textureBitmap.UnlockBits(textureData);
-
-                // set final state
-                State = TextureState.GlTextureCreated;
+                    // set final state only if the Gl texture object has been filled successfully
+                    // TODO handle glError
+                    _gl = tex;
+                    State = TextureState.GlTextureCreated;
+                }                
             }
         }
 

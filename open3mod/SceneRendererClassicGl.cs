@@ -103,7 +103,7 @@ namespace open3mod
             bool visibleSetChanged, 
             bool texturesChanged,
             RenderFlags flags)
-        {
+        {            
             GL.Disable(EnableCap.Texture2D);
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
             GL.Enable(EnableCap.DepthTest);
@@ -132,6 +132,14 @@ namespace open3mod
             GL.Scale(tmp,tmp,tmp);
 
             GL.Translate(-(_initposeMin + _initposeMax) * 0.5f);
+
+            // If textures changed, we may need to upload some of them to VRAM.
+            // it is important this happens here and not accidentially while
+            // compiling a displist.
+            if (texturesChanged)
+            {
+                UploadTextures();
+            }
 
             // Build and cache Gl displaylists and update only when the scene changes.
             // when the scene is being animated, this is bad because it changes every
@@ -203,6 +211,22 @@ namespace open3mod
             GL.Disable(EnableCap.DepthTest);
             GL.Disable(EnableCap.Texture2D);
             GL.Disable(EnableCap.Lighting);
+        }
+
+
+        /// <summary>
+        /// Make sure all textures required for the materials in the scene are uploaded to VRAM.
+        /// </summary>
+        private void UploadTextures()
+        {
+            if (_owner.Raw.Materials == null)
+            {
+                return;
+            }
+            foreach (var mat in _owner.Raw.Materials)
+            {
+                _owner.MaterialMapper.UploadTextures(mat);
+            }
         }
 
 

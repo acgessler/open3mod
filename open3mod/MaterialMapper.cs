@@ -31,6 +31,8 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
+using System.Diagnostics;
+
 namespace open3mod
 {
     /// <summary>
@@ -129,6 +131,29 @@ namespace open3mod
         }
 
 
+        /// <summary>
+        /// Uploads all the textures required for a given material to VRAM (i.e.
+        /// create the corresponding Gl objects).
+        /// </summary>
+        /// <param name="material"></param>
+        public void UploadTextures(Material material)
+        {
+            Debug.Assert(material != null);
+
+            // note: keep this up to date with the code in ApplyFixedFunctionMaterial
+            if (material.GetTextureCount(TextureType.Diffuse) > 0)
+            {
+                TextureSlot tex = material.GetTexture(TextureType.Diffuse, 0);
+                var gtex = _scene.TextureSet.GetOriginalOrReplacement(tex.FilePath);
+
+                if (gtex.State == Texture.TextureState.WinFormsImageCreated)
+                {
+                    gtex.Upload();
+                }
+            }
+        }
+
+
         private void ApplyFixedFunctionMaterial(Mesh mesh, Material mat, bool textured, bool shaded)
         {
             if ((mesh == null || mesh.HasNormals) && shaded)
@@ -151,6 +176,7 @@ namespace open3mod
                 GL.Disable(EnableCap.ColorMaterial);
             }
 
+            // note: keep this up-to-date with the code in UploadTextures()
             if (textured && mat.GetTextureCount(TextureType.Diffuse) > 0)
             {
                 TextureSlot tex = mat.GetTexture(TextureType.Diffuse, 0);
