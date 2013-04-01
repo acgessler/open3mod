@@ -139,7 +139,11 @@ namespace open3mod
         /// image has not yet been loaded or if an error occurred
         /// during loading.
         /// </summary>
-        public Image Image { get { return _image; }}
+        public Image Image { get
+        {
+            Debug.Assert(_image == null || State == TextureState.WinFormsImageCreated || State == TextureState.GlTextureCreated);
+            return _image;
+        }}
 
 
         /// <summary>
