@@ -27,6 +27,8 @@ namespace open3mod
         private MaterialPreviewRenderer _renderer;
         private bool _wantUpdate;
 
+        private bool _superSample;
+
 
         public MaterialThumbnailControl(MaterialInspectionView owner, Scene scene, Material material)
             : base(GetBackgroundImage(), material.HasName ? material.Name : "Unnamed Material")
@@ -35,9 +37,39 @@ namespace open3mod
             _scene = scene;
             _material = material;
 
-            UpdatePreview();
+            _superSample = true;
 
-            SetLoadingState();
+            UpdatePreview();
+            SetLoadingState();            
+        }
+
+
+        /// <summary>
+        /// The material shown in the control.
+        /// </summary>
+        public Material Material
+        {
+            get { return _material; }
+        }
+
+
+        /// <summary>
+        /// Indicates whether 2x supersampling is enabled for the material preview
+        /// (this means the material preview is rendered in twice the picture box's
+        ///  size)
+        /// </summary>
+        public bool SuperSample
+        {
+            get { return _superSample; }
+            set
+            {
+                if (_superSample == value)
+                {
+                    return;
+                }
+                _superSample = value;
+                UpdatePreview();
+            }
         }
 
 
@@ -57,8 +89,8 @@ namespace open3mod
                     return;
                 }
                 _renderer = new MaterialPreviewRenderer(_owner.Window, _scene, _material,
-                    (uint)pictureBox.Width,
-                    (uint)pictureBox.Height);
+                    (uint)pictureBox.Width * (uint)(SuperSample ? 2 : 1),
+                    (uint)pictureBox.Height * (uint)(SuperSample ? 2 : 1));
 
                 _wantUpdate = false;
             }
@@ -81,21 +113,18 @@ namespace open3mod
                     if (image != null)
                     {
                         pictureBox.Image = image;
+                        pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
                     }
                     else
                     {
                         pictureBox.Image = GetLoadErrorImage();
+                        pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
                     }                  
                 }));
 
             };
         }
 
-
-        public Material Material
-        {
-            get { return _material; }
-        }
 
 
         protected override State GetState()
