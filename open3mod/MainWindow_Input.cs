@@ -138,7 +138,7 @@ namespace open3mod
         }
 
 
-        private void OnMouseDown_(object sender, MouseEventArgs e)
+        partial void OnMouseDown(object sender, MouseEventArgs e)
         {
             _mouseDown = true;
 
@@ -171,7 +171,7 @@ namespace open3mod
         }
 
 
-        private void OnMouseUp_(object sender, MouseEventArgs e)
+        partial void OnMouseUp(object sender, MouseEventArgs e)
         {
             _mouseDown = false;
             if (!IsDraggingViewportSeparator)
@@ -189,7 +189,7 @@ namespace open3mod
         }
 
 
-        private void OnMouseMove_(object sender, MouseEventArgs e)
+        partial void OnMouseMove(object sender, MouseEventArgs e)
         {
             var sep = _dragSeparator != Tab.ViewSeparator._Max ? _dragSeparator : MousePosToViewportSeparator(e.X, e.Y);
             if (sep != Tab.ViewSeparator._Max)
@@ -271,7 +271,7 @@ namespace open3mod
         }
 
 
-        private void OnMouseLeave_(object sender, EventArgs e)
+        partial void OnMouseLeave(object sender, EventArgs e)
         {
             if (_mouseDown)
             {
@@ -280,7 +280,7 @@ namespace open3mod
         }
 
 
-        private void OnMouseEnter_(object sender, EventArgs e)
+        partial void OnMouseEnter(object sender, EventArgs e)
         {
             Capture = false;
         }
@@ -292,13 +292,13 @@ namespace open3mod
         }
 
 
-        private void OnPreviewKeyDown_(object sender, PreviewKeyDownEventArgs e)
+        partial void OnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             e.IsInputKey = true;
         }
 
 
-        private void OnKeyDown_(object sender, KeyEventArgs e)
+        partial void OnKeyDown(object sender, KeyEventArgs e)
         {
             switch (e.KeyData)
             {
@@ -333,7 +333,7 @@ namespace open3mod
         }
 
 
-        private void OnKeyUp_(object sender, KeyEventArgs keyEventArgs)
+        partial void OnKeyUp(object sender, KeyEventArgs keyEventArgs)
         {
             switch (keyEventArgs.KeyData)
             {

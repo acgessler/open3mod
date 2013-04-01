@@ -916,49 +916,17 @@ namespace open3mod
         }
 
 
-        // note: the methods below are supposed to be in MainWindow_Input.cs
-        // Windows Forms Designer keeps re-generating them though,. To solve
-        // this, we have stubs here and forward to the real code.
+        // note: the methods below are in MainWindow_Input.cs
+        // Windows Forms Designer keeps re-generating them though.
 
-        private void OnKeyDown(object sender, KeyEventArgs e)
-        {
-            OnKeyDown_(sender, e);
-        }
-
-        private void OnKeyUp(object sender, KeyEventArgs e)
-        {
-            OnKeyUp_(sender, e);
-        }
-
-        private void OnMouseDown(object sender, MouseEventArgs e)
-        {
-            OnMouseDown_(sender, e);
-        }
-
-        private void OnMouseEnter(object sender, EventArgs e)
-        {
-            OnMouseEnter_(sender, e);
-        }
-
-        private void OnMouseLeave(object sender, EventArgs e)
-        {
-            OnMouseLeave_(sender, e);
-        }
-
-        private void OnMouseMove(object sender, MouseEventArgs e)
-        {
-            OnMouseMove_(sender, e);
-        }
-
-        private void OnMouseUp(object sender, MouseEventArgs e)
-        {
-            OnMouseUp_(sender, e);
-        }
-
-        private void OnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
-        {
-            OnPreviewKeyDown_(sender, e);
-        }
+        partial void OnKeyDown(object sender, KeyEventArgs e);
+        partial void OnKeyUp(object sender, KeyEventArgs e);
+        partial void OnMouseDown(object sender, MouseEventArgs e);
+        partial void OnMouseEnter(object sender, EventArgs e);
+        partial void OnMouseLeave(object sender, EventArgs e);
+        partial void OnMouseMove(object sender, MouseEventArgs e);
+        partial void OnMouseUp(object sender, MouseEventArgs e);
+        partial void OnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e);
     }
 }
 

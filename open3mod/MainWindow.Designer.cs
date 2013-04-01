@@ -485,8 +485,8 @@ namespace open3mod
             // 
             this.toolStripStatistics.BackColor = System.Drawing.SystemColors.Control;
             this.toolStripStatistics.Name = "toolStripStatistics";
-            this.toolStripStatistics.Size = new System.Drawing.Size(118, 17);
-            this.toolStripStatistics.Text = "toolStripStatusLabel1";
+            this.toolStripStatistics.Size = new System.Drawing.Size(112, 17);
+            this.toolStripStatistics.Text = "toolStripStatusLabel";
             // 
             // statusStrip
             // 
