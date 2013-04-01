@@ -286,8 +286,8 @@ namespace open3mod
             _renderer.Update(delta);
         }
 
-        private bool _wantSetTexturesChanged = false;
-        private object _texChangeLock = new object();
+        private bool _wantSetTexturesChanged;
+        private readonly object _texChangeLock = new object();
 
         /// <summary>
         /// Call once per frame to render the scene to the current viewport.
@@ -320,7 +320,7 @@ namespace open3mod
             {
                 flags |= RenderFlags.Wireframe;
             }
-
+            
             flags |= RenderFlags.ShowGhosts;
 
             _wantSetTexturesChanged = false;
