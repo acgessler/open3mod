@@ -150,8 +150,10 @@ namespace open3mod
 
         public string StatsString
         {
-            get { 
-                var s = TotalVertexCount + " Vertices, " + TotalTriangleCount + " Triangles";
+            get {
+                var s = " Raw Loading Time: " + LoadingTime + " ms - ";
+                
+                s += TotalVertexCount + " Vertices, " + TotalTriangleCount + " Triangles";
                 if (TotalLineCount > 0)
                 {
                     s += ", " + TotalLineCount + " Lines";
@@ -160,8 +162,15 @@ namespace open3mod
                 {
                     s += ", " + TotalLineCount + " Points";
                 }
+
+                
                 return s;
             }
+        }
+
+        public long LoadingTime
+        {
+            get { return _loadingTime; }
         }
 
 
@@ -178,6 +187,7 @@ namespace open3mod
         private readonly int _totalTriangleCount;
         private readonly int _totalLineCount;
         private readonly int _totalPointCount;
+        private long _loadingTime;
 
         /// <summary>
         /// Construct a scene given a file name, throw if loading fails
@@ -189,7 +199,9 @@ namespace open3mod
             _baseDir = Path.GetDirectoryName(file);
   
             _logStore = new LogStore();
-             
+
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
 
             try
             {
@@ -220,6 +232,9 @@ namespace open3mod
                 Dispose();
                 throw new Exception("failed to read file: " + file + " (" + ex.Message + ")");               
             }
+
+            stopwatch.Stop();
+            _loadingTime = stopwatch.ElapsedMilliseconds;
 
             _mapper = new MaterialMapper(this); 
             _animator = new SceneAnimator(this);
