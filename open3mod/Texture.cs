@@ -263,6 +263,9 @@ namespace open3mod
         }
 
 
+        /// <summary>
+        /// Populate the _alphaState field if it is still AlphaState.NotKnownYet
+        /// </summary>
         private void TryDetectAlpha()
         {
             Debug.Assert(_alphaState == AlphaState.NotKnownYet);
@@ -303,6 +306,11 @@ namespace open3mod
         }
 
 
+        /// <summary>
+        /// Returns whether there are any non-oapque pixels in a given texture slice.
+        /// </summary>
+        /// <param name="textureData"></param>
+        /// <returns></returns>
         private static bool LookForAlphaBits(BitmapData textureData)
         {        
             Debug.Assert(textureData.Stride > 0);
@@ -331,6 +339,9 @@ namespace open3mod
         }
 
 
+        /// <summary>
+        /// Schedule asynchronous texture loading.
+        /// </summary>
         private void LoadAsync()
         {
             TextureQueue.CompletionCallback callback = (file, image, result) =>
