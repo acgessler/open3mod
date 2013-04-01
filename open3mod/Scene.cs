@@ -122,7 +122,13 @@ namespace open3mod
             get { return _textureSet; }
         }
 
-        
+
+        public bool IsIncompleteScene
+        {
+            get { return _incomplete; }
+        }
+
+
         private bool _texturesChanged = false;
         private readonly SceneAnimator _animator;
         private double _accumulatedTimeDelta;
@@ -130,6 +136,7 @@ namespace open3mod
         private bool _nodesToShowChanged = true;
         private Dictionary<Node, List<Mesh>> _meshesToShow;
         private bool _overrideSkeleton;
+        private readonly bool _incomplete;
 
 
         /// <summary>
@@ -156,6 +163,8 @@ namespace open3mod
                     //    angle of 66 degrees.
                     imp.SetConfig(new NormalSmoothingAngleConfig(66.0f));
 
+                    imp.SetConfig(new );
+
                     //  - request lots of post processing steps, the details of which
                     //    can be found in the TargetRealTimeMaximumQuality docs.
                     _raw = imp.ImportFile(file, PostProcessPreset.TargetRealTimeMaximumQuality);
@@ -164,6 +173,8 @@ namespace open3mod
                         Dispose();
                         throw new Exception("failed to read file: " + file);
                     }
+
+                    _incomplete = _raw.SceneFlags.HasFlag(SceneFlags.Incomplete);
                 }
             }
             catch(AssimpException ex)
