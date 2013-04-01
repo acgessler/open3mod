@@ -128,6 +128,26 @@ namespace open3mod
             get { return _incomplete; }
         }
 
+        public int TotalVertexCount
+        {
+            get { return _totalVertexCount; }
+        }
+
+        public int TotalTriangleCount
+        {
+            get { return _totalTriangleCount; }
+        }
+
+        public int TotalLineCount
+        {
+            get { return _totalLineCount; }
+        }
+
+        public int TotalPointCount
+        {
+            get { return _totalPointCount; }
+        }
+
 
         private bool _texturesChanged = false;
         private readonly SceneAnimator _animator;
@@ -138,6 +158,10 @@ namespace open3mod
         private bool _overrideSkeleton;
         private readonly bool _incomplete;
 
+        private readonly int _totalVertexCount;
+        private readonly int _totalTriangleCount;
+        private readonly int _totalLineCount;
+        private readonly int _totalPointCount;
 
         /// <summary>
         /// Construct a scene given a file name, throw if loading fails
@@ -187,7 +211,9 @@ namespace open3mod
             LoadTextures();
 
             // compute a bounding box (AABB) for the scene we just loaded
-            ComputeBoundingBox();
+            ComputeBoundingBox(out _sceneMin, out _sceneMax);
+
+            CountVertsAndFaces(out _totalVertexCount, out _totalTriangleCount, out _totalLineCount, out _totalPointCount);
 
             _renderer = new SceneRendererClassicGl(this, _sceneMin, _sceneMax);
         }
@@ -271,6 +297,9 @@ namespace open3mod
         }
 
 
+        /// <summary>
+        /// Populates the TextureSet with all the textures required for the scene.
+        /// </summary>
         private void LoadTextures()
         {
             var materials = _raw.Materials;
@@ -306,17 +335,72 @@ namespace open3mod
         }
 
 
-        private void ComputeBoundingBox()
+
+        /// <summary>
+        /// Counts vertices, points, lines and triangles in the scene.
+        /// </summary>
+        /// <param name="totalVertexCount"></param>
+        /// <param name="totalTriangleCount"></param>
+        /// <param name="totalLineCount"></param>
+        /// <param name="totalPointCount"></param>
+        private void CountVertsAndFaces(out int totalVertexCount, out int totalTriangleCount, out int totalLineCount, out int totalPointCount)
         {
-            _sceneMin = new Vector3(1e10f, 1e10f, 1e10f);
-            _sceneMax = new Vector3(-1e10f, -1e10f, -1e10f);
+            totalVertexCount = 0;
+            totalTriangleCount = 0;
+            totalLineCount = 0;
+            totalPointCount = 0;
+
+            for (var i = 0; i < _raw.MeshCount; ++i)
+            {
+                var mesh = _raw.Meshes[i];
+                totalVertexCount += mesh.VertexCount;
+
+                for (var j = 0; j < mesh.FaceCount; ++j)
+                {
+                    var face = mesh.Faces[j];
+                    switch(face.IndexCount) // /^_^/
+                    {
+                        case 1:
+                            ++totalPointCount;
+                            break;
+                        case 2:
+                            ++totalLineCount;
+                            break;
+                        case 3:
+                            ++totalTriangleCount;
+                            break;
+                        default:
+                            Debug.Assert(false);
+                            break;
+                    }
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Calculates the smallest AABB that encloses the scene.
+        /// </summary>
+        /// <param name="sceneMin"></param>
+        /// <param name="sceneMax"></param>
+        private void ComputeBoundingBox(out Vector3 sceneMin, out Vector3 sceneMax)
+        {
+            sceneMin = new Vector3(1e10f, 1e10f, 1e10f);
+            sceneMax = new Vector3(-1e10f, -1e10f, -1e10f);
             Matrix4 identity = Matrix4.Identity;
 
-            ComputeBoundingBox(_raw.RootNode, ref _sceneMin, ref _sceneMax, ref identity);
+            ComputeBoundingBox(_raw.RootNode, ref sceneMin, ref sceneMax, ref identity);
             _sceneCenter = (_sceneMin + _sceneMax) / 2.0f;
         }
 
 
+        /// <summary>
+        /// Helper for ComputeBoundingBox(out Vector3 sceneMin, out Vector3 sceneMax)
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <param name="trafo"></param>
         private void ComputeBoundingBox(Node node, ref Vector3 min, ref Vector3 max, ref Matrix4 trafo)
         {
             Matrix4 prev = trafo;
@@ -351,6 +435,9 @@ namespace open3mod
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Dispose()
         {
             if (_textureSet != null)
