@@ -183,7 +183,7 @@ namespace open3mod
         }
 
 
-        private bool IsDraggingViewportSeparator
+        public bool IsDraggingViewportSeparator
         {
             get { return _dragSeparator != Tab.ViewSeparator._Max; }
         }

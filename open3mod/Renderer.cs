@@ -219,7 +219,18 @@ namespace open3mod
                     DrawFps();
                 }
 
-                DrawHud();
+                if (!_window.IsDraggingViewportSeparator)
+                {
+                    if (!_hudHidden)
+                    {
+                        DrawHud();
+                    }
+                }
+                else
+                {
+                    _textOverlay.WantRedrawNextFrame = true;
+                    _hudHidden = true;
+                }
             }
             else
             {
@@ -379,9 +390,8 @@ namespace open3mod
             _hoverViewport = viewport;
             _hoverViewIndex = viewIndex;
             _hoverFadeInTime = HudHoverTime;
+            _hudHidden = false;
         }
-
-
 
 
         public void OnMouseClick(MouseEventArgs mouseEventArgs, Vector4 viewport, Tab.ViewIndex viewIndex)
@@ -398,7 +408,7 @@ namespace open3mod
         }
 
 
-        static string[] prefixTable = new[]
+        static readonly string[] PrefixTable = new[]
         {
             "open3mod.Images.HUD_X",
             "open3mod.Images.HUD_Y",
@@ -408,12 +418,14 @@ namespace open3mod
         };
 
 
-        static string[] postFixTable = new[]
+        static readonly string[] PostFixTable = new[]
         {
             "_Normal",
             "_Hover",
             "_Selected"
         };
+
+        private bool _hudHidden;
 
 
         /// <summary>
@@ -430,7 +442,7 @@ namespace open3mod
                 {
                     for (var j = 0; j < _hudImages.GetLength(1); ++j)
                     {
-                        _hudImages[i, j] = ImageFromResource.Get(prefixTable[i] + postFixTable[j] + ".png");
+                        _hudImages[i, j] = ImageFromResource.Get(PrefixTable[i] + PostFixTable[j] + ".png");
                     }
                 }
             }
