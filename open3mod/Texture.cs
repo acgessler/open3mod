@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +31,7 @@ using System.Threading.Tasks;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
+using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 
 
 namespace open3mod
@@ -52,7 +54,8 @@ namespace open3mod
 
         private readonly object _lock = new object();
         private readonly string _baseDir;
-        private Assimp.Texture _dataSource;
+        private readonly Assimp.Texture _dataSource;
+        private bool _hasAlpha;
 
         /// <summary>
         /// Possible states of a Texture object during its lifetime
@@ -170,10 +173,26 @@ namespace open3mod
 
 
         /// <summary>
+        /// Returns whether the texture has any non-opaque pixels and thus
+        /// needs to be rendered with alpha-blending.
+        /// 
+        /// This requires that State >= TextureState.GlTextureCreated, i.e. the
+        /// Gl texture image must have been Upload()ed
+        /// </summary>
+        /// <returns></returns>
+        public bool HasAlpha()
+        {
+            Debug.Assert(State == TextureState.GlTextureCreated);
+            return _hasAlpha;
+        }
+
+
+        /// <summary>
         /// Upload the texture to video RAM.
         /// 
         /// This requires that State == TextureState.WinFormsImageCreated, i.e. the
-        /// RAM texture image must be ready for use.
+        /// RAM texture image must be ready for use and the Gl object may not have 
+        /// been created yet.
         /// </summary>
         public void Upload()
         {
@@ -200,8 +219,12 @@ namespace open3mod
                         textureBitmap.LockBits(
                             new Rectangle(0, 0, textureBitmap.Width, textureBitmap.Height),
                             System.Drawing.Imaging.ImageLockMode.ReadOnly,
-                            System.Drawing.Imaging.PixelFormat.Format24bppRgb
+                            System.Drawing.Imaging.PixelFormat.Format32bppArgb
                             );
+
+
+                    _hasAlpha = LookForAlphaBits(textureData);
+
                     int tex;
                     GL.GenTextures(1, out tex);
 
@@ -229,7 +252,7 @@ namespace open3mod
                                   textureBitmap.Width,
                                   textureBitmap.Height,
                                   0,
-                                  PixelFormat.Bgr,
+                                  PixelFormat.Bgra,
                                   PixelType.UnsignedByte,
                                   textureData.Scan0);
 
@@ -241,12 +264,40 @@ namespace open3mod
                     State = TextureState.GlTextureCreated;
                 }       
                 finally {
-                    if (shouldDisposeBitmap && textureBitmap != null)
+                    if (shouldDisposeBitmap)
                     {
                         textureBitmap.Dispose();
                     }
                 }
             }
+        }
+
+
+        private static bool LookForAlphaBits(BitmapData textureData)
+        {        
+            Debug.Assert(textureData.Stride > 0);
+
+            var countBytes = textureData.Stride * textureData.Height;
+            var tempBuffer = new byte[countBytes];
+     
+            var dataLineLength = textureData.Width * 4;
+            var padding = textureData.Stride - dataLineLength;
+            Debug.Assert(padding >= 0);
+
+            System.Runtime.InteropServices.Marshal.Copy(textureData.Scan0, tempBuffer, 0, countBytes);
+
+            var n = 3;
+            for (var y = 0; y < textureData.Height; ++y, n += padding)
+            {
+                for (var x = 0; x < textureData.Width; ++x, n += 4)
+                {
+                    if (tempBuffer[n] < 0xff)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
 

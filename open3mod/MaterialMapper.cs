@@ -176,11 +176,16 @@ namespace open3mod
                 GL.Disable(EnableCap.ColorMaterial);
             }
 
+            // note: keep semantics of hasAlpha consistent with IsAlphaMaterial()
+            var hasAlpha = false;
+
             // note: keep this up-to-date with the code in UploadTextures()
             if (textured && mat.GetTextureCount(TextureType.Diffuse) > 0)
             {
                 TextureSlot tex = mat.GetTexture(TextureType.Diffuse, 0);
                 var gtex = _scene.TextureSet.GetOriginalOrReplacement(tex.FilePath);
+
+                hasAlpha = hasAlpha || gtex.HasAlpha();
 
                 if(gtex.GlTexture != 0)
                 {
@@ -197,10 +202,7 @@ namespace open3mod
             else
             {
                 GL.Disable(EnableCap.Texture2D);
-            }
-
-            // note: keep semantics of hasAlpha consistent with IsAlphaMaterial()
-            var hasAlpha = false;
+            }         
 
             var alpha = 1.0f;
             if (mat.HasOpacity)
@@ -222,7 +224,7 @@ namespace open3mod
                 }
             }
             color.A *= alpha;
-            hasAlpha = color.A < 1.0f;
+            hasAlpha = hasAlpha || color.A < 1.0f;
             GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, color);
 
             color = new Color4(0, 0, 0, 1.0f);
