@@ -148,6 +148,22 @@ namespace open3mod
             get { return _totalPointCount; }
         }
 
+        public string StatsString
+        {
+            get { 
+                var s = TotalVertexCount + " Vertices, " + TotalTriangleCount + " Triangles";
+                if (TotalLineCount > 0)
+                {
+                    s += ", " + TotalLineCount + " Lines";
+                }
+                if (TotalPointCount > 0)
+                {
+                    s += ", " + TotalLineCount + " Points";
+                }
+                return s;
+            }
+        }
+
 
         private bool _texturesChanged = false;
         private readonly SceneAnimator _animator;

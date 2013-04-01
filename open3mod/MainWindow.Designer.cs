@@ -55,7 +55,8 @@ namespace open3mod
             this.exportAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.statusStrip = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatistics = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripSelectRenderer = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.openToolStripButton = new System.Windows.Forms.ToolStripButton();
@@ -83,6 +84,7 @@ namespace open3mod
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.glControl1 = new open3mod.RenderControl();
             this.menuStrip1.SuspendLayout();
+            this.statusStrip.SuspendLayout();
             this.toolStripSelectRenderer.SuspendLayout();
             this.tabContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -213,13 +215,21 @@ namespace open3mod
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItemClick);
             // 
-            // statusStrip1
+            // statusStrip
             // 
-            this.statusStrip1.Location = new System.Drawing.Point(0, 712);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1051, 22);
-            this.statusStrip1.TabIndex = 1;
-            this.statusStrip1.Text = "statusStrip1";
+            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatistics});
+            this.statusStrip.Location = new System.Drawing.Point(0, 712);
+            this.statusStrip.Name = "statusStrip";
+            this.statusStrip.Size = new System.Drawing.Size(1051, 22);
+            this.statusStrip.TabIndex = 1;
+            this.statusStrip.Text = "statusStrip1";
+            // 
+            // toolStripStatistics
+            // 
+            this.toolStripStatistics.Name = "toolStripStatistics";
+            this.toolStripStatistics.Size = new System.Drawing.Size(118, 17);
+            this.toolStripStatistics.Text = "toolStripStatusLabel1";
             // 
             // toolStripSelectRenderer
             // 
@@ -498,7 +508,7 @@ namespace open3mod
             this.Controls.Add(this.glControl1);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.toolStripSelectRenderer);
-            this.Controls.Add(this.statusStrip1);
+            this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.menuStrip1);
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
@@ -510,6 +520,8 @@ namespace open3mod
             this.Load += new System.EventHandler(this.OnLoad);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.statusStrip.ResumeLayout(false);
+            this.statusStrip.PerformLayout();
             this.toolStripSelectRenderer.ResumeLayout(false);
             this.toolStripSelectRenderer.PerformLayout();
             this.tabContextMenuStrip.ResumeLayout(false);
@@ -524,7 +536,7 @@ namespace open3mod
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
-        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStrip toolStripSelectRenderer;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
@@ -563,6 +575,7 @@ namespace open3mod
         private ToolStripButton toolStripButtonShowSettings;
         private ToolStripMenuItem exportToolStripMenuItem;
         private ToolStripMenuItem exportAllToolStripMenuItem;
+        private ToolStripStatusLabel toolStripStatistics;
     }
 }
 

@@ -389,6 +389,17 @@ namespace open3mod
             Debug.Assert(tab != null);
             tabControl1.SelectedTab = tab;
 
+            var outer = UiState.TabForId(tab);
+            Debug.Assert(outer != null);
+
+            if (outer.ActiveScene != null)
+            {
+                toolStripStatistics.Text = outer.ActiveScene.StatsString;
+            }
+            else
+            {
+                toolStripStatistics.Text = "";
+            }
             // update internal housekeeping
             UiState.SelectTab(tab);
 
@@ -418,7 +429,7 @@ namespace open3mod
 
 
         /// <summary>
-        /// Open a particular 3D model and assigns it to a particular tab.
+        /// Opens a particular 3D model and assigns it to a particular tab.
         /// May be called on a non-GUI-thread.
         /// </summary>
         private void OpenFile(Tab tab, bool setActive)
@@ -441,15 +452,15 @@ namespace open3mod
             var updateTitle = new MethodInvoker(() =>
             {
                 var t = (TabPage)tab.Id;
-                if (t.Text.EndsWith(LoadingTitlePostfix))
+                if (!t.Text.EndsWith(LoadingTitlePostfix))
                 {
-                    t.Text = t.Text.Substring(0,t.Text.Length -
-                        LoadingTitlePostfix.Length);
+                    return;
+                }
+                t.Text = t.Text.Substring(0,t.Text.Length - LoadingTitlePostfix.Length);
 
-                    if (tab.State == Tab.TabState.Failed)
-                    {
-                        t.Text = t.Text + FailedTitlePostfix;
-                    }
+                if (tab.State == Tab.TabState.Failed)
+                {
+                    t.Text = t.Text + FailedTitlePostfix;
                 }
             });
 
@@ -902,6 +913,51 @@ namespace open3mod
                 CoreSettings.CoreSettings.Default.Maximized = false;
             }
             CoreSettings.CoreSettings.Default.Save();
+        }
+
+
+        // note: the methods below are supposed to be in MainWindow_Input.cs
+        // Windows Forms Designer keeps re-generating them though,. To solve
+        // this, we have stubs here and forward to the real code.
+
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            OnKeyDown_(sender, e);
+        }
+
+        private void OnKeyUp(object sender, KeyEventArgs e)
+        {
+            OnKeyUp_(sender, e);
+        }
+
+        private void OnMouseDown(object sender, MouseEventArgs e)
+        {
+            OnMouseDown_(sender, e);
+        }
+
+        private void OnMouseEnter(object sender, EventArgs e)
+        {
+            OnMouseEnter_(sender, e);
+        }
+
+        private void OnMouseLeave(object sender, EventArgs e)
+        {
+            OnMouseLeave_(sender, e);
+        }
+
+        private void OnMouseMove(object sender, MouseEventArgs e)
+        {
+            OnMouseMove_(sender, e);
+        }
+
+        private void OnMouseUp(object sender, MouseEventArgs e)
+        {
+            OnMouseUp_(sender, e);
+        }
+
+        private void OnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            OnPreviewKeyDown_(sender, e);
         }
     }
 }
