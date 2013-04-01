@@ -152,10 +152,13 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Renderer.cs" />
+    <Compile Include="RenderMesh.cs" />
     <Compile Include="RoundedRectangle.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="SceneAnimator.cs" />
     <Compile Include="SceneRendererClassicGl.cs" />
+    <Compile Include="SceneRendererModernGl.cs" />
+    <Compile Include="SceneRendererShared.cs" />
     <Compile Include="SettingsDialog.cs">
       <SubType>Form</SubType>
     </Compile>

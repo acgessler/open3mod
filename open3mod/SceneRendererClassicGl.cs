@@ -38,34 +38,17 @@ namespace open3mod
     /// Render a Scene using old-school OpenGl, that is, display lists,
     /// matrix stacks and glVertexN-family calls.
     /// </summary>
-    public sealed class SceneRendererClassicGl : ISceneRenderer
-    {
-        private readonly Scene _owner;
-        private readonly Vector3 _initposeMin;
-        private readonly Vector3 _initposeMax;
+    public sealed class SceneRendererClassicGl : SceneRendererShared, ISceneRenderer
+    {        
         private int _displayList;
         private int _displayListAlpha;
         private RenderFlags _lastFlags;
-
-
-        private readonly CpuSkinningEvaluator _skinner;
-        private readonly bool[] _isAlphaMaterial;
-
+      
 
         internal SceneRendererClassicGl(Scene owner, Vector3 initposeMin, Vector3 initposeMax)
+            : base(owner, initposeMin, initposeMax)
         {
-            _owner = owner;
-            _initposeMin = initposeMin;
-            _initposeMax = initposeMax;
-
-            Debug.Assert(_owner.Raw != null);    
-            _skinner = new CpuSkinningEvaluator(owner);
-
-            _isAlphaMaterial = new bool[owner.Raw.MaterialCount];
-            for (int i = 0; i < _isAlphaMaterial.Length; ++i)
-            {
-                _isAlphaMaterial[i] = _owner.MaterialMapper.IsAlphaMaterial(owner.Raw.Materials[i]);
-            }
+            
         }
 
 
@@ -95,7 +78,7 @@ namespace open3mod
 
         public void Update(double delta)
         {
-            _skinner.Update();
+            Skinner.Update();
         }
 
 
@@ -125,13 +108,13 @@ namespace open3mod
 
             GL.LoadMatrix(ref lookat);
 
-            var tmp = _initposeMax.X - _initposeMin.X;
-            tmp = Math.Max(_initposeMax.Y - _initposeMin.Y, tmp);
-            tmp = Math.Max(_initposeMax.Z - _initposeMin.Z, tmp);
+            var tmp = InitposeMax.X - InitposeMin.X;
+            tmp = Math.Max(InitposeMax.Y - InitposeMin.Y, tmp);
+            tmp = Math.Max(InitposeMax.Z - InitposeMin.Z, tmp);
             tmp = 2.0f / tmp;
             GL.Scale(tmp,tmp,tmp);
 
-            GL.Translate(-(_initposeMin + _initposeMax) * 0.5f);
+            GL.Translate(-(InitposeMin + InitposeMax) * 0.5f);
 
             // If textures changed, we may need to upload some of them to VRAM.
             // it is important this happens here and not accidentially while
@@ -144,7 +127,7 @@ namespace open3mod
             // Build and cache Gl displaylists and update only when the scene changes.
             // when the scene is being animated, this is bad because it changes every
             // frame anyway. In this case  we don't use a displist.
-            var animated = _owner.SceneAnimator.IsAnimationActive;
+            var animated = Owner.SceneAnimator.IsAnimationActive;
             if (_displayList == 0 || visibleSetChanged || texturesChanged || flags != _lastFlags || animated)
             {
                 _lastFlags = flags;
@@ -159,11 +142,11 @@ namespace open3mod
                     GL.NewList(_displayList, ListMode.Compile); 
                 }
 
-                var needAlpha = RecursiveRender(_owner.Raw.RootNode, visibleMeshesByNode, flags, animated);
+                var needAlpha = RecursiveRender(Owner.Raw.RootNode, visibleMeshesByNode, flags, animated);
 
                 if (flags.HasFlag(RenderFlags.ShowSkeleton) || flags.HasFlag(RenderFlags.ShowNormals))
                 {
-                    RecursiveRenderNoScale(_owner.Raw.RootNode, visibleMeshesByNode, flags, 1.0f / tmp, animated);
+                    RecursiveRenderNoScale(Owner.Raw.RootNode, visibleMeshesByNode, flags, 1.0f / tmp, animated);
                 }
 
                 if (!animated)
@@ -182,7 +165,7 @@ namespace open3mod
                         }
                         GL.NewList(_displayListAlpha, ListMode.Compile);
                     }
-                    RecursiveRenderWithAlpha(_owner.Raw.RootNode, visibleMeshesByNode, flags, animated);
+                    RecursiveRenderWithAlpha(Owner.Raw.RootNode, visibleMeshesByNode, flags, animated);
 
                     if (!animated)
                     {
@@ -214,26 +197,6 @@ namespace open3mod
         }
 
 
-        /// <summary>
-        /// Make sure all textures required for the materials in the scene are uploaded to VRAM.
-        /// </summary>
-        private void UploadTextures()
-        {
-            if (_owner.Raw.Materials == null)
-            {
-                return;
-            }
-            var i = 0;
-            foreach (var mat in _owner.Raw.Materials)
-            {
-                if(_owner.MaterialMapper.UploadTextures(mat))
-                {
-                    _isAlphaMaterial[i] = _owner.MaterialMapper.IsAlphaMaterial(mat);
-                }
-                ++i;
-            }
-        }
-
 
         /// <summary>
         /// Recursive rendering function
@@ -252,7 +215,7 @@ namespace open3mod
             Matrix4 m;
             if (animated)
             {
-                _owner.SceneAnimator.GetLocalTransform(node, out m);
+                Owner.SceneAnimator.GetLocalTransform(node, out m);
             }
             else
             {
@@ -274,8 +237,8 @@ namespace open3mod
                     // everything is visible. alpha-blended materials are delayed for 2nd pass
                     foreach (var index in node.MeshIndices)
                     {
-                        var mesh = _owner.Raw.Meshes[index];
-                        if (_isAlphaMaterial[mesh.MaterialIndex])
+                        var mesh = Owner.Raw.Meshes[index];
+                        if (IsAlphaMaterial[mesh.MaterialIndex])
                         {
                             needAlpha = true;
                             continue;
@@ -296,9 +259,9 @@ namespace open3mod
                         // some meshes of this node are visible. alpha-blended materials are delayed for 2nd pass
                         foreach (var index in node.MeshIndices)
                         {
-                            var mesh = _owner.Raw.Meshes[index];
+                            var mesh = Owner.Raw.Meshes[index];
 
-                            if (_isAlphaMaterial[mesh.MaterialIndex] || (meshList != null && !meshList.Contains(mesh)))
+                            if (IsAlphaMaterial[mesh.MaterialIndex] || (meshList != null && !meshList.Contains(mesh)))
                             {
                                 needAlpha = true;
                                 continue;
@@ -350,7 +313,7 @@ namespace open3mod
             Matrix4 m;
             if (animated)
             {
-                _owner.SceneAnimator.GetLocalTransform(node, out m);
+                Owner.SceneAnimator.GetLocalTransform(node, out m);
             }
             else
             {
@@ -373,8 +336,8 @@ namespace open3mod
                     // render everything with alpha materials
                     foreach (var index in node.MeshIndices)
                     {
-                        var mesh = _owner.Raw.Meshes[index];
-                        if (_isAlphaMaterial[mesh.MaterialIndex])
+                        var mesh = Owner.Raw.Meshes[index];
+                        if (IsAlphaMaterial[mesh.MaterialIndex])
                         {
                             DrawMesh(node, animated, false, index, mesh, flags);
                         }
@@ -387,8 +350,8 @@ namespace open3mod
                         // render everything with alpha materials 
                         foreach (var index in node.MeshIndices)
                         {
-                            var mesh = _owner.Raw.Meshes[index];
-                            if (_isAlphaMaterial[mesh.MaterialIndex])
+                            var mesh = Owner.Raw.Meshes[index];
+                            if (IsAlphaMaterial[mesh.MaterialIndex])
                             {
                                 DrawMesh(node, animated, false, index, mesh, flags);
                             }
@@ -400,13 +363,13 @@ namespace open3mod
                         // list of visible meshes for this node.
                         foreach (var index in node.MeshIndices)
                         {
-                            var mesh = _owner.Raw.Meshes[index];
+                            var mesh = Owner.Raw.Meshes[index];
                             if (!meshList.Contains(mesh))
                             {
                                 DrawMesh(node, animated, true, index, mesh, flags);
                                 continue;
                             }
-                            if (_isAlphaMaterial[mesh.MaterialIndex])
+                            if (IsAlphaMaterial[mesh.MaterialIndex])
                             {
                                 DrawMesh(node, animated, false, index, mesh, flags);
                             }
@@ -418,7 +381,7 @@ namespace open3mod
                     // node not visible, render only ghosts
                     foreach (var index in node.MeshIndices)
                     {
-                        var mesh = _owner.Raw.Meshes[index];
+                        var mesh = Owner.Raw.Meshes[index];
                         DrawMesh(node, animated, true, index, mesh, flags);
                     }
                 }
@@ -449,11 +412,11 @@ namespace open3mod
         {
             if (showGhost)
             {
-                _owner.MaterialMapper.ApplyGhostMaterial(mesh, _owner.Raw.Materials[mesh.MaterialIndex]);
+                Owner.MaterialMapper.ApplyGhostMaterial(mesh, Owner.Raw.Materials[mesh.MaterialIndex]);
             }
             else
             {
-                _owner.MaterialMapper.ApplyMaterial(mesh, _owner.Raw.Materials[mesh.MaterialIndex], 
+                Owner.MaterialMapper.ApplyMaterial(mesh, Owner.Raw.Materials[mesh.MaterialIndex], 
                     flags.HasFlag(RenderFlags.Textured), 
                     flags.HasFlag(RenderFlags.Shaded));
             }
@@ -496,7 +459,7 @@ namespace open3mod
                         Vector3 normal;
                         if (skinning)
                         {
-                            _skinner.GetTransformedVertexNormal(node, index, indice, out normal);
+                            Skinner.GetTransformedVertexNormal(node, index, indice, out normal);
                         }
                         else
                         {
@@ -514,7 +477,7 @@ namespace open3mod
                     Vector3 pos;
                     if (skinning)
                     {
-                        _skinner.GetTransformedVertexPosition(node, index, indice, out pos);
+                        Skinner.GetTransformedVertexPosition(node, index, indice, out pos);
                     }
                     else
                     {
@@ -547,7 +510,7 @@ namespace open3mod
             Matrix4 mConv;
             if (animated)
             {
-                _owner.SceneAnimator.GetLocalTransform(node, out mConv);
+                Owner.SceneAnimator.GetLocalTransform(node, out mConv);
                 OpenTkToAssimp.FromMatrix(ref mConv, out m);
             }
             else
@@ -605,7 +568,7 @@ namespace open3mod
                 {
                     foreach (var index in node.MeshIndices)
                     {
-                        var mesh = _owner.Raw.Meshes[index];
+                        var mesh = Owner.Raw.Meshes[index];
                         if(meshList != null && !meshList.Contains(mesh))
                         {
                             continue;
@@ -693,7 +656,7 @@ namespace open3mod
                 Vector3 tmp;
                 if (skinning)
                 {
-                    _skinner.GetTransformedVertexPosition(node, meshIndex, i, out tmp);
+                    Skinner.GetTransformedVertexPosition(node, meshIndex, i, out tmp);
                 }
                 else
                 {
@@ -764,7 +727,7 @@ namespace open3mod
                 Vector3 v;          
                 if(skinning)
                 {
-                    _skinner.GetTransformedVertexPosition(node, meshIndex, i, out v);
+                    Skinner.GetTransformedVertexPosition(node, meshIndex, i, out v);
                 }
                 else
                 {
@@ -774,7 +737,7 @@ namespace open3mod
                 Vector3 n;
                 if (skinning)
                 {
-                    _skinner.GetTransformedVertexNormal(node, meshIndex, i, out n);
+                    Skinner.GetTransformedVertexNormal(node, meshIndex, i, out n);
                 }
                 else
                 {
