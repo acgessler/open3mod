@@ -19,6 +19,13 @@
 ///////////////////////////////////////////////////////////////////////////////////
 
 
+// DETECT_ALPHA_EARLY
+// Check for alpha pixels directly after receiving the Image-Loaded callback.
+// this happens on the texture loader thread, so we can save rendering
+// interruptions later by checking for alpha pixels at this early stage. 
+// It means we have to lock the bitmap twice and hold the monitor longer, though.
+#define DETECT_ALPHA_EARLY
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -55,7 +62,7 @@ namespace open3mod
         private readonly object _lock = new object();
         private readonly string _baseDir;
         private readonly Assimp.Texture _dataSource;
-        private bool _hasAlpha;
+ 
 
         /// <summary>
         /// Possible states of a Texture object during its lifetime
@@ -68,6 +75,16 @@ namespace open3mod
             GlTextureCreated,
         }
 
+        /// <summary>
+        /// Possibles values for the HasAlpha property
+        /// </summary>
+        public enum AlphaState
+        {
+            NotKnownYet,
+            Opaque,
+            HasAlpha,
+        }
+
         public delegate void CompletionCallback(Texture self);
 
         public TextureState State { get; private set; }
@@ -75,6 +92,11 @@ namespace open3mod
         {
             get { return _file; }
         }
+
+
+        private AlphaState _alphaState = AlphaState.NotKnownYet;
+
+
 
         /// <summary>
         /// Start loading a texture from a given file path
@@ -132,46 +154,6 @@ namespace open3mod
         }
 
 
-        private void LoadAsync()
-        {
-            TextureQueue.CompletionCallback callback = (file, image, result) =>
-                {
-                    Debug.Assert(_file == file);
-                    SetImage(image, result);
-
-                    if (_callback != null)
-                    {
-                        _callback(_file, _image, result);
-                    }
-                };
-
-            lock (_lock) {
-                State = TextureState.LoadingPending;
-                if (_dataSource != null)
-                {
-                    TextureQueue.Enqueue(_dataSource, _file, callback);
-                    return;
-                }
-                
-                TextureQueue.Enqueue(_file, _baseDir, callback);
-            }
-        }
-
-
-        private void SetImage(Image image, TextureLoader.LoadResult result)
-        {
-            Debug.Assert(State == TextureState.LoadingPending);
-
-            lock (_lock)
-            {
-                _image = image;
-                // set proper state
-                State = result != TextureLoader.LoadResult.Good  ? TextureState.LoadingFailed : TextureState.WinFormsImageCreated;
-                Debug.Assert(result != TextureLoader.LoadResult.Good || _image != null);
-            }
-        }
-
-
         /// <summary>
         /// Returns whether the texture has any non-opaque pixels and thus
         /// needs to be rendered with alpha-blending.
@@ -179,11 +161,16 @@ namespace open3mod
         /// This requires that State >= TextureState.GlTextureCreated, i.e. the
         /// Gl texture image must have been Upload()ed
         /// </summary>
-        /// <returns></returns>
-        public bool HasAlpha()
+        public AlphaState HasAlpha
         {
-            Debug.Assert(State == TextureState.GlTextureCreated);
-            return _hasAlpha;
+            get
+            {
+                if (_alphaState == AlphaState.NotKnownYet)
+                {
+                    TryDetectAlpha();
+                }
+                return _alphaState;
+            }
         }
 
 
@@ -200,8 +187,8 @@ namespace open3mod
             lock (_lock) { // this is a long CS, but at this time we don't expect concurrent action.
                 // http://www.opentk.com/node/259
                 Bitmap textureBitmap = null;
-                bool shouldDisposeBitmap = false;
-
+                var shouldDisposeBitmap = false;
+               
                 // in order to LockBits(), we need to create a Bitmap. In case the given Image
                 // *is* already a Bitmap however, we can directly re-use it.
                 try {
@@ -215,15 +202,18 @@ namespace open3mod
                         shouldDisposeBitmap = true;
                     }
 
-                    System.Drawing.Imaging.BitmapData textureData =
-                        textureBitmap.LockBits(
-                            new Rectangle(0, 0, textureBitmap.Width, textureBitmap.Height),
-                            System.Drawing.Imaging.ImageLockMode.ReadOnly,
+                    var textureData = textureBitmap.LockBits(
+                        new Rectangle(0, 0, textureBitmap.Width, textureBitmap.Height),
+                            ImageLockMode.ReadOnly,
                             System.Drawing.Imaging.PixelFormat.Format32bppArgb
-                            );
+                        );
 
 
-                    _hasAlpha = LookForAlphaBits(textureData);
+                    // determine alpha pixels if this has not been done before
+                    if (_alphaState == AlphaState.NotKnownYet)
+                    {
+                        _alphaState = LookForAlphaBits(textureData) ? AlphaState.HasAlpha : AlphaState.Opaque;
+                    }
 
                     int tex;
                     GL.GenTextures(1, out tex);
@@ -273,6 +263,46 @@ namespace open3mod
         }
 
 
+        private void TryDetectAlpha()
+        {
+            Debug.Assert(_alphaState == AlphaState.NotKnownYet);
+            if (State != TextureState.WinFormsImageCreated && State != TextureState.GlTextureCreated)
+            {
+                return;
+            }
+            lock(_lock)
+            {               
+                // in order to LockBits(), we need to create a Bitmap. In case the given Image
+                // *is* already a Bitmap however, we can directly re-use it.
+                try {
+                    Bitmap textureBitmap = null;
+                    if (_image is Bitmap)
+                    {
+                        textureBitmap = (Bitmap)_image;
+                    }
+                    else
+                    {
+                        // replace the image by the Bitmap - Upload() needs it anyway
+                        var old = _image;
+                        _image = textureBitmap = new Bitmap(_image);
+                        old.Dispose();
+                    }
+
+                    var textureData = textureBitmap.LockBits(
+                        new Rectangle(0, 0, textureBitmap.Width, textureBitmap.Height),
+                            ImageLockMode.ReadOnly,
+                            System.Drawing.Imaging.PixelFormat.Format32bppArgb
+                        );
+                
+                   _alphaState = LookForAlphaBits(textureData) ? AlphaState.HasAlpha : AlphaState.Opaque;
+                   textureBitmap.UnlockBits(textureData);
+                }
+                catch
+                { }
+            }
+        }
+
+
         private static bool LookForAlphaBits(BitmapData textureData)
         {        
             Debug.Assert(textureData.Stride > 0);
@@ -298,6 +328,55 @@ namespace open3mod
                 }
             }
             return false;
+        }
+
+
+        private void LoadAsync()
+        {
+            TextureQueue.CompletionCallback callback = (file, image, result) =>
+            {
+                Debug.Assert(_file == file);
+                SetImage(image, result);
+
+                if (_callback != null)
+                {
+                    _callback(_file, _image, result);
+                }
+            };
+
+            lock (_lock)
+            {
+                State = TextureState.LoadingPending;
+                if (_dataSource != null)
+                {
+                    TextureQueue.Enqueue(_dataSource, _file, callback);
+                    return;
+                }
+
+                TextureQueue.Enqueue(_file, _baseDir, callback);
+            }
+        }
+
+
+        private void SetImage(Image image, TextureLoader.LoadResult result)
+        {
+            Debug.Assert(State == TextureState.LoadingPending);
+
+            lock (_lock)
+            {
+                _image = image;
+                // set proper state
+                State = result != TextureLoader.LoadResult.Good ? TextureState.LoadingFailed : TextureState.WinFormsImageCreated;
+                Debug.Assert(result != TextureLoader.LoadResult.Good || _image != null);
+
+                
+#if DETECT_ALPHA_EARLY
+                if (_image != null)
+                {
+                    TryDetectAlpha();
+                }
+#endif
+            }
         }
 
 

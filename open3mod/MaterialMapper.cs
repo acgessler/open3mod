@@ -96,6 +96,18 @@ namespace open3mod
                 return true;
             }
 
+
+            if (material.GetTextureCount(TextureType.Diffuse) > 0)
+            {
+                TextureSlot tex = material.GetTexture(TextureType.Diffuse, 0);
+                var gtex = _scene.TextureSet.GetOriginalOrReplacement(tex.FilePath);
+
+                if(gtex.HasAlpha == Texture.AlphaState.HasAlpha)
+                {
+                    return true;
+                }
+            }
+
             return false;
         }
 
@@ -133,12 +145,15 @@ namespace open3mod
 
         /// <summary>
         /// Uploads all the textures required for a given material to VRAM (i.e.
-        /// create the corresponding Gl objects).
+        /// create the corresponding Gl objects). Textures that have been 
+        /// uploaded before are not attempted again.
         /// </summary>
         /// <param name="material"></param>
-        public void UploadTextures(Material material)
+        /// <returns>Whether there were any new texture uploads</returns>
+        public bool UploadTextures(Material material)
         {
             Debug.Assert(material != null);
+            var any = false;
 
             // note: keep this up to date with the code in ApplyFixedFunctionMaterial
             if (material.GetTextureCount(TextureType.Diffuse) > 0)
@@ -149,8 +164,10 @@ namespace open3mod
                 if (gtex.State == Texture.TextureState.WinFormsImageCreated)
                 {
                     gtex.Upload();
+                    any = true;
                 }
             }
+            return any;
         }
 
 
@@ -185,7 +202,7 @@ namespace open3mod
                 TextureSlot tex = mat.GetTexture(TextureType.Diffuse, 0);
                 var gtex = _scene.TextureSet.GetOriginalOrReplacement(tex.FilePath);
 
-                hasAlpha = hasAlpha || gtex.HasAlpha();
+                hasAlpha = hasAlpha || gtex.HasAlpha == Texture.AlphaState.HasAlpha;
 
                 if(gtex.GlTexture != 0)
                 {

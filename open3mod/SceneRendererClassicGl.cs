@@ -223,9 +223,14 @@ namespace open3mod
             {
                 return;
             }
+            var i = 0;
             foreach (var mat in _owner.Raw.Materials)
             {
-                _owner.MaterialMapper.UploadTextures(mat);
+                if(_owner.MaterialMapper.UploadTextures(mat))
+                {
+                    _isAlphaMaterial[i] = _owner.MaterialMapper.IsAlphaMaterial(mat);
+                }
+                ++i;
             }
         }
 
