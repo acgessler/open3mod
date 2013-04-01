@@ -160,7 +160,7 @@ namespace open3mod
                 return;
             }
 
-            if (sep != Tab.ViewSeparator._Max)
+            if (sep == Tab.ViewSeparator._Max)
             {
                 var view = UiState.ActiveTab.ActiveViews[(int)index];
                 Debug.Assert(view != null);
