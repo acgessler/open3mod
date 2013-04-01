@@ -163,8 +163,6 @@ namespace open3mod
                     //    angle of 66 degrees.
                     imp.SetConfig(new NormalSmoothingAngleConfig(66.0f));
 
-                    imp.SetConfig(new );
-
                     //  - request lots of post processing steps, the details of which
                     //    can be found in the TargetRealTimeMaximumQuality docs.
                     _raw = imp.ImportFile(file, PostProcessPreset.TargetRealTimeMaximumQuality);
