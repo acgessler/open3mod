@@ -286,6 +286,8 @@ namespace open3mod
             _renderer.Update(delta);
         }
 
+        private bool _wantSetTexturesChanged = false;
+        private object _texChangeLock = new object();
 
         /// <summary>
         /// Call once per frame to render the scene to the current viewport.
@@ -321,9 +323,17 @@ namespace open3mod
 
             flags |= RenderFlags.ShowGhosts;
 
+            _wantSetTexturesChanged = false;
             _renderer.Render(cam, _meshesToShow, _nodesToShowChanged, _texturesChanged, flags);
 
-            _texturesChanged = false;
+            lock (_texChangeLock)
+            {
+                if (!_wantSetTexturesChanged)
+                {
+                    _texturesChanged = false;
+                }
+            }
+
             _nodesToShowChanged = false;
         }
 
@@ -360,7 +370,11 @@ namespace open3mod
             }
 
             TextureSet.AddCallback((name, tex) => {
-                _texturesChanged = true;
+                lock (_texChangeLock)
+                {
+                    _wantSetTexturesChanged = true;
+                    _texturesChanged = true;
+                }
                 return true;
             });
         }
