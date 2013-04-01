@@ -20,6 +20,7 @@
 
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -43,7 +44,7 @@ namespace open3mod
 
         private abstract class Task
         {
-            public readonly CompletionCallback Callback;
+            protected readonly CompletionCallback Callback;
 
             public abstract void Load();
 
@@ -96,11 +97,7 @@ namespace open3mod
 
 
         private static Thread _thread;
-        private static readonly Queue<Task> Queue = new Queue<Task>();
-        private static readonly AutoResetEvent Event = new AutoResetEvent(false);
-
-        private static volatile bool _break;
-
+        private static readonly BlockingCollection<Task> Queue = new BlockingCollection<Task>();
 
 
         /// <summary>
@@ -121,10 +118,7 @@ namespace open3mod
                 StartThread();
             }
 
-            lock (Queue) {
-                Queue.Enqueue(new TextureFromFileTask(file, baseDir, callback));
-            }
-            Event.Set();
+            Queue.Add(new TextureFromFileTask(file, baseDir, callback));
         }
 
 
@@ -145,11 +139,7 @@ namespace open3mod
                 StartThread();
             }
 
-            lock (Queue)
-            {
-                Queue.Enqueue(new TextureFromMemoryTask(dataSource, refName, callback));
-            }
-            Event.Set();
+            Queue.Add(new TextureFromMemoryTask(dataSource, refName, callback));
         }
 
 
@@ -160,11 +150,7 @@ namespace open3mod
                 return;
             }
 
-            _break = true;
-            // note that completion callbacks may still be called
-            // after this point. With the current implementation
-            // of Texture it doesn't matter, though.
-            Event.Set();
+            Queue.CompleteAdding();
         }
 
 
@@ -180,29 +166,18 @@ namespace open3mod
         {
             try
             {
-                while (!_break)
+                while (true)
                 {
-                
-                    Task task;
-                    try
-                    {
-                        lock (Queue) {
-                            task = Queue.Dequeue();
-                        }
-                    }
-                    catch(InvalidOperationException)
-                    {
-                        // empty queue, go sleep
-                        Event.WaitOne();                      
-                        continue;
-                    }
-
-                    task.Load();
+                    Queue.Take().Load();
                 }
             }
             catch(ThreadInterruptedException)
             {
                 
+            }
+            catch (InvalidOperationException)
+            {
+
             }
         }       
     }
