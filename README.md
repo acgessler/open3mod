@@ -23,7 +23,7 @@ __Some key features:__
  - Multiple viewports (up to 4) and different camera modes such as orbit cameras or even First-Person
  - A multitude of texture file formats is supported through DevIL. Textures are being loaded asynchronously, so there
    are no extra waiting times if you only care about geometry
- - Export of scenes (or parts of scenes) is supported. Output formats include Collada, 3DS, PLY, STL, OBJ 
+ - Export of scenes (or parts of scenes) is supported. Output formats include Collada, PLY, STL, OBJ 
    (as of now).
 
 
