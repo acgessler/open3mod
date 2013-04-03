@@ -76,12 +76,19 @@ namespace open3mod
         }
 #endif
 
+
+        /// <summary>
+        /// <see cref="ISceneRenderer.Update"/>
+        /// </summary>   
         public void Update(double delta)
         {
             Skinner.Update();
         }
 
 
+        /// <summary>
+        /// <see cref="ISceneRenderer.Render"/>
+        /// </summary>   
         public void Render(ICameraController cam, Dictionary<Node, List<Mesh>> visibleMeshesByNode, 
             bool visibleSetChanged, 
             bool texturesChanged,
