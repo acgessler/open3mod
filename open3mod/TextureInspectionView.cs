@@ -45,7 +45,7 @@ namespace open3mod
             var have = new HashSet<string>();
             foreach (var mat in scene.Raw.Materials)
             {
-                var textures = mat.GetAllTextures();
+                var textures = mat.GetAllMaterialTextures();
                 foreach (var tex in textures)
                 {
                     if (have.Contains(tex.FilePath))

@@ -33,27 +33,27 @@ namespace open3mod
 {
     public class EmbeddedTextureLoader : TextureLoader
     {
-        public EmbeddedTextureLoader(Assimp.Texture tex) 
+        public EmbeddedTextureLoader(Assimp.EmbeddedTexture tex) 
         {
             if(tex.IsCompressed)
             {
-                var compTex = (Assimp.CompressedTexture) tex;
-                if(!compTex.HasData)
+                var compTex = tex;
+                if(!compTex.HasCompressedData)
                 {
                     return;
                 }
 
                 // note: have to keep the stream open for the lifetime of the image, so don't Dispose()
-                SetFromStream(new MemoryStream(compTex.Data));
+                SetFromStream(new MemoryStream(compTex.CompressedData));
                 return;
             }
 
-            var rawTex = (Assimp.UncompressedTexture) tex;
-            if (!rawTex.HasData || rawTex.Width < 1 || rawTex.Height < 1)
+            var rawTex = tex;
+            if (!rawTex.HasNonCompressedData || rawTex.Width < 1 || rawTex.Height < 1)
             {
                 return;
             }
-            var texels = rawTex.Data;
+            var texels = rawTex.NonCompressedData;
 
             
             var image = new Bitmap(rawTex.Width, rawTex.Height, PixelFormat.Format32bppArgb);

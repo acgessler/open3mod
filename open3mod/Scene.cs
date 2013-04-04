@@ -346,11 +346,11 @@ namespace open3mod
             var materials = _raw.Materials;
             foreach (var mat in materials)
             {
-                var textures = mat.GetAllTextures();
+                var textures = mat.GetAllMaterialTextures();
                 foreach (var tex in textures)
                 {
                     var path = tex.FilePath;
-                    Assimp.Texture embeddedSource = null;
+                    EmbeddedTexture embeddedSource = null;
                     if(path.StartsWith("*"))
                     {
                         // Embedded texture, following the asterisk is the zero-based
@@ -358,7 +358,7 @@ namespace open3mod
                         uint index;
                         if(Raw.HasTextures && uint.TryParse(path.Substring(1), out index) && index < Raw.TextureCount)
                         {
-                            embeddedSource = Raw.Textures[index];
+                            embeddedSource = Raw.Textures[(int)index];
                         }
                         // else: just add the name to the texture set without specifying
                         // a data source, the texture will then be in a failed state 

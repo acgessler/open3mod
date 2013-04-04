@@ -497,7 +497,7 @@ namespace Assimp {
     /// Enumerates geometric primitive types.
     /// </summary>
     [Flags]
-    public enum PrimitiveType : uint {
+    public enum PrimitiveType : int {
         /// <summary>
         /// Point primitive. This is just a single vertex
         /// in the virtual world. A face has one index for such a primitive.
@@ -825,7 +825,7 @@ namespace Assimp {
     /// <summary>
     /// Defines the purpose of a texture.
     /// </summary>
-    public enum TextureType : uint {
+    public enum TextureType : int {
         /// <summary>
         /// No texture, but the value can be used as a 'texture semantic'.
         /// </summary>
@@ -904,7 +904,7 @@ namespace Assimp {
     /// Defines the state of the imported scene data structure.
     /// </summary>
     [Flags]
-    public enum SceneFlags : uint {
+    public enum SceneFlags : int {
         /// <summary>
         /// Default state of the scene, it imported successfully.
         /// </summary>
@@ -1047,7 +1047,7 @@ namespace Assimp {
     /// <summary>
     /// Enumerates how the native Assimp DLL was compiled
     /// </summary>
-    public enum CompileFlags : uint {
+    public enum CompileFlags : int {
         /// <summary>
         /// Assimp compiled as a shared object (Windows: DLL);
         /// </summary>

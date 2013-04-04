@@ -32,9 +32,8 @@ namespace Assimp {
     /// accessing non-texture/texture properties without having to know the Assimp material key names. Not all properties may be present,
     /// and if they aren't a default value will be returned.
     /// </summary>
-    public sealed class Material {
+    public sealed class Material : IMarshalable<Material, AiMaterial> {
         private Dictionary<String, MaterialProperty> m_properties;
-        private Dictionary<int, List<TextureSlot>> m_textures;
 
         /// <summary>
         /// Gets the number of properties contained in the material.
@@ -44,6 +43,8 @@ namespace Assimp {
                 return m_properties.Count;
             }
         }
+
+        #region Convienent non-texture properties
 
         /// <summary>
         /// Checks if the material has a name property.
@@ -60,10 +61,20 @@ namespace Assimp {
         public String Name {
             get {
                 MaterialProperty prop = GetProperty(AiMatKeys.NAME);
-                if(prop != null) {
-                    return prop.AsString();
-                }
+                if(prop != null)
+                    return prop.GetStringValue();
+
                 return String.Empty;
+            }
+            set {
+                MaterialProperty prop = GetProperty(AiMatKeys.NAME);
+
+                if(prop == null) {
+                    prop = new MaterialProperty(AiMatKeys.NAME, value);
+                    AddProperty(prop);
+                }
+
+                prop.SetStringValue(value);
             }
         }
 
@@ -82,10 +93,20 @@ namespace Assimp {
         public bool IsTwoSided {
             get {
                 MaterialProperty prop = GetProperty(AiMatKeys.TWOSIDED);
-                if(prop != null) {
-                    return prop.AsBoolean();
-                }
+                if(prop != null)
+                    return prop.GetBooleanValue();
+
                 return false;
+            }
+            set {
+                MaterialProperty prop = GetProperty(AiMatKeys.TWOSIDED);
+
+                if(prop == null) {
+                    prop = new MaterialProperty(AiMatKeys.TWOSIDED, value);
+                    AddProperty(prop);
+                }
+
+                prop.SetBooleanValue(value);
             }
         }
 
@@ -104,10 +125,20 @@ namespace Assimp {
         public ShadingMode ShadingMode {
             get {
                 MaterialProperty prop = GetProperty(AiMatKeys.SHADING_MODEL);
-                if(prop != null) {
-                    return prop.AsShadingMode();
-                }
+                if(prop != null)
+                    return (ShadingMode) prop.GetIntegerValue();
+
                 return ShadingMode.None;
+            }
+            set {
+                MaterialProperty prop = GetProperty(AiMatKeys.SHADING_MODEL);
+
+                if(prop == null) {
+                    prop = new MaterialProperty(AiMatKeys.SHADING_MODEL, (int) value);
+                    AddProperty(prop);
+                }
+
+                prop.SetIntegerValue((int) value);
             }
         }
 
@@ -126,10 +157,20 @@ namespace Assimp {
         public bool IsWireFrameEnabled {
             get {
                 MaterialProperty prop = GetProperty(AiMatKeys.ENABLE_WIREFRAME);
-                if(prop != null) {
-                    return prop.AsBoolean();
-                }
+                if(prop != null)
+                    return prop.GetBooleanValue();
+
                 return false;
+            }
+            set {
+                MaterialProperty prop = GetProperty(AiMatKeys.ENABLE_WIREFRAME);
+
+                if(prop == null) {
+                    prop = new MaterialProperty(AiMatKeys.ENABLE_WIREFRAME, value);
+                    AddProperty(prop);
+                }
+
+                prop.SetBooleanValue(value);
             }
         }
 
@@ -148,10 +189,20 @@ namespace Assimp {
         public BlendMode BlendMode {
             get {
                 MaterialProperty prop = GetProperty(AiMatKeys.BLEND_FUNC);
-                if(prop != null) {
-                    return prop.AsBlendMode();
-                }
+                if(prop != null)
+                    return (BlendMode) prop.GetIntegerValue();
+
                 return BlendMode.Default;
+            }
+            set {
+                MaterialProperty prop = GetProperty(AiMatKeys.BLEND_FUNC);
+
+                if(prop == null) {
+                    prop = new MaterialProperty(AiMatKeys.BLEND_FUNC, (int) value);
+                    AddProperty(prop);
+                }
+
+                prop.SetIntegerValue((int) value);
             }
         }
 
@@ -170,10 +221,20 @@ namespace Assimp {
         public float Opacity {
             get {
                 MaterialProperty prop = GetProperty(AiMatKeys.OPACITY);
-                if(prop != null) {
-                    return prop.AsFloat();
-                }
+                if(prop != null)
+                    return prop.GetFloatValue();
+
                 return 1.0f;
+            }
+            set {
+                MaterialProperty prop = GetProperty(AiMatKeys.OPACITY);
+
+                if(prop == null) {
+                    prop = new MaterialProperty(AiMatKeys.OPACITY, value);
+                    AddProperty(prop);
+                }
+
+                prop.SetFloatValue(value);
             }
         }
 
@@ -192,10 +253,20 @@ namespace Assimp {
         public float BumpScaling {
             get {
                 MaterialProperty prop = GetProperty(AiMatKeys.BUMPSCALING);
-                if(prop != null) {
-                    return prop.AsFloat();
-                }
+                if(prop != null)
+                    return prop.GetFloatValue();
+  
                 return 0.0f;
+            }
+            set {
+                MaterialProperty prop = GetProperty(AiMatKeys.BUMPSCALING);
+
+                if(prop == null) {
+                    prop = new MaterialProperty(AiMatKeys.BUMPSCALING, value);
+                    AddProperty(prop);
+                }
+
+                prop.SetFloatValue(value);
             }
         }
 
@@ -214,10 +285,20 @@ namespace Assimp {
         public float Shininess {
             get {
                 MaterialProperty prop = GetProperty(AiMatKeys.SHININESS);
-                if(prop != null) {
-                    return prop.AsFloat();
-                }
+                if(prop != null)
+                    return prop.GetFloatValue();
+
                 return 0.0f;
+            }
+            set {
+                MaterialProperty prop = GetProperty(AiMatKeys.SHININESS);
+
+                if(prop == null) {
+                    prop = new MaterialProperty(AiMatKeys.SHININESS, value);
+                    AddProperty(prop);
+                }
+
+                prop.SetFloatValue(value);
             }
         }
 
@@ -236,10 +317,20 @@ namespace Assimp {
         public float ShininessStrength {
             get {
                 MaterialProperty prop = GetProperty(AiMatKeys.SHININESS_STRENGTH);
-                if(prop != null) {
-                    return prop.AsFloat();
-                }
+                if(prop != null)
+                    return prop.GetFloatValue();
+
                 return 1.0f;
+            }
+            set {
+                MaterialProperty prop = GetProperty(AiMatKeys.SHININESS_STRENGTH);
+
+                if(prop == null) {
+                    prop = new MaterialProperty(AiMatKeys.SHININESS_STRENGTH, value);
+                    AddProperty(prop);
+                }
+
+                prop.SetFloatValue(value);
             }
         }
 
@@ -259,10 +350,20 @@ namespace Assimp {
         public float Reflectivity {
             get {
                 MaterialProperty prop = GetProperty(AiMatKeys.REFLECTIVITY);
-                if(prop != null) {
-                    return prop.AsFloat();
-                }
+                if(prop != null)
+                    return prop.GetFloatValue();
+
                 return 0.0f;
+            }
+            set {
+                MaterialProperty prop = GetProperty(AiMatKeys.REFLECTIVITY);
+
+                if(prop == null) {
+                    prop = new MaterialProperty(AiMatKeys.REFLECTIVITY, value);
+                    AddProperty(prop);
+                }
+
+                prop.SetFloatValue(value);
             }
         }
 
@@ -281,10 +382,20 @@ namespace Assimp {
         public Color4D ColorDiffuse {
             get {
                 MaterialProperty prop = GetProperty(AiMatKeys.COLOR_DIFFUSE);
-                if(prop != null) {
-                    return prop.AsColor4D();
-                }
+                if(prop != null)
+                    return prop.GetColor4DValue();
+
                 return new Color4D(1.0f, 1.0f, 1.0f, 1.0f);
+            }
+            set {
+                MaterialProperty prop = GetProperty(AiMatKeys.COLOR_DIFFUSE);
+
+                if(prop == null) {
+                    prop = new MaterialProperty(AiMatKeys.COLOR_DIFFUSE, value);
+                    AddProperty(prop);
+                }
+
+                prop.SetColor4DValue(value);
             }
         }
 
@@ -303,10 +414,20 @@ namespace Assimp {
         public Color4D ColorAmbient {
             get {
                 MaterialProperty prop = GetProperty(AiMatKeys.COLOR_AMBIENT);
-                if(prop != null) {
-                    return prop.AsColor4D();
-                }
+                if(prop != null)
+                    return prop.GetColor4DValue();
+
                 return new Color4D(.2f, .2f, .2f, 1.0f);
+            }
+            set {
+                MaterialProperty prop = GetProperty(AiMatKeys.COLOR_AMBIENT);
+
+                if(prop == null) {
+                    prop = new MaterialProperty(AiMatKeys.COLOR_AMBIENT, value);
+                    AddProperty(prop);
+                }
+
+                prop.SetColor4DValue(value);
             }
         }
 
@@ -325,10 +446,20 @@ namespace Assimp {
         public Color4D ColorSpecular {
             get {
                 MaterialProperty prop = GetProperty(AiMatKeys.COLOR_SPECULAR);
-                if(prop != null) {
-                    return prop.AsColor4D();
-                }
+                if(prop != null)
+                    return prop.GetColor4DValue();
+
                 return new Color4D(0, 0, 0, 1.0f);
+            }
+            set {
+                MaterialProperty prop = GetProperty(AiMatKeys.COLOR_SPECULAR);
+
+                if(prop == null) {
+                    prop = new MaterialProperty(AiMatKeys.COLOR_SPECULAR, value);
+                    AddProperty(prop);
+                }
+
+                prop.SetColor4DValue(value);
             }
         }
 
@@ -347,10 +478,20 @@ namespace Assimp {
         public Color4D ColorEmissive {
             get {
                 MaterialProperty prop = GetProperty(AiMatKeys.COLOR_EMISSIVE);
-                if(prop != null) {
-                    return prop.AsColor4D();
-                }
+                if(prop != null)
+                    return prop.GetColor4DValue();
+
                 return new Color4D(0, 0, 0, 1.0f);
+            }
+            set {
+                MaterialProperty prop = GetProperty(AiMatKeys.COLOR_EMISSIVE);
+
+                if(prop == null) {
+                    prop = new MaterialProperty(AiMatKeys.COLOR_EMISSIVE, value);
+                    AddProperty(prop);
+                }
+
+                prop.SetColor4DValue(value);
             }
         }
 
@@ -369,10 +510,20 @@ namespace Assimp {
         public Color4D ColorTransparent {
             get {
                 MaterialProperty prop = GetProperty(AiMatKeys.COLOR_TRANSPARENT);
-                if(prop != null) {
-                    return prop.AsColor4D();
-                }
+                if(prop != null)
+                    return prop.GetColor4DValue();
+
                 return new Color4D(0, 0, 0, 1.0f);
+            }
+            set {
+                MaterialProperty prop = GetProperty(AiMatKeys.COLOR_TRANSPARENT);
+
+                if(prop == null) {
+                    prop = new MaterialProperty(AiMatKeys.COLOR_TRANSPARENT, value);
+                    AddProperty(prop);
+                }
+
+                prop.SetColor4DValue(value);
             }
         }
 
@@ -391,12 +542,278 @@ namespace Assimp {
         public Color4D ColorReflective {
             get {
                 MaterialProperty prop = GetProperty(AiMatKeys.COLOR_REFLECTIVE);
-                if(prop != null) {
-                    return prop.AsColor4D();
-                }
+                if(prop != null)
+                    return prop.GetColor4DValue();
+
                 return new Color4D(0, 0, 0, 1.0f);
             }
+            set {
+                MaterialProperty prop = GetProperty(AiMatKeys.COLOR_REFLECTIVE);
+
+                if(prop == null) {
+                    prop = new MaterialProperty(AiMatKeys.COLOR_REFLECTIVE, value);
+                    AddProperty(prop);
+                }
+
+                prop.SetColor4DValue(value);
+            }
         }
+
+        #endregion
+
+        #region Convienent texture properties
+
+        /// <summary>
+        /// Gets if the material has a diffuse texture in the first texture index.
+        /// </summary>
+        public bool HasTextureDiffuse {
+            get {
+                return HasProperty(AiMatKeys.TEXTURE_BASE, TextureType.Diffuse, 0);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets diffuse texture properties in the first texture index.
+        /// </summary>
+        public TextureSlot TextureDiffuse {
+            get {
+                TextureSlot tex;
+                GetMaterialTexture(TextureType.Diffuse, 0, out tex);
+
+                return tex;
+            }
+            set {
+                if(value.TextureIndex == 0 && value.TextureType == TextureType.Diffuse)
+                    AddMaterialTexture(ref value);
+            }
+        }
+
+        /// <summary>
+        /// Gets if the material has a specular texture in the first texture index.
+        /// </summary>
+        public bool HasTextureSpecular {
+            get {
+                return HasProperty(AiMatKeys.TEXTURE_BASE, TextureType.Specular, 0);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets specular texture properties in the first texture index.
+        /// </summary>
+        public TextureSlot TextureSpecular {
+            get {
+                TextureSlot tex;
+                GetMaterialTexture(TextureType.Specular, 0, out tex);
+
+                return tex;
+            }
+            set {
+                if(value.TextureIndex == 0 && value.TextureType == TextureType.Specular)
+                    AddMaterialTexture(ref value);
+            }
+        }
+
+        /// <summary>
+        /// Gets if the material has a ambient texture in the first texture index.
+        /// </summary>
+        public bool HasTextureAmbient {
+            get {
+                return HasProperty(AiMatKeys.TEXTURE_BASE, TextureType.Ambient, 0);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets ambient texture properties in the first texture index.
+        /// </summary>
+        public TextureSlot TextureAmbient {
+            get {
+                TextureSlot tex;
+                GetMaterialTexture(TextureType.Ambient, 0, out tex);
+
+                return tex;
+            }
+            set {
+                if(value.TextureIndex == 0 && value.TextureType == TextureType.Ambient)
+                    AddMaterialTexture(ref value);
+            }
+        }
+
+        /// <summary>
+        /// Gets if the material has a emissive texture in the first texture index.
+        /// </summary>
+        public bool HasTextureEmissive {
+            get {
+                return HasProperty(AiMatKeys.TEXTURE_BASE, TextureType.Emissive, 0);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets emissive texture properties in the first texture index.
+        /// </summary>
+        public TextureSlot TextureEmissive {
+            get {
+                TextureSlot tex;
+                GetMaterialTexture(TextureType.Emissive, 0, out tex);
+
+                return tex;
+            }
+            set {
+                if(value.TextureIndex == 0 && value.TextureType == TextureType.Emissive)
+                    AddMaterialTexture(ref value);
+            }
+        }
+
+        /// <summary>
+        /// Gets if the material has a height texture in the first texture index.
+        /// </summary>
+        public bool HasTextureHeight {
+            get {
+                return HasProperty(AiMatKeys.TEXTURE_BASE, TextureType.Height, 0);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets height texture properties in the first texture index.
+        /// </summary>
+        public TextureSlot TextureHeight {
+            get {
+                TextureSlot tex;
+                GetMaterialTexture(TextureType.Height, 0, out tex);
+
+                return tex;
+            }
+            set {
+                if(value.TextureIndex == 0 && value.TextureType == TextureType.Height)
+                    AddMaterialTexture(ref value);
+            }
+        }
+
+        /// <summary>
+        /// Gets if the material has a normal texture in the first texture index.
+        /// </summary>
+        public bool HasTextureNormal {
+            get {
+                return HasProperty(AiMatKeys.TEXTURE_BASE, TextureType.Normals, 0);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets normal texture properties in the first texture index.
+        /// </summary>
+        public TextureSlot TextureNormal {
+            get {
+                TextureSlot tex;
+                GetMaterialTexture(TextureType.Normals, 0, out tex);
+
+                return tex;
+            }
+            set {
+                if(value.TextureIndex == 0 && value.TextureType == TextureType.Normals)
+                    AddMaterialTexture(ref value);
+            }
+        }
+
+        /// <summary>
+        /// Gets if the material has an opacity texture in the first texture index.
+        /// </summary>
+        public bool HasTextureOpacity {
+            get {
+                return HasProperty(AiMatKeys.TEXTURE_BASE, TextureType.Opacity, 0);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets opacity texture properties in the first texture index.
+        /// </summary>
+        public TextureSlot TextureOpacity {
+            get {
+                TextureSlot tex;
+                GetMaterialTexture(TextureType.Opacity, 0, out tex);
+
+                return tex;
+            }
+            set {
+                if(value.TextureIndex == 0 && value.TextureType == TextureType.Opacity)
+                    AddMaterialTexture(ref value);
+            }
+        }
+
+        /// <summary>
+        /// Gets if the material has a displacement texture in the first texture index.
+        /// </summary>
+        public bool HasTextureDisplacement {
+            get {
+                return HasProperty(AiMatKeys.TEXTURE_BASE, TextureType.Displacement, 0);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets displacement texture properties in the first texture index.
+        /// </summary>
+        public TextureSlot TextureDisplacement {
+            get {
+                TextureSlot tex;
+                GetMaterialTexture(TextureType.Displacement, 0, out tex);
+
+                return tex;
+            }
+            set {
+                if(value.TextureIndex == 0 && value.TextureType == TextureType.Displacement)
+                    AddMaterialTexture(ref value);
+            }
+        }
+
+        /// <summary>
+        /// Gets if the material has a light map texture in the first texture index.
+        /// </summary>
+        public bool HasTextureLightMap {
+            get {
+                return HasProperty(AiMatKeys.TEXTURE_BASE, TextureType.Lightmap, 0);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets light map texture properties in the first texture index.
+        /// </summary>
+        public TextureSlot TextureLightMap {
+            get {
+                TextureSlot tex;
+                GetMaterialTexture(TextureType.Lightmap, 0, out tex);
+
+                return tex;
+            }
+            set {
+                if(value.TextureIndex == 0 && value.TextureType == TextureType.Lightmap)
+                    AddMaterialTexture(ref value);
+            }
+        }
+
+        /// <summary>
+        /// Gets if the material has a reflection texture in the first texture index.
+        /// </summary>
+        public bool HasTextureReflection {
+            get {
+                return HasProperty(AiMatKeys.TEXTURE_BASE, TextureType.Reflection, 0);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets reflection texture properties in the first texture index.
+        /// </summary>
+        public TextureSlot TextureReflection {
+            get {
+                TextureSlot tex;
+                GetMaterialTexture(TextureType.Reflection, 0, out tex);
+
+                return tex;
+            }
+            set {
+                if(value.TextureIndex == 0 && value.TextureType == TextureType.Reflection)
+                    AddMaterialTexture(ref value);
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// Constructs a new Material.
@@ -404,7 +821,6 @@ namespace Assimp {
         /// <param name="material">Unmanaged AiMaterial struct.</param>
         internal Material(ref AiMaterial material) {
             m_properties = new Dictionary<String, MaterialProperty>();
-            m_textures = new Dictionary<int, List<TextureSlot>>();
 
             if(material.NumProperties > 0 && material.Properties != IntPtr.Zero) {
                 AiMaterialProperty[] properties = MemoryHelper.MarshalArray<AiMaterialProperty>(material.Properties, (int) material.NumProperties, true);
@@ -413,24 +829,13 @@ namespace Assimp {
                     m_properties.Add(prop.FullyQualifiedName, prop);
                 }
             }
-            //Idea is to look at each texture type, and get the "TextureSlot" struct of each one. They're essentially stored in a dictionary where each type contains a bucket
-            //of textures. It seems just looping over properties will yield duplicates (no idea what the non $tex.file properties are, but they all seem to contain the same texture info).
-            //So hopefully doing it this way will give a nice and concise list of textures that can easily be retrieved, and all pertinent info (file path, wrap mode, etc) will be available to
-            //the user.
-            foreach(var texType in Enum.GetValues(typeof(TextureType))) {
-                TextureType type = (TextureType) texType;
-                if(type != TextureType.None) {
-                    uint count = AssimpLibrary.Instance.GetMaterialTextureCount(ref material, type);
-                    for(uint i = 0; i < count; i++) {
-                        List<TextureSlot> slots;
-                        if(!m_textures.TryGetValue((int) type, out slots)) {
-                            slots = new List<TextureSlot>();
-                            m_textures.Add((int) type, slots);
-                        }
-                        slots.Add(AssimpLibrary.Instance.GetMaterialTexture(ref material, type, i));
-                    }
-                }
-            }
+        }
+
+        /// <summary>
+        /// Constructs a new instance of the <see cref="Material"/> class.
+        /// </summary>
+        public Material() {
+            m_properties = new Dictionary<String, MaterialProperty>();
         }
 
         /// <summary>
@@ -442,10 +847,10 @@ namespace Assimp {
         /// <param name="texIndex">Texture index; non-texture properties should leave this zero.</param>
         /// <returns>The fully qualified name</returns>
         public static String CreateFullyQualifiedName(String baseName, TextureType texType, int texIndex) {
-            if(String.IsNullOrEmpty(baseName)) {
-                return null;
-            }
-            return String.Format("{0},{1},{2}", baseName, 0, 0);
+            if(String.IsNullOrEmpty(baseName))
+                return String.Empty;
+
+            return String.Format("{0},{1},{2}", baseName, (int) texType, texIndex);
         }
 
         /// <summary>
@@ -523,6 +928,7 @@ namespace Assimp {
             if(String.IsNullOrEmpty(baseName)) {
                 return false;
             }
+
             String fullyQualifiedName = CreateFullyQualifiedName(baseName, texType, texIndex);
             return HasProperty(fullyQualifiedName);
         }
@@ -541,6 +947,68 @@ namespace Assimp {
         }
 
         /// <summary>
+        /// Adds a property to this material.
+        /// </summary>
+        /// <param name="matProp">Material property</param>
+        /// <returns>True if the property was successfully added, false otherwise (e.g. null or key already present).</returns>
+        public bool AddProperty(MaterialProperty matProp) {
+            if(matProp == null)
+                return false;
+
+            if(m_properties.ContainsKey(matProp.FullyQualifiedName))
+                return false;
+
+            m_properties.Add(matProp.FullyQualifiedName, matProp);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Removes a non-texture property from the material.
+        /// </summary>
+        /// <param name="baseName">Property name</param>
+        /// <returns>True if the property was removed, false otherwise</returns>
+        public bool RemoveNonTextureProperty(String baseName) {
+            if(String.IsNullOrEmpty(baseName))
+                return false;
+
+            return RemoveProperty(CreateFullyQualifiedName(baseName, TextureType.None, 0));
+        }
+
+        /// <summary>
+        /// Removes a property from the material.
+        /// </summary>
+        /// <param name="baseName">Name of the property</param>
+        /// <param name="texType">Property texture type</param>
+        /// <param name="texIndex">Property texture index</param>
+        /// <returns>True if the property was removed, false otherwise</returns>
+        public bool RemoveProperty(String baseName, TextureType texType, int texIndex) {
+            if(String.IsNullOrEmpty(baseName))
+                return false;
+
+            return RemoveProperty(CreateFullyQualifiedName(baseName, texType, texIndex));
+        }
+
+        /// <summary>
+        /// Removes a property from the material.
+        /// </summary>
+        /// <param name="fullyQualifiedName">Fully qualified name of the property ({basename},{texType},{texIndex})</param>
+        /// <returns></returns>
+        public bool RemoveProperty(String fullyQualifiedName) {
+            if(String.IsNullOrEmpty(fullyQualifiedName))
+                return false;
+
+            return m_properties.Remove(fullyQualifiedName);
+        }
+
+        /// <summary>
+        /// Removes all properties from the material;
+        /// </summary>
+        public void Clear() {
+            m_properties.Clear();
+        }
+
+        /// <summary>
         /// Gets -all- properties contained in the Material.
         /// </summary>
         /// <returns>All properties in the material property map.</returns>
@@ -549,68 +1017,289 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Gets all the textures that are of the specified texture type.
+        /// Gets all the number of textures that are of the specified texture type.
         /// </summary>
         /// <param name="texType">Texture type</param>
         /// <returns>Texture count</returns>
-        public int GetTextureCount(TextureType texType) {
-            if(texType != TextureType.None) {
-                List<TextureSlot> slot;
-                if(m_textures.TryGetValue((int) texType, out slot)) {
-                    return slot.Count;
+        public int GetMaterialTextureCount(TextureType texType) {
+            int count = 0;
+            foreach(KeyValuePair<String, MaterialProperty> kv in m_properties) {
+                MaterialProperty matProp = kv.Value;
+
+                if(matProp.Name.StartsWith(AiMatKeys.TEXTURE_BASE) && matProp.TextureType == texType) {
+                    count++;
                 }
             }
-            return 0;
+
+            return count;
         }
 
         /// <summary>
-        /// Gets the specific texture information for the texture type and texture index.
+        /// Adds a texture to the material - this bulk creates a property for each field. This will
+        /// either create properties or overwrite existing properties. If the texture has no
+        /// file path, nothing is added.
+        /// </summary>
+        /// <param name="texture">Texture to add</param>
+        /// <returns>True if the texture properties were added or modified</returns>
+        public bool AddMaterialTexture(ref TextureSlot texture) {
+            return AddMaterialTexture(ref texture, false);
+        }
+
+        /// <summary>
+        /// Adds a texture to the material - this bulk creates a property for each field. This will
+        /// either create properties or overwrite existing properties. If the texture has no
+        /// file path, nothing is added.
+        /// </summary>
+        /// <param name="texture">Texture to add</param>
+        /// <param name="onlySetFilePath">True to only set the texture's file path, false otherwise</param>
+        /// <returns>True if the texture properties were added or modified</returns>
+        public bool AddMaterialTexture(ref TextureSlot texture, bool onlySetFilePath) {
+            if(String.IsNullOrEmpty(texture.FilePath))
+                return false;
+
+            TextureType texType = texture.TextureType;
+            int texIndex = texture.TextureIndex;
+            
+            String texName = CreateFullyQualifiedName(AiMatKeys.TEXTURE_BASE, texType, texIndex);
+
+            MaterialProperty texNameProp = GetProperty(texName);
+
+            if(texNameProp == null)
+                AddProperty(new MaterialProperty(texName, texture.FilePath));
+            else
+                texNameProp.SetStringValue(texture.FilePath);
+
+            if(onlySetFilePath)
+                return true;
+
+            String mappingName = CreateFullyQualifiedName(AiMatKeys.MAPPING_BASE, texType, texIndex);
+            String uvIndexName = CreateFullyQualifiedName(AiMatKeys.UVWSRC_BASE, texType, texIndex);
+            String blendFactorName = CreateFullyQualifiedName(AiMatKeys.TEXBLEND_BASE, texType, texIndex);
+            String texOpName = CreateFullyQualifiedName(AiMatKeys.TEXOP_BASE, texType, texIndex);
+            String uMapModeName = CreateFullyQualifiedName(AiMatKeys.MAPPINGMODE_U_BASE, texType, texIndex);
+            String vMapModeName = CreateFullyQualifiedName(AiMatKeys.MAPPINGMODE_V_BASE, texType, texIndex);
+            String texFlagsName = CreateFullyQualifiedName(AiMatKeys.TEXFLAGS_BASE, texType, texIndex);
+
+            MaterialProperty mappingNameProp = GetProperty(mappingName);
+            MaterialProperty uvIndexNameProp = GetProperty(uvIndexName);
+            MaterialProperty blendFactorNameProp = GetProperty(blendFactorName);
+            MaterialProperty texOpNameProp = GetProperty(texOpName);
+            MaterialProperty uMapModeNameProp = GetProperty(uMapModeName);
+            MaterialProperty vMapModeNameProp = GetProperty(vMapModeName);
+            MaterialProperty texFlagsNameProp = GetProperty(texFlagsName);
+
+            if(mappingNameProp == null)
+                AddProperty(new MaterialProperty(mappingName, (int) texture.Mapping));
+            else
+                mappingNameProp.SetIntegerValue((int) texture.Mapping);
+
+            if(uvIndexNameProp == null)
+                AddProperty(new MaterialProperty(uvIndexName, texture.UVIndex));
+            else
+                uvIndexNameProp.SetIntegerValue(texture.UVIndex);
+
+            if(blendFactorNameProp == null)
+                AddProperty(new MaterialProperty(blendFactorName, texture.BlendFactor));
+            else
+                blendFactorNameProp.SetFloatValue(texture.BlendFactor);
+
+            if(texOpNameProp == null)
+                AddProperty(new MaterialProperty(texOpName, (int) texture.Operation));
+            else
+                texOpNameProp.SetIntegerValue((int) texture.Operation);
+
+            if(uMapModeNameProp == null)
+                AddProperty(new MaterialProperty(uMapModeName, (int) texture.WrapModeU));
+            else
+                uMapModeNameProp.SetIntegerValue((int) texture.WrapModeU);
+
+            if(vMapModeNameProp == null)
+                AddProperty(new MaterialProperty(vMapModeName, (int) texture.WrapModeV));
+            else
+                vMapModeNameProp.SetIntegerValue((int) texture.WrapModeV);
+
+            if(texFlagsNameProp == null)
+                AddProperty(new MaterialProperty(texFlagsName, texture.Flags));
+            else
+                texFlagsNameProp.SetIntegerValue(texture.Flags);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Removes a texture from the material - this bulk removes a property for each field.
+        /// If the texture has no file path, nothing is removed
+        /// </summary>
+        /// <param name="texture">Texture to remove</param>
+        public bool RemoveMaterialTexture(ref TextureSlot texture) {
+            if(String.IsNullOrEmpty(texture.FilePath))
+                return false;
+
+            TextureType texType = texture.TextureType;
+            int texIndex = texture.TextureIndex;
+
+            String texName = CreateFullyQualifiedName(AiMatKeys.TEXTURE_BASE, texType, texIndex);
+            String mappingName = CreateFullyQualifiedName(AiMatKeys.MAPPING_BASE, texType, texIndex);
+            String uvIndexName = CreateFullyQualifiedName(AiMatKeys.UVWSRC_BASE, texType, texIndex);
+            String blendFactorName = CreateFullyQualifiedName(AiMatKeys.TEXBLEND_BASE, texType, texIndex);
+            String texOpName = CreateFullyQualifiedName(AiMatKeys.TEXOP_BASE, texType, texIndex);
+            String uMapModeName = CreateFullyQualifiedName(AiMatKeys.MAPPINGMODE_U_BASE, texType, texIndex);
+            String vMapModeName = CreateFullyQualifiedName(AiMatKeys.MAPPINGMODE_V_BASE, texType, texIndex);
+            String texFlagsName = CreateFullyQualifiedName(AiMatKeys.TEXFLAGS_BASE, texType, texIndex);
+
+            RemoveProperty(texName);
+            RemoveProperty(mappingName);
+            RemoveProperty(uvIndexName);
+            RemoveProperty(blendFactorName);
+            RemoveProperty(texOpName);
+            RemoveProperty(uMapModeName);
+            RemoveProperty(vMapModeName);
+            RemoveProperty(texFlagsName);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Gets a texture that corresponds to the type/index.
         /// </summary>
         /// <param name="texType">Texture type</param>
-        /// <param name="index">Texture index</param>
-        /// <returns>Texture information struct</returns>
-        public TextureSlot GetTexture(TextureType texType, int index) {
-            TextureSlot texSlot = new TextureSlot();
-            if(texType != TextureType.None) {
-                List<TextureSlot> slotList;
-                if(m_textures.TryGetValue((int) texType, out slotList)) {
-                    //Note: Unsure if the textures will be in the proper index order in our list, so to play it safe we're looking at all of them until
-                    //we find the index
-                    foreach(TextureSlot slot in slotList) {
-                        if(slot.TextureIndex == index) {
-                            return slot;
-                        }
-                    }
-                }
-            }
-            return texSlot;
+        /// <param name="texIndex">Texture index</param>
+        /// <param name="texture">Texture description</param>
+        /// <returns>True if the texture was found in the material</returns>
+        public bool GetMaterialTexture(TextureType texType, int texIndex, out TextureSlot texture) {
+            texture = new TextureSlot();
+
+            String texName = CreateFullyQualifiedName(AiMatKeys.TEXTURE_BASE, texType, texIndex);
+
+            MaterialProperty texNameProp = GetProperty(texName);
+
+            //This one is necessary, the rest are optional
+            if(texNameProp == null)
+                return false;
+
+            String mappingName = CreateFullyQualifiedName(AiMatKeys.MAPPING_BASE, texType, texIndex);
+            String uvIndexName = CreateFullyQualifiedName(AiMatKeys.UVWSRC_BASE, texType, texIndex);
+            String blendFactorName = CreateFullyQualifiedName(AiMatKeys.TEXBLEND_BASE, texType, texIndex);
+            String texOpName = CreateFullyQualifiedName(AiMatKeys.TEXOP_BASE, texType, texIndex);
+            String uMapModeName = CreateFullyQualifiedName(AiMatKeys.MAPPINGMODE_U_BASE, texType, texIndex);
+            String vMapModeName = CreateFullyQualifiedName(AiMatKeys.MAPPINGMODE_V_BASE, texType, texIndex);
+            String texFlagsName = CreateFullyQualifiedName(AiMatKeys.TEXFLAGS_BASE, texType, texIndex);
+
+            MaterialProperty mappingNameProp = GetProperty(mappingName);
+            MaterialProperty uvIndexNameProp = GetProperty(uvIndexName);
+            MaterialProperty blendFactorNameProp = GetProperty(blendFactorName);
+            MaterialProperty texOpNameProp = GetProperty(texOpName);
+            MaterialProperty uMapModeNameProp = GetProperty(uMapModeName);
+            MaterialProperty vMapModeNameProp = GetProperty(vMapModeName);
+            MaterialProperty texFlagsNameProp = GetProperty(texFlagsName);
+
+            texture.FilePath = texNameProp.GetStringValue();
+            texture.TextureType = texType;
+            texture.TextureIndex = texIndex;
+            texture.Mapping = (mappingNameProp != null) ? (TextureMapping) mappingNameProp.GetIntegerValue() : TextureMapping.FromUV;
+            texture.UVIndex = (uvIndexNameProp != null) ? uvIndexNameProp.GetIntegerValue() : 0;
+            texture.BlendFactor = (blendFactorNameProp != null) ? blendFactorNameProp.GetFloatValue() : 0.0f;
+            texture.Operation = (texOpNameProp != null) ? (TextureOperation) texOpNameProp.GetIntegerValue() : 0;
+            texture.WrapModeU = (uMapModeNameProp != null) ? (TextureWrapMode) uMapModeNameProp.GetIntegerValue() : TextureWrapMode.Wrap;
+            texture.WrapModeV = (vMapModeNameProp != null) ? (TextureWrapMode) vMapModeNameProp.GetIntegerValue() : TextureWrapMode.Wrap;
+            texture.Flags = (texFlagsNameProp != null) ? texFlagsNameProp.GetIntegerValue() : 0;
+
+            return true;
         }
 
         /// <summary>
-        /// Gets all texture infos for the specific texture type.
+        /// Gets all textures that correspond to the type.
         /// </summary>
-        /// <param name="texType">Texture type</param>
-        /// <returns>All textures that correspond to the texture type.</returns>
-        public TextureSlot[] GetTextures(TextureType texType) {
-            if(texType != TextureType.None) {
-                List<TextureSlot> slotList;
-                if(m_textures.TryGetValue((int) texType, out slotList)) {
-                    return slotList.ToArray();
-                }
+        /// <param name="type">Texture type</param>
+        /// <returns>The array of textures</returns>
+        public TextureSlot[] GetMaterialTextures(TextureType type) {
+            int count = GetMaterialTextureCount(type);
+
+            if(count == 0)
+                return new TextureSlot[0];
+
+            TextureSlot[] textures = new TextureSlot[count];
+
+            for(int i = 0; i < count; i++) {
+                TextureSlot tex;
+                GetMaterialTexture(type, i, out tex);
+                textures[i] = tex;
             }
-            return null;
+
+            return textures;
         }
 
         /// <summary>
-        /// Get all textures contained in this material.
+        /// Gets all textures in the material.
         /// </summary>
-        /// <returns>All texture information structs</returns>
-        public TextureSlot[] GetAllTextures() {
+        /// <returns>The array of textures</returns>
+        public TextureSlot[] GetAllMaterialTextures() {
             List<TextureSlot> textures = new List<TextureSlot>();
-            foreach(KeyValuePair<int, List<TextureSlot>> kv in m_textures) {
-                textures.AddRange(kv.Value);
+            TextureType[] types = Enum.GetValues(typeof(TextureType)) as TextureType[];
+
+            foreach(TextureType texType in types) {
+                textures.AddRange(GetMaterialTextures(texType));
             }
+
             return textures.ToArray();
         }
+
+        #region IMarshalable Implementation
+
+        /// <summary>
+        /// Gets if the native value type is blittable (that is, does not require marshaling by the runtime, e.g. has MarshalAs attributes).
+        /// </summary>
+        bool IMarshalable<Material, AiMaterial>.IsNativeBlittable {
+            get { return true; }
+        }
+
+        /// <summary>
+        /// Writes the managed data to the native value.
+        /// </summary>
+        /// <param name="thisPtr">Optional pointer to the memory that will hold the native value.</param>
+        /// <param name="nativeValue">Output native value</param>
+        void IMarshalable<Material, AiMaterial>.ToNative(IntPtr thisPtr, out AiMaterial nativeValue) {
+            nativeValue.NumAllocated = nativeValue.NumProperties = (uint) m_properties.Count;
+            nativeValue.Properties = IntPtr.Zero;
+
+            if(m_properties.Count > 0)
+                nativeValue.Properties = MemoryHelper.ToNativeArray<MaterialProperty, AiMaterialProperty>(m_properties.Values.ToArray<MaterialProperty>(), true);
+        }
+
+        /// <summary>
+        /// Reads the unmanaged data from the native value.
+        /// </summary>
+        /// <param name="nativeValue">Input native value</param>
+        void IMarshalable<Material, AiMaterial>.FromNative(ref AiMaterial nativeValue) {
+            Clear();
+
+            if(nativeValue.NumProperties > 0 && nativeValue.Properties != IntPtr.Zero) {
+                MaterialProperty[] matProps = MemoryHelper.FromNativeArray<MaterialProperty, AiMaterialProperty>(nativeValue.Properties, (int) nativeValue.NumProperties, true);
+
+                foreach(MaterialProperty matProp in matProps) {
+                    AddProperty(matProp);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Frees unmanaged memory created by <see cref="ToNative"/>.
+        /// </summary>
+        /// <param name="nativeValue">Native value to free</param>
+        /// <param name="freeNative">True if the unmanaged memory should be freed, false otherwise.</param>
+        public static void FreeNative(IntPtr nativeValue, bool freeNative) {
+            if(nativeValue == IntPtr.Zero)
+                return;
+
+            AiMaterial aiMaterial = MemoryHelper.Read<AiMaterial>(nativeValue);
+
+            if(aiMaterial.NumAllocated > 0 && aiMaterial.Properties != IntPtr.Zero) 
+                MemoryHelper.FreeNativeArray<AiMaterialProperty>(aiMaterial.Properties, (int) aiMaterial.NumProperties, MaterialProperty.FreeNative, true);
+
+            if(freeNative)
+                MemoryHelper.FreeMemory(nativeValue);
+        }
+
+        #endregion
     }
 }

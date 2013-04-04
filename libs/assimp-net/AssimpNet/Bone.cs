@@ -21,6 +21,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using Assimp.Unmanaged;
 
 namespace Assimp {
@@ -29,17 +30,20 @@ namespace Assimp {
     /// hierarchy and by which it can be addressed by animations. In addition it has a number of
     /// influences on vertices.
     /// </summary>
-    public sealed class Bone {
+    public sealed class Bone : IMarshalable<Bone, AiBone> {
         private String m_name;
-        private VertexWeight[] m_weights;
+        private List<VertexWeight> m_weights;
         private Matrix4x4 m_offsetMatrix;
 
         /// <summary>
-        /// Gets the name of the bone.
+        /// Gets or sets the name of the bone.
         /// </summary>
         public String Name {
             get {
                 return m_name;
+            }
+            set {
+                m_name = value;
             }
         }
 
@@ -48,7 +52,7 @@ namespace Assimp {
         /// </summary>
         public int VertexWeightCount {
             get {
-                return (m_weights == null) ? 0 : m_weights.Length;
+                return m_weights.Count;
             }
         }
 
@@ -57,27 +61,30 @@ namespace Assimp {
         /// </summary>
         public bool HasVertexWeights {
             get {
-                return m_weights != null;
+                return m_weights.Count > 0;
             }
         }
 
         /// <summary>
         /// Gets the vertex weights owned by the bone.
         /// </summary>
-        public VertexWeight[] VertexWeights {
+        public List<VertexWeight> VertexWeights {
             get {
                 return m_weights;
             }
         }
 
         /// <summary>
-        /// Gets the matrix that transforms from mesh space to bone space in bind pose.
+        /// Gets or sets the matrix that transforms from mesh space to bone space in bind pose.
         /// </summary>
         public Matrix4x4 OffsetMatrix
         {
             get
             {
                 return m_offsetMatrix;
+            }
+            set {
+                m_offsetMatrix = value;
             }
         }
 
@@ -88,10 +95,93 @@ namespace Assimp {
         internal Bone(ref AiBone bone) {
             m_name = bone.Name.GetString();
             m_offsetMatrix = bone.OffsetMatrix;
+            m_weights = new List<VertexWeight>();
 
-            if(bone.NumWeights > 0 && bone.Weights != IntPtr.Zero) {
-                m_weights = MemoryHelper.MarshalArray<VertexWeight>(bone.Weights, (int) bone.NumWeights);
-            }
+            if(bone.NumWeights > 0 && bone.Weights != IntPtr.Zero)
+                m_weights.AddRange(MemoryHelper.MarshalArray<VertexWeight>(bone.Weights, (int) bone.NumWeights));
         }
+
+        /// <summary>
+        /// Constructs a new instance of the <see cref="Bone"/> class.
+        /// </summary>
+        public Bone() {
+            m_name = null;
+            m_offsetMatrix = Matrix3x3.Identity;
+            m_weights = null;
+        }
+
+        /// <summary>
+        /// Constructs a new instance of the <see cref="Bone"/> class.
+        /// </summary>
+        /// <param name="name">Name of the bone</param>
+        /// <param name="offsetMatrix">Bone's offset matrix</param>
+        /// <param name="weights">Vertex weights</param>
+        public Bone(String name, Matrix3x3 offsetMatrix, VertexWeight[] weights) {
+            m_name = name;
+            m_offsetMatrix = offsetMatrix;
+            m_weights = new List<VertexWeight>();
+
+            if(weights != null)
+                m_weights.AddRange(weights);
+        }
+
+        #region IMarshalable Implementation
+
+        /// <summary>
+        /// Gets if the native value type is blittable (that is, does not require marshaling by the runtime, e.g. has MarshalAs attributes).
+        /// </summary>
+        bool IMarshalable<Bone, AiBone>.IsNativeBlittable {
+            get { return true; }
+        }
+
+        /// <summary>
+        /// Writes the managed data to the native value.
+        /// </summary>
+        /// <param name="thisPtr">Optional pointer to the memory that will hold the native value.</param>
+        /// <param name="nativeValue">Output native value</param>
+        void IMarshalable<Bone, AiBone>.ToNative(IntPtr thisPtr, out AiBone nativeValue) {
+            nativeValue.Name = new AiString(m_name);
+            nativeValue.OffsetMatrix = m_offsetMatrix;
+            nativeValue.NumWeights = (uint) m_weights.Count;
+            nativeValue.Weights = IntPtr.Zero;
+            
+            if(nativeValue.NumWeights > 0)
+                nativeValue.Weights = MemoryHelper.ToNativeArray<VertexWeight>(m_weights.ToArray());
+        }
+
+        /// <summary>
+        /// Reads the unmanaged data from the native value.
+        /// </summary>
+        /// <param name="nativeValue">Input native value</param>
+        void IMarshalable<Bone, AiBone>.FromNative(ref AiBone nativeValue) {
+            m_name = nativeValue.Name.GetString();
+            m_offsetMatrix = nativeValue.OffsetMatrix;
+            m_weights.Clear();
+
+            if(nativeValue.NumWeights > 0 && nativeValue.Weights != IntPtr.Zero)
+                m_weights.AddRange(MemoryHelper.MarshalArray<VertexWeight>(nativeValue.Weights, (int) nativeValue.NumWeights));
+        }
+
+        /// <summary>
+        /// Frees unmanaged memory created by <see cref="ToNative"/>.
+        /// </summary>
+        /// <param name="nativeValue">Native value to free</param>
+        /// <param name="freeNative">True if the unmanaged memory should be freed, false otherwise.</param>
+        public static void FreeNative(IntPtr nativeValue, bool freeNative) {
+            if(nativeValue == IntPtr.Zero)
+                return;
+
+            AiBone aiBone = MemoryHelper.Read<AiBone>(nativeValue);
+            int numWeights = MemoryHelper.Read<int>(MemoryHelper.AddIntPtr(nativeValue, MemoryHelper.SizeOf<AiString>()));
+            IntPtr weightsPtr = MemoryHelper.AddIntPtr(nativeValue, MemoryHelper.SizeOf<AiString>() + sizeof(uint));
+
+            if(aiBone.NumWeights > 0 && aiBone.Weights != IntPtr.Zero)
+                MemoryHelper.FreeMemory(aiBone.Weights);
+
+            if(freeNative)
+                MemoryHelper.FreeMemory(nativeValue);
+        }
+
+        #endregion
     }
 }

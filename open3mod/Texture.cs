@@ -61,7 +61,7 @@ namespace open3mod
 
         private readonly object _lock = new object();
         private readonly string _baseDir;
-        private readonly Assimp.Texture _dataSource;
+        private readonly Assimp.EmbeddedTexture _dataSource;
  
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace open3mod
         /// <param name="callback">Optional callback to be invoked
         ///   when loading to memory is either complete or is definitely
         ///   failed.)</param>
-        public Texture(Assimp.Texture dataSource, string refName, CompletionCallback callback)
+        public Texture(Assimp.EmbeddedTexture dataSource, string refName, CompletionCallback callback)
         {
             _file = refName;
             _dataSource = dataSource;

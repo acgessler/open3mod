@@ -78,10 +78,10 @@ namespace open3mod
 
         private class TextureFromMemoryTask : Task
         {
-            private readonly Assimp.Texture _dataSource;
+            private readonly Assimp.EmbeddedTexture _dataSource;
             private readonly string _refName;
 
-            public TextureFromMemoryTask(Assimp.Texture dataSource, string refName, CompletionCallback callback)
+            public TextureFromMemoryTask(Assimp.EmbeddedTexture dataSource, string refName, CompletionCallback callback)
                 : base(callback)
             {
                 _dataSource = dataSource;
@@ -128,7 +128,7 @@ namespace open3mod
         /// <param name="dataSource">Assimp texture to read from</param>
         /// <param name="refName">Name to report to the callback</param>
         /// <param name="callback">Callback to be invoked when loading is complete</param>
-        public static void Enqueue(Assimp.Texture dataSource, string refName, CompletionCallback callback)
+        public static void Enqueue(Assimp.EmbeddedTexture dataSource, string refName, CompletionCallback callback)
         {
             Debug.Assert(dataSource != null);
             Debug.Assert(refName != null);

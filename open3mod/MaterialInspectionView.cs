@@ -47,7 +47,7 @@ namespace open3mod
             foreach (var mat in scene.Raw.Materials)
             {
                 var dependencies = new HashSet<string>();
-                var textures = mat.GetAllTextures();
+                var textures = mat.GetAllMaterialTextures();
                 foreach (var tex in textures)
                 {      
                     dependencies.Add(tex.FilePath);                  

@@ -121,15 +121,15 @@ namespace open3mod
             {
                 var boneMatrices = _scene.SceneAnimator.GetBoneMatricesForMesh(_lastNode, _sourceIndex);
                 // update entire mesh
-                for (uint i = 0; i < _cachedPositions.Length; ++i)
+                for (int i = 0; i < _cachedPositions.Length; ++i)
                 {
                     var v = AssimpToOpenTk.FromVector(_source.Vertices[i]);
-                    EvaluateBoneInfluences(ref v, i, boneMatrices, out _cachedPositions[i]);
+                    EvaluateBoneInfluences(ref v, (uint)i, boneMatrices, out _cachedPositions[i]);
                 }
-                for (uint i = 0; i < _cachedNormals.Length; ++i)
+                for (int i = 0; i < _cachedNormals.Length; ++i)
                 {
                     var n = AssimpToOpenTk.FromVector(_source.Normals[i]);
-                    EvaluateBoneInfluences(ref n, i, boneMatrices, out _cachedNormals[i], true);
+                    EvaluateBoneInfluences(ref n, (uint)i, boneMatrices, out _cachedNormals[i], true);
                 }
 
                 _dirty = false;

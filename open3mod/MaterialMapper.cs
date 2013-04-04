@@ -97,9 +97,10 @@ namespace open3mod
             }
 
 
-            if (material.GetTextureCount(TextureType.Diffuse) > 0)
+            if (material.GetMaterialTextureCount(TextureType.Diffuse) > 0)
             {
-                TextureSlot tex = material.GetTexture(TextureType.Diffuse, 0);
+                TextureSlot tex;
+                material.GetMaterialTexture(TextureType.Diffuse, 0, out tex);
                 var gtex = _scene.TextureSet.GetOriginalOrReplacement(tex.FilePath);
 
                 if(gtex.HasAlpha == Texture.AlphaState.HasAlpha)
@@ -156,9 +157,11 @@ namespace open3mod
             var any = false;
 
             // note: keep this up to date with the code in ApplyFixedFunctionMaterial
-            if (material.GetTextureCount(TextureType.Diffuse) > 0)
+            if (material.GetMaterialTextureCount(TextureType.Diffuse) > 0)
             {
-                TextureSlot tex = material.GetTexture(TextureType.Diffuse, 0);
+                TextureSlot tex;
+                material.GetMaterialTexture(TextureType.Diffuse, 0, out tex);
+
                 var gtex = _scene.TextureSet.GetOriginalOrReplacement(tex.FilePath);
 
                 if (gtex.State == Texture.TextureState.WinFormsImageCreated)
@@ -197,9 +200,10 @@ namespace open3mod
             var hasAlpha = false;
 
             // note: keep this up-to-date with the code in UploadTextures()
-            if (textured && mat.GetTextureCount(TextureType.Diffuse) > 0)
+            if (textured && mat.GetMaterialTextureCount(TextureType.Diffuse) > 0)
             {
-                TextureSlot tex = mat.GetTexture(TextureType.Diffuse, 0);
+                TextureSlot tex;
+                mat.GetMaterialTexture(TextureType.Diffuse, 0, out tex);
                 var gtex = _scene.TextureSet.GetOriginalOrReplacement(tex.FilePath);
 
                 hasAlpha = hasAlpha || gtex.HasAlpha == Texture.AlphaState.HasAlpha;

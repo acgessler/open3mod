@@ -21,6 +21,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using Assimp.Unmanaged;
 
 namespace Assimp {
@@ -34,21 +35,24 @@ namespace Assimp {
     /// <para>Keys are in chronological order and duplicate keys do not pass the validation step. There most likely will be no
     /// negative time values, but they are not forbidden.</para>
     /// </summary>
-    public sealed class NodeAnimationChannel {
+    public sealed class NodeAnimationChannel : IMarshalable<NodeAnimationChannel, AiNodeAnim> {
         private String m_nodeName;
-        private VectorKey[] m_positionKeys;
-        private QuaternionKey[] m_rotationKeys;
-        private VectorKey[] m_scalingKeys;
+        private List<VectorKey> m_positionKeys;
+        private List<QuaternionKey> m_rotationKeys;
+        private List<VectorKey> m_scalingKeys;
         private AnimationBehaviour m_preState;
         private AnimationBehaviour m_postState;
 
         /// <summary>
-        /// Gets the name of the node affected by this animation. It must <c>exist</c> and it <c>must</c>
+        /// Gets or sets the name of the node affected by this animation. It must <c>exist</c> and it <c>must</c>
         /// be unique.
         /// </summary>
         public String NodeName {
             get {
                 return m_nodeName;
+            }
+            set {
+                m_nodeName = value;
             }
         }
 
@@ -57,25 +61,25 @@ namespace Assimp {
         /// </summary>
         public int PositionKeyCount {
             get {
-                return (m_positionKeys == null) ? 0 : m_positionKeys.Length;
+                return m_positionKeys.Count;
             }
         }
 
         /// <summary>
-        /// Checks if this animation channel contains position keys.
+        /// Gets if this animation channel contains position keys.
         /// </summary>
         public bool HasPositionKeys {
             get {
-                return m_positionKeys != null;
+                return m_positionKeys.Count > 0;
             }
         }
 
         /// <summary>
         /// Gets the position keys of this animation channel. Positions are
-        /// specified as a 3D vector. If there are position keys, there will
+        /// specified as a 3D vector. If there are position keys, there should
         /// also be -at least- one scaling and one rotation key.
         /// </summary>
-        public VectorKey[] PositionKeys {
+        public List<VectorKey> PositionKeys {
             get {
                 return m_positionKeys;
             }
@@ -86,25 +90,25 @@ namespace Assimp {
         /// </summary>
         public int RotationKeyCount {
             get {
-                return (m_rotationKeys == null) ? 0 : m_rotationKeys.Length;
+                return m_rotationKeys.Count;
             }
         }
 
         /// <summary>
-        /// Checks if the animation channel contains rotation keys.
+        /// Gets if the animation channel contains rotation keys.
         /// </summary>
         public bool HasRotationKeys {
             get {
-                return m_rotationKeys != null;
+                return m_rotationKeys.Count > 0;
             }
         }
 
         /// <summary>
         /// Gets the rotation keys of this animation channel. Rotations are
-        /// given as quaternions. If this exists, there will be -at least- one
+        /// given as quaternions. If this exists, there should be -at least- one
         /// scaling and one position key.
         /// </summary>
-        public QuaternionKey[] RotationKeys {
+        public List<QuaternionKey> RotationKeys {
             get {
                 return m_rotationKeys;
             }
@@ -115,47 +119,53 @@ namespace Assimp {
         /// </summary>
         public int ScalingKeyCount {
             get {
-                return (m_scalingKeys == null) ? 0 : m_scalingKeys.Length;
+                return m_scalingKeys.Count;
             }
         }
 
         /// <summary>
-        /// Checks if the animation channel contains scaling keys.
+        /// Gets if the animation channel contains scaling keys.
         /// </summary>
         public bool HasScalingKeys {
             get {
-                return m_scalingKeys != null;
+                return m_scalingKeys.Count > 0;
             }
         }
 
         /// <summary>
         /// Gets the scaling keys of this animation channel. Scalings are
-        /// specified in a 3D vector. If there are scaling keys, there will
+        /// specified in a 3D vector. If there are scaling keys, there should
         /// also be -at least- one position and one rotation key.
         /// </summary>
-        public VectorKey[] ScalingKeys {
+        public List<VectorKey> ScalingKeys {
             get {
                 return m_scalingKeys;
             }
         }
 
         /// <summary>
-        /// Gets how the animation behaves before the first key is encountered. By default the original
+        /// Gets or sets how the animation behaves before the first key is encountered. By default the original
         /// transformation matrix of the affected node is used.
         /// </summary>
         public AnimationBehaviour PreState {
             get {
                 return m_preState;
             }
+            set {
+                m_preState = value;
+            }
         }
 
         /// <summary>
-        /// Gets how the animation behaves after the last key was processed. By default the original
+        /// Gets or sets how the animation behaves after the last key was processed. By default the original
         /// transformation matrix of the affected node is taken.
         /// </summary>
         public AnimationBehaviour PostState {
             get {
                 return m_postState;
+            }
+            set {
+                m_postState = value;
             }
         }
 
@@ -170,18 +180,120 @@ namespace Assimp {
 
             //Load position keys
             if(nodeAnim.NumPositionKeys > 0 && nodeAnim.PositionKeys != IntPtr.Zero) {
-                m_positionKeys = MemoryHelper.MarshalArray<VectorKey>(nodeAnim.PositionKeys, (int) nodeAnim.NumPositionKeys);
+                m_positionKeys.AddRange(MemoryHelper.MarshalArray<VectorKey>(nodeAnim.PositionKeys, (int) nodeAnim.NumPositionKeys));
             }
 
             //Load rotation keys
             if(nodeAnim.NumRotationKeys > 0 && nodeAnim.RotationKeys != IntPtr.Zero) {
-                m_rotationKeys = MemoryHelper.MarshalArray<QuaternionKey>(nodeAnim.RotationKeys, (int) nodeAnim.NumRotationKeys);
+                m_rotationKeys.AddRange(MemoryHelper.MarshalArray<QuaternionKey>(nodeAnim.RotationKeys, (int) nodeAnim.NumRotationKeys));
             }
 
             //Load scaling keys
             if(nodeAnim.NumScalingKeys > 0 && nodeAnim.ScalingKeys != IntPtr.Zero) {
-                m_scalingKeys = MemoryHelper.MarshalArray<VectorKey>(nodeAnim.ScalingKeys, (int) nodeAnim.NumScalingKeys);
+                m_scalingKeys.AddRange(MemoryHelper.MarshalArray<VectorKey>(nodeAnim.ScalingKeys, (int) nodeAnim.NumScalingKeys));
             }
         }
+
+        /// <summary>
+        /// Constructs a new instance of the <see cref="NodeAnimationChannel"/> class.
+        /// </summary>
+        public NodeAnimationChannel() {
+            m_nodeName = String.Empty;
+            m_preState = AnimationBehaviour.Default;
+            m_postState = AnimationBehaviour.Default;
+
+            m_positionKeys = new List<VectorKey>();
+            m_rotationKeys = new List<QuaternionKey>();
+            m_scalingKeys = new List<VectorKey>();
+        }
+
+        #region IMarshalable Implementation
+
+        /// <summary>
+        /// Gets if the native value type is blittable (that is, does not require marshaling by the runtime, e.g. has MarshalAs attributes).
+        /// </summary>
+        bool IMarshalable<NodeAnimationChannel, AiNodeAnim>.IsNativeBlittable {
+            get { return true; }
+        }
+
+        /// <summary>
+        /// Writes the managed data to the native value.
+        /// </summary>
+        /// <param name="thisPtr">Optional pointer to the memory that will hold the native value.</param>
+        /// <param name="nativeValue">Output native value</param>
+        void IMarshalable<NodeAnimationChannel, AiNodeAnim>.ToNative(IntPtr thisPtr, out AiNodeAnim nativeValue) {
+            nativeValue.NodeName = new AiString(m_nodeName);
+            nativeValue.Prestate = m_preState;
+            nativeValue.PostState = m_postState;
+
+            nativeValue.NumPositionKeys = (uint) m_positionKeys.Count;
+            nativeValue.PositionKeys = IntPtr.Zero;
+            
+            if(nativeValue.NumPositionKeys > 0)
+                MemoryHelper.ToNativeArray<VectorKey>(m_positionKeys.ToArray());
+
+
+            nativeValue.NumRotationKeys = (uint) m_rotationKeys.Count;
+            nativeValue.RotationKeys = IntPtr.Zero;
+            
+            if(nativeValue.NumRotationKeys > 0)
+                MemoryHelper.ToNativeArray<QuaternionKey>(m_rotationKeys.ToArray());
+
+
+            nativeValue.NumScalingKeys = (uint) m_scalingKeys.Count;
+            nativeValue.ScalingKeys = IntPtr.Zero;
+            
+            if(nativeValue.NumScalingKeys > 0)
+                MemoryHelper.ToNativeArray<VectorKey>(m_scalingKeys.ToArray());
+        }
+
+        /// <summary>
+        /// Reads the unmanaged data from the native value.
+        /// </summary>
+        /// <param name="nativeValue">Input native value</param>
+        void IMarshalable<NodeAnimationChannel, AiNodeAnim>.FromNative(ref AiNodeAnim nativeValue) {
+            m_nodeName = nativeValue.NodeName.GetString();
+            m_preState = nativeValue.Prestate;
+            m_postState = nativeValue.PostState;
+
+            m_positionKeys.Clear();
+            m_rotationKeys.Clear();
+            m_scalingKeys.Clear();
+
+            if(nativeValue.NumPositionKeys > 0 && nativeValue.PositionKeys != IntPtr.Zero)
+                m_positionKeys.AddRange(MemoryHelper.FromNativeArray<VectorKey>(nativeValue.PositionKeys, (int) nativeValue.NumPositionKeys));
+
+            if(nativeValue.NumRotationKeys > 0 && nativeValue.RotationKeys != IntPtr.Zero)
+                m_rotationKeys.AddRange(MemoryHelper.FromNativeArray<QuaternionKey>(nativeValue.RotationKeys, (int) nativeValue.NumRotationKeys));
+
+            if(nativeValue.NumScalingKeys > 0 && nativeValue.ScalingKeys != IntPtr.Zero)
+                m_scalingKeys.AddRange(MemoryHelper.FromNativeArray<VectorKey>(nativeValue.ScalingKeys, (int) nativeValue.NumScalingKeys));
+        }
+
+        /// <summary>
+        /// Frees unmanaged memory created by <see cref="ToNative"/>.
+        /// </summary>
+        /// <param name="nativeValue">Native value to free</param>
+        /// <param name="freeNative">True if the unmanaged memory should be freed, false otherwise.</param>
+        public static void FreeNative(IntPtr nativeValue, bool freeNative) {
+            if(nativeValue == IntPtr.Zero)
+                return;
+
+            AiNodeAnim aiNodeAnim = MemoryHelper.Read<AiNodeAnim>(nativeValue);
+
+            if(aiNodeAnim.NumPositionKeys > 0 && aiNodeAnim.PositionKeys != IntPtr.Zero)
+                MemoryHelper.FreeMemory(aiNodeAnim.PositionKeys);
+
+            if(aiNodeAnim.NumRotationKeys > 0 && aiNodeAnim.RotationKeys != IntPtr.Zero)
+                MemoryHelper.FreeMemory(aiNodeAnim.RotationKeys);
+
+            if(aiNodeAnim.NumScalingKeys > 0 && aiNodeAnim.ScalingKeys != IntPtr.Zero)
+                MemoryHelper.FreeMemory(aiNodeAnim.ScalingKeys);
+
+            if(freeNative)
+                MemoryHelper.FreeMemory(nativeValue);
+        }
+
+        #endregion
     }
 }

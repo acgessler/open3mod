@@ -29,6 +29,7 @@ namespace Assimp.Unmanaged {
     /// Represents an aiScene struct.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
+    [CLSCompliant(false)]
     public struct AiScene {
         /// <summary>
         /// unsigned int, flags about the state of the scene
@@ -99,12 +100,18 @@ namespace Assimp.Unmanaged {
         /// aiCamera**, cameras in the scene.
         /// </summary>
         public IntPtr Cameras;
+
+        /// <summary>
+        /// void*, Private data do not touch!
+        /// </summary>
+        public IntPtr PrivateData;
     }
 
     /// <summary>
     /// Represents an aiNode struct.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
+    [CLSCompliant(false)]
     public struct AiNode {
         /// <summary>
         /// Name of the node.
@@ -119,7 +126,7 @@ namespace Assimp.Unmanaged {
         /// <summary>
         /// aiNode*, node's parent.
         /// </summary>
-        public IntPtr parent;
+        public IntPtr Parent;
 
         /// <summary>
         /// Number of children the node owns.
@@ -143,9 +150,10 @@ namespace Assimp.Unmanaged {
     }
 
     /// <summary>
-    /// Represents an aiMesh struct.
+    /// Represents an aiMesh struct. Note: This structure requires marshaling, due to the arrays of IntPtrs.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
+    [CLSCompliant(false)]
     public struct AiMesh {
         /// <summary>
         /// unsigned int, bitwise flag detailing types of primitives contained.
@@ -196,7 +204,7 @@ namespace Assimp.Unmanaged {
         public IntPtr[] TextureCoords;
 
         /// <summary>
-        /// unsigned int[4], array of ints denoting the number of components for texture coordinates - UV (2), UVW (3) for example.
+        /// unsigned int[4], array of ints denoting the number of components for each set of texture coordinates - UV (2), UVW (3) for example.
         /// </summary>
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = AiDefines.AI_MAX_NUMBER_OF_TEXTURECOORDS, ArraySubType = UnmanagedType.U4)]
         public uint[] NumUVComponents;
@@ -227,12 +235,12 @@ namespace Assimp.Unmanaged {
         public AiString Name;
 
         /// <summary>
-        /// NOT CURRENTLY IN USE.
+        /// Number of attachment meshes. NOT CURRENTLY IN USE.
         /// </summary>
         public uint NumAnimMeshes;
 
         /// <summary>
-        /// NOT CURRENTLY IN USE.
+        /// aiAnimMesh**, array of attachment meshes for vertex-based animation. NOT CURRENTLY IN USE.
         /// </summary>
         public IntPtr AnimMeshes;
     }
@@ -241,7 +249,11 @@ namespace Assimp.Unmanaged {
     /// Represents an aiTexture struct.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct AiTexture {
+    [CLSCompliant(false)]
+    public unsafe struct AiTexture {
+        //Internal use only
+        private static readonly char[] s_nullFormat = new char[] { '\0', '\0', '\0', '\0' };
+
         /// <summary>
         /// Width of the texture.
         /// </summary>
@@ -255,19 +267,48 @@ namespace Assimp.Unmanaged {
         /// <summary>
         /// char[4], format extension hint.
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst=4)]
-        public String FormatHint;
+        //[MarshalAs(UnmanagedType.ByValTStr, SizeConst=4)]
+        //public String FormatHint;
+        public fixed char FormatHint[4];
 
         /// <summary>
         /// aiTexel*, array of texel data.
         /// </summary>
         public IntPtr Data;
+
+        /// <summary>
+        /// Sets the format hint.
+        /// </summary>
+        /// <param name="formatHint">Format hint - must be 3 characters or less</param>
+        public void SetFormatHint(String formatHint) {
+            char[] hintChars = (String.IsNullOrEmpty(formatHint)) ? s_nullFormat : formatHint.ToLowerInvariant().ToCharArray();
+
+            int count = hintChars.Length;
+
+            fixed(char* charPtr = FormatHint) {
+                charPtr[0] = (count > 0) ? hintChars[0] : '\0';
+                charPtr[1] = (count > 1) ? hintChars[1] : '\0';
+                charPtr[2] = (count > 2) ? hintChars[2] : '\0';
+                charPtr[3] = '\0';
+            }
+        }
+
+        /// <summary>
+        /// Gets the format hint.
+        /// </summary>
+        /// <returns>The format hint</returns>
+        public String GetFormatHint() {
+            fixed(char* charPtr = FormatHint) {
+                return new String(charPtr);
+            }
+        }
     }
 
     /// <summary>
     /// Represents an aiFace struct.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
+    [CLSCompliant(false)]
     public struct AiFace {
         /// <summary>
         /// Number of indices in the face.
@@ -284,6 +325,7 @@ namespace Assimp.Unmanaged {
     /// Represents an aiBone struct.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
+    [CLSCompliant(false)]
     public struct AiBone {
         /// <summary>
         /// Name of the bone.
@@ -310,6 +352,7 @@ namespace Assimp.Unmanaged {
     /// Represents an aiMaterialProperty struct.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
+    [CLSCompliant(false)]
     public struct AiMaterialProperty {
         /// <summary>
         /// Name of the property (key).
@@ -348,6 +391,7 @@ namespace Assimp.Unmanaged {
     /// Represents an aiMaterial struct.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
+    [CLSCompliant(false)]
     public struct AiMaterial {
         /// <summary>
         /// aiMaterialProperty**, array of material properties.
@@ -369,6 +413,7 @@ namespace Assimp.Unmanaged {
     /// Represents an aiNodeAnim struct.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
+    [CLSCompliant(false)]
     public struct AiNodeAnim {
         /// <summary>
         /// Name of the node affected by the animation. The node must exist
@@ -425,6 +470,7 @@ namespace Assimp.Unmanaged {
     /// Represents an aiMeshAnim struct.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
+    [CLSCompliant(false)]
     public struct AiMeshAnim {
         /// <summary>
         /// Name of the mesh to be animated. Empty string not allowed.
@@ -446,6 +492,7 @@ namespace Assimp.Unmanaged {
     /// Represents an aiAnimation struct.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
+    [CLSCompliant(false)]
     public struct AiAnimation {
         /// <summary>
         /// Name of the animation.
@@ -488,6 +535,7 @@ namespace Assimp.Unmanaged {
     /// Represents an aiLight struct.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
+    [CLSCompliant(false)]
     public struct AiLight {
         /// <summary>
         /// Name of the light.
@@ -554,6 +602,7 @@ namespace Assimp.Unmanaged {
     /// Represents an aiCamera struct.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
+    [CLSCompliant(false)]
     public struct AiCamera {
         /// <summary>
         /// Name of the camera.
@@ -599,38 +648,46 @@ namespace Assimp.Unmanaged {
     /// <summary>
     /// Represents an aiString struct.
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-    public struct AiString {
+    [StructLayout(LayoutKind.Sequential)]
+    [CLSCompliant(false)]
+    public unsafe struct AiString {
         /// <summary>
         /// Byte length of the UTF-8 string.
         /// </summary>
         public UIntPtr Length;
 
         /// <summary>
-        /// Actual string.
+        /// Actual string data.
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = AiDefines.MAX_LENGTH)]
-        public byte[] Data;
+        public fixed byte Data[AiDefines.MAX_LENGTH];
+
+        /// <summary>
+        /// Constructs a new instance of the <see cref="AiString"/> struct.
+        /// </summary>
+        /// <param name="data">The string data</param>
+        public AiString(String data) {
+            Length = UIntPtr.Zero;
+ 
+            SetString(data);
+        }
 
         /// <summary>
         /// Convienence method for getting the AiString string - if the length is not greater than zero, it returns
         /// an empty string rather than garbage.
         /// </summary>
         /// <returns>AiString string data</returns>
-        public String GetString() {
-            if(Length.ToUInt32() > 0) {
-                byte[] copy = new byte[AiDefines.MAX_LENGTH];
-                int index = 0;
-                //Note: I've observed an issue with x64 where the byte data is scattered about in the array, so reading
-                //the byte array with the given length may not return all the data. It seems to work OK if we just 
-                //grab all those bytes in sequence (does not affect x86 whatsoever)
-                foreach(byte b in Data) {
-                    if(b != 0) {
-                        copy[index] = b;
-                        index++;
-                    }
+        public unsafe String GetString() {
+            int length = (int) Length.ToUInt32();
+
+            if(length > 0) {
+                byte[] copy = new byte[length];
+
+                fixed(byte* bytePtr = Data) {
+                    MemoryHelper.Read<byte>(new IntPtr(bytePtr), copy, 0, length);
                 }
-                return Encoding.UTF8.GetString(copy, 0, (int) Length.ToUInt32());
+
+                //Note: aiTypes.h specifies aiString is UTF-8 encoded string.
+                return Encoding.UTF8.GetString(copy, 0, length);
             } else {
                 return String.Empty;
             }
@@ -640,21 +697,37 @@ namespace Assimp.Unmanaged {
         /// Convienence method for setting the AiString string (and length).
         /// </summary>
         /// <param name="data">String data to set</param>
-        public bool SetString(String data) {
-            if(data == null)
-                data = String.Empty;
+        public unsafe bool SetString(String data) {
+            if(String.IsNullOrEmpty(data)) {
+                Length = new UIntPtr(0);
+                return false;
+            }
 
             //Note: aiTypes.h specifies aiString is UTF-8 encoded string.
             if(Encoding.UTF8.GetByteCount(data) <= AiDefines.MAX_LENGTH) {
                 byte[] copy = Encoding.UTF8.GetBytes(data);
-                Data = new byte[AiDefines.MAX_LENGTH];
-                Array.Copy(copy, Data, copy.Length);
-                Length = (UIntPtr) copy.Length;
+
+                //Write bytes to data field
+                if(copy.Length > 0) {
+                    fixed(byte* bytePtr = Data) {
+                        MemoryHelper.Write<byte>(new IntPtr(bytePtr), copy, 0, copy.Length);
+                    }
+                }
+
+                Length = new UIntPtr((uint) copy.Length);
 
                 return true;
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Returns the fully qualified type name of this instance.
+        /// </summary>
+        /// <returns>A <see cref="T:System.String" /> containing a fully qualified type name.</returns>
+        public override String ToString() {
+            return GetString();
         }
     }
 
@@ -662,6 +735,7 @@ namespace Assimp.Unmanaged {
     /// Represents a log stream, which receives all log messages and streams them somewhere.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
+    [CLSCompliant(false)]
     public struct AiLogStream {
         /// <summary>
         /// Function pointer that gets called when a message is to be logged.
@@ -679,6 +753,7 @@ namespace Assimp.Unmanaged {
     /// scene. All sizes in in bytes.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
+    [CLSCompliant(false)]
     public struct AiMemoryInfo {
         /// <summary>
         /// Size of the storage allocated for texture data, in bytes.
@@ -722,9 +797,10 @@ namespace Assimp.Unmanaged {
     }
 
     /// <summary>
-    /// Represents an aiAnimMesh struct.
+    /// Represents an aiAnimMesh struct. Note: This structure requires marshaling, due to the array of IntPtrs.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
+    [CLSCompliant(false)]
     public struct AiAnimMesh {
         /// <summary>
         /// aiVector3D*, replacement position array.
@@ -768,6 +844,7 @@ namespace Assimp.Unmanaged {
     /// Describes a file format which Assimp can export to.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
+    [CLSCompliant(false)]
     public struct AiExportFormatDesc {
         /// <summary>
         /// char*, a short string ID to uniquely identify the export format. e.g. "dae" or "obj"
@@ -790,11 +867,12 @@ namespace Assimp.Unmanaged {
     /// blobs represent auxillary files produced by the exporter (e.g. material files) and are named accordingly.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
+    [CLSCompliant(false)]
     public struct AiExportDataBlob {
         /// <summary>
         /// size_t, size of the data in bytes.
         /// </summary>
-        public IntPtr Size;
+        public UIntPtr Size;
 
         /// <summary>
         /// void*, the data.
@@ -816,6 +894,7 @@ namespace Assimp.Unmanaged {
     /// Contains callbacks to implement a custom file system to open and close files.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
+    [CLSCompliant(false)]
     public struct AiFileIO {
         /// <summary>
         /// Function pointer to open a new file.
@@ -837,6 +916,7 @@ namespace Assimp.Unmanaged {
     /// Contains callbacks to read and write to a file opened by a custom file system.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
+    [CLSCompliant(false)]
     public struct AiFile {
         /// <summary>
         /// Function pointer to read from a file.
@@ -882,6 +962,7 @@ namespace Assimp.Unmanaged {
     /// <param name="msg">Log message</param>
     /// <param name="userData">char* pointer to user data that is passed to the callback</param>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    [CLSCompliant(false)]
     public delegate void AiLogStreamCallback([In, MarshalAs(UnmanagedType.LPStr)] String msg, IntPtr userData);
 
     /// <summary>
@@ -893,6 +974,7 @@ namespace Assimp.Unmanaged {
     /// <param name="numElements">Number of elements to write</param>
     /// <returns>Number of elements successfully written. Should be zero if either size or numElements is zero. May be less than numElements if an error occured.</returns>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    [CLSCompliant(false)]
     public delegate UIntPtr AiFileWriteProc(IntPtr file, IntPtr dataToWrite, UIntPtr sizeOfElemInBytes, UIntPtr numElements);
 
     /// <summary>
@@ -904,6 +986,7 @@ namespace Assimp.Unmanaged {
     /// <param name="numElements">Number of elements to read</param>
     /// <returns>Number of elements succesfully read. Should be zero if either size or numElements is zero. May be less than numElements if end of file is encountered, or if an error occured.</returns>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    [CLSCompliant(false)]
     public delegate UIntPtr AiFileReadProc(IntPtr file, IntPtr dataToRead, UIntPtr sizeOfElemInBytes, UIntPtr numElements);
 
     /// <summary>
@@ -912,6 +995,7 @@ namespace Assimp.Unmanaged {
     /// <param name="file">Pointer to an AiFile instance.</param>
     /// <returns>Returns the current file cursor or the file size in bytes. May be -1 if an error has occured.</returns>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    [CLSCompliant(false)]
     public delegate UIntPtr AiFileTellProc(IntPtr file);
 
     /// <summary>
@@ -919,6 +1003,7 @@ namespace Assimp.Unmanaged {
     /// </summary>
     /// <param name="file">Pointer to an AiFile instance.</param>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    [CLSCompliant(false)]
     public delegate void AiFileFlushProc(IntPtr file);
 
     /// <summary>
@@ -929,6 +1014,7 @@ namespace Assimp.Unmanaged {
     /// <param name="seekOrigin">Position used as a reference</param>
     /// <returns>Returns success, if successful</returns>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    [CLSCompliant(false)]
     public delegate ReturnCode AiFileSeek(IntPtr file, UIntPtr offset, Origin seekOrigin);
 
     /// <summary>
@@ -939,6 +1025,7 @@ namespace Assimp.Unmanaged {
     /// <param name="mode">Read-write permissions to request</param>
     /// <returns>Pointer to an AiFile instance.</returns>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    [CLSCompliant(false)]
     public delegate IntPtr AiFileOpenProc(IntPtr fileIO, [In, MarshalAs(UnmanagedType.LPStr)] String pathToFile, [In, MarshalAs(UnmanagedType.LPStr)] String mode);
 
     /// <summary>
@@ -947,6 +1034,7 @@ namespace Assimp.Unmanaged {
     /// <param name="fileIO">Pointer to an AiFileIO instance.</param>
     /// <param name="file">Pointer to an AiFile instance that will be closed.</param>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    [CLSCompliant(false)]
     public delegate void AiFileCloseProc(IntPtr fileIO, IntPtr file);
 
 

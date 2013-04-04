@@ -135,7 +135,7 @@ namespace open3mod
             GL.BindTexture(TextureTarget.Texture2D, colorTexture);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.NearestMipmapNearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
-            // note! OpenTK.Graphics.OpenGL.TextureWrapMode clashes with Assimp.TextureWrapMode
+            // note! OpenTK.Graphics.OpenGL.TextureWrapMode clashes with Assimp.EmbeddedTextureWrapMode
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)OpenTK.Graphics.OpenGL.TextureWrapMode.Clamp);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)OpenTK.Graphics.OpenGL.TextureWrapMode.Clamp);
             

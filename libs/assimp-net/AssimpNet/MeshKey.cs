@@ -39,14 +39,14 @@ namespace Assimp {
         /// <summary>
         /// Index of the anim mesh that corresponds to this keyframe.
         /// </summary>
-        public uint Value;
+        public int Value;
 
         /// <summary>
         /// Constructs a new MeshKey.
         /// </summary>
         /// <param name="time">The time of this key.</param>
         /// <param name="index">Index of the anim mesh that corresponds to this keyframe.</param>
-        public MeshKey(double time, uint index) {
+        public MeshKey(double time, int index) {
             Time = time;
             Value = index;
         }

@@ -30,6 +30,7 @@ namespace Assimp.Unmanaged {
     /// <summary>
     /// Singleton that governs access to the unmanaged Assimp library functions.
     /// </summary>
+    [CLSCompliant(false)]
     public sealed class AssimpLibrary {
         private static AssimpLibrary s_instance;
         private AssimpLibraryImplementation m_impl;
@@ -319,6 +320,25 @@ namespace Assimp.Unmanaged {
             return exportFunc(scene, formatId, fileName, fileIO, (uint) preProcessing);
         }
 
+        /// <summary>
+        /// Creates a modifyable copy of a scene, useful for copying the scene that was imported so its topology can be modified
+        /// and the scene be exported.
+        /// </summary>
+        /// <param name="sceneToCopy">Valid scene to be copied</param>
+        /// <returns>Modifyable copy of the scene</returns>
+        public IntPtr CopyScene(IntPtr sceneToCopy) {
+            if(sceneToCopy == IntPtr.Zero)
+                return IntPtr.Zero;
+
+            IntPtr copiedScene;
+
+            AssimpDelegates.aiCopyScene func = m_impl.GetFunction<AssimpDelegates.aiCopyScene>("aiCopyScene");
+
+            func(sceneToCopy, out copiedScene);
+
+            return copiedScene;
+        }
+
         #endregion
 
         #region Logging Methods
@@ -474,7 +494,7 @@ namespace Assimp.Unmanaged {
 
             IntPtr ptr = IntPtr.Zero;
             try {
-                ptr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Color4D)));
+                ptr = MemoryHelper.AllocateMemory(MemoryHelper.SizeOf<Color4D>());
                 ReturnCode code = func(ref mat, key, (uint) texType, texIndex, ptr);
                 Color4D color = new Color4D();
                 if(code == ReturnCode.Success && ptr != IntPtr.Zero) {
@@ -483,7 +503,7 @@ namespace Assimp.Unmanaged {
                 return color;
             } finally {
                 if(ptr != IntPtr.Zero) {
-                    Marshal.FreeHGlobal(ptr);
+                    MemoryHelper.FreeMemory(ptr);
                 }
             }
         }
@@ -505,7 +525,7 @@ namespace Assimp.Unmanaged {
 
             IntPtr ptr = IntPtr.Zero;
             try {
-                ptr = Marshal.AllocHGlobal(IntPtr.Size);
+                ptr = MemoryHelper.AllocateMemory(IntPtr.Size);
                 ReturnCode code = func(ref mat, key, (uint) texType, texIndex, ptr, ref floatCount);
                 float[] array = null;
                 if(code == ReturnCode.Success && floatCount > 0) {
@@ -515,7 +535,7 @@ namespace Assimp.Unmanaged {
                 return array;
             } finally {
                 if(ptr != IntPtr.Zero) {
-                    Marshal.FreeHGlobal(ptr);
+                    MemoryHelper.FreeMemory(ptr);
                 }
             }
         }
@@ -537,7 +557,7 @@ namespace Assimp.Unmanaged {
 
             IntPtr ptr = IntPtr.Zero;
             try {
-                ptr = Marshal.AllocHGlobal(IntPtr.Size);
+                ptr = MemoryHelper.AllocateMemory(IntPtr.Size);
                 ReturnCode code = func(ref mat, key, (uint) texType, texIndex, ptr, ref intCount);
                 int[] array = null;
                 if(code == ReturnCode.Success && intCount > 0) {
@@ -547,7 +567,7 @@ namespace Assimp.Unmanaged {
                 return array;
             } finally {
                 if(ptr != IntPtr.Zero) {
-                    Marshal.FreeHGlobal(ptr);
+                    MemoryHelper.FreeMemory(ptr);
                 }
             }
         }
@@ -660,7 +680,7 @@ namespace Assimp.Unmanaged {
 
             ReturnCode code = func(ref mat, type, index, out str, out mapping, out uvIndex, out blendFactor, out texOp, wrapModes, out flags);
             
-            return new TextureSlot(str.GetString(), type, index, mapping, uvIndex, blendFactor, texOp, wrapModes[0], wrapModes[1], flags);
+            return new TextureSlot(str.GetString(), type, (int) index, mapping, (int) uvIndex, blendFactor, texOp, wrapModes[0], wrapModes[1], (int) flags);
         }
 
         #endregion
@@ -992,6 +1012,9 @@ namespace Assimp.Unmanaged {
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate ReturnCode aiExportSceneEx(IntPtr scene, [In, MarshalAs(UnmanagedType.LPStr)] String formatId, [In, MarshalAs(UnmanagedType.LPStr)] String fileName, IntPtr fileIO, uint preProcessing);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void aiCopyScene(IntPtr sceneIn, out IntPtr sceneOut);
 
         #endregion
 

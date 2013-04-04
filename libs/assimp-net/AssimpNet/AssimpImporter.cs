@@ -227,7 +227,7 @@ namespace Assimp {
                     if(postProcessFlags != PostProcessSteps.None)
                         ptr = AssimpLibrary.Instance.ApplyPostProcessing(ptr, postProcessFlags);
 
-                    return ValidateAndCreateScene(ptr);
+                    return new Scene(MemoryHelper.MarshalStructure<AiScene>(ptr));
                 } finally {
                     CleanupImport();
 
@@ -293,7 +293,7 @@ namespace Assimp {
                     if(postProcessFlags != PostProcessSteps.None)
                         ptr = AssimpLibrary.Instance.ApplyPostProcessing(ptr, postProcessFlags);
 
-                    return ValidateAndCreateScene(ptr);
+                    return new Scene(MemoryHelper.MarshalStructure<AiScene>(ptr));
                 } finally {
                     CleanupImport();
 
@@ -379,8 +379,6 @@ namespace Assimp {
                     if(importProcessSteps != PostProcessSteps.None)
                         ptr = AssimpLibrary.Instance.ApplyPostProcessing(ptr, importProcessSteps);
 
-                    ValidateScene(ptr);
-
                     AssimpLibrary.Instance.ExportScene(ptr, exportFormatId, outputFilename, fileIO, exportProcessSteps);
                 } finally {
                     CleanupImport();
@@ -461,8 +459,6 @@ namespace Assimp {
 
                     if(importProcessSteps != PostProcessSteps.None)
                         ptr = AssimpLibrary.Instance.ApplyPostProcessing(ptr, importProcessSteps);
-
-                    ValidateScene(ptr);
 
                     return AssimpLibrary.Instance.ExportSceneToBlob(ptr, exportFormatId, exportProcessSteps);
                 } finally {
@@ -548,8 +544,6 @@ namespace Assimp {
                     if(importProcessSteps != PostProcessSteps.None)
                         ptr = AssimpLibrary.Instance.ApplyPostProcessing(ptr, importProcessSteps);
 
-                    ValidateScene(ptr);
-
                     AssimpLibrary.Instance.ExportScene(ptr, exportFormatId, outputFilename, exportProcessSteps);
                 } finally {
                     CleanupImport();
@@ -629,8 +623,6 @@ namespace Assimp {
 
                     if(importProcessSteps != PostProcessSteps.None)
                         ptr = AssimpLibrary.Instance.ApplyPostProcessing(ptr, importProcessSteps);
-
-                    ValidateScene(ptr);
 
                     return AssimpLibrary.Instance.ExportSceneToBlob(ptr, exportFormatId, exportProcessSteps);
                 } finally {
@@ -940,24 +932,6 @@ namespace Assimp {
             //Noticed that sometimes Assimp doesn't call Close() callbacks always, so ensure we clean up those up here
             if(UsingCustomIOSystem) {
                 m_ioSystem.CloseAllFiles();
-            }
-        }
-
-        //Validate the imported scene to ensure its complete and load the return scene
-        private Scene ValidateAndCreateScene(IntPtr ptr) {
-            AiScene scene = MemoryHelper.MarshalStructure<AiScene>(ptr);
-            if((scene.Flags & SceneFlags.Incomplete) == SceneFlags.Incomplete) {
-                throw new AssimpException("Error importing file: Imported scene is incomplete. " + AssimpLibrary.Instance.GetErrorString());
-            }
-
-            return new Scene(scene);
-        }
-
-        //Validate the imported scene to ensure its complete and load the return scene
-        private void ValidateScene(IntPtr ptr) {
-            AiScene scene = MemoryHelper.MarshalStructure<AiScene>(ptr);
-            if((scene.Flags & SceneFlags.Incomplete) == SceneFlags.Incomplete) {
-                throw new AssimpException("Error importing file: Imported scene is incomplete. " + AssimpLibrary.Instance.GetErrorString());
             }
         }
 

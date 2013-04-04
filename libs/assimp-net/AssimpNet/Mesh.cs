@@ -28,24 +28,23 @@ namespace Assimp {
     /// <summary>
     /// A mesh represents geometry with a single material.
     /// </summary>
-    public sealed class Mesh {
+    public sealed class Mesh : IMarshalable<Mesh, AiMesh> {
         private String m_name;
         private PrimitiveType m_primitiveType;
         private int m_materialIndex;
-        private int m_vertexCount;
-        private Vector3D[] m_vertices;
-        private Vector3D[] m_normals;
-        private Vector3D[] m_tangents;
-        private Vector3D[] m_bitangents;
-        private Face[] m_faces;
-        private List<Color4D[]> m_colors;
-        private List<Vector3D[]> m_texCoords;
-        private List<uint> m_texComponentNumber;
-        private Bone[] m_bones;
-        private MeshAnimationAttachment[] m_meshAttachments;
+        private List<Vector3D> m_vertices;
+        private List<Vector3D> m_normals;
+        private List<Vector3D> m_tangents;
+        private List<Vector3D> m_bitangents;
+        private List<Face> m_faces;
+        private List<Color4D>[] m_colors;
+        private List<Vector3D>[] m_texCoords;
+        private int[] m_texComponentCount;
+        private List<Bone> m_bones;
+        private List<MeshAnimationAttachment> m_meshAttachments;
 
         /// <summary>
-        /// Gets the mesh name. This tends to be used
+        /// Gets or sets the mesh name. This tends to be used
         /// when formats name nodes and meshes independently,
         /// vertex animations refer to meshes by their names,
         /// or importers split meshes up, each mesh will reference
@@ -55,10 +54,13 @@ namespace Assimp {
             get {
                 return m_name;
             }
+            set {
+                m_name = value;
+            }
         }
 
         /// <summary>
-        /// Gets the primitive type. This may contain more than one
+        /// Gets or sets the primitive type. This may contain more than one
         /// type unless if <see cref="PostProcessSteps.SortByPrimitiveType"/>
         /// option is not set.
         /// </summary>
@@ -66,24 +68,30 @@ namespace Assimp {
             get {
                 return m_primitiveType;
             }
+            set {
+                m_primitiveType = value;
+            }
         }
 
         /// <summary>
-        /// Gets the index of the material associated with this mesh.
+        /// Gets or sets the index of the material associated with this mesh.
         /// </summary>
         public int MaterialIndex {
             get {
                 return m_materialIndex;
             }
+            set {
+                m_materialIndex = value;
+            }
         }
 
         /// <summary>
-        /// Gets the number of vertices in this mesh. This is also
-        /// the size for all per-vertex data arays.
+        /// Gets the number of vertices in this mesh. This is the count that all
+        /// per-vertex lists should be the size of.
         /// </summary>
         public int VertexCount {
             get {
-                return m_vertexCount;
+                return m_vertices.Count;
             }
         }
 
@@ -93,32 +101,32 @@ namespace Assimp {
         /// </summary>
         public bool HasVertices {
             get {
-                return m_vertices != null;
+                return m_vertices.Count > 0;
             }
         }
 
         /// <summary>
-        /// Gets the vertex position array.
+        /// Gets the vertex position list.
         /// </summary>
-        public Vector3D[] Vertices {
+        public List<Vector3D> Vertices {
             get {
-                return m_vertices;
+                return m_vertices; 
             }
         }
 
         /// <summary>
-        /// Gets if the mesh as normals.
+        /// Gets if the mesh as normals. If it does exist, the count should be the same as the vertex count.
         /// </summary>
         public bool HasNormals {
             get {
-                return m_normals != null;
+                return m_normals.Count > 0;
             }
         }
 
         /// <summary>
-        /// Gets the vertex normal array.
+        /// Gets the vertex normal list.
         /// </summary>
-        public Vector3D[] Normals {
+        public List<Vector3D> Normals {
             get {
                 return m_normals;
             }
@@ -126,27 +134,27 @@ namespace Assimp {
 
         /// <summary>
         /// Gets if the mesh has tangents and bitangents. It is not
-        /// possible for one to be without the other.
+        /// possible for one to be without the other. If it does exist, the count should be the same as the vertex count.
         /// </summary>
         public bool HasTangentBasis {
             get {
-                return VertexCount > 0 && m_tangents != null &&m_bitangents != null;
+                return m_tangents.Count > 0 && m_bitangents.Count > 0;
             }
         }
 
         /// <summary>
-        /// Gets the vertex tangent array.
+        /// Gets the vertex tangent list.
         /// </summary>
-        public Vector3D[] Tangents {
+        public List<Vector3D> Tangents {
             get {
                 return m_tangents;
             }
         }
 
         /// <summary>
-        /// Gets the vertex bitangent array.
+        /// Gets the vertex bitangent list.
         /// </summary>
-        public Vector3D[] BiTangents {
+        public List<Vector3D> BiTangents {
             get {
                 return m_bitangents;
             }
@@ -157,7 +165,7 @@ namespace Assimp {
         /// </summary>
         public int FaceCount {
             get {
-                return (m_faces == null) ? 0 : m_faces.Length;
+                return m_faces.Count;
             }
         }
 
@@ -167,7 +175,7 @@ namespace Assimp {
         /// </summary>
         public bool HasFaces {
             get {
-                return m_faces != null;
+                return m_faces.Count > 0;
             }
         }
 
@@ -175,7 +183,7 @@ namespace Assimp {
         /// Gets the mesh's faces. Each face will contain indices
         /// to the vertices.
         /// </summary>
-        public Face[] Faces {
+        public List<Face> Faces {
             get {
                 return m_faces;
             }
@@ -183,21 +191,66 @@ namespace Assimp {
 
         /// <summary>
         /// Gets the number of valid vertex color channels contained in the
-        /// mesh. This can be a value between zero and the maximum vertex color count.
+        /// mesh (list is not empty/not null). This can be a value between zero and the maximum vertex color count. Each individual channel
+        /// should be the size of <see cref="VertexCount"/>.
         /// </summary>
         public int VertexColorChannelCount {
             get {
-                return (m_colors == null) ? 0 : m_colors.Count;
+                int count = 0;
+                for(int i = 0; i < m_colors.Length; i++) {
+                    if(HasVertexColors(i))
+                        count++;
+                }
+
+                return count;
             }
         }
 
         /// <summary>
         /// Gets the number of valid texture coordinate channels contained
-        /// in the mesh. This can be a value between zero and the maximum texture coordinate count.
+        /// in the mesh (list is not empty/not null). This can be a value between zero and the maximum texture coordinate count.
+        /// Each individual channel should be the size of <see cref="VertexCount"/>.
         /// </summary>
-        public int TextureCoordsChannelCount {
+        public int TextureCoordinateChannelCount {
             get {
-                return (m_texCoords == null) ? 0 : m_texCoords.Count;
+                int count = 0;
+                for(int i = 0; i < m_texCoords.Length; i++) {
+                    if(HasTextureCoords(i))
+                        count++;
+                }
+
+                return count;
+            }
+        }
+
+        /// <summary>
+        /// Gets the array that contains each vertex color channels, by default all are lists of zero (but can be set to null). Each index
+        /// in the array corresponds to the texture coordinate channel. The length of the array corresponds to Assimp's maximum vertex color channel limit.
+        /// </summary>
+        public List<Color4D>[] VertexColorChannels {
+            get {
+                return m_colors;
+            }
+        }
+
+        /// <summary>
+        /// Gets the array that contains each texture coordinate channel, by default all are lists of zero (but can be set to null). Each index
+        /// in the array corresponds to the texture coordinate channel. The length of the array corresponds to Assimp's maximum UV channel limit.
+        /// </summary>
+        public List<Vector3D>[] TextureCoordinateChannels {
+            get {
+                return m_texCoords;
+            }
+        }
+
+        /// <summary>
+        /// Gets the array that contains the count of UV(W) components for each texture coordinate channel, usually 2 (UV) or 3 (UVW). A component
+        /// value of zero means the texture coordinate channel does not exist. The channel index (index in the array) corresponds
+        /// to the texture coordinate channel index.
+        /// </summary>
+        public int[] UVComponentCount {
+            get {
+                return m_texComponentCount;
             }
         }
 
@@ -206,7 +259,7 @@ namespace Assimp {
         /// </summary>
         public int BoneCount {
             get {
-                return (m_bones == null) ? 0 : m_bones.Length;
+                return m_bones.Count;
             }
         }
 
@@ -215,16 +268,43 @@ namespace Assimp {
         /// </summary>
         public bool HasBones {
             get {
-                return m_bones != null;
+                return m_bones.Count > 0;
             }
         }
 
         /// <summary>
         /// Gets the bones that influence this mesh.
         /// </summary>
-        public Bone[] Bones {
+        public List<Bone> Bones {
             get {
                 return m_bones;
+            }
+        }
+
+        /// <summary>
+        /// Gets the number of mesh animation attachments that influence this mesh.
+        /// </summary>
+        public int MeshAnimationAttachmentCount {
+            get {
+                return m_meshAttachments.Count;
+            }
+        }
+
+        /// <summary>
+        /// Gets if this mesh has mesh animation attachments.
+        /// </summary>
+        public bool HasMeshAnimationAttachments {
+            get {
+                return m_meshAttachments.Count > 0;
+            }
+        }
+
+        /// <summary>
+        /// Gets the mesh animation attachments that influence this mesh.
+        /// </summary>
+        public List<MeshAnimationAttachment> MeshAnimationAttachments {
+            get {
+                return m_meshAttachments;
             }
         }
 
@@ -235,169 +315,204 @@ namespace Assimp {
         internal Mesh(ref AiMesh mesh) {
             m_name = mesh.Name.GetString();
             m_primitiveType = mesh.PrimitiveTypes;
-            m_vertexCount = (int) mesh.NumVertices;
             m_materialIndex = (int) mesh.MaterialIndex;
+
+            int vertexCount = (int) mesh.NumVertices;
+
+            m_vertices = new List<Vector3D>(vertexCount);
+            m_normals = new List<Vector3D>();
+            m_tangents = new List<Vector3D>();
+            m_bitangents = new List<Vector3D>();
+            m_colors = new List<Color4D>[AiDefines.AI_MAX_NUMBER_OF_COLOR_SETS];
+
+            for(int i = 0; i < m_colors.Length; i++) {
+                m_colors[i] = new List<Color4D>();
+            }
+
+            m_texCoords = new List<Vector3D>[AiDefines.AI_MAX_NUMBER_OF_TEXTURECOORDS];
+
+            for(int i = 0; i < m_texCoords.Length; i++) {
+                m_texCoords[i] = new List<Vector3D>();
+            }
+
+            m_texComponentCount = new int[AiDefines.AI_MAX_NUMBER_OF_TEXTURECOORDS];
+            m_bones = new List<Bone>();
+            m_faces = new List<Face>();
+            m_meshAttachments = new List<MeshAnimationAttachment>();
 
             //Load per-vertex arrays
             if(mesh.NumVertices > 0) {
                 if(mesh.Vertices != IntPtr.Zero) {
-                    m_vertices = MemoryHelper.MarshalArray<Vector3D>(mesh.Vertices, m_vertexCount);
+                    m_vertices.AddRange(MemoryHelper.MarshalArray<Vector3D>(mesh.Vertices, vertexCount));
                 }
                 if(mesh.Normals != IntPtr.Zero) {
-                    m_normals = MemoryHelper.MarshalArray<Vector3D>(mesh.Normals, m_vertexCount);
+                    m_normals.AddRange(MemoryHelper.MarshalArray<Vector3D>(mesh.Normals, vertexCount));
                 }
                 if(mesh.Tangents != IntPtr.Zero) {
-                    m_tangents = MemoryHelper.MarshalArray<Vector3D>(mesh.Tangents, m_vertexCount);
+                    m_tangents.AddRange(MemoryHelper.MarshalArray<Vector3D>(mesh.Tangents, vertexCount));
                 }
                 if(mesh.BiTangents != IntPtr.Zero) {
-                    m_bitangents = MemoryHelper.MarshalArray<Vector3D>(mesh.BiTangents, m_vertexCount);
+                    m_bitangents.AddRange(MemoryHelper.MarshalArray<Vector3D>(mesh.BiTangents, vertexCount));
                 }
             }
 
             //Load faces
             if(mesh.NumFaces > 0 && mesh.Faces != IntPtr.Zero) {
                 AiFace[] faces = MemoryHelper.MarshalArray<AiFace>(mesh.Faces, (int) mesh.NumFaces);
-                m_faces = new Face[faces.Length];
-                for(int i = 0; i < m_faces.Length; i++) {
-                    m_faces[i] = new Face(ref faces[i]);
+                for(int i = 0; i < faces.Length; i++) {
+                    m_faces.Add(new Face(ref faces[i]));
                 }
             }
 
             //Load UVW components - this should match the texture coordinate channels
             uint[] components = mesh.NumUVComponents;
             if(components != null) {
-                m_texComponentNumber = new List<uint>();
-                foreach(uint num in components) {
-                    if(num > 0) {
-                        m_texComponentNumber.Add(num);
-                    }
+                for(int i = 0; i < components.Length; i++) {
+                    m_texComponentCount[i] = (int) components[i];
                 }
             }
 
             //Load texture coordinate channels
             IntPtr[] texCoords = mesh.TextureCoords;
             if(texCoords != null) {
-                m_texCoords = new List<Vector3D[]>();
-                foreach(IntPtr texPtr in texCoords) {
-                    if(texPtr != IntPtr.Zero) {
-                        m_texCoords.Add(MemoryHelper.MarshalArray<Vector3D>(texPtr, m_vertexCount));
-                    }
+                for(int i = 0; i < texCoords.Length; i++) {
+                    IntPtr texPtr = texCoords[i];
+
+                    if(texPtr != IntPtr.Zero)
+                        m_texCoords[i] = new List<Vector3D>(MemoryHelper.MarshalArray<Vector3D>(texPtr, vertexCount));
                 }
             }
 
             //Load vertex color channels
             IntPtr[] vertexColors = mesh.Colors;
             if(vertexColors != null) {
-                m_colors = new List<Color4D[]>();
-                foreach(IntPtr colorPtr in vertexColors) {
-                    if(colorPtr != IntPtr.Zero) {
-                        m_colors.Add(MemoryHelper.MarshalArray<Color4D>(colorPtr, m_vertexCount));
-                    }
+                for(int i = 0; i < vertexColors.Length; i++) {
+                    IntPtr colorPtr = vertexColors[i];
+
+                    if(colorPtr != IntPtr.Zero) 
+                        m_colors[i] = new List<Color4D>(MemoryHelper.MarshalArray<Color4D>(colorPtr, vertexCount));
                 }
             }
 
             //Load bones
             if(mesh.NumBones > 0 && mesh.Bones != IntPtr.Zero) {
                 AiBone[] bones = MemoryHelper.MarshalArray<AiBone>(mesh.Bones, (int) mesh.NumBones, true);
-                m_bones = new Bone[bones.Length];
-                for(int i = 0; i < m_bones.Length; i++) {
-                    m_bones[i] = new Bone(ref bones[i]);
+                for(int i = 0; i < bones.Length; i++) {
+                    m_bones.Add(new Bone(ref bones[i]));
                 }
             }
 
             //Load anim meshes (attachment meshes)
             if(mesh.NumAnimMeshes > 0 && mesh.AnimMeshes != IntPtr.Zero) {
                 AiAnimMesh[] animMeshes = MemoryHelper.MarshalArray<AiAnimMesh>(mesh.AnimMeshes, (int) mesh.NumAnimMeshes, true);
-                m_meshAttachments = new MeshAnimationAttachment[animMeshes.Length];
-                for(int i = 0; i < m_meshAttachments.Length; i++) {
-                    m_meshAttachments[i] = new MeshAnimationAttachment(ref animMeshes[i]);
+                for(int i = 0; i < animMeshes.Length; i++) {
+                    m_meshAttachments.Add(new MeshAnimationAttachment(ref animMeshes[i]));
                 }
             }
         }
 
+        public Mesh() : this(String.Empty, PrimitiveType.Triangle) { }
+
+        public Mesh(String name) : this(name, PrimitiveType.Triangle) { }
+
+        public Mesh(String name, PrimitiveType primType) {
+            m_name = name;
+            m_primitiveType = primType;
+            m_materialIndex = 0;
+
+            m_vertices = new List<Vector3D>();
+            m_normals = new List<Vector3D>();
+            m_tangents = new List<Vector3D>();
+            m_bitangents = new List<Vector3D>();
+            m_colors = new List<Color4D>[AiDefines.AI_MAX_NUMBER_OF_COLOR_SETS];
+
+            for(int i = 0; i < m_colors.Length; i++) {
+                m_colors[i] = new List<Color4D>();
+            }
+
+            m_texCoords = new List<Vector3D>[AiDefines.AI_MAX_NUMBER_OF_TEXTURECOORDS];
+
+            for(int i = 0; i < m_texCoords.Length; i++) {
+                m_texCoords[i] = new List<Vector3D>();
+            }
+
+            m_texComponentCount = new int[AiDefines.AI_MAX_NUMBER_OF_TEXTURECOORDS];
+            m_bones = new List<Bone>();
+            m_faces = new List<Face>();
+            m_meshAttachments = new List<MeshAnimationAttachment>();
+        }
+
         /// <summary>
-        /// Checks if the mesh has vertex colors for the specified channel. If
-        /// this returns true, you can be confident that the channel contains
-        /// the same number of vertex colors as there are vertices in this mesh.
+        /// Checks if the mesh has vertex colors for the specified channel. This returns false if the list
+        /// is null or empty. The channel, if it exists, should contain the same number of entries as <see cref="VertexCount"/>.
         /// </summary>
         /// <param name="channelIndex">Channel index</param>
         /// <returns>True if vertex colors are present in the channel.</returns>
         public bool HasVertexColors(int channelIndex) {
-            if(m_colors != null) {
-                if(channelIndex >= m_colors.Count || channelIndex < 0) {
-                    return false;
-                }
-                return VertexCount > 0 && m_colors[channelIndex] != null;
-            }
+            if(channelIndex >= m_colors.Length || channelIndex < 0)
+                return false;
+
+            List<Color4D> colors = m_colors[channelIndex];
+
+            if(colors != null)
+                return colors.Count > 0;
+
             return false;
         }
 
         /// <summary>
-        /// Checks if the mesh has texture coordinates for the specified channel.
-        /// If this returns true, you can be confident that the channel contains the same
-        /// number of texture coordinates as there are vertices in this mesh.
+        /// Checks if the mesh has texture coordinates for the specified channel. This returns false if the list
+        /// is null or empty. The channel, if it exists, should contain the same number of entries as <see cref="VertexCount"/>.
         /// </summary>
         /// <param name="channelIndex">Channel index</param>
         /// <returns>True if texture coordinates are present in the channel.</returns>
         public bool HasTextureCoords(int channelIndex) {
-            if(m_texCoords != null) {
-                if(channelIndex >= m_texCoords.Count || channelIndex < 0) {
-                    return false;
-                }
-                return VertexCount > 0 && m_texCoords[channelIndex] != null;
-            }
+            if(channelIndex >= m_texCoords.Length || channelIndex < 0)
+                return false;
+
+            List<Vector3D> texCoords = m_texCoords[channelIndex];
+
+            if(texCoords != null)
+                return texCoords.Count > 0;
+
             return false;
         }
 
         /// <summary>
-        /// Gets the array of vertex colors from the specified vertex color channel.
+        /// Convienence method for setting this meshe's face list from an index buffer.
         /// </summary>
-        /// <param name="channelIndex">Channel index</param>
-        /// <returns>The vertex color array, or null if it does not exist.</returns>
-        public Color4D[] GetVertexColors(int channelIndex) {
-            if(HasVertexColors(channelIndex)) {
-                return m_colors[channelIndex];
-            }
-            return null;
-        }
+        /// <param name="indices">Index buffer</param>
+        /// <param name="indicesPerFace">Indices per face</param>
+        /// <returns>True if the operation succeeded, false otherwise (e.g. not enough data)</returns>
+        public bool SetIndices(int[] indices, int indicesPerFace) {
+            if(indices == null || indices.Length == 0 || ((indices.Length % indicesPerFace) != 0))
+                return false;
 
-        /// <summary>
-        /// Gets the array of texture coordinates from the specified texture coordinate
-        /// channel.
-        /// </summary>
-        /// <param name="channelIndex">Channel index</param>
-        /// <returns>The texture coordinate array, or null if it does not exist.</returns>
-        public Vector3D[] GetTextureCoords(int channelIndex) {
-            if(HasTextureCoords(channelIndex)) {
-                return m_texCoords[channelIndex];
-            }
-            return null;
-        }
+            m_faces.Clear();
 
-        /// <summary>
-        /// Gets the number of UV(W) components for the texture coordinate channel, this
-        /// usually either 2 (UV) or 3 (UVW). No components mean the texture coordinate channel
-        /// does not exist. The channel index matches the texture coordinate channel index.
-        /// </summary>
-        /// <param name="channelIndex">Channel index</param>
-        /// <returns>The number of UV(W) components the texture coordinate channel contains</returns>
-        public int GetUVComponentCount(int channelIndex) {
-            if(HasTextureCoords(channelIndex)) {
-                if(m_texComponentNumber != null) {
-                    return (int)m_texComponentNumber[channelIndex];
+            int numFaces = indices.Length / indicesPerFace;
+            int index = 0;
+
+            for(int i = 0; i < numFaces; i++) {
+                Face face = new Face();
+                for(int j = 0; j < indicesPerFace; j++) {
+                    face.Indices.Add(indices[index]);
+                    index++;
                 }
+                m_faces.Add(face);
             }
-            return 0;
+
+            return true;
         }
 
         /// <summary>
         /// Convienence method for accumulating all face indices into a single
         /// index array.
         /// </summary>
-        /// <returns>uint index array</returns>
-        public uint[] GetIndices() {
+        /// <returns>int index array</returns>
+        public int[] GetIndices() {
             if(HasFaces) {
-                List<uint> indices = new List<uint>();
+                List<int> indices = new List<int>();
                 foreach(Face face in m_faces) {
                     if(face.IndexCount > 0 && face.Indices != null) {
                         indices.AddRange(face.Indices);
@@ -409,23 +524,21 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Convienence method for accumulating all face indices into a single
-        /// index array.
+        /// Convienence method for accumulating all face indices into a single index
+        /// array as unsigned integers (the default from Assimp, if you need them).
         /// </summary>
-        /// <returns>int index array</returns>
-        public int[] GetIntIndices() {
-            //We could use a dirty hack here to do a conversion...but may as well be
-            //safe just in case
+        /// <returns>uint index array</returns>
+        [CLSCompliant(false)]
+        public uint[] GetUnsignedIndices() {
             if(HasFaces) {
-                List<int> indices = new List<int>();
+                List<uint> indices = new List<uint>();
                 foreach(Face face in m_faces) {
                     if(face.IndexCount > 0 && face.Indices != null) {
                         foreach(uint index in face.Indices) {
-                            indices.Add((int) index);
+                            indices.Add((uint) index);
                         }
                     }
                 }
-                return indices.ToArray();
             }
             return null;
         }
@@ -436,8 +549,6 @@ namespace Assimp {
         /// </summary>
         /// <returns>short index array</returns>
         public short[] GetShortIndices() {
-            //We could use a dirty hack here to do a conversion...but may as well be
-            //safe just in case
             if(HasFaces) {
                 List<short> indices = new List<short>();
                 foreach(Face face in m_faces) {
@@ -451,5 +562,269 @@ namespace Assimp {
             }
             return null;
         }
+
+        private void ClearBuffers() {
+            m_vertices.Clear();
+            m_normals.Clear();
+            m_tangents.Clear();
+            m_bitangents.Clear();
+
+            for(int i = 0; i < m_colors.Length; i++) {
+                List<Color4D> colors = m_colors[i];
+
+                if(colors == null)
+                    m_colors[i] = new List<Color4D>();
+                else
+                    colors.Clear();
+            }
+
+            for(int i = 0; i < m_texCoords.Length; i++) {
+                List<Vector3D> texCoords = m_texCoords[i];
+
+                if(texCoords == null)
+                    m_texCoords[i] = new List<Vector3D>();
+                else
+                    texCoords.Clear();
+            }
+
+            for(int i = 0; i < m_texComponentCount.Length; i++) {
+                m_texComponentCount[i] = 0;
+            }
+
+            m_bones.Clear();
+            m_faces.Clear();
+            m_meshAttachments.Clear();
+        }
+
+        private Vector3D[] CopyTo(List<Vector3D> list, Vector3D[] copy) {
+            list.CopyTo(copy);
+
+            return copy;
+        }
+
+        #region IMarshalable Implementation
+
+        /// <summary>
+        /// Gets if the native value type is blittable (that is, does not require marshaling by the runtime, e.g. has MarshalAs attributes).
+        /// </summary>
+        bool IMarshalable<Mesh, AiMesh>.IsNativeBlittable {
+            get { return false; }
+        }
+
+        /// <summary>
+        /// Writes the managed data to the native value.
+        /// </summary>
+        /// <param name="thisPtr">Optional pointer to the memory that will hold the native value.</param>
+        /// <param name="nativeValue">Output native value</param>
+        void IMarshalable<Mesh, AiMesh>.ToNative(IntPtr thisPtr, out AiMesh nativeValue) {
+            nativeValue.Name = new AiString(m_name);
+            nativeValue.Vertices = IntPtr.Zero;
+            nativeValue.Normals = IntPtr.Zero;
+            nativeValue.Tangents = IntPtr.Zero;
+            nativeValue.BiTangents = IntPtr.Zero;
+            nativeValue.AnimMeshes = IntPtr.Zero;
+            nativeValue.Bones = IntPtr.Zero;
+            nativeValue.Faces = IntPtr.Zero;
+            nativeValue.Colors = new IntPtr[AiDefines.AI_MAX_NUMBER_OF_COLOR_SETS];
+            nativeValue.TextureCoords = new IntPtr[AiDefines.AI_MAX_NUMBER_OF_TEXTURECOORDS];
+            nativeValue.NumUVComponents = new uint[AiDefines.AI_MAX_NUMBER_OF_TEXTURECOORDS];
+            nativeValue.PrimitiveTypes = m_primitiveType;
+            nativeValue.MaterialIndex = (uint) m_materialIndex;
+            nativeValue.NumVertices = (uint) VertexCount;
+            nativeValue.NumBones = (uint) BoneCount;
+            nativeValue.NumFaces = (uint) FaceCount;
+            nativeValue.NumAnimMeshes = (uint) MeshAnimationAttachmentCount;
+
+            if(nativeValue.NumVertices > 0) {
+
+                //Since we can have so many buffers of Vector3D with same length, lets re-use a buffer
+                Vector3D[] copy = new Vector3D[nativeValue.NumVertices];
+
+                nativeValue.Vertices = MemoryHelper.ToNativeArray<Vector3D>(CopyTo(m_vertices, copy));
+
+                if(HasNormals)
+                    nativeValue.Normals = MemoryHelper.ToNativeArray<Vector3D>(CopyTo(m_normals, copy));
+
+                if(HasTangentBasis) {
+                    nativeValue.Tangents = MemoryHelper.ToNativeArray<Vector3D>(CopyTo(m_tangents, copy));
+                    nativeValue.BiTangents = MemoryHelper.ToNativeArray<Vector3D>(CopyTo(m_bitangents, copy));
+                }
+
+                //Vertex Color channels
+                for(int i = 0; i < m_colors.Length; i++) {
+                    List<Color4D> list = m_colors[i];
+
+                    if(list == null || list.Count == 0) {
+                        nativeValue.Colors[i] = IntPtr.Zero;
+                    } else {
+                        nativeValue.Colors[i] = MemoryHelper.ToNativeArray<Color4D>(list.ToArray());
+                    }
+                }
+
+                //Texture coordinate channels
+                for(int i = 0; i < m_texCoords.Length; i++) {
+                    List<Vector3D> list = m_texCoords[i];
+
+                    if(list == null || list.Count == 0) {
+                        nativeValue.TextureCoords[i] = IntPtr.Zero;
+                    } else {
+                        nativeValue.TextureCoords[i] = MemoryHelper.ToNativeArray<Vector3D>(CopyTo(list, copy));
+                    }
+                }
+
+                //UV components for each tex coordinate channel
+                for(int i = 0; i < m_texComponentCount.Length; i++) {
+                    nativeValue.NumUVComponents[i] = (uint) m_texComponentCount[i];
+                }
+            }
+
+            if(nativeValue.NumFaces > 0)
+                nativeValue.Faces = MemoryHelper.ToNativeArray<Face, AiFace>(m_faces.ToArray());
+
+            if(nativeValue.NumBones > 0)
+                nativeValue.Bones = MemoryHelper.ToNativeArray<Bone, AiBone>(m_bones.ToArray(), true);
+
+            if(nativeValue.NumAnimMeshes > 0)
+                nativeValue.AnimMeshes = MemoryHelper.ToNativeArray<MeshAnimationAttachment, AiAnimMesh>(m_meshAttachments.ToArray());
+        }
+
+        /// <summary>
+        /// Reads the unmanaged data from the native value.
+        /// </summary>
+        /// <param name="nativeValue">Input native value</param>
+        void IMarshalable<Mesh, AiMesh>.FromNative(ref AiMesh nativeValue) {
+            ClearBuffers();
+
+            int vertexCount = (int) nativeValue.NumVertices;
+
+            //Load Per-vertex components
+            if(vertexCount > 0) {
+
+                //Positions
+                if(nativeValue.Vertices != IntPtr.Zero)
+                    m_vertices.AddRange(MemoryHelper.FromNativeArray<Vector3D>(nativeValue.Vertices, vertexCount));
+
+                //Normals
+                if(nativeValue.Normals != IntPtr.Zero)
+                    m_normals.AddRange(MemoryHelper.FromNativeArray<Vector3D>(nativeValue.Normals, vertexCount));
+
+                //Tangents
+                if(nativeValue.Tangents != IntPtr.Zero)
+                    m_tangents.AddRange(MemoryHelper.FromNativeArray<Vector3D>(nativeValue.Tangents, vertexCount));
+
+                //BiTangents
+                if(nativeValue.BiTangents != IntPtr.Zero)
+                    m_bitangents.AddRange(MemoryHelper.FromNativeArray<Vector3D>(nativeValue.BiTangents, vertexCount));
+
+                //Vertex Color channels
+                IntPtr[] colors = nativeValue.Colors;
+
+                if(colors != null) {
+                    for(int i = 0; i < colors.Length; i++) {
+                        IntPtr colorPtr = colors[i];
+
+                        if(colorPtr != IntPtr.Zero)
+                            m_colors[i].AddRange(MemoryHelper.FromNativeArray<Color4D>(colorPtr, vertexCount));
+                    }
+                }
+
+                //Texture coordinate channels
+                IntPtr[] texCoords = nativeValue.TextureCoords;
+
+                if(texCoords != null) {
+                    for(int i = 0; i < texCoords.Length; i++) {
+                        IntPtr texCoordsPtr = texCoords[i];
+
+                        if(texCoordsPtr != IntPtr.Zero)
+                            m_texCoords[i].AddRange(MemoryHelper.FromNativeArray<Vector3D>(texCoordsPtr, vertexCount));
+                    }
+                }
+
+                //UV components for each tex coordinate channel
+                uint[] uvComps = nativeValue.NumUVComponents;
+
+                if(uvComps != null) {
+                    for(int i = 0; i < uvComps.Length; i++) {
+                        m_texComponentCount[i] = (int) uvComps[i];
+                    }
+                }
+            }
+
+            //Faces
+            if(nativeValue.NumFaces > 0 && nativeValue.Faces != IntPtr.Zero)
+                m_faces.AddRange(MemoryHelper.FromNativeArray<Face, AiFace>(nativeValue.Faces, (int) nativeValue.NumFaces));
+
+            //Bones
+            if(nativeValue.NumBones > 0 && nativeValue.Bones != IntPtr.Zero)
+                m_bones.AddRange(MemoryHelper.FromNativeArray<Bone, AiBone>(nativeValue.Bones, (int) nativeValue.NumBones, true));
+
+            //Attachment meshes
+            if(nativeValue.NumAnimMeshes > 0 && nativeValue.AnimMeshes != IntPtr.Zero)
+                m_meshAttachments.AddRange(MemoryHelper.FromNativeArray<MeshAnimationAttachment, AiAnimMesh>(nativeValue.AnimMeshes, (int) nativeValue.NumAnimMeshes, true));
+        }
+
+        /// <summary>
+        /// Frees unmanaged memory created by <see cref="ToNative"/>.
+        /// </summary>
+        /// <param name="nativeValue">Native value to free</param>
+        /// <param name="freeNative">True if the unmanaged memory should be freed, false otherwise.</param>
+        public static void FreeNative(IntPtr nativeValue, bool freeNative) {
+            if(nativeValue == IntPtr.Zero)
+                return;
+
+            AiMesh aiMesh = MemoryHelper.MarshalStructure<AiMesh>(nativeValue);
+
+            if(aiMesh.NumVertices > 0) {
+                if(aiMesh.Vertices != IntPtr.Zero)
+                    MemoryHelper.FreeMemory(aiMesh.Vertices);
+
+                if(aiMesh.Normals != IntPtr.Zero)
+                    MemoryHelper.FreeMemory(aiMesh.Normals);
+
+                if(aiMesh.Tangents != IntPtr.Zero)
+                    MemoryHelper.FreeMemory(aiMesh.Tangents);
+
+                if(aiMesh.BiTangents != IntPtr.Zero)
+                    MemoryHelper.FreeMemory(aiMesh.BiTangents);
+
+                //Vertex Color channels
+                IntPtr[] colors = aiMesh.Colors;
+
+                if(colors != null) {
+                    for(int i = 0; i < colors.Length; i++) {
+                        IntPtr colorPtr = colors[i];
+
+                        if(colorPtr != IntPtr.Zero)
+                            MemoryHelper.FreeMemory(colorPtr);
+                    }
+                }
+
+                //Texture coordinate channels
+                IntPtr[] texCoords = aiMesh.TextureCoords;
+
+                if(texCoords != null) {
+                    for(int i = 0; i < texCoords.Length; i++) {
+                        IntPtr texCoordsPtr = texCoords[i];
+
+                        if(texCoordsPtr != IntPtr.Zero)
+                            MemoryHelper.FreeMemory(texCoordsPtr);
+                    }
+                }
+            }
+
+            if(aiMesh.NumFaces > 0 && aiMesh.Faces != IntPtr.Zero)
+                MemoryHelper.FreeNativeArray<AiFace>(aiMesh.Faces, (int) aiMesh.NumFaces, Face.FreeNative);
+
+            if(aiMesh.NumBones > 0 && aiMesh.Bones != IntPtr.Zero)
+                MemoryHelper.FreeNativeArray<AiBone>(aiMesh.Bones, (int) aiMesh.NumBones, Bone.FreeNative, true);
+
+            if(aiMesh.NumAnimMeshes > 0 && aiMesh.AnimMeshes != IntPtr.Zero)
+                MemoryHelper.FreeNativeArray<AiAnimMesh>(aiMesh.AnimMeshes, (int) aiMesh.NumAnimMeshes, MeshAnimationAttachment.FreeNative, true);
+
+            if(freeNative)
+                MemoryHelper.FreeMemory(nativeValue);
+        }
+
+        #endregion
     }
 }
