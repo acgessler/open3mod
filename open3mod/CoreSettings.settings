@@ -15,7 +15,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="InspectorSplitterPos" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">507</Value>
+      <Value Profile="(Default)">510</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -95,6 +95,11 @@
     </Compile>
     <Compile Include="FpsCameraController.cs" />
     <Compile Include="FpsTracker.cs" />
+    <Compile Include="GraphicsSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>GraphicsSettings.settings</DependentUpon>
+    </Compile>
     <Compile Include="HierarchyInspectionView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -251,6 +256,10 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>CoreSettings.Designer.cs</LastGenOutput>
       <CustomToolNamespace>CoreSettings</CustomToolNamespace>
+    </None>
+    <None Include="GraphicsSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>GraphicsSettings.Designer.cs</LastGenOutput>
     </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
