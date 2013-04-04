@@ -178,6 +178,10 @@ namespace Assimp {
             m_preState = nodeAnim.Prestate;
             m_postState = nodeAnim.PostState;
 
+            m_positionKeys = new List<VectorKey>();
+            m_rotationKeys = new List<QuaternionKey>();
+            m_scalingKeys = new List<VectorKey>();
+
             //Load position keys
             if(nodeAnim.NumPositionKeys > 0 && nodeAnim.PositionKeys != IntPtr.Zero) {
                 m_positionKeys.AddRange(MemoryHelper.MarshalArray<VectorKey>(nodeAnim.PositionKeys, (int) nodeAnim.NumPositionKeys));
