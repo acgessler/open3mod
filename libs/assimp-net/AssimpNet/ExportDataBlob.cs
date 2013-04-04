@@ -30,6 +30,20 @@ namespace Assimp {
     /// turn can reference another and so on. This is used to allow exporters to write more than one output for a given
     /// scene, such as material files. Existence of such files depends on the format.
     /// </summary>
+    /// <remarks>
+    /// The stream representation of an ExportDataBlob is as follows:
+    /// <code>
+    /// String: Name of the Blob
+    /// int: Length of Binary Data
+    /// byte[]: Binary Data
+    /// bool: If has next data blob
+    ///     String: Name of nested blob
+    ///     int: Length of nested blob binary data
+    ///     byte[]: Nested blob binary data
+    ///     bool: If nested blob has next data blob
+    ///     ....
+    /// </code>
+    /// </remarks>
     public sealed class ExportDataBlob {
         private String m_name;
         private byte[] m_data;
@@ -78,7 +92,7 @@ namespace Assimp {
         /// <param name="dataBlob">Unmanaged structure.</param>
         internal ExportDataBlob(ref AiExportDataBlob dataBlob) {
             m_name = dataBlob.Name.GetString();
-            m_data = MemoryHelper.MarshalArray<byte>(dataBlob.Data, dataBlob.Size.ToInt32());
+            m_data = MemoryHelper.MarshalArray<byte>(dataBlob.Data, (int) dataBlob.Size.ToUInt32());
             m_next = null;
 
             if(dataBlob.NextBlob != IntPtr.Zero) {

@@ -31,7 +31,7 @@ namespace Assimp {
     /// system defined by the node which corresponds to the camera. This allows for camera
     /// animations.
     /// </summary>
-    public sealed class Camera {
+    public sealed class Camera : IMarshalable<Camera, AiCamera> {
         private String m_name;
         private Vector3D m_position;
         private Vector3D m_up;
@@ -180,5 +180,64 @@ namespace Assimp {
             m_clipPlaneNear = camera.ClipPlaneNear;
             m_aspectRatio = camera.Aspect;
         }
+
+        /// <summary>
+        /// Constructs a new instance of the <see cref="Camera"/> class.
+        /// </summary>
+        public Camera() {
+            m_name = String.Empty;
+        }
+
+        #region IMarshalable Implementation
+
+        /// <summary>
+        /// Gets if the native value type is blittable (that is, does not require marshaling by the runtime, e.g. has MarshalAs attributes).
+        /// </summary>
+        bool IMarshalable<Camera, AiCamera>.IsNativeBlittable {
+            get { return true; }
+        }
+
+        /// <summary>
+        /// Writes the managed data to the native value.
+        /// </summary>
+        /// <param name="thisPtr">Optional pointer to the memory that will hold the native value.</param>
+        /// <param name="nativeValue">Output native value</param>
+        void IMarshalable<Camera, AiCamera>.ToNative(IntPtr thisPtr, out AiCamera nativeValue) {
+            nativeValue.Name = new AiString(m_name);
+            nativeValue.Position = m_position;
+            nativeValue.LookAt = m_direction;
+            nativeValue.Up = m_up;
+            nativeValue.HorizontalFOV = m_fieldOfView;
+            nativeValue.ClipPlaneFar = m_clipPlaneFar;
+            nativeValue.ClipPlaneNear = m_clipPlaneNear;
+            nativeValue.Aspect = m_aspectRatio;
+        }
+
+        /// <summary>
+        /// Reads the unmanaged data from the native value.
+        /// </summary>
+        /// <param name="nativeValue">Input native value</param>
+        void IMarshalable<Camera, AiCamera>.FromNative(ref AiCamera nativeValue) {
+            m_name = nativeValue.Name.GetString();
+            m_position = nativeValue.Position;
+            m_direction = nativeValue.LookAt;
+            m_up = nativeValue.Up;
+            m_fieldOfView = nativeValue.HorizontalFOV;
+            m_clipPlaneFar = nativeValue.ClipPlaneFar;
+            m_clipPlaneNear = nativeValue.ClipPlaneNear;
+            m_aspectRatio = nativeValue.Aspect;
+        }
+
+        /// <summary>
+        /// Frees unmanaged memory created by <see cref="ToNative"/>.
+        /// </summary>
+        /// <param name="nativeValue">Native value to free</param>
+        /// <param name="freeNative">True if the unmanaged memory should be freed, false otherwise.</param>
+        public static void FreeNative(IntPtr nativeValue, bool freeNative) {
+            if(nativeValue != IntPtr.Zero && freeNative)
+                MemoryHelper.FreeMemory(nativeValue);
+        }
+
+        #endregion
     }
 }

@@ -34,7 +34,7 @@ namespace Assimp {
         /// <summary>
         /// Index of the vertex which is influenced by the bone.
         /// </summary>
-        public uint VertexID;
+        public int VertexID;
 
         /// <summary>
         /// Strength of the influence in range of (0...1). All influences
@@ -47,7 +47,7 @@ namespace Assimp {
         /// </summary>
         /// <param name="vertID">Index of the vertex.</param>
         /// <param name="weight">Weight of the influence.</param>
-        public VertexWeight(uint vertID, float weight) {
+        public VertexWeight(int vertID, float weight) {
             VertexID = vertID;
             Weight = weight;
         }

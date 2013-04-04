@@ -23,112 +23,60 @@
 using System;
 
 namespace Assimp {
-
     /// <summary>
     /// Describes all the values pertaining to a particular texture slot in a material.
     /// </summary>
     [Serializable]
     public struct TextureSlot {
-        private String m_filePath;
-        private TextureType m_type;
-        private uint m_index;
-        private TextureMapping m_mapping;
-        private uint m_uvIndex;
-        private float m_blendFactor;
-        private TextureOperation m_texOp;
-        private TextureWrapMode m_wrapModeU;
-        private TextureWrapMode m_wrapModeV;
-        private uint m_flags;
-
         /// <summary>
         /// Gets the texture file path.
         /// </summary>
-        public String FilePath {
-            get {
-                return m_filePath;
-            }
-        }
+        public String FilePath;
 
         /// <summary>
         /// Gets the texture type semantic.
         /// </summary>
-        public TextureType TextureType {
-            get {
-                return m_type;
-            }
-        }
+        public TextureType TextureType;
 
         /// <summary>
         /// Gets the texture index in the material.
         /// </summary>
-        public uint TextureIndex {
-            get {
-                return m_index;
-            }
-        }
+        public int TextureIndex;
 
         /// <summary>
         /// Gets the texture mapping.
         /// </summary>
-        public TextureMapping Mapping {
-            get {
-                return m_mapping;
-            }
-        }
+        public TextureMapping Mapping;
 
         /// <summary>
         /// Gets the UV channel index that corresponds to this texture from the mesh.
         /// </summary>
-        public uint UVIndex {
-            get {
-                return m_uvIndex;
-            }
-        }
+        public int UVIndex; 
 
         /// <summary>
         /// Gets the blend factor.
         /// </summary>
-        public float BlendFactor {
-            get {
-                return m_blendFactor;
-            }
-        }
+        public float BlendFactor;
 
         /// <summary>
         /// Gets the texture operation.
         /// </summary>
-        public TextureOperation Operation {
-            get {
-                return m_texOp;
-            }
-        }
+        public TextureOperation Operation;
 
         /// <summary>
         /// Gets the texture wrap mode for the U coordinate.
         /// </summary>
-        public TextureWrapMode WrapModeU {
-            get {
-                return m_wrapModeU;
-            }
-        }
+        public TextureWrapMode WrapModeU;
 
         /// <summary>
         /// Gets the texture wrap mode for the V coordinate.
         /// </summary>
-        public TextureWrapMode WrapModeV {
-            get {
-                return m_wrapModeV;
-            }
-        }
+        public TextureWrapMode WrapModeV;
 
         /// <summary>
         /// Gets misc flags.
         /// </summary>
-        public uint Flags {
-            get {
-                return m_flags;
-            }
-        }
+        public int Flags;
 
         /// <summary>
         /// Constructs a new TextureSlot.
@@ -143,18 +91,18 @@ namespace Assimp {
         /// <param name="wrapModeU">Texture wrap mode for U coordinate</param>
         /// <param name="wrapModeV">Texture wrap mode for V coordinate</param>
         /// <param name="flags">Misc flags</param>
-        public TextureSlot(String filePath, TextureType typeSemantic, uint texIndex, TextureMapping mapping, uint uvIndex, float blendFactor,
-            TextureOperation texOp, TextureWrapMode wrapModeU, TextureWrapMode wrapModeV, uint flags) {
-                m_filePath = (filePath == null) ? String.Empty : filePath;
-                m_type = typeSemantic;
-                m_index = texIndex;
-                m_mapping = mapping;
-                m_uvIndex = uvIndex;
-                m_blendFactor = blendFactor;
-                m_texOp = texOp;
-                m_wrapModeU = wrapModeU;
-                m_wrapModeV = wrapModeV;
-                m_flags = flags;
+        public TextureSlot(String filePath, TextureType typeSemantic, int texIndex, TextureMapping mapping, int uvIndex, float blendFactor,
+            TextureOperation texOp, TextureWrapMode wrapModeU, TextureWrapMode wrapModeV, int flags) {
+                FilePath = (filePath == null) ? String.Empty : filePath;
+                TextureType = typeSemantic;
+                TextureIndex = texIndex;
+                Mapping = mapping;
+                UVIndex = uvIndex;
+                BlendFactor = blendFactor;
+                Operation = texOp;
+                WrapModeU = wrapModeU;
+                WrapModeV = wrapModeV;
+                Flags = flags;
         }
     }
 }

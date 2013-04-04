@@ -28,6 +28,7 @@ namespace Assimp {
     /// <summary>
     /// Time-value pair specifying a 3D vector for a given time.
     /// </summary>
+    [Serializable]
     [StructLayoutAttribute(LayoutKind.Sequential)]
     public struct VectorKey : IEquatable<VectorKey> {
         /// <summary>

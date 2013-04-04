@@ -168,12 +168,12 @@ namespace open3mod
         /// <summary>
         /// Generates and populates an Gl vertex array buffer given 3D vectors as source data
         /// </summary>
-        private void GenAndFillBuffer(out int outGlBufferId, Vector3D[] dataBuffer) 
+        private void GenAndFillBuffer(out int outGlBufferId, List<Vector3D> dataBuffer) 
         {
             GL.GenBuffers(1, out outGlBufferId);
             GL.BindBuffer(BufferTarget.ArrayBuffer, outGlBufferId);
 
-            var byteCount = dataBuffer.Length * 12;
+            var byteCount = dataBuffer.Count * 12;
             var temp = new float[byteCount];
 
             var n = 0;
@@ -218,8 +218,8 @@ namespace open3mod
             GL.GenBuffers(1, out texCoordBufferId);
             GL.BindBuffer(BufferTarget.ArrayBuffer, texCoordBufferId);
 
-            var uvs = _mesh.GetTextureCoords(0);
-            var byteCount = uvs.Length * 2;
+            var uvs = _mesh.TextureCoordinateChannels[0];
+            var byteCount = uvs.Count * 2;
             var temp = new float[byteCount];
             var n = 0;
             foreach (var uv in uvs)
@@ -265,7 +265,7 @@ namespace open3mod
             GenAndFillBuffer(out tangentBufferId, tangents);
 
             var bitangents = _mesh.BiTangents;
-            Debug.Assert(bitangents.Length == tangents.Length);
+            Debug.Assert(bitangents.Count == tangents.Count);
 
             GenAndFillBuffer(out bitangentBufferId, bitangents);
         }
@@ -282,9 +282,9 @@ namespace open3mod
             GL.GenBuffers(1, out colorBufferId);
             GL.BindBuffer(BufferTarget.ArrayBuffer, colorBufferId);
 
-            var colors = _mesh.GetVertexColors(0);
+            var colors = _mesh.VertexColorChannels[0];
             // convert to 32Bit RGBA
-            var byteCount = colors.Length*4;
+            var byteCount = colors.Count*4;
             var byteColors = new byte[byteCount];
             var n = 0;
             foreach(var c in colors)

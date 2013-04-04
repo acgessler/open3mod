@@ -58,6 +58,8 @@
     <Compile Include="ExportDataBlob.cs" />
     <Compile Include="ExportFormatDescription.cs" />
     <Compile Include="Face.cs" />
+    <Compile Include="Interfaces.cs" />
+    <Compile Include="InternalInterop.cs" />
     <Compile Include="IOStream.cs" />
     <Compile Include="IOSystem.cs" />
     <Compile Include="Material.cs" />
@@ -66,9 +68,10 @@
     <Compile Include="MeshAnimationAttachment.cs" />
     <Compile Include="MeshKey.cs" />
     <Compile Include="NodeAnimationChannel.cs" />
+    <Compile Include="NodeCollection.cs" />
     <Compile Include="QuaternionKey.cs" />
     <Compile Include="Texel.cs" />
-    <Compile Include="Texture.cs" />
+    <Compile Include="EmbeddedTexture.cs" />
     <Compile Include="TextureSlot.cs" />
     <Compile Include="Unmanaged\AiMatKeys.cs" />
     <Compile Include="Unmanaged\AssimpLibrary.cs" />
@@ -110,6 +113,9 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>"$(SolutionDir)\libs\Tesla.Interop.Generator\Tesla.Interop.Generator.exe" "$(TargetDir)$(TargetFileName)" "$(ProjectDir)AssimpKey.snk"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

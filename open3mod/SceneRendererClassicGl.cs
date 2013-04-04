@@ -458,7 +458,7 @@ namespace open3mod
                     var indice = face.Indices[i];
                     if (hasColors)
                     {
-                        var vertColor = AssimpToOpenTk.FromColor(mesh.GetVertexColors(0)[indice]);
+                        var vertColor = AssimpToOpenTk.FromColor(mesh.VertexColorChannels[0][indice]);
                         GL.Color4(vertColor);
                     }
                     if (mesh.HasNormals)
@@ -466,7 +466,7 @@ namespace open3mod
                         Vector3 normal;
                         if (skinning)
                         {
-                            Skinner.GetTransformedVertexNormal(node, index, indice, out normal);
+                            Skinner.GetTransformedVertexNormal(node, index, (uint)indice, out normal);
                         }
                         else
                         {
@@ -477,14 +477,14 @@ namespace open3mod
                     }
                     if (hasTexCoords)
                     {
-                        var uvw = AssimpToOpenTk.FromVector(mesh.GetTextureCoords(0)[indice]);
+                        var uvw = AssimpToOpenTk.FromVector(mesh.TextureCoordinateChannels[0][indice]);
                         GL.TexCoord2(uvw.X, 1 - uvw.Y);
                     }
 
                     Vector3 pos;
                     if (skinning)
                     {
-                        Skinner.GetTransformedVertexPosition(node, index, indice, out pos);
+                        Skinner.GetTransformedVertexPosition(node, index, (uint)indice, out pos);
                     }
                     else
                     {
@@ -667,7 +667,7 @@ namespace open3mod
                 }
                 else
                 {
-                    tmp = AssimpToOpenTk.FromVector(mesh.Vertices[i]);
+                    tmp = AssimpToOpenTk.FromVector(mesh.Vertices[(int)i]);
                 }          
 
                 min.X = Math.Min(min.X, tmp.X);
@@ -738,7 +738,7 @@ namespace open3mod
                 }
                 else
                 {
-                    v = AssimpToOpenTk.FromVector(mesh.Vertices[i]);
+                    v = AssimpToOpenTk.FromVector(mesh.Vertices[(int)i]);
                 }
 
                 Vector3 n;
@@ -748,7 +748,7 @@ namespace open3mod
                 }
                 else
                 {
-                    n = AssimpToOpenTk.FromVector(mesh.Normals[i]);
+                    n = AssimpToOpenTk.FromVector(mesh.Normals[(int)i]);
                 }
          
                 GL.Vertex3(v);

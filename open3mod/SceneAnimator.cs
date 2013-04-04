@@ -382,7 +382,7 @@ namespace open3mod
             if (ActiveAnimation != -1)
             {
                 var channels = _raw.Animations[ActiveAnimation].NodeAnimationChannels;
-                for (int i = 0; i < channels.Length; ++i)
+                for (int i = 0; i < channels.Count; ++i)
                 {
                     if (channels[i].NodeName != rootNode.Name)
                     {

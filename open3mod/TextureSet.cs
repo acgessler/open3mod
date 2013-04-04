@@ -152,7 +152,7 @@ namespace open3mod
         /// </param>
         /// <param name="embeddedDataSource">Optional parameter that specifies
         ///    an in-memory, embedded data source for the texture. </param>
-        public void Add(string path, Assimp.Texture embeddedDataSource = null)
+        public void Add(string path, Assimp.EmbeddedTexture embeddedDataSource = null)
         {
             if(_dict.ContainsKey(path))
             {
