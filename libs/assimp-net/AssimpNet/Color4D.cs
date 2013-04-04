@@ -133,6 +133,29 @@ namespace Assimp {
         }
 
         /// <summary>
+        /// Constructs a Color4D from a Color3D. Alpha is set to 1.0.
+        /// </summary>
+        /// <param name="rgb">RGB values</param>
+        public Color4D(Color3D rgb) {
+            R = rgb.R;
+            G = rgb.G;
+            B = rgb.B;
+            A = 1.0f;
+        }
+
+        /// <summary>
+        /// Constructs a Color4D from a Color3D and alpha value.
+        /// </summary>
+        /// <param name="rgb">RGB values</param>
+        /// <param name="alpha">Alpha value</param>
+        public Color4D(Color3D rgb, float alpha) {
+            R = rgb.R;
+            G = rgb.G;
+            B = rgb.B;
+            A = alpha;
+        }
+
+        /// <summary>
         /// Determines if the color is black, or close to being black.
         /// </summary>
         /// <returns>True if the color is black/nearly block, false otherwise.</returns>

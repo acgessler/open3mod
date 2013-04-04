@@ -392,6 +392,19 @@ namespace Assimp {
         }
 
         /// <summary>
+        /// Gets the property raw data as a float array.
+        /// </summary>
+        /// <returns>Float array</returns>
+        public float[] GetFloatArrayValue() {
+            if(m_type == PropertyType.Float || m_type == PropertyType.Integer) {
+                int count = ByteCount / sizeof(float);
+                return GetValueArrayAs<float>(count);
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Sets the property raw data as a float array.
         /// </summary>
         /// <param name="values">Values to set</param>
@@ -411,6 +424,19 @@ namespace Assimp {
         public int[] GetIntegerArrayValue(int count) {
             if(m_type == PropertyType.Float || m_type == PropertyType.Integer)
                 return GetValueArrayAs<int>(count);
+
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the property raw data as an integer array.
+        /// </summary>
+        /// <returns>Integer array</returns>
+        public int[] GetIntegerArrayValue() {
+            if(m_type == PropertyType.Float || m_type == PropertyType.Integer) {
+                int count = ByteCount / sizeof(int);
+                return GetValueArrayAs<int>(count);
+            }
 
             return null;
         }
@@ -472,10 +498,23 @@ namespace Assimp {
         /// </summary>
         /// <returns>Color4D</returns>
         public Color4D GetColor4DValue() {
-            if(m_type != PropertyType.Float)
+            if(m_type != PropertyType.Float || m_rawValue == null)
                 return new Color4D();
 
-            return GetValueAs<Color4D>();
+            //We may have a Color that's RGB, so still read it and set alpha to 1.0
+            unsafe {
+                fixed(byte* ptr = m_rawValue) {
+
+                    if(m_rawValue.Length >= MemoryHelper.SizeOf<Color4D>()) {
+                        return MemoryHelper.Read<Color4D>(new IntPtr(ptr));
+                    } else if(m_rawValue.Length >= MemoryHelper.SizeOf<Color3D>()) {
+                        return new Color4D(MemoryHelper.Read<Color3D>(new IntPtr(ptr)), 1.0f);
+                    }
+
+                }
+            }
+
+            return new Color4D();
         }
 
         /// <summary>
@@ -523,6 +562,7 @@ namespace Assimp {
 
             int size = MemoryHelper.SizeOf<T>(data);
 
+            //Resize byte array if necessary
             if(m_rawValue == null || m_rawValue.Length != size)
                 m_rawValue = new byte[size];
 
@@ -536,6 +576,7 @@ namespace Assimp {
         private unsafe bool SetValueAs<T>(T value) where T : struct {
             int size = MemoryHelper.SizeOf<T>();
 
+            //Resize byte array if necessary
             if(m_rawValue == null || m_rawValue.Length != size)
                 m_rawValue = new byte[size];
 
