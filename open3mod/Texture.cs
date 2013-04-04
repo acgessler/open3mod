@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
@@ -206,6 +207,18 @@ namespace open3mod
                         shouldDisposeBitmap = true;
                     }
 
+                    // apply texture resolution bias? (i.e. low quality textures)
+                    if(GraphicsSettings.Default.TexQualityBias > 0)
+                    {
+                        var b = ApplyResolutionBias(textureBitmap, GraphicsSettings.Default.TexQualityBias);
+                        if(shouldDisposeBitmap)
+                        {
+                            textureBitmap.Dispose();
+                        }
+                        textureBitmap = b;
+                        shouldDisposeBitmap = true;
+                    }
+
                     var textureData = textureBitmap.LockBits(
                         new Rectangle(0, 0, textureBitmap.Width, textureBitmap.Height),
                             ImageLockMode.ReadOnly,
@@ -264,6 +277,32 @@ namespace open3mod
                     }
                 }
             }
+        }
+
+
+        /// <summary>
+        /// Obtain a downscaled version of a given Bitmap. The downscaling
+        /// factor is expressed as an log2 resolution bias.
+        /// </summary>
+        /// <param name="textureBitmap"></param>
+        /// <param name="bias">Value greater 0</param>
+        /// <returns></returns>
+        private static Bitmap ApplyResolutionBias(Bitmap textureBitmap, int bias)
+        {
+            Debug.Assert(textureBitmap != null);
+            Debug.Assert(bias > 0);
+
+            var width = textureBitmap.Width >> bias;
+            var height = textureBitmap.Height >> bias;
+
+            var b = new Bitmap(width, height);
+            using (var g = Graphics.FromImage(b))
+            {
+                g.InterpolationMode = InterpolationMode.NearestNeighbor;
+                g.DrawImage(textureBitmap, 0, 0, width, height);
+            }
+
+            return b;
         }
 
 
