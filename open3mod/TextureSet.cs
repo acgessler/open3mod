@@ -20,6 +20,7 @@
 
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -327,6 +328,23 @@ namespace open3mod
             {
                 _dict.Clear();
                 _loaded.Clear();
+            }
+        }
+
+
+        /// <summary>
+        /// Obtain an enumeration of all loaded textures. The enumeration is safe
+        /// to use from any thread as well as with concurring texture load jobs.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Texture> GetLoadedTexturesCollectionThreadsafe()
+        {
+            lock (_loaded) 
+            {
+                foreach(var v in _loaded)
+                {
+                    yield return _dict[v];
+                }
             }
         }
     }

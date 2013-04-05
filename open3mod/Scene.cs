@@ -369,14 +369,38 @@ namespace open3mod
                 }
             }
 
-            TextureSet.AddCallback((name, tex) => {
-                lock (_texChangeLock)
-                {
-                    _wantSetTexturesChanged = true;
-                    _texturesChanged = true;
-                }
+            TextureSet.AddCallback((name, tex) =>
+            {
+                SetTexturesChangedFlag();
                 return true;
             });
+        }
+
+
+        private void SetTexturesChangedFlag()
+        {
+            lock (_texChangeLock)
+            {
+                _wantSetTexturesChanged = true;
+                _texturesChanged = true;
+            }
+        }
+
+
+        /// <summary>
+        /// Requests that all textures be re-uploaded as soon as possible.
+        /// This is called when the texture settings are changed.
+        /// </summary>
+        public void RequestReuploadTextures()
+        {
+            SetTexturesChangedFlag();
+            foreach (var tex in TextureSet.GetLoadedTexturesCollectionThreadsafe())
+            {
+                if (tex.State == Texture.TextureState.GlTextureCreated)
+                {
+                    tex.ReleaseUpload();
+                }
+            }
         }
 
 
@@ -388,7 +412,9 @@ namespace open3mod
         /// <param name="totalTriangleCount"></param>
         /// <param name="totalLineCount"></param>
         /// <param name="totalPointCount"></param>
-        private void CountVertsAndFaces(out int totalVertexCount, out int totalTriangleCount, out int totalLineCount, out int totalPointCount)
+        private void CountVertsAndFaces(out int totalVertexCount, out int totalTriangleCount, 
+            out int totalLineCount, 
+            out int totalPointCount)
         {
             totalVertexCount = 0;
             totalTriangleCount = 0;

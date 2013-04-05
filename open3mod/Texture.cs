@@ -185,10 +185,20 @@ namespace open3mod
         /// This requires that State == TextureState.WinFormsImageCreated, i.e. the
         /// RAM texture image must be ready for use and the Gl object may not have 
         /// been created yet.
+        /// 
+        /// Must be called on a thread that is allowed to use Gl APIs.
         /// </summary>
         public void Upload()
         {
             Debug.Assert(State == TextureState.WinFormsImageCreated);
+
+            // this may be required if ReleaseUpload() has been called before
+            if (_gl != 0)
+            {
+                GL.DeleteTexture(_gl);
+                _gl = 0;
+            }
+
             lock (_lock) { // this is a long CS, but at this time we don't expect concurrent action.
                 // http://www.opentk.com/node/259
                 Bitmap textureBitmap = null;
@@ -277,6 +287,25 @@ namespace open3mod
                     }
                 }
             }
+        }
+
+
+
+        /// <summary>
+        /// Requests that the Gl object for the texture should be released.
+        /// After this method has been called, Upload() can be used to re-create
+        /// the object. This method can be called from any thread.
+        /// </summary>
+        public void ReleaseUpload()
+        {
+            Debug.Assert(State == TextureState.GlTextureCreated);
+
+            lock (_lock)
+            {
+                State = TextureState.WinFormsImageCreated;
+            }
+            // don't Gl.DeleteTexture() at this point - it is not necessarily the
+            // Gl thread. Upload() does this.
         }
 
 
