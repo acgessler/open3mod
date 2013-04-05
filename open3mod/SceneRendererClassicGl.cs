@@ -254,7 +254,7 @@ namespace open3mod
                         var skinning = DrawMesh(node, animated, false, index, mesh, flags);
                         if (flags.HasFlag(RenderFlags.ShowBoundingBoxes))
                         {
-                            DrawBoundingBox(node, index, mesh, skinning);
+                            OverlayBoundingBox.DrawBoundingBox(node, index, mesh, skinning ? Skinner : null);
                         }
                     }
                 }
@@ -277,7 +277,7 @@ namespace open3mod
                             var skinning = DrawMesh(node, animated, false, index, mesh, flags);
                             if (flags.HasFlag(RenderFlags.ShowBoundingBoxes))
                             {
-                                DrawBoundingBox(node, index, mesh, skinning);
+                                OverlayBoundingBox.DrawBoundingBox(node, index, mesh, skinning ? Skinner : null);
                             }
                         }
                     }
@@ -561,7 +561,7 @@ namespace open3mod
                         }
                     }
                 }
-                DrawSkeletonBone(node, invGlobalScale,highlight);
+                OverlaySkeleton.DrawSkeletonBone(node, invGlobalScale,highlight);
             }
 
             GL.PushMatrix();
@@ -581,7 +581,7 @@ namespace open3mod
                             continue;
                         }
 
-                        DrawNormals(node, index, mesh, mesh.HasBones && animated, invGlobalScale);
+                        OverlayNormals.DrawNormals(node, index, mesh, mesh.HasBones && animated ? Skinner : null, invGlobalScale);
                     }
                 }
             }
@@ -591,173 +591,7 @@ namespace open3mod
                 RecursiveRenderNoScale(node.Children[i], visibleMeshesByNode, flags, invGlobalScale, animated);
             }
             GL.PopMatrix();
-        }
-
-
-        private void DrawSkeletonBone(Node node, float invGlobalScale, bool highlight)
-        {
-            var target = new Vector3(node.Transform.A4, node.Transform.B4, node.Transform.C4);
-            if (target.LengthSquared > 1e-6f)
-            {
-                GL.Disable(EnableCap.Lighting);
-                GL.Disable(EnableCap.Texture2D);
-                GL.Enable(EnableCap.ColorMaterial);
-                GL.Disable(EnableCap.DepthTest);
-
-                GL.Color4(highlight ? new Color4(0.0f, 1.0f, 0.5f, 1.0f) : new Color4(0.0f, 0.5f, 1.0f, 1.0f));
-
-                var right = new Vector3(1, 0, 0);
-                var targetNorm = target;
-                targetNorm.Normalize();
-
-                Vector3 up;
-                Vector3.Cross(ref targetNorm, ref right, out up);
-                Vector3.Cross(ref up, ref targetNorm, out right);
-
-                up *= invGlobalScale;
-                right *= invGlobalScale;
-
-                const float jointWidth = 0.03f;
-
-                GL.Begin(BeginMode.LineLoop);
-                GL.Vertex3(-jointWidth*up + -jointWidth*right);
-                GL.Vertex3(-jointWidth*up + jointWidth*right);
-                GL.Vertex3(jointWidth*up + jointWidth*right);
-                GL.Vertex3(jointWidth*up + -jointWidth*right);
-                GL.End();
-
-                GL.Begin(BeginMode.Lines);
-                GL.Vertex3(-jointWidth*up + -jointWidth*right);
-                GL.Vertex3(target);
-                GL.Vertex3(-jointWidth*up + jointWidth*right);
-                GL.Vertex3(target);
-                GL.Vertex3(jointWidth*up + jointWidth*right);
-                GL.Vertex3(target);
-                GL.Vertex3(jointWidth*up + -jointWidth*right);
-                GL.Vertex3(target);
-
-                GL.Color4(highlight ? new Color4(1.0f, 0.0f, 0.0f, 1.0f) : new Color4(1.0f, 1.0f, 0.0f, 1.0f));
-
-                GL.Vertex3(Vector3.Zero);
-                GL.Vertex3(target);
-                GL.End();
-
-                GL.Disable(EnableCap.ColorMaterial);
-                GL.Enable(EnableCap.DepthTest);
-            }           
-        }
-
-
-        private void DrawBoundingBox(Node node, int meshIndex, Mesh mesh, bool skinning)
-        {           
-            GL.Disable(EnableCap.Lighting);
-            GL.Disable(EnableCap.Texture2D);
-            GL.Enable(EnableCap.ColorMaterial);
-
-            GL.Color4(new Color4(1.0f, 0.0f, 0.0f, 1.0f));
-
-            var min = new Vector3(1e10f, 1e10f, 1e10f);
-            var max = new Vector3(-1e10f, -1e10f, -1e10f);
-            for (uint i = 0; i < mesh.VertexCount; ++i)
-            {              
-                Vector3 tmp;
-                if (skinning)
-                {
-                    Skinner.GetTransformedVertexPosition(node, meshIndex, i, out tmp);
-                }
-                else
-                {
-                    tmp = AssimpToOpenTk.FromVector(mesh.Vertices[(int)i]);
-                }          
-
-                min.X = Math.Min(min.X, tmp.X);
-                min.Y = Math.Min(min.Y, tmp.Y);
-                min.Z = Math.Min(min.Z, tmp.Z);
-
-                max.X = Math.Max(max.X, tmp.X);
-                max.Y = Math.Max(max.Y, tmp.Y);
-                max.Z = Math.Max(max.Z, tmp.Z);               
-            }
-
-            GL.Begin(BeginMode.LineLoop);
-            GL.Vertex3(min);
-            GL.Vertex3(new Vector3(min.X, max.Y, min.Z));
-            GL.Vertex3(new Vector3(min.X, max.Y, max.Z));
-            GL.Vertex3(new Vector3(min.X, min.Y, max.Z));
-            GL.End();
-
-            GL.Begin(BeginMode.LineLoop);
-            GL.Vertex3(new Vector3(max.X, min.Y, min.Z));
-            GL.Vertex3(new Vector3(max.X, max.Y, min.Z));
-            GL.Vertex3(new Vector3(max.X, max.Y, max.Z));
-            GL.Vertex3(new Vector3(max.X, min.Y, max.Z));
-            GL.End();
-
-            GL.Begin(BeginMode.Lines);
-            GL.Vertex3(min);
-            GL.Vertex3(new Vector3(max.X, min.Y, min.Z));
-
-            GL.Vertex3(new Vector3(min.X, max.Y, min.Z));
-            GL.Vertex3(new Vector3(max.X, max.Y, min.Z));
-
-            GL.Vertex3(new Vector3(min.X, max.Y, max.Z));
-            GL.Vertex3(new Vector3(max.X, max.Y, max.Z));
-
-            GL.Vertex3(new Vector3(min.X, min.Y, max.Z));
-            GL.Vertex3(new Vector3(max.X, min.Y, max.Z));
-            GL.End();
-
-            GL.Disable(EnableCap.ColorMaterial);
-        }
-
-
-        private void DrawNormals(Node node, int meshIndex, Mesh mesh, bool skinning, float invGlobalScale)
-        {
-            if(!mesh.HasNormals)
-            {
-                return;
-            }
-            // scale by scene size because the scene will be resized to fit
-            // the unit box but the normals should have a fixed length
-            var scale = invGlobalScale * 0.03f;
-
-            GL.Begin(BeginMode.Lines);
-
-            GL.Disable(EnableCap.Lighting);
-            GL.Disable(EnableCap.Texture2D);
-            GL.Enable(EnableCap.ColorMaterial);
-
-            GL.Color4(new Color4(0.0f, 1.0f, 0.0f, 1.0f));
-
-            for (uint i = 0; i < mesh.VertexCount; ++i)
-            {
-                Vector3 v;          
-                if(skinning)
-                {
-                    Skinner.GetTransformedVertexPosition(node, meshIndex, i, out v);
-                }
-                else
-                {
-                    v = AssimpToOpenTk.FromVector(mesh.Vertices[(int)i]);
-                }
-
-                Vector3 n;
-                if (skinning)
-                {
-                    Skinner.GetTransformedVertexNormal(node, meshIndex, i, out n);
-                }
-                else
-                {
-                    n = AssimpToOpenTk.FromVector(mesh.Normals[(int)i]);
-                }
-         
-                GL.Vertex3(v);
-                GL.Vertex3(v+n*scale);
-            }
-            GL.End();
-
-            GL.Disable(EnableCap.ColorMaterial);
-        }
+        }       
     }
 }
 
