@@ -70,7 +70,7 @@ namespace open3mod
             if (needAlpha)
             {
                 // handle semi-transparent geometry              
-                //RecursiveRenderWithAlpha(Owner.Raw.RootNode, visibleMeshesByNode, flags, animated);
+                RecursiveRenderWithAlpha(Owner.Raw.RootNode, visibleMeshesByNode, flags, animated);
             }
 
 
@@ -84,7 +84,8 @@ namespace open3mod
 
 
         /// <summary>
-        /// Recursive rendering function
+        /// Recursive rendering function for opaque meshes that also checks whether there
+        /// is any need for a second rendering pass to draw semi-transparent meshes.
         /// </summary>
         /// <param name="node">Current node</param>
         /// <param name="visibleMeshesByNode"> </param>
@@ -109,62 +110,12 @@ namespace open3mod
             // TODO for some reason, all OpenTk matrices need a ^T - we should clarify our conventions somewhere
             m.Transpose();
 
-            GL.PushMatrix();
-            GL.MultMatrix(ref m);
-
             // the following permutations could be compacted into one big loop with lots of
             // condition magic, but at the cost of readability and also performance.
             // we therefore keep it redundant and stupid.
             if (node.HasMeshes)
             {
-                if (visibleMeshesByNode == null)
-                {
-                    // everything is visible. alpha-blended materials are delayed for 2nd pass
-                    foreach (var index in node.MeshIndices)
-                    {
-                        var mesh = Owner.Raw.Meshes[index];
-                        if (IsAlphaMaterial[mesh.MaterialIndex])
-                        {
-                            needAlpha = true;
-                            continue;
-                        }
-
-                        var skinning = DrawMesh(node, animated, false, index, mesh, flags);
-                        if (flags.HasFlag(RenderFlags.ShowBoundingBoxes))
-                        {
-                            OverlayBoundingBox.DrawBoundingBox(node, index, mesh, skinning ? Skinner : null);
-                        }
-                    }
-                }
-                else
-                {
-                    List<Mesh> meshList;
-                    if (visibleMeshesByNode.TryGetValue(node, out meshList))
-                    {
-                        // some meshes of this node are visible. alpha-blended materials are delayed for 2nd pass
-                        foreach (var index in node.MeshIndices)
-                        {
-                            var mesh = Owner.Raw.Meshes[index];
-
-                            if (IsAlphaMaterial[mesh.MaterialIndex] || (meshList != null && !meshList.Contains(mesh)))
-                            {
-                                needAlpha = true;
-                                continue;
-                            }
-
-                            var skinning = DrawMesh(node, animated, false, index, mesh, flags);
-                            if (flags.HasFlag(RenderFlags.ShowBoundingBoxes))
-                            {
-                                OverlayBoundingBox.DrawBoundingBox(node, index, mesh, skinning ? Skinner : null);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // node not visible, draw ghosts in 2nd pass
-                        needAlpha = true;
-                    }
-                }
+                needAlpha = DrawOpaqueMeshes(node, visibleMeshesByNode, flags, animated);
             }
 
 
@@ -172,13 +123,56 @@ namespace open3mod
             {
                 needAlpha = RecursiveRender(node.Children[i], visibleMeshesByNode, flags, animated) || needAlpha;
             }
-
-            GL.PopMatrix();
             return needAlpha;
         }
 
 
-        private bool DrawMesh(Node node, bool animated, bool p2, int index, Mesh mesh, RenderFlags flags)
+        /// <summary>
+        /// Recursive rendering function for semi-transparent (i.e. alpha-blended) meshes.
+        /// 
+        /// Alpha blending is not globally on, meshes need to do that on their own. 
+        /// 
+        /// This render function is called _after_ solid geometry has been drawn, so the 
+        /// relative order between transparent and opaque geometry is maintained. There
+        /// is no further ordering within the alpha rendering pass.
+        /// </summary>
+        /// <param name="node">Current node</param>
+        /// <param name="visibleNodes">Set of visible meshes</param>
+        /// <param name="flags">Rendering flags</param>
+        /// <param name="animated">Play animation?</param>
+        private void RecursiveRenderWithAlpha(Node node, Dictionary<Node, List<Mesh>> visibleNodes,
+            RenderFlags flags,
+            bool animated)
+        {
+            Matrix4 m;
+            if (animated)
+            {
+                Owner.SceneAnimator.GetLocalTransform(node, out m);
+            }
+            else
+            {
+                m = AssimpToOpenTk.FromMatrix(node.Transform);
+            }
+            // TODO for some reason, all OpenTk matrices need a ^T - clarify our conventions somewhere
+            m.Transpose();
+
+            // the following permutations could be compacted into one big loop with lots of
+            // condition magic, but at the cost of readability and also performance.
+            // we therefore keep it redundant and stupid.
+            if (node.HasMeshes)
+            {
+                DrawAlphaMeshes(node, visibleNodes, flags, animated);
+            }
+
+
+            for (var i = 0; i < node.ChildCount; i++)
+            {
+                RecursiveRenderWithAlpha(node.Children[i], visibleNodes, flags, animated);
+            }
+        }
+
+
+        protected override bool DrawMesh(Node node, bool animated, bool p2, int index, Mesh mesh, RenderFlags flags)
         {
             return true;
         }

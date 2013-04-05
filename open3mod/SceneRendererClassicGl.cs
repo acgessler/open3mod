@@ -234,59 +234,10 @@ namespace open3mod
             GL.PushMatrix();        
             GL.MultMatrix(ref m);
 
-            // the following permutations could be compacted into one big loop with lots of
-            // condition magic, but at the cost of readability and also performance.
-            // we therefore keep it redundant and stupid.
+            
             if (node.HasMeshes)
             {
-                if (visibleMeshesByNode == null)
-                {
-                    // everything is visible. alpha-blended materials are delayed for 2nd pass
-                    foreach (var index in node.MeshIndices)
-                    {
-                        var mesh = Owner.Raw.Meshes[index];
-                        if (IsAlphaMaterial[mesh.MaterialIndex])
-                        {
-                            needAlpha = true;
-                            continue;
-                        }
-
-                        var skinning = DrawMesh(node, animated, false, index, mesh, flags);
-                        if (flags.HasFlag(RenderFlags.ShowBoundingBoxes))
-                        {
-                            OverlayBoundingBox.DrawBoundingBox(node, index, mesh, skinning ? Skinner : null);
-                        }
-                    }
-                }
-                else
-                {
-                    List<Mesh> meshList;
-                    if (visibleMeshesByNode.TryGetValue(node, out meshList))
-                    {
-                        // some meshes of this node are visible. alpha-blended materials are delayed for 2nd pass
-                        foreach (var index in node.MeshIndices)
-                        {
-                            var mesh = Owner.Raw.Meshes[index];
-
-                            if (IsAlphaMaterial[mesh.MaterialIndex] || (meshList != null && !meshList.Contains(mesh)))
-                            {
-                                needAlpha = true;
-                                continue;
-                            }
-
-                            var skinning = DrawMesh(node, animated, false, index, mesh, flags);
-                            if (flags.HasFlag(RenderFlags.ShowBoundingBoxes))
-                            {
-                                OverlayBoundingBox.DrawBoundingBox(node, index, mesh, skinning ? Skinner : null);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // node not visible, draw ghosts in 2nd pass
-                        needAlpha = true;
-                    }
-                }
+                needAlpha = DrawOpaqueMeshes(node, visibleMeshesByNode, flags, animated);
             }
 
          
@@ -337,64 +288,10 @@ namespace open3mod
             // we therefore keep it redundant and stupid.
             if (node.HasMeshes)
             {
-                List<Mesh> meshList;
-                if (visibleNodes == null)
-                {
-                    // render everything with alpha materials
-                    foreach (var index in node.MeshIndices)
-                    {
-                        var mesh = Owner.Raw.Meshes[index];
-                        if (IsAlphaMaterial[mesh.MaterialIndex])
-                        {
-                            DrawMesh(node, animated, false, index, mesh, flags);
-                        }
-                    }
-                }
-                else if(visibleNodes.TryGetValue(node, out meshList))
-                {
-                    if (meshList == null)
-                    {
-                        // render everything with alpha materials 
-                        foreach (var index in node.MeshIndices)
-                        {
-                            var mesh = Owner.Raw.Meshes[index];
-                            if (IsAlphaMaterial[mesh.MaterialIndex])
-                            {
-                                DrawMesh(node, animated, false, index, mesh, flags);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // render everything that has either alpha materials or is not in the
-                        // list of visible meshes for this node.
-                        foreach (var index in node.MeshIndices)
-                        {
-                            var mesh = Owner.Raw.Meshes[index];
-                            if (!meshList.Contains(mesh))
-                            {
-                                DrawMesh(node, animated, true, index, mesh, flags);
-                                continue;
-                            }
-                            if (IsAlphaMaterial[mesh.MaterialIndex])
-                            {
-                                DrawMesh(node, animated, false, index, mesh, flags);
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    // node not visible, render only ghosts
-                    foreach (var index in node.MeshIndices)
-                    {
-                        var mesh = Owner.Raw.Meshes[index];
-                        DrawMesh(node, animated, true, index, mesh, flags);
-                    }
-                }
+                DrawAlphaMeshes(node, visibleNodes, flags, animated);
             }
 
-  
+
             for (var i = 0; i < node.ChildCount; i++)
             {
                 RecursiveRenderWithAlpha(node.Children[i], visibleNodes, flags, animated);
@@ -402,6 +299,7 @@ namespace open3mod
 
             GL.PopMatrix();
         }
+
 
 
         /// <summary>
@@ -415,7 +313,7 @@ namespace open3mod
         /// <param name="mesh">Mesh instance</param>
         /// <param name="flags"> </param>
         /// <returns></returns>
-        private bool DrawMesh(Node node, bool animated, bool showGhost, int index, Mesh mesh, RenderFlags flags)
+        protected override bool DrawMesh(Node node, bool animated, bool showGhost, int index, Mesh mesh, RenderFlags flags)
         {
             if (showGhost)
             {
