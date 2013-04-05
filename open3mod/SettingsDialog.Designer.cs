@@ -38,7 +38,7 @@
             this.comboBox4 = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.comboBoxTexResolution = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -89,7 +89,7 @@
             this.groupBox1.Controls.Add(this.comboBox4);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.checkBox2);
-            this.groupBox1.Controls.Add(this.comboBox3);
+            this.groupBox1.Controls.Add(this.comboBoxTexResolution);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.label2);
@@ -172,18 +172,19 @@
             this.checkBox2.Text = "Linear MIP";
             this.checkBox2.UseVisualStyleBackColor = true;
             // 
-            // comboBox3
+            // comboBoxTexResolution
             // 
-            this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Items.AddRange(new object[] {
+            this.comboBoxTexResolution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTexResolution.FormattingEnabled = true;
+            this.comboBoxTexResolution.Items.AddRange(new object[] {
             "Full",
             "Medium",
             "Low"});
-            this.comboBox3.Location = new System.Drawing.Point(186, 119);
-            this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(153, 21);
-            this.comboBox3.TabIndex = 5;
+            this.comboBoxTexResolution.Location = new System.Drawing.Point(186, 119);
+            this.comboBoxTexResolution.Name = "comboBoxTexResolution";
+            this.comboBoxTexResolution.Size = new System.Drawing.Size(153, 21);
+            this.comboBoxTexResolution.TabIndex = 5;
+            this.comboBoxTexResolution.SelectedIndexChanged += new System.EventHandler(this.OnChangeTextureResolution);
             // 
             // label3
             // 
@@ -327,7 +328,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.ComboBox comboBoxTexResolution;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox comboBox4;

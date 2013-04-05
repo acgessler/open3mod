@@ -784,6 +784,7 @@ namespace open3mod
             if (_settings == null || _settings.IsDisposed)
             {
                 _settings = new SettingsDialog();
+                _settings.Main = this;
             }
 
             if(!_settings.Visible)
