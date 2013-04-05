@@ -160,7 +160,8 @@ namespace open3mod
                 UploadTangentsAndBitangents(out vboToFill.TangentBufferId, out vboToFill.BitangentBufferId);
             }
 
-            // TODO: upload primitives
+            vboToFill.NumElements = UploadPrimitives(out vboToFill.ElementBufferID);
+
             // TODO: upload bone weights
         }
 
@@ -209,6 +210,70 @@ namespace open3mod
 
 
         /// <summary>
+        /// Uploads vertex indices to a newly generated Gl vertex array
+        /// </summary>
+        private int UploadPrimitives(out int elementBufferId)
+        {
+            Debug.Assert(_mesh.HasTextureCoords(0));
+
+            GL.GenBuffers(1, out elementBufferId);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, elementBufferId);
+
+            var faces = _mesh.Faces;
+
+            // TODO account for other primitives than triangles
+            var triCount = 0;
+            int byteCount;
+            var need32Bit = false;
+            foreach(var face in faces)
+            {
+                if (face.IndexCount != 3)
+                {
+                    continue;
+                }
+                ++triCount;
+                if (face.Indices.Any(idx => idx > 0xffff))
+                {
+                    need32Bit = true;
+                }
+            }
+
+            var intCount = triCount * 3;
+            if (need32Bit)
+            {
+                var temp = new uint[intCount];
+                byteCount = intCount * sizeof(uint);
+                var n = 0;
+                foreach (var idx in faces.Where(face => face.IndexCount == 3).SelectMany(face => face.Indices))
+                {
+                    temp[n++] = (uint)idx;
+                }
+
+                GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)byteCount,
+                    temp, BufferUsageHint.StaticDraw);
+            }
+            else
+            {
+                var temp = new ushort[intCount];
+                byteCount = intCount * sizeof(ushort);
+                var n = 0;
+                foreach (var idx in faces.Where(face => face.IndexCount == 3).SelectMany(face => face.Indices))
+                {
+                    Debug.Assert(idx <= 0xffff);
+                    temp[n++] = (ushort)idx;
+                }
+
+                GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)byteCount, 
+                    temp, BufferUsageHint.StaticDraw);
+            }
+            
+            VerifyBufferSize(byteCount);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
+            return triCount * 3;
+        }
+
+
+        /// <summary>
         /// Uploads UV coordinates to a newly generated Gl vertex array.
         /// </summary>
         private void UploadTextureCoords(out int texCoordBufferId)
@@ -219,8 +284,8 @@ namespace open3mod
             GL.BindBuffer(BufferTarget.ArrayBuffer, texCoordBufferId);
 
             var uvs = _mesh.TextureCoordinateChannels[0];
-            var byteCount = uvs.Count * 2;
-            var temp = new float[byteCount];
+            var floatCount = uvs.Count * 2;
+            var temp = new float[floatCount];
             var n = 0;
             foreach (var uv in uvs)
             {
@@ -228,6 +293,7 @@ namespace open3mod
                 temp[n++] = uv.Y;
             }
 
+            var byteCount = floatCount*sizeof (float);
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(byteCount), temp, BufferUsageHint.StaticDraw);
             VerifyBufferSize(byteCount);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
