@@ -82,5 +82,16 @@ namespace open3mod
                 tab.ActiveScene.RequestReuploadTextures();
             }
         }
+
+
+        private void OnOk(object sender, EventArgs e)
+        {
+            if (_main == null)
+            {
+                Close();
+                return;
+            }
+            _main.CloseSettingsDialog();
+        }
     }
 }
