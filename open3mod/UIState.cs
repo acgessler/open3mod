@@ -40,16 +40,75 @@ namespace open3mod
     /// </summary>
     public sealed class UiState : IDisposable
     {
-      
-        public bool RenderWireframe;
-        public bool RenderTextured = true;
-        public bool RenderLit = true;
 
-        public bool ShowFps = true;
+        public bool RenderWireframe
+        {
+            get { return CoreSettings.CoreSettings.Default.RenderWireframe; }
+            set { CoreSettings.CoreSettings.Default.RenderWireframe = value; }
+        }
 
-        public bool ShowBBs = false;
-        public bool ShowNormals = false;
-        public bool ShowSkeleton = false;
+        public bool RenderTextured  
+        { 
+            get { return CoreSettings.CoreSettings.Default.RenderTextured; }
+            set { CoreSettings.CoreSettings.Default.RenderTextured = value; }
+        }
+
+        public bool RenderLit 
+        { 
+            get { return CoreSettings.CoreSettings.Default.RenderLit; }
+            set { CoreSettings.CoreSettings.Default.RenderLit = value; }
+        }
+
+        public bool ShowFps
+        {
+            get { return CoreSettings.CoreSettings.Default.ShowFps; }
+            set { CoreSettings.CoreSettings.Default.ShowFps = value; }
+        }
+
+        public bool ShowBBs
+        {
+            get { return CoreSettings.CoreSettings.Default.ShowBBs; }
+            set { CoreSettings.CoreSettings.Default.ShowBBs = value; }
+        }
+
+        public bool ShowNormals
+        {
+            get { return CoreSettings.CoreSettings.Default.ShowNormals; }
+            set { CoreSettings.CoreSettings.Default.ShowNormals = value; }
+        }
+
+        public bool ShowSkeleton
+        {
+            get { return CoreSettings.CoreSettings.Default.ShowSkeleton; }
+            set { CoreSettings.CoreSettings.Default.ShowSkeleton = value; }
+        }
+
+
+
+        /// <summary>
+        /// Font to be used for textual overlays in 3D view (size ~ 12px)
+        /// </summary>
+        public readonly Font DefaultFont12;
+
+
+        /// <summary>
+        /// Font to be used for textual overlays in 3D view (size ~ 16px)
+        /// </summary>
+        public readonly Font DefaultFont16;
+
+
+        public UiState(Tab defaultTab)
+        {
+            DefaultFont12 = new Font("Segoe UI", 12);
+            DefaultFont16 = new Font("Segoe UI", 18);
+
+            Tabs = new List<Tab> { defaultTab };
+
+            ActiveTab = defaultTab;
+        }
+
+
+
 
         /// <summary>
         /// Current active tab. May never be null, there is always
@@ -168,31 +227,6 @@ namespace open3mod
             }
 #endif
             Tabs.Add(tab);
-        }
-
-
-
-
-        /// <summary>
-        /// Font to be used for textual overlays in 3D view (size ~ 12px)
-        /// </summary>
-        public readonly Font DefaultFont12;
-
-
-        /// <summary>
-        /// Font to be used for textual overlays in 3D view (size ~ 16px)
-        /// </summary>
-        public readonly Font DefaultFont16;
-
-
-        public UiState(Tab defaultTab)
-        {
-            DefaultFont12 = new Font("Segoe UI", 12);
-            DefaultFont16 = new Font("Segoe UI", 18);
-
-            Tabs = new List<Tab> {defaultTab};
-
-            ActiveTab = defaultTab;
         }
 
 

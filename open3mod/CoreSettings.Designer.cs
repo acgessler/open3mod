@@ -72,13 +72,97 @@ namespace CoreSettings {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("730")]
+        [global::System.Configuration.DefaultSettingValueAttribute("731")]
         public int InspectorSplitterPos {
             get {
                 return ((int)(this["InspectorSplitterPos"]));
             }
             set {
                 this["InspectorSplitterPos"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RenderWireframe {
+            get {
+                return ((bool)(this["RenderWireframe"]));
+            }
+            set {
+                this["RenderWireframe"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool RenderTextured {
+            get {
+                return ((bool)(this["RenderTextured"]));
+            }
+            set {
+                this["RenderTextured"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool RenderLit {
+            get {
+                return ((bool)(this["RenderLit"]));
+            }
+            set {
+                this["RenderLit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowFps {
+            get {
+                return ((bool)(this["ShowFps"]));
+            }
+            set {
+                this["ShowFps"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowBBs {
+            get {
+                return ((bool)(this["ShowBBs"]));
+            }
+            set {
+                this["ShowBBs"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowNormals {
+            get {
+                return ((bool)(this["ShowNormals"]));
+            }
+            set {
+                this["ShowNormals"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowSkeleton {
+            get {
+                return ((bool)(this["ShowSkeleton"]));
+            }
+            set {
+                this["ShowSkeleton"] = value;
             }
         }
     }
