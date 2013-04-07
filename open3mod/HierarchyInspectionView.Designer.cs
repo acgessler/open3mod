@@ -132,6 +132,7 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(311, 21);
             this.panel2.TabIndex = 9;
+            this.panel2.Visible = false;
             // 
             // panel1
             // 
@@ -158,7 +159,7 @@
             this.meshInfoPopup.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.meshInfoPopup.Location = new System.Drawing.Point(191, 335);
             this.meshInfoPopup.Name = "meshInfoPopup";
-            this.meshInfoPopup.Size = new System.Drawing.Size(115, 271);
+            this.meshInfoPopup.Size = new System.Drawing.Size(115, 79);
             this.meshInfoPopup.TabIndex = 12;
             // 
             // nodeInfoPopup
@@ -166,7 +167,7 @@
             this.nodeInfoPopup.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.nodeInfoPopup.Location = new System.Drawing.Point(191, 43);
             this.nodeInfoPopup.Name = "nodeInfoPopup";
-            this.nodeInfoPopup.Size = new System.Drawing.Size(115, 282);
+            this.nodeInfoPopup.Size = new System.Drawing.Size(115, 79);
             this.nodeInfoPopup.TabIndex = 11;
             // 
             // HierarchyInspectionView
