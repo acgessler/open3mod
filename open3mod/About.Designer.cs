@@ -69,13 +69,14 @@
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.Location = new System.Drawing.Point(12, 48);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(118, 13);
+            this.label4.Size = new System.Drawing.Size(108, 13);
             this.label4.TabIndex = 4;
-            this.label4.Text = "Version 0.1 (alpha) ";
+            this.label4.Text = "Version 0.2 (beta)";
             // 
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Enabled = false;
             this.linkLabel1.Location = new System.Drawing.Point(508, 22);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(46, 13);
@@ -124,6 +125,7 @@
             // linkLabel3
             // 
             this.linkLabel3.AutoSize = true;
+            this.linkLabel3.Enabled = false;
             this.linkLabel3.Location = new System.Drawing.Point(12, 133);
             this.linkLabel3.Name = "linkLabel3";
             this.linkLabel3.Size = new System.Drawing.Size(319, 13);
