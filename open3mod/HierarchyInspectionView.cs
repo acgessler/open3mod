@@ -433,7 +433,8 @@ namespace open3mod
                     _hitNodeCursor = -1;
                 }
 
-                labelHitCount.Text = string.Format("{0} hits", nodes.Count.ToString(CultureInfo.InvariantCulture));
+                labelHitCount.Text = string.Format("{0} hit{1}", nodes.Count.ToString(CultureInfo.InvariantCulture), 
+                    nodes.Count == 1 ? "" : "s");
             }
             else
             {
