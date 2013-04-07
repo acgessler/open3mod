@@ -33,11 +33,17 @@ namespace open3mod
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainWindow());
+
+            var mainWindow = new MainWindow();
+            if(args.Length > 0)
+            {
+                mainWindow.AddTab(args[0]);
+            }
+            Application.Run(mainWindow);
 
             TextureQueue.Terminate();
         }
