@@ -72,7 +72,7 @@ namespace CoreSettings {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("510")]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
         public int InspectorSplitterPos {
             get {
                 return ((int)(this["InspectorSplitterPos"]));
