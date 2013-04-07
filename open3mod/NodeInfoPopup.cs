@@ -41,13 +41,13 @@ namespace open3mod
             switch (purpose)
             {
                 case NodePurpose.Joint:
-                    labelCaption.Text = "Skeleton Joint";
+                    labelCaption.Text = "Joint";
                     break;
                 case NodePurpose.ImporterGenerated:
-                    labelCaption.Text = "Dummy Node";
+                    labelCaption.Text = "Root";
                     break;
                 case NodePurpose.GenericMeshHolder:
-                    labelCaption.Text = "Scene Node";
+                    labelCaption.Text = "Node";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("purpose");
