@@ -111,11 +111,14 @@ namespace open3mod
             _fps = new FpsTracker();
 
             // sync global UI with UIState
-            toolStripButtonShowFPS.CheckState = _ui.ShowFps ? CheckState.Checked : CheckState.Unchecked;
-            toolStripButtonShowShaded.CheckState = _ui.RenderLit ? CheckState.Checked : CheckState.Unchecked;
-            toolStripButtonShowTextures.CheckState = _ui.RenderTextured ? CheckState.Checked : CheckState.Unchecked;
-            toolStripButtonWireframe.CheckState = _ui.RenderWireframe ? CheckState.Checked : CheckState.Unchecked;
-          
+            framerateToolStripMenuItem.Checked = toolStripButtonShowFPS.Checked = _ui.ShowFps;
+            lightingToolStripMenuItem.Checked = toolStripButtonShowShaded.Checked = _ui.RenderLit;
+            texturedToolStripMenuItem.Checked = toolStripButtonShowTextures.Checked = _ui.RenderTextured;
+            wireframeToolStripMenuItem.Checked = toolStripButtonWireframe.Checked = _ui.RenderWireframe;
+            showNormalVectorsToolStripMenuItem.Checked = toolStripButtonShowNormals.Checked = _ui.ShowNormals;
+            showBoundingBoxesToolStripMenuItem.Checked = toolStripButtonShowBB.Checked = _ui.ShowBBs;
+            showAnimationSkeletonToolStripMenuItem.Checked = toolStripButtonShowSkeleton.Checked = _ui.ShowSkeleton;
+
             // manually register the MouseWheel handler
             glControl1.MouseWheel += OnMouseMove;
 
@@ -405,9 +408,18 @@ namespace open3mod
 
             // update UI check boxes
             var vm = _ui.ActiveTab.ActiveViewMode;
-            toolStripButtonFullView.CheckState = vm == Tab.ViewMode.Single ? CheckState.Checked : CheckState.Unchecked;
-            toolStripButtonTwoViews.CheckState = vm == Tab.ViewMode.Two ? CheckState.Checked : CheckState.Unchecked;
-            toolStripButtonFourViews.CheckState = vm == Tab.ViewMode.Four ? CheckState.Checked : CheckState.Unchecked;
+            fullViewToolStripMenuItem.CheckState = toolStripButtonFullView.CheckState = 
+                vm == Tab.ViewMode.Single 
+                ? CheckState.Checked 
+                : CheckState.Unchecked;
+            twoViewsToolStripMenuItem.CheckState = toolStripButtonTwoViews.CheckState = 
+                vm == Tab.ViewMode.Two 
+                ? CheckState.Checked 
+                : CheckState.Unchecked;
+            fourViewsToolStripMenuItem.CheckState = toolStripButtonFourViews.CheckState = 
+                vm == Tab.ViewMode.Four 
+                ? CheckState.Checked 
+                : CheckState.Unchecked;
 
             // some other UI housekeeping, this also injects the GL panel into the tab
             ActivateUiTab(tab);
@@ -605,75 +617,103 @@ namespace open3mod
         private void ToggleFps(object sender, EventArgs e)
         {
             _ui.ShowFps = !_ui.ShowFps;
+            framerateToolStripMenuItem.Checked = toolStripButtonShowFPS.Checked = _ui.ShowFps;
         }
 
 
         private void ToggleShading(object sender, EventArgs e)
         {
             _ui.RenderLit = !_ui.RenderLit;
+            lightingToolStripMenuItem.Checked = toolStripButtonShowShaded.Checked = _ui.RenderLit;
         }
 
 
         private void ToggleTextures(object sender, EventArgs e)
         {
             _ui.RenderTextured = !_ui.RenderTextured;
+            texturedToolStripMenuItem.Checked = toolStripButtonShowTextures.Checked = _ui.RenderTextured;
         }
 
 
         private void ToggleWireframe(object sender, EventArgs e)
         {
             _ui.RenderWireframe = !_ui.RenderWireframe;
+            wireframeToolStripMenuItem.Checked = toolStripButtonWireframe.Checked = _ui.RenderWireframe;
         }
 
 
         private void ToggleShowBb(object sender, EventArgs e)
         {
             _ui.ShowBBs = !_ui.ShowBBs;
+            showBoundingBoxesToolStripMenuItem.Checked = toolStripButtonShowBB.Checked = _ui.ShowBBs;
         }
 
 
         private void ToggleShowNormals(object sender, EventArgs e)
         {
             _ui.ShowNormals = !_ui.ShowNormals;
+            showNormalVectorsToolStripMenuItem.Checked = toolStripButtonShowNormals.Checked = _ui.ShowNormals;
         }
 
 
         private void ToggleShowSkeleton(object sender, EventArgs e)
         {
             _ui.ShowSkeleton = !_ui.ShowSkeleton;
+            showAnimationSkeletonToolStripMenuItem.Checked = toolStripButtonShowSkeleton.Checked = _ui.ShowSkeleton;
         }
 
 
         private void ToggleFullView(object sender, EventArgs e)
         {
-            if (UiState.ActiveTab.ActiveViewMode == Tab.ViewMode.Single) return;
+            if (UiState.ActiveTab.ActiveViewMode == Tab.ViewMode.Single)
+            {
+                return;
+            }
             UiState.ActiveTab.ActiveViewMode = Tab.ViewMode.Single;
 
             toolStripButtonFullView.CheckState = CheckState.Checked;
             toolStripButtonTwoViews.CheckState = CheckState.Unchecked;
             toolStripButtonFourViews.CheckState = CheckState.Unchecked;
+
+            fullViewToolStripMenuItem.CheckState = CheckState.Checked;
+            twoViewsToolStripMenuItem.CheckState = CheckState.Unchecked;
+            fourViewsToolStripMenuItem.CheckState = CheckState.Unchecked;
         }
 
 
         private void ToggleTwoViews(object sender, EventArgs e)
         {
-            if (UiState.ActiveTab.ActiveViewMode == Tab.ViewMode.Two) return;
+            if (UiState.ActiveTab.ActiveViewMode == Tab.ViewMode.Two)
+            {
+                return;
+            }
             UiState.ActiveTab.ActiveViewMode = Tab.ViewMode.Two;
 
             toolStripButtonFullView.CheckState = CheckState.Unchecked;
             toolStripButtonTwoViews.CheckState = CheckState.Checked;
             toolStripButtonFourViews.CheckState = CheckState.Unchecked;
+
+            fullViewToolStripMenuItem.CheckState = CheckState.Unchecked;
+            twoViewsToolStripMenuItem.CheckState = CheckState.Checked;
+            fourViewsToolStripMenuItem.CheckState = CheckState.Unchecked;
         }
 
 
         private void ToggleFourViews(object sender, EventArgs e)
         {
-            if (UiState.ActiveTab.ActiveViewMode == Tab.ViewMode.Four) return;
+            if (UiState.ActiveTab.ActiveViewMode == Tab.ViewMode.Four)
+            {
+                return;
+            }
             UiState.ActiveTab.ActiveViewMode = Tab.ViewMode.Four;
 
             toolStripButtonFullView.CheckState = CheckState.Unchecked;
             toolStripButtonTwoViews.CheckState = CheckState.Unchecked;
             toolStripButtonFourViews.CheckState = CheckState.Checked;
+
+            fullViewToolStripMenuItem.CheckState = CheckState.Unchecked;
+            twoViewsToolStripMenuItem.CheckState = CheckState.Unchecked;
+            fourViewsToolStripMenuItem.CheckState = CheckState.Checked;
         }
 
 

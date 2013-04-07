@@ -48,7 +48,7 @@ namespace open3mod
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemView = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.fullViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -87,8 +87,8 @@ namespace open3mod
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.wireframeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.texturedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.enableLightingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showFramerateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lightingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.framerateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.showBoundingBoxesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showNormalVectorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -170,14 +170,14 @@ namespace open3mod
             // toolStripMenuItemView
             // 
             this.toolStripMenuItemView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem3,
+            this.fullViewToolStripMenuItem,
             this.twoViewsToolStripMenuItem,
             this.fourViewsToolStripMenuItem,
             this.toolStripSeparator6,
             this.wireframeToolStripMenuItem,
             this.texturedToolStripMenuItem,
-            this.enableLightingToolStripMenuItem,
-            this.showFramerateToolStripMenuItem,
+            this.lightingToolStripMenuItem,
+            this.framerateToolStripMenuItem,
             this.toolStripSeparator7,
             this.showBoundingBoxesToolStripMenuItem,
             this.showNormalVectorsToolStripMenuItem,
@@ -186,13 +186,13 @@ namespace open3mod
             this.toolStripMenuItemView.Size = new System.Drawing.Size(44, 20);
             this.toolStripMenuItemView.Text = "View";
             // 
-            // toolStripMenuItem3
+            // fullViewToolStripMenuItem
             // 
-            this.toolStripMenuItem3.CheckOnClick = true;
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(178, 22);
-            this.toolStripMenuItem3.Text = "One 3D View";
-            this.toolStripMenuItem3.Click += new System.EventHandler(this.ToggleFullView);
+            this.fullViewToolStripMenuItem.CheckOnClick = true;
+            this.fullViewToolStripMenuItem.Name = "fullViewToolStripMenuItem";
+            this.fullViewToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.fullViewToolStripMenuItem.Text = "Full 3D View";
+            this.fullViewToolStripMenuItem.Click += new System.EventHandler(this.ToggleFullView);
             // 
             // toolsToolStripMenuItem
             // 
@@ -240,7 +240,7 @@ namespace open3mod
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItemClick);
             // 
@@ -538,21 +538,21 @@ namespace open3mod
             this.texturedToolStripMenuItem.Text = "Textures";
             this.texturedToolStripMenuItem.Click += new System.EventHandler(this.ToggleTextures);
             // 
-            // enableLightingToolStripMenuItem
+            // lightingToolStripMenuItem
             // 
-            this.enableLightingToolStripMenuItem.CheckOnClick = true;
-            this.enableLightingToolStripMenuItem.Name = "enableLightingToolStripMenuItem";
-            this.enableLightingToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.enableLightingToolStripMenuItem.Text = "Lighting";
-            this.enableLightingToolStripMenuItem.Click += new System.EventHandler(this.ToggleShading);
+            this.lightingToolStripMenuItem.CheckOnClick = true;
+            this.lightingToolStripMenuItem.Name = "lightingToolStripMenuItem";
+            this.lightingToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.lightingToolStripMenuItem.Text = "Lighting";
+            this.lightingToolStripMenuItem.Click += new System.EventHandler(this.ToggleShading);
             // 
-            // showFramerateToolStripMenuItem
+            // framerateToolStripMenuItem
             // 
-            this.showFramerateToolStripMenuItem.CheckOnClick = true;
-            this.showFramerateToolStripMenuItem.Name = "showFramerateToolStripMenuItem";
-            this.showFramerateToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.showFramerateToolStripMenuItem.Text = "Framerate";
-            this.showFramerateToolStripMenuItem.Click += new System.EventHandler(this.ToggleFps);
+            this.framerateToolStripMenuItem.CheckOnClick = true;
+            this.framerateToolStripMenuItem.Name = "framerateToolStripMenuItem";
+            this.framerateToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.framerateToolStripMenuItem.Text = "Framerate";
+            this.framerateToolStripMenuItem.Click += new System.EventHandler(this.ToggleFps);
             // 
             // toolStripSeparator7
             // 
@@ -671,7 +671,7 @@ namespace open3mod
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemView;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem fullViewToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButtonWireframe;
         private System.Windows.Forms.ToolStripButton toolStripButtonShowTextures;
         private System.Windows.Forms.ToolStripButton toolStripButtonShowShaded;
@@ -702,8 +702,8 @@ namespace open3mod
         private ToolStripSeparator toolStripSeparator6;
         private ToolStripMenuItem wireframeToolStripMenuItem;
         private ToolStripMenuItem texturedToolStripMenuItem;
-        private ToolStripMenuItem enableLightingToolStripMenuItem;
-        private ToolStripMenuItem showFramerateToolStripMenuItem;
+        private ToolStripMenuItem lightingToolStripMenuItem;
+        private ToolStripMenuItem framerateToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator7;
         private ToolStripMenuItem showBoundingBoxesToolStripMenuItem;
         private ToolStripMenuItem showNormalVectorsToolStripMenuItem;
