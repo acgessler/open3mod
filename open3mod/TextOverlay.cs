@@ -100,7 +100,8 @@ namespace open3mod
         /// content as dirty to enforce automatic updating of the underlying Gl
         /// resources.
         /// </summary>
-        /// <returns>Context to draw to</returns>
+        /// <returns>Context to draw to or a null if resources have been
+        ///    disposed already.</returns>
         public Graphics GetDrawableGraphicsContext()
         {
             if(_disposed)
@@ -109,7 +110,18 @@ namespace open3mod
             }
             if(_tempContext == null)
             {
-                _tempContext = Graphics.FromImage(_textBmp);
+                try
+                {
+                    _tempContext = Graphics.FromImage(_textBmp);
+                }
+                catch(Exception ex)
+                {
+                    // this happens when _textBmp is not a valid bitmap. It seems, this
+                    // can happen if the application is inactive and then switched to.
+                    // todo: find out how to avoid this.
+                    _tempContext = null;
+                    return null;
+                }
 
                 _tempContext.Clear(Color.Transparent);
                 _tempContext.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
