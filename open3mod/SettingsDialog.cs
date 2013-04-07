@@ -24,6 +24,9 @@ namespace open3mod
 
             InitTexResolution();
             InitTexFilter();
+            InitMultiSampling();
+            InitLightingQuality();
+            InitRenderingBackend();
         }
 
 
@@ -35,6 +38,7 @@ namespace open3mod
 
         private void OnOk(object sender, EventArgs e)
         {
+            _gSettings.Save();
             if (_main == null)
             {
                 Close();
@@ -119,6 +123,51 @@ namespace open3mod
             foreach (var scene in _main.UiState.ActiveScenes())
             {
                 scene.RequestReconfigureTextures();
+            }
+        }
+
+
+        private void InitMultiSampling()
+        {
+            comboBoxSetMultiSampling.SelectedIndex = _gSettings.MultiSampling;
+        }
+
+
+        private void OnChangeMultiSamplingMode(object sender, EventArgs e)
+        {
+            Debug.Assert(comboBoxSetMultiSampling.SelectedIndex <= 3);
+            if (_gSettings.MultiSampling != comboBoxSetMultiSampling.SelectedIndex)
+            {
+                _gSettings.MultiSampling = comboBoxSetMultiSampling.SelectedIndex;
+                labelPleaseRestart.Visible = true;
+            }
+        }
+
+
+        private void InitLightingQuality()
+        {     
+            comboBoxSetLightingMode.SelectedIndex = _gSettings.LightingQuality;
+        }
+
+
+        private void InitRenderingBackend()
+        {
+            comboBoxSetBackend.SelectedIndex = _gSettings.RenderingBackend;
+        }
+
+
+        private void OnChangeRenderingBackend(object sender, EventArgs e)
+        {
+            Debug.Assert(comboBoxSetBackend.SelectedIndex <= 1);
+            _gSettings.RenderingBackend = comboBoxSetBackend.SelectedIndex;
+
+            if (_main == null)
+            {
+                return;
+            }
+            foreach (var scene in _main.UiState.ActiveScenes())
+            {
+                scene.RecreateRenderingBackend();
             }
         }
     }

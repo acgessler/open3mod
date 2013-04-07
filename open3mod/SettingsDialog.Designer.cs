@@ -28,29 +28,36 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.comboBox5 = new System.Windows.Forms.ComboBox();
+            this.comboBoxSetLightingMode = new System.Windows.Forms.ComboBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.comboBox4 = new System.Windows.Forms.ComboBox();
+            this.comboBoxSetBackend = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.comboBoxTexResolution = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.comboBoxSetTextureFilter = new System.Windows.Forms.ComboBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.comboBoxSetMultiSampling = new System.Windows.Forms.ComboBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.button1 = new System.Windows.Forms.Button();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
             this.checkBoxLinearMIP = new System.Windows.Forms.CheckBox();
+            this.labelPleaseRestart = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -82,10 +89,10 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Controls.Add(this.comboBox5);
+            this.groupBox1.Controls.Add(this.comboBoxSetLightingMode);
             this.groupBox1.Controls.Add(this.checkBox3);
             this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.comboBox4);
+            this.groupBox1.Controls.Add(this.comboBoxSetBackend);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.checkBoxLinearMIP);
             this.groupBox1.Controls.Add(this.comboBoxTexResolution);
@@ -93,7 +100,7 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.comboBoxSetTextureFilter);
-            this.groupBox1.Controls.Add(this.comboBox1);
+            this.groupBox1.Controls.Add(this.comboBoxSetMultiSampling);
             this.groupBox1.Location = new System.Drawing.Point(21, 61);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(491, 293);
@@ -110,18 +117,22 @@
             this.label6.TabIndex = 11;
             this.label6.Text = "Lighting Mode";
             // 
-            // comboBox5
+            // comboBoxSetLightingMode
             // 
-            this.comboBox5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox5.FormattingEnabled = true;
-            this.comboBox5.Location = new System.Drawing.Point(186, 201);
-            this.comboBox5.Name = "comboBox5";
-            this.comboBox5.Size = new System.Drawing.Size(153, 21);
-            this.comboBox5.TabIndex = 12;
+            this.comboBoxSetLightingMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSetLightingMode.FormattingEnabled = true;
+            this.comboBoxSetLightingMode.Items.AddRange(new object[] {
+            "Low Quality",
+            "High Quality"});
+            this.comboBoxSetLightingMode.Location = new System.Drawing.Point(186, 201);
+            this.comboBoxSetLightingMode.Name = "comboBoxSetLightingMode";
+            this.comboBoxSetLightingMode.Size = new System.Drawing.Size(153, 21);
+            this.comboBoxSetLightingMode.TabIndex = 12;
             // 
             // checkBox3
             // 
             this.checkBox3.AutoSize = true;
+            this.checkBox3.Enabled = false;
             this.checkBox3.Location = new System.Drawing.Point(20, 253);
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.Size = new System.Drawing.Size(152, 17);
@@ -140,17 +151,18 @@
             this.label5.Text = "Note: some of the settings below are ignored for the \"Legacy\" \r\nbackend. Also, th" +
     "e legacy backend supports no GPU-based\r\nskinning so animations may run slowly.";
             // 
-            // comboBox4
+            // comboBoxSetBackend
             // 
-            this.comboBox4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox4.FormattingEnabled = true;
-            this.comboBox4.Items.AddRange(new object[] {
-            "OpenGl 3.0 / Shader Model 4.0",
-            "OpenGl Legacy / Fixed Function Pipeline"});
-            this.comboBox4.Location = new System.Drawing.Point(186, 35);
-            this.comboBox4.Name = "comboBox4";
-            this.comboBox4.Size = new System.Drawing.Size(153, 21);
-            this.comboBox4.TabIndex = 8;
+            this.comboBoxSetBackend.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSetBackend.FormattingEnabled = true;
+            this.comboBoxSetBackend.Items.AddRange(new object[] {
+            "OpenGl Legacy / Fixed Function Pipeline",
+            "OpenGl 3.0 / Shader Model 4.0"});
+            this.comboBoxSetBackend.Location = new System.Drawing.Point(186, 35);
+            this.comboBoxSetBackend.Name = "comboBoxSetBackend";
+            this.comboBoxSetBackend.Size = new System.Drawing.Size(248, 21);
+            this.comboBoxSetBackend.TabIndex = 8;
+            this.comboBoxSetBackend.SelectedIndexChanged += new System.EventHandler(this.OnChangeRenderingBackend);
             // 
             // label4
             // 
@@ -217,23 +229,25 @@
             this.comboBoxSetTextureFilter.TabIndex = 3;
             this.comboBoxSetTextureFilter.SelectedIndexChanged += new System.EventHandler(this.OnChangeTextureFilter);
             // 
-            // comboBox1
+            // comboBoxSetMultiSampling
             // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
+            this.comboBoxSetMultiSampling.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSetMultiSampling.FormattingEnabled = true;
+            this.comboBoxSetMultiSampling.Items.AddRange(new object[] {
             "None",
             "Slight",
             "Normal",
             "Maximum"});
-            this.comboBox1.Location = new System.Drawing.Point(186, 147);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(153, 21);
-            this.comboBox1.TabIndex = 2;
+            this.comboBoxSetMultiSampling.Location = new System.Drawing.Point(186, 147);
+            this.comboBoxSetMultiSampling.Name = "comboBoxSetMultiSampling";
+            this.comboBoxSetMultiSampling.Size = new System.Drawing.Size(153, 21);
+            this.comboBoxSetMultiSampling.TabIndex = 2;
+            this.comboBoxSetMultiSampling.SelectedIndexChanged += new System.EventHandler(this.OnChangeMultiSamplingMode);
             // 
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
+            this.checkBox1.Enabled = false;
             this.checkBox1.Location = new System.Drawing.Point(27, 25);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(398, 17);
@@ -243,6 +257,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.label7);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -253,6 +268,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.label8);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
@@ -273,6 +289,32 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.OnOk);
             // 
+            // imageList1
+            // 
+            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.ForeColor = System.Drawing.Color.Red;
+            this.label7.Location = new System.Drawing.Point(235, 160);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(38, 13);
+            this.label7.TabIndex = 0;
+            this.label7.Text = "TODO";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.ForeColor = System.Drawing.Color.Red;
+            this.label8.Location = new System.Drawing.Point(232, 163);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(38, 13);
+            this.label8.TabIndex = 1;
+            this.label8.Text = "TODO";
+            // 
             // checkBoxLinearMIP
             // 
             this.checkBoxLinearMIP.AutoSize = true;
@@ -287,11 +329,23 @@
             this.checkBoxLinearMIP.UseVisualStyleBackColor = true;
             this.checkBoxLinearMIP.CheckedChanged += new System.EventHandler(this.OnChangeMipSettings);
             // 
+            // labelPleaseRestart
+            // 
+            this.labelPleaseRestart.AutoSize = true;
+            this.labelPleaseRestart.ForeColor = System.Drawing.Color.Red;
+            this.labelPleaseRestart.Location = new System.Drawing.Point(23, 434);
+            this.labelPleaseRestart.Name = "labelPleaseRestart";
+            this.labelPleaseRestart.Size = new System.Drawing.Size(232, 13);
+            this.labelPleaseRestart.TabIndex = 2;
+            this.labelPleaseRestart.Text = "Please restart the application to see all changes";
+            this.labelPleaseRestart.Visible = false;
+            // 
             // SettingsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(539, 465);
+            this.Controls.Add(this.labelPleaseRestart);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.tabControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -304,7 +358,12 @@
             this.tabPage1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -315,7 +374,7 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ComboBox comboBoxSetTextureFilter;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox comboBoxSetMultiSampling;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox checkBox1;
@@ -325,10 +384,14 @@
         private System.Windows.Forms.ComboBox comboBoxTexResolution;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ComboBox comboBox4;
+        private System.Windows.Forms.ComboBox comboBoxSetBackend;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.ComboBox comboBox5;
+        private System.Windows.Forms.ComboBox comboBoxSetLightingMode;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label labelPleaseRestart;
     }
 }

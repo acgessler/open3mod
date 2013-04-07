@@ -57,7 +57,7 @@ namespace open3mod
         private readonly TextureSet _textureSet;
 
         private readonly MaterialMapper _mapper;
-        private readonly ISceneRenderer _renderer;
+        private ISceneRenderer _renderer;
 
 
         /// <summary>
@@ -253,7 +253,36 @@ namespace open3mod
 
             CountVertsAndFaces(out _totalVertexCount, out _totalTriangleCount, out _totalLineCount, out _totalPointCount);
 
-            _renderer = new SceneRendererClassicGl(this, _sceneMin, _sceneMax);
+            CreateRenderingBackend();
+        }
+
+
+        /// <summary>
+        /// Recreates the rendering backend if needed. This is called after the
+        /// global rendering backend setting is changed.
+        /// </summary>
+        public void RecreateRenderingBackend()
+        {
+            if(_renderer != null)
+            {
+                _renderer.Dispose();
+                _renderer = null;
+            }
+            CreateRenderingBackend();
+        }
+
+
+        private void CreateRenderingBackend()
+        {
+            Debug.Assert(_renderer == null);
+            if (GraphicsSettings.Default.RenderingBackend == 0)
+            {
+                _renderer = new SceneRendererClassicGl(this, _sceneMin, _sceneMax);
+            }
+            else
+            {
+                _renderer = new SceneRendererModernGl(this, _sceneMin, _sceneMax);
+            }
         }
 
 

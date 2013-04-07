@@ -70,5 +70,29 @@ namespace open3mod {
                 this["MultiSampling"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int RenderingBackend {
+            get {
+                return ((int)(this["RenderingBackend"]));
+            }
+            set {
+                this["RenderingBackend"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int LightingQuality {
+            get {
+                return ((int)(this["LightingQuality"]));
+            }
+            set {
+                this["LightingQuality"] = value;
+            }
+        }
     }
 }
