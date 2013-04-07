@@ -168,13 +168,20 @@ namespace open3mod
             }
         }
 
+
+        /// <summary>
+        /// Loading time, in milliseconds. 
+        /// </summary>
         public long LoadingTime
         {
             get { return _loadingTime; }
         }
 
 
-        private bool _texturesChanged = false;
+        private volatile bool _texturesChanged;
+        private volatile bool _wantSetTexturesChanged;
+        private readonly object _texChangeLock = new object();
+
         private readonly SceneAnimator _animator;
         private double _accumulatedTimeDelta;
 
@@ -187,7 +194,7 @@ namespace open3mod
         private readonly int _totalTriangleCount;
         private readonly int _totalLineCount;
         private readonly int _totalPointCount;
-        private long _loadingTime;
+        private readonly long _loadingTime;
 
         /// <summary>
         /// Construct a scene given a file name, throw if loading fails
@@ -286,8 +293,6 @@ namespace open3mod
             _renderer.Update(delta);
         }
 
-        private bool _wantSetTexturesChanged;
-        private readonly object _texChangeLock = new object();
 
         /// <summary>
         /// Call once per frame to render the scene to the current viewport.
@@ -399,6 +404,23 @@ namespace open3mod
                 if (tex.State == Texture.TextureState.GlTextureCreated)
                 {
                     tex.ReleaseUpload();
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Requests that texture filters be re-configured as soon as possible.
+        /// This is called when the texture settings are changed.
+        /// </summary>
+        public void RequestReconfigureTextures()
+        {
+            SetTexturesChangedFlag();
+            foreach (var tex in TextureSet.GetLoadedTexturesCollectionThreadsafe())
+            {
+                if (tex.State == Texture.TextureState.GlTextureCreated)
+                {
+                    tex.ReconfigureUploadedTextureRequested = true;
                 }
             }
         }

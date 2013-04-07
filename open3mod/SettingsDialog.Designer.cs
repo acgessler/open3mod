@@ -37,12 +37,12 @@
             this.label5 = new System.Windows.Forms.Label();
             this.comboBox4 = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBoxLinearMIP = new System.Windows.Forms.CheckBox();
             this.comboBoxTexResolution = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.comboBoxSetTextureFilter = new System.Windows.Forms.ComboBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -87,12 +87,12 @@
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.comboBox4);
             this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.checkBox2);
+            this.groupBox1.Controls.Add(this.checkBoxLinearMIP);
             this.groupBox1.Controls.Add(this.comboBoxTexResolution);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.comboBox2);
+            this.groupBox1.Controls.Add(this.comboBoxSetTextureFilter);
             this.groupBox1.Controls.Add(this.comboBox1);
             this.groupBox1.Location = new System.Drawing.Point(21, 61);
             this.groupBox1.Name = "groupBox1";
@@ -161,15 +161,19 @@
             this.label4.TabIndex = 7;
             this.label4.Text = "Rendering Backend";
             // 
-            // checkBox2
+            // checkBoxLinearMIP
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(362, 178);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(77, 17);
-            this.checkBox2.TabIndex = 6;
-            this.checkBox2.Text = "Linear MIP";
-            this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBoxLinearMIP.AutoSize = true;
+            this.checkBoxLinearMIP.Checked = global::open3mod.GraphicsSettings.Default.UseMips;
+            this.checkBoxLinearMIP.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxLinearMIP.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.GraphicsSettings.Default, "UseMips", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxLinearMIP.Location = new System.Drawing.Point(362, 178);
+            this.checkBoxLinearMIP.Name = "checkBoxLinearMIP";
+            this.checkBoxLinearMIP.Size = new System.Drawing.Size(72, 17);
+            this.checkBoxLinearMIP.TabIndex = 6;
+            this.checkBoxLinearMIP.Text = "Use MIPs";
+            this.checkBoxLinearMIP.UseVisualStyleBackColor = true;
+            this.checkBoxLinearMIP.CheckedChanged += new System.EventHandler(this.OnChangeMipSettings);
             // 
             // comboBoxTexResolution
             // 
@@ -212,19 +216,20 @@
             this.label2.TabIndex = 1;
             this.label2.Text = "Texture Filter";
             // 
-            // comboBox2
+            // comboBoxSetTextureFilter
             // 
-            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Items.AddRange(new object[] {
+            this.comboBoxSetTextureFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSetTextureFilter.FormattingEnabled = true;
+            this.comboBoxSetTextureFilter.Items.AddRange(new object[] {
             "None",
             "Linear",
             "Anisotropic Low",
             "Anisotropic High"});
-            this.comboBox2.Location = new System.Drawing.Point(186, 174);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(153, 21);
-            this.comboBox2.TabIndex = 3;
+            this.comboBoxSetTextureFilter.Location = new System.Drawing.Point(186, 174);
+            this.comboBoxSetTextureFilter.Name = "comboBoxSetTextureFilter";
+            this.comboBoxSetTextureFilter.Size = new System.Drawing.Size(153, 21);
+            this.comboBoxSetTextureFilter.TabIndex = 3;
+            this.comboBoxSetTextureFilter.SelectedIndexChanged += new System.EventHandler(this.OnChangeTextureFilter);
             // 
             // comboBox1
             // 
@@ -309,14 +314,14 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.ComboBox comboBoxSetTextureFilter;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.CheckBox checkBoxLinearMIP;
         private System.Windows.Forms.ComboBox comboBoxTexResolution;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Label label5;

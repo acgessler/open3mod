@@ -23,12 +23,24 @@ namespace open3mod
             _gSettings = GraphicsSettings.Default;
 
             InitTexResolution();
+            InitTexFilter();
         }
 
 
         public MainWindow Main
         {
             set { _main = value; }
+        }
+
+
+        private void OnOk(object sender, EventArgs e)
+        {
+            if (_main == null)
+            {
+                Close();
+                return;
+            }
+            _main.CloseSettingsDialog();
         }
 
 
@@ -84,14 +96,42 @@ namespace open3mod
         }
 
 
-        private void OnOk(object sender, EventArgs e)
+        private void InitTexFilter()
         {
+            comboBoxSetTextureFilter.SelectedIndex = _gSettings.TextureFilter;
+        }
+
+
+        private void OnChangeTextureFilter(object sender, EventArgs e)
+        {
+            Debug.Assert(comboBoxSetTextureFilter.SelectedIndex <= 3);
+            _gSettings.TextureFilter = comboBoxSetTextureFilter.SelectedIndex;
+           
             if (_main == null)
             {
-                Close();
                 return;
             }
-            _main.CloseSettingsDialog();
+            foreach (var tab in _main.UiState.Tabs)
+            {
+                if (tab.ActiveScene == null)
+                {
+                    continue; ;
+                }
+                tab.ActiveScene.RequestReconfigureTextures();
+            }
+        }
+
+
+        private void OnChangeMipSettings(object sender, EventArgs e)
+        {
+            foreach (var tab in _main.UiState.Tabs)
+            {
+                if (tab.ActiveScene == null)
+                {
+                    continue; ;
+                }
+                tab.ActiveScene.RequestReconfigureTextures();
+            }
         }
     }
 }
