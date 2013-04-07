@@ -72,13 +72,7 @@ namespace open3mod
         /// <returns></returns>
         public IEnumerable<Tab> TabsWithActiveScenes()
         {
-            foreach (var tab in Tabs)
-            {
-                if (tab.ActiveScene != null)
-                {
-                    yield return tab;
-                }
-            }
+            return Tabs.Where(tab => tab.ActiveScene != null);
         }
 
 
@@ -88,11 +82,8 @@ namespace open3mod
         /// <returns></returns>
         public IEnumerable<Scene> ActiveScenes()
         {
-            foreach (var tab in TabsWithActiveScenes())
-            {
-                yield return tab.ActiveScene;
-            }
-        }  
+            return TabsWithActiveScenes().Select(tab => tab.ActiveScene);
+        }
 
 
         /// <summary>
@@ -111,15 +102,12 @@ namespace open3mod
         /// property to the tab object. This does *not* update the UI.
         /// </summary>
         /// <param name="id">Unique id of the tab to be selected</param>
-        public void SelectTab(object id) 
+        public void SelectTab(object id)
         {
-            foreach (Tab ts in Tabs)
+            foreach (var ts in Tabs.Where(ts => ts.Id == id))
             {
-                if (ts.Id == id)
-                {
-                    ActiveTab = ts;
-                    return;
-                }
+                ActiveTab = ts;
+                return;
             }
 
             Debug.Assert(false, "tab with id not found: " + id.ToString());
