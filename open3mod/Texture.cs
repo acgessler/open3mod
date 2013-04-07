@@ -88,15 +88,11 @@ namespace open3mod
 
         public delegate void CompletionCallback(Texture self);
 
-        public TextureState State { get; private set; }
-        public string FileName
-        {
-            get { return _file; }
-        }
 
 
-        private AlphaState _alphaState = AlphaState.NotKnownYet;
-
+        private volatile AlphaState _alphaState = AlphaState.NotKnownYet;
+        private volatile TextureState _state;
+        private volatile bool _reconfigure;
 
 
         /// <summary>
@@ -148,18 +144,6 @@ namespace open3mod
 
 
         /// <summary>
-        /// Get the Gl texture object associated with the Texture or 0 if the texture has not 
-        /// been created yet. Use Upload() to create the Gl texture.
-        /// </summary>
-        public int GlTexture
-        {
-            get {       
-                return _gl; 
-            }
-        }
-
-
-        /// <summary>
         /// Returns whether the texture has any non-opaque pixels and thus
         /// needs to be rendered with alpha-blending.
         /// 
@@ -176,6 +160,38 @@ namespace open3mod
                 }
                 return _alphaState;
             }
+        }
+
+
+        /// <summary>
+        /// Current state of the texture object.
+        /// </summary>
+        public TextureState State
+        {
+            get { return _state; }
+            private set { _state = value; }
+        }
+
+
+        public string FileName
+        {
+            get { return _file; }
+        }
+
+
+        /// <summary>
+        /// Flag that indicates whether ReconfigureUploadedTexture() should be
+        /// called on this texture. If BindGlTexture() is called while this
+        /// flag is set, it does this automatically. See the docs for BindGlTexture
+        /// for more information.
+        /// 
+        /// This flag can be read and written to from any thread while
+        /// ReconfigureUploadedTexture() requires to be called on the Gl thread.
+        /// </summary>
+        public bool ReconfigureUploadedTextureRequested
+        {
+            get { return _reconfigure; }
+            set { _reconfigure = value; }
         }
 
 
@@ -247,22 +263,8 @@ namespace open3mod
 
                     GL.ActiveTexture(TextureUnit.Texture0);
                     GL.BindTexture(TextureTarget.Texture2D, tex);
-                    
-                    GL.TexParameter(TextureTarget.Texture2D,
-                                    TextureParameterName.TextureMinFilter,
-                                    (int)TextureMinFilter.LinearMipmapLinear);
-                    GL.TexParameter(TextureTarget.Texture2D,
-                                    TextureParameterName.TextureMagFilter,
-                                    (int)TextureMagFilter.Linear);
 
-                    // generate MIPs
-                    GL.TexParameter(TextureTarget.Texture2D, 
-                        TextureParameterName.GenerateMipmap, 1);
-
-                    // set maximum anisotropic filtering
-                    float maxAniso;
-                    GL.GetFloat((GetPName)ExtTextureFilterAnisotropic.MaxTextureMaxAnisotropyExt, out maxAniso);
-                    GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, maxAniso);
+                    ConfigureFilters();                    
 
                     // upload
                     GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Four,
@@ -290,11 +292,106 @@ namespace open3mod
         }
 
 
+        /// <summary>
+        /// Binds the Gl texture object for this Texture to the Texture2D stage.
+        /// 
+        /// This requires that the texture has been uploaded. Do not use
+        /// Gl.BindTexture directly. This method calls ReconfigureUploadedTexture
+        /// if the ReconfigureUploadedTextureRequested flag is set. It is therefore
+        /// only safe to use from within displaylists if this flag is not set (i.e.
+        /// ReconfigureUploadedTexture() should be called before the displaylist
+        /// is compiled).
+        /// 
+        /// This method may be called only from a thread that has access to Gl.
+        /// </summary>
+        public void BindGlTexture()
+        {
+            Debug.Assert(State == TextureState.GlTextureCreated);
+            GL.BindTexture(TextureTarget.Texture2D, _gl);
+
+            if(ReconfigureUploadedTextureRequested)
+            {
+                ReconfigureUploadedTexture();
+            } 
+        } 
+
+
+        private void ConfigureFilters()
+        {
+            // assuming Gl texture is bound!
+            var settings = GraphicsSettings.Default;
+            var mips = settings.UseMips;
+
+            switch(settings.TextureFilter)
+            {
+                    // full aniso
+                case 3:             
+                    // low aniso
+                case 2:           
+                    // linear
+                case 1:
+                    GL.TexParameter(TextureTarget.Texture2D,
+                        TextureParameterName.TextureMinFilter,
+                        (int)(mips ? TextureMinFilter.LinearMipmapLinear : TextureMinFilter.Linear));
+
+                    GL.TexParameter(TextureTarget.Texture2D,
+                        TextureParameterName.TextureMagFilter,
+                        (int)TextureMagFilter.Linear);
+                    break;
+
+                    // point
+                case 0:
+                    GL.TexParameter(TextureTarget.Texture2D,
+                        TextureParameterName.TextureMinFilter,
+                        (int)(mips ? TextureMinFilter.NearestMipmapNearest : TextureMinFilter.Nearest));
+
+                    GL.TexParameter(TextureTarget.Texture2D,
+                        TextureParameterName.TextureMagFilter,
+                        (int)TextureMagFilter.Nearest);
+                    break;
+
+                default:
+                    Debug.Assert(false);
+                    break;
+            }
+
+            // select anisotropic filtering if needed
+            if (settings.TextureFilter >= 2)
+            {
+                float maxAniso;
+                GL.GetFloat((GetPName)ExtTextureFilterAnisotropic.MaxTextureMaxAnisotropyExt, out maxAniso);
+                GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, 
+                    settings.TextureFilter >= 3
+                        ? maxAniso
+                        : maxAniso * 0.5f);    
+            }
+            else
+            {
+                GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt,
+                    0.0f);    
+            }
+            
+            // generate MIPs?
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, mips ? 1 : 0);
+            if (!mips)
+            {
+                return;
+            }
+
+            // already uploaded before? need glGenerateMipMap to update
+            if(State == TextureState.GlTextureCreated)
+            {
+                GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+            }
+        }
+
 
         /// <summary>
         /// Requests that the Gl object for the texture should be released.
         /// After this method has been called, Upload() can be used to re-create
-        /// the object. This method can be called from any thread.
+        /// the object (otherwise calling Upload() again would be illegal). 
+        /// 
+        /// This method can be called from any thread.
         /// </summary>
         public void ReleaseUpload()
         {
@@ -306,6 +403,36 @@ namespace open3mod
             }
             // don't Gl.DeleteTexture() at this point - it is not necessarily the
             // Gl thread. Upload() does this.
+        }
+
+
+        /// <summary>
+        /// Requests that the texture filtering settings associated with the
+        /// Gl object for this texture should be reconfigured based on the
+        /// current GraphicsSettings. Reconfiguration happens immediately.
+        /// 
+        /// Use ReconfigureUploadedTextureRequested to request this method
+        /// to be called the next time the texture is bound.
+        /// 
+        /// This method must therefore be called from a thread that has
+        /// access to Gl. The currently bound texture is afterwards restored
+        /// to its old value.
+        /// </summary>
+        public void ReconfigureUploadedTexture()
+        {
+            Debug.Assert(State == TextureState.GlTextureCreated);
+
+            ReconfigureUploadedTextureRequested = false;
+
+            int old;
+            GL.GetInteger(GetPName.TextureBinding2D, out old);
+            GL.BindTexture(TextureTarget.Texture2D, _gl);
+            ConfigureFilters();
+
+            if(old != 0)
+            {
+                GL.BindTexture(TextureTarget.Texture2D, old);
+            }
         }
 
 

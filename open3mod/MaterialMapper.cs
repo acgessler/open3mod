@@ -169,6 +169,10 @@ namespace open3mod
                     gtex.Upload();
                     any = true;
                 }
+                else if (gtex.ReconfigureUploadedTextureRequested)
+                {
+                    gtex.ReconfigureUploadedTexture();
+                }
             }
             return any;
         }
@@ -208,11 +212,11 @@ namespace open3mod
 
                 hasAlpha = hasAlpha || gtex.HasAlpha == Texture.AlphaState.HasAlpha;
 
-                if(gtex.GlTexture != 0)
+                if(gtex.State == Texture.TextureState.GlTextureCreated)
                 {
                     GL.ActiveTexture(TextureUnit.Texture0);
-                    GL.BindTexture(TextureTarget.Texture2D, gtex.GlTexture);
-           
+                    gtex.BindGlTexture();
+   
                     GL.Enable(EnableCap.Texture2D);
                 }
                 else
