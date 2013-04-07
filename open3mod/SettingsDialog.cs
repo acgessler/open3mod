@@ -85,13 +85,9 @@ namespace open3mod
             {
                 return;
             }
-            foreach(var tab in _main.UiState.Tabs)
+            foreach (var scene in _main.UiState.ActiveScenes())
             {
-                if (tab.ActiveScene == null)
-                {
-                    continue; ;
-                }
-                tab.ActiveScene.RequestReuploadTextures();
+                scene.RequestReuploadTextures();
             }
         }
 
@@ -111,26 +107,18 @@ namespace open3mod
             {
                 return;
             }
-            foreach (var tab in _main.UiState.Tabs)
+            foreach (var scene in _main.UiState.ActiveScenes()) 
             {
-                if (tab.ActiveScene == null)
-                {
-                    continue; ;
-                }
-                tab.ActiveScene.RequestReconfigureTextures();
+                scene.RequestReconfigureTextures();
             }
         }
 
 
         private void OnChangeMipSettings(object sender, EventArgs e)
         {
-            foreach (var tab in _main.UiState.Tabs)
+            foreach (var scene in _main.UiState.ActiveScenes())
             {
-                if (tab.ActiveScene == null)
-                {
-                    continue; ;
-                }
-                tab.ActiveScene.RequestReconfigureTextures();
+                scene.RequestReconfigureTextures();
             }
         }
     }

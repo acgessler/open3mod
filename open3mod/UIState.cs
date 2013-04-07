@@ -67,6 +67,35 @@ namespace open3mod
 
 
         /// <summary>
+        /// Enumerate all tabs that contain valid scenes.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Tabs> TabsWithActiveScenes()
+        {
+            foreach (var tab in _main.UiState.Tabs)
+            {
+                if (tab.ActiveScene != null)
+                {
+                    yield return tab;
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Enumerate all scenes that are active in some tab.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Scene> ActiveScenes()
+        {
+            foreach (var tab in TabsWithActiveScenes())
+            {
+                yield return tab.ActiveScene;
+            }
+        }  
+
+
+        /// <summary>
         /// Get the Tab instance with a particular id 
         /// </summary>
         /// <param name="id">unique tab ID</param>
