@@ -80,7 +80,6 @@ namespace open3mod
             this.closeAllButThisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonTabClose = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.glControl1 = new open3mod.RenderControl();
             this.toolStripStatistics = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.twoViewsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -96,6 +95,7 @@ namespace open3mod
             this.showAnimationSkeletonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.glControl1 = new open3mod.RenderControl();
             this.menuStrip1.SuspendLayout();
             this.toolStripSelectRenderer.SuspendLayout();
             this.tabContextMenuStrip.SuspendLayout();
@@ -216,6 +216,7 @@ namespace open3mod
             // 
             // exportToolStripMenuItem
             // 
+            this.exportToolStripMenuItem.Enabled = false;
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
             this.exportToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exportToolStripMenuItem.Text = "Export";
@@ -223,6 +224,7 @@ namespace open3mod
             // 
             // exportAllToolStripMenuItem
             // 
+            this.exportAllToolStripMenuItem.Enabled = false;
             this.exportAllToolStripMenuItem.Name = "exportAllToolStripMenuItem";
             this.exportAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exportAllToolStripMenuItem.Text = "Export all";
@@ -238,7 +240,7 @@ namespace open3mod
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItemClick);
             // 
@@ -482,32 +484,6 @@ namespace open3mod
             // 
             this.openFileDialog.Multiselect = true;
             // 
-            // glControl1
-            // 
-            this.glControl1.AllowDrop = true;
-            this.glControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.glControl1.BackColor = System.Drawing.Color.Black;
-            this.glControl1.Location = new System.Drawing.Point(177, 70);
-            this.glControl1.Name = "glControl1";
-            this.glControl1.Size = new System.Drawing.Size(742, 626);
-            this.glControl1.TabIndex = 0;
-            this.glControl1.VSync = true;
-            this.glControl1.Load += new System.EventHandler(this.OnGlLoad);
-            this.glControl1.DragDrop += new System.Windows.Forms.DragEventHandler(this.OnDrag);
-            this.glControl1.DragEnter += new System.Windows.Forms.DragEventHandler(this.OnDragEnter);
-            this.glControl1.Paint += new System.Windows.Forms.PaintEventHandler(this.GlPaint);
-            this.glControl1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDown);
-            this.glControl1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.OnKeyUp);
-            this.glControl1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OnMouseDown);
-            this.glControl1.MouseEnter += new System.EventHandler(this.OnMouseEnter);
-            this.glControl1.MouseLeave += new System.EventHandler(this.OnMouseLeave);
-            this.glControl1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnMouseMove);
-            this.glControl1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.OnMouseUp);
-            this.glControl1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.OnPreviewKeyDown);
-            this.glControl1.Resize += new System.EventHandler(this.OnGlResize);
-            // 
             // toolStripStatistics
             // 
             this.toolStripStatistics.BackColor = System.Drawing.SystemColors.Control;
@@ -615,6 +591,32 @@ namespace open3mod
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.optionsToolStripMenuItem.Text = "Options";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.OnShowSettings);
+            // 
+            // glControl1
+            // 
+            this.glControl1.AllowDrop = true;
+            this.glControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.glControl1.BackColor = System.Drawing.Color.Black;
+            this.glControl1.Location = new System.Drawing.Point(177, 70);
+            this.glControl1.Name = "glControl1";
+            this.glControl1.Size = new System.Drawing.Size(742, 626);
+            this.glControl1.TabIndex = 0;
+            this.glControl1.VSync = true;
+            this.glControl1.Load += new System.EventHandler(this.OnGlLoad);
+            this.glControl1.DragDrop += new System.Windows.Forms.DragEventHandler(this.OnDrag);
+            this.glControl1.DragEnter += new System.Windows.Forms.DragEventHandler(this.OnDragEnter);
+            this.glControl1.Paint += new System.Windows.Forms.PaintEventHandler(this.GlPaint);
+            this.glControl1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDown);
+            this.glControl1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.OnKeyUp);
+            this.glControl1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OnMouseDown);
+            this.glControl1.MouseEnter += new System.EventHandler(this.OnMouseEnter);
+            this.glControl1.MouseLeave += new System.EventHandler(this.OnMouseLeave);
+            this.glControl1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnMouseMove);
+            this.glControl1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.OnMouseUp);
+            this.glControl1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.OnPreviewKeyDown);
+            this.glControl1.Resize += new System.EventHandler(this.OnGlResize);
             // 
             // MainWindow
             // 
