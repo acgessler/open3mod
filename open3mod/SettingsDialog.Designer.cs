@@ -37,7 +37,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.comboBox4 = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.checkBoxLinearMIP = new System.Windows.Forms.CheckBox();
             this.comboBoxTexResolution = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -48,6 +47,7 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.button1 = new System.Windows.Forms.Button();
+            this.checkBoxLinearMIP = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -161,20 +161,6 @@
             this.label4.TabIndex = 7;
             this.label4.Text = "Rendering Backend";
             // 
-            // checkBoxLinearMIP
-            // 
-            this.checkBoxLinearMIP.AutoSize = true;
-            this.checkBoxLinearMIP.Checked = global::open3mod.GraphicsSettings.Default.UseMips;
-            this.checkBoxLinearMIP.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxLinearMIP.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.GraphicsSettings.Default, "UseMips", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxLinearMIP.Location = new System.Drawing.Point(362, 178);
-            this.checkBoxLinearMIP.Name = "checkBoxLinearMIP";
-            this.checkBoxLinearMIP.Size = new System.Drawing.Size(72, 17);
-            this.checkBoxLinearMIP.TabIndex = 6;
-            this.checkBoxLinearMIP.Text = "Use MIPs";
-            this.checkBoxLinearMIP.UseVisualStyleBackColor = true;
-            this.checkBoxLinearMIP.CheckedChanged += new System.EventHandler(this.OnChangeMipSettings);
-            // 
             // comboBoxTexResolution
             // 
             this.comboBoxTexResolution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -286,6 +272,20 @@
             this.button1.Text = "OK";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.OnOk);
+            // 
+            // checkBoxLinearMIP
+            // 
+            this.checkBoxLinearMIP.AutoSize = true;
+            this.checkBoxLinearMIP.Checked = global::open3mod.GraphicsSettings.Default.UseMips;
+            this.checkBoxLinearMIP.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxLinearMIP.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.GraphicsSettings.Default, "UseMips", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxLinearMIP.Location = new System.Drawing.Point(362, 178);
+            this.checkBoxLinearMIP.Name = "checkBoxLinearMIP";
+            this.checkBoxLinearMIP.Size = new System.Drawing.Size(72, 17);
+            this.checkBoxLinearMIP.TabIndex = 6;
+            this.checkBoxLinearMIP.Text = "Use MIPs";
+            this.checkBoxLinearMIP.UseVisualStyleBackColor = true;
+            this.checkBoxLinearMIP.CheckedChanged += new System.EventHandler(this.OnChangeMipSettings);
             // 
             // SettingsDialog
             // 

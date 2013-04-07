@@ -58,5 +58,17 @@ namespace open3mod {
                 this["UseMips"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int MultiSampling {
+            get {
+                return ((int)(this["MultiSampling"]));
+            }
+            set {
+                this["MultiSampling"] = value;
+            }
+        }
     }
 }

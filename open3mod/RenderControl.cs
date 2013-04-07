@@ -21,6 +21,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,16 +35,71 @@ namespace open3mod
     /// Dummy derivative of GLControl to be able to specify constructor
     /// parameters while still being usable with the WinForms designer.
     /// 
-    /// The RenderControl always requests 4 FSAA samples, a stencil buffer
-    /// and a 24 bit depth buffer, which should be natively supported
-    /// by most hardware in use today.
+    /// The RenderControl always requests a stencil buffer and a 24 bit depth
+    /// buffer, which should be natively supported by most hardware in use today.
+    /// 
+    /// MultiSampling is requested according to the current value of
+    /// GraphicsSettings.Default.UseMultiSampling.
     /// 
     /// </summary>
     class RenderControl : GLControl
     {
         public RenderControl()
-            : base(new GraphicsMode(new ColorFormat(32), 24, 8, 4))
+            : base(new GraphicsMode(new ColorFormat(32), 24, 8, GetSampleCount(GraphicsSettings.Default.MultiSampling)))
         { }
+
+
+        /// <summary>
+        /// Converts a value for GraphicsSettings.Default.MultiSampling into a device-specific
+        /// sample count.
+        /// </summary>
+        /// <param name="multiSampling">Device-independent quality level in [0,3]</param>
+        /// <returns>Sample count for device</returns>
+        private static int GetSampleCount(int multiSampling)
+        {
+            // UI names:
+            /*  None
+                Slight
+                Normal
+                Maximum
+            */
+            switch (multiSampling)
+            {
+                case 0:
+                    return 0;
+                case 1:
+                    return 2;
+                case 2:
+                    return 4;
+                case 3: 
+                    return MaximumSampleCount();
+                
+            }
+            Debug.Assert(false);
+            return 0;
+        }
+
+
+        /// <summary>
+        /// Determines the maximum number of FSAA samples supported by the hardware.
+        /// </summary>
+        /// <returns></returns>
+        private static int MaximumSampleCount()
+        {
+            // http://www.opentk.com/node/2355 modified to actually work
+            var highest = 0;
+            var aa = 0;
+            do
+            {
+                var mode = new GraphicsMode(32, 0, 0, aa);
+                if(mode.Samples == aa && mode.Samples > highest)
+                {
+                    highest = mode.Samples;
+                }
+                aa += 2;
+            } while (aa <= 32);
+            return highest;
+        }
     }
 }
 
