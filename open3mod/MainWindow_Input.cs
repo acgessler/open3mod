@@ -277,6 +277,8 @@ namespace open3mod
             {
                 Capture = true;
             }
+
+            Cursor = Cursors.Default;
         }
 
 
