@@ -299,20 +299,17 @@ namespace open3mod
         /// should thus be avoided.
         /// </summary>
         /// <param name="node">Node for which to query bone matrices</param>
-        /// <param name="meshIndex">Index of the mesh in the mesh list of
-        ///    the node (_not_ the scene-wide index)</param>
+        /// <param name="mesh">Mesh for which to query bone matrices. Must be
+        ///    one of the meshes attached to the node.</param>
         /// <returns>For each bone of the mesh the bone transformation
         /// matrix. The returned array is only valid for the rest of
         /// the frame or till the next call to GetBoneMatricesForMesh(). 
         /// It may contain more entries than the mesh has bones, the extra entries 
         /// should be ignored in this case.</returns>
-        public Matrix4[] GetBoneMatricesForMesh(Node node, int meshIndex)
+        public Matrix4[] GetBoneMatricesForMesh(Node node, Mesh mesh)
         {
             Debug.Assert(node != null);
-            Debug.Assert(meshIndex < node.MeshCount);
-
-            var globalMeshIndex = node.MeshIndices[meshIndex];
-            var mesh = _raw.Meshes[globalMeshIndex];
+            Debug.Assert(mesh != null);
 
             // calculate the mesh's inverse global transform
             Matrix4 globalInverseMeshTransform;

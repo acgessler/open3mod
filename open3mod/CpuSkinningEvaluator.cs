@@ -50,16 +50,13 @@ namespace open3mod
             private readonly BoneByVertexMap _boneMap;
             private Node _lastNode;
 
-            private readonly int _sourceIndex;
 
-
-            public CachedMeshData(Scene scene, Mesh source, int sourceIndex)
+            public CachedMeshData(Scene scene, Mesh source)
             {
                 Debug.Assert(source.HasBones, "source mesh needs to have bones");
 
                 _scene = scene;
                 _source = source;
-                _sourceIndex = sourceIndex;
 
                 _cachedPositions = new Vector3[source.VertexCount];
                 _cachedNormals = new Vector3[source.VertexCount];
@@ -119,7 +116,7 @@ namespace open3mod
             /// </summary>
             private void Cache()
             {
-                var boneMatrices = _scene.SceneAnimator.GetBoneMatricesForMesh(_lastNode, _sourceIndex);
+                var boneMatrices = _scene.SceneAnimator.GetBoneMatricesForMesh(_lastNode, _source);
                 // update entire mesh
                 for (int i = 0; i < _cachedPositions.Length; ++i)
                 {
@@ -192,7 +189,7 @@ namespace open3mod
                 {
                     continue;
                 }
-                _cache[i] = new CachedMeshData(owner, owner.Raw.Meshes[i], i);
+                _cache[i] = new CachedMeshData(owner, owner.Raw.Meshes[i]);
             }
         }
 
