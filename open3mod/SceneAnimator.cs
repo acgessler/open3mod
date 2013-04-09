@@ -113,7 +113,7 @@ namespace open3mod
 
                 if (_activeAnim != -1)
                 {
-                    _evaluator = new AnimEvaluator(_raw.Animations[_activeAnim]);
+                    _evaluator = new AnimEvaluator(_raw.Animations[_activeAnim], TicksPerSecond);
                 }
             }
         }
@@ -169,6 +169,29 @@ namespace open3mod
         }
 
 
+        public const double DefaultTicksPerSecond = 25.0;
+
+
+        /// <summary>
+        /// Getter for the number of animation ticks per second.
+        /// This applies to the current animation, the value is
+        /// 0.0 if no animation is currently active.
+        /// </summary>
+        public double TicksPerSecond
+        {
+            get
+            {
+                if (ActiveAnimation == -1)
+                {
+                    return 0.0;
+                }
+
+                var anim = _raw.Animations[ActiveAnimation];
+                return anim.TicksPerSecond > 1e-10 ? anim.TicksPerSecond : DefaultTicksPerSecond;
+            }
+        }
+
+
         /// <summary>
         /// Getter for the duration of the current animation in seconds.
         /// Returns 0.0 if no animation is currently active.
@@ -182,7 +205,7 @@ namespace open3mod
                     return 0.0;
                 }
                 var anim = _raw.Animations[ActiveAnimation];
-                return anim.DurationInTicks / anim.TicksPerSecond;
+                return anim.DurationInTicks / TicksPerSecond;
             }
         }
 

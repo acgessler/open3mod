@@ -41,6 +41,7 @@ namespace open3mod
     public class AnimEvaluator
     {
         private readonly Animation _animation;
+        private readonly double _ticksPerSecond;
         private readonly Matrix4[] _currentTransforms;
         private readonly T3[] _lastPositions;
         private double _lastTime;
@@ -54,9 +55,10 @@ namespace open3mod
         }
 
 
-        public AnimEvaluator(Animation animation)
+        public AnimEvaluator(Animation animation, double ticksPerSecond)
         {
             _animation = animation;
+            _ticksPerSecond = ticksPerSecond;
 
             _lastPositions = new T3[_animation.NodeAnimationChannelCount];
             _currentTransforms = new Matrix4[_animation.NodeAnimationChannelCount];
@@ -93,9 +95,8 @@ namespace open3mod
         public void Evaluate(double pTime, bool isInEndPosition)
         {
             // extract ticks per second. Assume default value if not given
-            double ticksPerSecond = _animation.TicksPerSecond >= 0.0 ? _animation.TicksPerSecond : 25.0;
             // every following time calculation happens in ticks
-            pTime *= ticksPerSecond;
+            pTime *= _ticksPerSecond;
 
             // map into anim's duration
             double time = 0.0f;
