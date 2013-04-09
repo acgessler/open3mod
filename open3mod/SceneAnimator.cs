@@ -173,7 +173,10 @@ namespace open3mod
 
 
         /// <summary>
-        /// Getter for the number of animation ticks per second.
+        /// Getter for the number of animation ticks per second. If the
+        /// current animation does not specify a tickrate, a default value
+        /// is returned.
+        /// 
         /// This applies to the current animation, the value is
         /// 0.0 if no animation is currently active.
         /// </summary>

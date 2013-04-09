@@ -70,6 +70,10 @@ namespace open3mod
                     {
                         dur /= anim.TicksPerSecond;
                     }
+                    else
+                    {
+                        dur /= SceneAnimator.DefaultTicksPerSecond;
+                    }
                     listBoxAnimations.Items.Add(string.Format("{0} ({1}s)", anim.Name, dur.ToString("0.000")));
                 }                
             }
