@@ -350,6 +350,10 @@ namespace open3mod
                 _visibleInstancedMeshes = 1;
 
                 PopulateMeshInfoPopup(node);
+                if(_meshDiag != null && node != null)
+                {
+                    SetMeshDetailDialogInfo(itemAsMesh.Value, node.Text);
+                }
             }
             else
             {
@@ -399,6 +403,26 @@ namespace open3mod
             meshInfoPopup.Location = loc;
 
             meshInfoPopup.Populate(((KeyValuePair<Node, Mesh>)node.Tag).Value);
+        }
+
+
+        private void SetMeshDetailDialogInfo(Mesh mesh, string text)
+        {
+            if (_meshDiag == null)
+            {
+                _meshDiag = new MeshDetailsDialog();
+                _meshDiag.FormClosed += (o, args) =>
+                {
+                    _meshDiag = null;
+                };
+                _meshDiag.Show();
+            }
+            else
+            {
+                _meshDiag.BringToFront();
+            }
+
+            _meshDiag.SetMesh(mesh, text);
         }
 
 
@@ -627,23 +651,7 @@ namespace open3mod
                 var mesh = ((KeyValuePair<Node, Mesh>)e.Node.Tag).Value;
                 Debug.Assert(mesh != null);
 
-                if (_meshDiag == null)
-                {
-                    _meshDiag = new MeshDetailsDialog();
-                    _meshDiag.FormClosed += (o, args) =>
-                        {
-                            _meshDiag = null;
-                        };
-
-                    _meshDiag.StartPosition = FormStartPosition.CenterScreen;
-                    _meshDiag.Show();
-                }
-                else
-                {
-                    _meshDiag.BringToFront();
-                }
-
-                _meshDiag.SetMesh(mesh, e.Node.Text);                
+                SetMeshDetailDialogInfo(mesh, e.Node.Text);                            
             }
         }
     }
