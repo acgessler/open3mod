@@ -73,6 +73,7 @@ namespace open3mod
         private bool _searchLocked;
         private int _hitNodeCursor;
         private List<TreeNode> _hitNodes;
+        private MeshDetailsDialog _meshDiag;
 
 
         public HierarchyInspectionView(Scene scene, TabPage tabPageHierarchy)
@@ -615,6 +616,34 @@ namespace open3mod
                     UpdateFilters();
                     _hitNodeCursor = (_hitNodeCursor + 1)%_hitNodes.Count;
                 }
+            }
+        }
+
+
+        private void AfterNodeDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if(e.Node.Tag is KeyValuePair<Node, Mesh>)
+            {
+                var mesh = ((KeyValuePair<Node, Mesh>)e.Node.Tag).Value;
+                Debug.Assert(mesh != null);
+
+                if (_meshDiag == null)
+                {
+                    _meshDiag = new MeshDetailsDialog();
+                    _meshDiag.FormClosed += (o, args) =>
+                        {
+                            _meshDiag = null;
+                        };
+
+                    _meshDiag.StartPosition = FormStartPosition.CenterScreen;
+                    _meshDiag.Show();
+                }
+                else
+                {
+                    _meshDiag.BringToFront();
+                }
+
+                _meshDiag.SetMesh(mesh, e.Node.Text);                
             }
         }
     }

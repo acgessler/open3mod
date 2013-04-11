@@ -28,18 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
+            this.checkedListBoxPerVertex = new System.Windows.Forms.CheckedListBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.labelVertexCount = new System.Windows.Forms.Label();
+            this.labelFaceCount = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.checkedListBox2 = new System.Windows.Forms.CheckedListBox();
+            this.checkedListBoxPerFace = new System.Windows.Forms.CheckedListBox();
             this.SuspendLayout();
             // 
-            // checkedListBox1
+            // checkedListBoxPerVertex
             // 
-            this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Items.AddRange(new object[] {
+            this.checkedListBoxPerVertex.Enabled = false;
+            this.checkedListBoxPerVertex.FormattingEnabled = true;
+            this.checkedListBoxPerVertex.Items.AddRange(new object[] {
             "Xyz Positions",
             "Normals",
             "Tangent Space Basis",
@@ -52,39 +53,41 @@
             "Vertex Colors #3",
             "Vertex Colors #4",
             "Bone Weights"});
-            this.checkedListBox1.Location = new System.Drawing.Point(15, 69);
-            this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(157, 184);
-            this.checkedListBox1.TabIndex = 5;
+            this.checkedListBoxPerVertex.Location = new System.Drawing.Point(15, 57);
+            this.checkedListBoxPerVertex.Name = "checkedListBoxPerVertex";
+            this.checkedListBoxPerVertex.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.checkedListBoxPerVertex.SelectionMode = System.Windows.Forms.SelectionMode.None;
+            this.checkedListBoxPerVertex.Size = new System.Drawing.Size(157, 184);
+            this.checkedListBoxPerVertex.TabIndex = 5;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 53);
+            this.label1.Location = new System.Drawing.Point(12, 41);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(82, 13);
             this.label1.TabIndex = 6;
             this.label1.Text = "Per-vertex data:";
             // 
-            // label2
+            // labelVertexCount
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(12, 25);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(121, 13);
-            this.label2.TabIndex = 7;
-            this.label2.Text = "<aNumber> Vertices";
+            this.labelVertexCount.AutoSize = true;
+            this.labelVertexCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelVertexCount.Location = new System.Drawing.Point(12, 13);
+            this.labelVertexCount.Name = "labelVertexCount";
+            this.labelVertexCount.Size = new System.Drawing.Size(121, 13);
+            this.labelVertexCount.TabIndex = 7;
+            this.labelVertexCount.Text = "<aNumber> Vertices";
             // 
-            // label3
+            // labelFaceCount
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(12, 277);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(109, 13);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "<aNumber> Faces";
+            this.labelFaceCount.AutoSize = true;
+            this.labelFaceCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelFaceCount.Location = new System.Drawing.Point(12, 265);
+            this.labelFaceCount.Name = "labelFaceCount";
+            this.labelFaceCount.Size = new System.Drawing.Size(109, 13);
+            this.labelFaceCount.TabIndex = 8;
+            this.labelFaceCount.Text = "<aNumber> Faces";
             // 
             // label4
             // 
@@ -94,32 +97,35 @@
             this.label4.Size = new System.Drawing.Size(0, 13);
             this.label4.TabIndex = 9;
             // 
-            // checkedListBox2
+            // checkedListBoxPerFace
             // 
-            this.checkedListBox2.FormattingEnabled = true;
-            this.checkedListBox2.Items.AddRange(new object[] {
+            this.checkedListBoxPerFace.Enabled = false;
+            this.checkedListBoxPerFace.FormattingEnabled = true;
+            this.checkedListBoxPerFace.Items.AddRange(new object[] {
             "Triangles",
             "Lines",
             "Points"});
-            this.checkedListBox2.Location = new System.Drawing.Point(15, 303);
-            this.checkedListBox2.Name = "checkedListBox2";
-            this.checkedListBox2.Size = new System.Drawing.Size(160, 49);
-            this.checkedListBox2.TabIndex = 10;
+            this.checkedListBoxPerFace.Location = new System.Drawing.Point(15, 291);
+            this.checkedListBoxPerFace.Name = "checkedListBoxPerFace";
+            this.checkedListBoxPerFace.Size = new System.Drawing.Size(160, 49);
+            this.checkedListBoxPerFace.TabIndex = 10;
             // 
             // MeshDetailsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(187, 365);
-            this.Controls.Add(this.checkedListBox2);
+            this.ClientSize = new System.Drawing.Size(187, 354);
+            this.Controls.Add(this.checkedListBoxPerFace);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.labelFaceCount);
+            this.Controls.Add(this.labelVertexCount);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.checkedListBox1);
+            this.Controls.Add(this.checkedListBoxPerVertex);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "MeshDetailsDialog";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "<meshName> Details";
+            this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -127,12 +133,12 @@
 
         #endregion
 
-        private System.Windows.Forms.CheckedListBox checkedListBox1;
+        private System.Windows.Forms.CheckedListBox checkedListBoxPerVertex;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label labelVertexCount;
+        private System.Windows.Forms.Label labelFaceCount;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.CheckedListBox checkedListBox2;
+        private System.Windows.Forms.CheckedListBox checkedListBoxPerFace;
 
 
 

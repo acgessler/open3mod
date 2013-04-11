@@ -90,6 +90,7 @@
             this._tree.TabIndex = 5;
             this._tree.NodeMouseHover += new System.Windows.Forms.TreeNodeMouseHoverEventHandler(this.OnNodeHover);
             this._tree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.AfterSelect);
+            this._tree.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.AfterNodeDoubleClick);
             this._tree.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDown);
             this._tree.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
             this._tree.MouseEnter += new System.EventHandler(this.OnMouseEnter);
