@@ -57,23 +57,28 @@ namespace open3mod
             return _view;
         }
 
+
         public void MovementKey(float x, float y, float z)
         {
             var v = new Vector3(x, y, z) * MovementBaseSpeed;
             Vector3.Transform(ref v, ref _orientation, out v);
             _translation += v;
+
+            UpdateViewMatrix();
         }
+
 
         public CameraMode GetCameraMode()
         {
             return CameraMode.Fps;
         }
 
+
         public void MouseMove(int x, int y)
         {
             if (y != 0)
             {
-                _orientation *= Matrix4.CreateFromAxisAngle(Vector3.Cross(new Vector3(_orientation.Column0), Vector3.UnitY),
+                _orientation *= Matrix4.CreateFromAxisAngle(_orientation.Column0.Xyz,
                     (float)(y * RotationSpeed * Math.PI / 180.0));
             }
 
@@ -85,6 +90,7 @@ namespace open3mod
 
             UpdateViewMatrix();
         }
+
 
         public void Scroll(int z)
         {

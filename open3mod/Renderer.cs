@@ -435,9 +435,7 @@ namespace open3mod
         {
             if (_hudImages == null)
             {
-                // todo: 5 changed to 4 to disable WASD view for beta release (because
-                // it is broken). Change it back and fix this.
-                _hudImages = new Image[4,3];
+                _hudImages = new Image[5,3];
                 
 
                 for (var i = 0; i < _hudImages.GetLength(0); ++i)

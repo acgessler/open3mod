@@ -315,13 +315,13 @@ namespace open3mod
                     break;
 
                 case Keys.S:
-                case Keys.Right:
-                    _rightPressed = true;
+                case Keys.Down:
+                    _backPressed = true;
                     break;
 
                 case Keys.D:
-                case Keys.Back:
-                    _backPressed = true;
+                case Keys.Right:
+                    _rightPressed = true;
                     break;
 
                 case Keys.PageUp:
