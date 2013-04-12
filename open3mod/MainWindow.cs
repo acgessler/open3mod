@@ -46,7 +46,7 @@ namespace open3mod
         private int _previousMousePosY = -1;
         private bool _mouseDown;
 
-    
+ 
 
         private delegate void DelegateSelectTab(TabPage tab);
         private readonly DelegateSelectTab _delegateSelectTab;
@@ -511,7 +511,7 @@ namespace open3mod
         }
 
 
-        private TabUiSkeleton UiForTab(Tab tab)
+        public TabUiSkeleton UiForTab(Tab tab)
         {
             return ((TabUiSkeleton) ((TabPage) tab.Id).Controls[0]);
         }

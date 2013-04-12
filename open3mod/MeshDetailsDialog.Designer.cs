@@ -34,6 +34,7 @@
             this.labelFaceCount = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.checkedListBoxPerFace = new System.Windows.Forms.CheckedListBox();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // checkedListBoxPerVertex
@@ -110,11 +111,23 @@
             this.checkedListBoxPerFace.Size = new System.Drawing.Size(160, 49);
             this.checkedListBoxPerFace.TabIndex = 10;
             // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(92, 355);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(83, 13);
+            this.linkLabel1.TabIndex = 11;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "Jump to material";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OnJumpToMaterial);
+            // 
             // MeshDetailsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(187, 354);
+            this.ClientSize = new System.Drawing.Size(187, 387);
+            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.checkedListBoxPerFace);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.labelFaceCount);
@@ -139,6 +152,7 @@
         private System.Windows.Forms.Label labelFaceCount;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.CheckedListBox checkedListBoxPerFace;
+        private System.Windows.Forms.LinkLabel linkLabel1;
 
 
 

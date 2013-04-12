@@ -422,7 +422,7 @@ namespace open3mod
                 _meshDiag.BringToFront();
             }
 
-            _meshDiag.SetMesh(mesh, text);
+            _meshDiag.SetMesh(FindForm() as MainWindow, mesh, text);
         }
 
 

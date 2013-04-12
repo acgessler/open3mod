@@ -47,6 +47,12 @@ namespace open3mod
         }
 
 
+        public void OpenMaterialsTab()
+        {
+            tabControlInfoViewPicker.SelectedTab = tabPageMaterials;
+        }
+
+
         /// <summary>
         /// Binds a scene to the InspectionView.
         /// </summary>

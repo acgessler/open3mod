@@ -14,16 +14,23 @@ namespace open3mod
 {
     public partial class MeshDetailsDialog : Form
     {
- 
+        private Mesh _mesh;
+        private MainWindow _host;
+
         public MeshDetailsDialog()
         {
             InitializeComponent();
         }
 
 
-        public void SetMesh(Mesh mesh, string meshName) 
+        public void SetMesh(MainWindow host, Mesh mesh, string meshName) 
         {
             Debug.Assert(mesh != null);
+            Debug.Assert(host != null);
+            Debug.Assert(meshName != null);
+
+            _mesh = mesh;
+            _host = host;
 
             labelVertexCount.Text = mesh.VertexCount + " Vertices";
             labelFaceCount.Text = mesh.FaceCount + " Faces";
@@ -73,6 +80,36 @@ namespace open3mod
             checkedListBoxPerVertex.SetItemCheckState(11, mesh.HasBones
                 ? CheckState.Checked
                 : CheckState.Unchecked);
+        }
+
+
+        private void OnJumpToMaterial(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            linkLabel1.LinkVisited = false;
+            Debug.Assert(_mesh != null);
+            Debug.Assert(_host != null);
+            
+            // this need not be the currently selected tab
+            foreach(var tab in _host.UiState.TabsWithActiveScenes())
+            {
+                var scene = tab.ActiveScene;
+                Debug.Assert(scene != null);
+
+                for(var i = 0; i < scene.Raw.MeshCount; ++i)
+                {
+                    var m = scene.Raw.Meshes[i];
+                    if (m == _mesh)
+                    {
+                        var mat = scene.Raw.Materials[m.MaterialIndex];
+                        var ui = _host.UiForTab(tab);
+                        Debug.Assert(ui != null);
+
+                        var inspector = ui.GetInspector();
+                        inspector.Materials.SelectEntry(mat);
+                        inspector.OpenMaterialsTab();
+                    }
+                }
+            }
         }
     }
 }

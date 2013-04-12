@@ -98,6 +98,25 @@ namespace open3mod
             Scene.TextureSet.AddCallback(changeHandler);
             Scene.TextureSet.AddReplaceCallback(changeHandler); 
         }
+
+
+        /// <summary>
+        /// Select the entry pertaining to a given material.
+        /// </summary>
+        /// <param name="thumb">Material to select. This material *must*
+        ///    have a corresponding entry.</param>
+        public void SelectEntry(Material thumb)
+        {
+            foreach(var v in Entries)
+            {
+                if(v.Material == thumb)
+                {
+                    SelectEntry(v);
+                    return;
+                }
+            }    
+            Debug.Assert(false);
+        }
     }
 }
 
