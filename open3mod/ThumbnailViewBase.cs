@@ -22,6 +22,7 @@ namespace open3mod
         protected ThumbnailViewBase(FlowLayoutPanel flow)
         {
             Flow = flow;
+            Flow.AutoScroll = true;
             Entries = new List<TThumbnailType>();
         }
 
@@ -61,6 +62,17 @@ namespace open3mod
                 _selectedEntry.IsSelected = false;
             }
             _selectedEntry = thumb;
+        }
+
+
+        /// <summary>
+        /// Ensure a specific thumbnail entry is visible (i.e. scroll so it is).
+        /// </summary>
+        /// <param name="thumb">Entry to scroll to, must be contained in the thumbnail view</param>
+        public void EnsureVisible(TThumbnailType thumb)
+        {
+            Debug.Assert(Entries.Contains(thumb));
+            Flow.ScrollControlIntoView(thumb);
         }
 
 

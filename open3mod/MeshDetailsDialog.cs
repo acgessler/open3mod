@@ -106,6 +106,7 @@ namespace open3mod
 
                         var inspector = ui.GetInspector();
                         inspector.Materials.SelectEntry(mat);
+                        inspector.Materials.EnsureVisible(mat);
                         inspector.OpenMaterialsTab();
                     }
                 }

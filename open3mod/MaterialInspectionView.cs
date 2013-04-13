@@ -117,6 +117,25 @@ namespace open3mod
             }    
             Debug.Assert(false);
         }
+
+
+        /// <summary>
+        /// Ensure the entry pertaining to a given material is visible.
+        /// </summary>
+        /// <param name="thumb">Material to scroll to. This material *must*
+        ///    have a corresponding entry.</param>
+        public void EnsureVisible(Material thumb)
+        {
+            foreach (var v in Entries)
+            {
+                if (v.Material == thumb)
+                {
+                    EnsureVisible(v);
+                    return;
+                }
+            }
+            Debug.Assert(false);
+        }
     }
 }
 
