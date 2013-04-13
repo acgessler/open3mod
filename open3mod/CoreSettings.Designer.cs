@@ -72,7 +72,7 @@ namespace CoreSettings {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("731")]
+        [global::System.Configuration.DefaultSettingValueAttribute("732")]
         public int InspectorSplitterPos {
             get {
                 return ((int)(this["InspectorSplitterPos"]));
@@ -163,6 +163,18 @@ namespace CoreSettings {
             }
             set {
                 this["ShowSkeleton"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int DefaultRotationMode {
+            get {
+                return ((int)(this["DefaultRotationMode"]));
+            }
+            set {
+                this["DefaultRotationMode"] = value;
             }
         }
     }
