@@ -781,7 +781,7 @@ namespace open3mod
         {
             // get sender TreeNode --
             // http://www.windows-tech.info/3/61534a0f5205ea18.php
-            var cms = (ContextMenuStrip)sender;
+            var cms = sender as ContextMenuStrip ?? (ContextMenuStrip)((ToolStripMenuItem)sender).Owner;
             var treeView = (TreeView)cms.SourceControl;
 
             var node = _tree.GetNodeAt(treeView.PointToClient(cms.Location));
@@ -800,6 +800,28 @@ namespace open3mod
         private void OnContextMenuHideNode(object sender, EventArgs e)
         {
 
+        }
+
+
+        private void OnMouseClick(object sender, MouseEventArgs e)
+        {
+            // http://stackoverflow.com/questions/3166643/windows-forms-treeview-node-context-menu-problem
+            // select a node on which the user invokes the context menu - this
+            // avoids some ugly glitches with the popups and should also improve
+            // user experience.
+            if(e.Button != MouseButtons.Right)
+            {
+                return;
+            }
+            var treeNodeAtMousePosition = _tree.GetNodeAt(_tree.PointToClient(e.Location));
+            var selectedTreeNode = _tree.SelectedNode;
+            if (treeNodeAtMousePosition == null || treeNodeAtMousePosition == selectedTreeNode)
+            {
+                return;
+            }
+
+            _tree.SelectedNode = treeNodeAtMousePosition;
+            UpdateFilters();
         }
     }
 }

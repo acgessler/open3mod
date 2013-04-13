@@ -42,10 +42,10 @@
             this.contextMenuStripTreeNode = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.detailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.meshInfoPopup = new open3mod.MeshInfoPopup();
-            this.nodeInfoPopup = new open3mod.NodeInfoPopup();
             this.contextMenuStripMesh = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.detailsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.meshInfoPopup = new open3mod.MeshInfoPopup();
+            this.nodeInfoPopup = new open3mod.NodeInfoPopup();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.contextMenuStripTreeNode.SuspendLayout();
@@ -54,13 +54,14 @@
             // 
             // linkLabel1
             // 
+            this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(188, 5);
+            this.linkLabel1.Location = new System.Drawing.Point(247, 5);
             this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(100, 13);
+            this.linkLabel1.Size = new System.Drawing.Size(54, 13);
             this.linkLabel1.TabIndex = 1;
             this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "Go to hidden nodes";
+            this.linkLabel1.Text = "Unhide all";
             // 
             // textBoxFilter
             // 
@@ -100,6 +101,7 @@
             this._tree.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.AfterNodeDoubleClick);
             this._tree.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDown);
             this._tree.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
+            this._tree.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OnMouseClick);
             this._tree.MouseEnter += new System.EventHandler(this.OnMouseEnter);
             this._tree.MouseLeave += new System.EventHandler(this.OnMouseLeave);
             // 
@@ -140,7 +142,6 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(311, 21);
             this.panel2.TabIndex = 9;
-            this.panel2.Visible = false;
             // 
             // panel1
             // 
@@ -184,6 +185,21 @@
             this.hideToolStripMenuItem.Text = "Hide";
             this.hideToolStripMenuItem.Click += new System.EventHandler(this.OnContextMenuHideNode);
             // 
+            // contextMenuStripMesh
+            // 
+            this.contextMenuStripMesh.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.detailsToolStripMenuItem1});
+            this.contextMenuStripMesh.Name = "contextMenuStripMesh";
+            this.contextMenuStripMesh.Size = new System.Drawing.Size(110, 26);
+            this.contextMenuStripMesh.Click += new System.EventHandler(this.OnContextMenuShowDetails);
+            // 
+            // detailsToolStripMenuItem1
+            // 
+            this.detailsToolStripMenuItem1.Name = "detailsToolStripMenuItem1";
+            this.detailsToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.detailsToolStripMenuItem1.Text = "Details";
+            this.detailsToolStripMenuItem1.Click += new System.EventHandler(this.OnContextMenuShowDetails);
+            // 
             // meshInfoPopup
             // 
             this.meshInfoPopup.Anchor = System.Windows.Forms.AnchorStyles.Right;
@@ -199,20 +215,6 @@
             this.nodeInfoPopup.Name = "nodeInfoPopup";
             this.nodeInfoPopup.Size = new System.Drawing.Size(88, 90);
             this.nodeInfoPopup.TabIndex = 11;
-            // 
-            // contextMenuStripMesh
-            // 
-            this.contextMenuStripMesh.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.detailsToolStripMenuItem1});
-            this.contextMenuStripMesh.Name = "contextMenuStripMesh";
-            this.contextMenuStripMesh.Size = new System.Drawing.Size(153, 48);
-            this.contextMenuStripMesh.Click += new System.EventHandler(this.OnContextMenuShowDetails);
-            // 
-            // detailsToolStripMenuItem1
-            // 
-            this.detailsToolStripMenuItem1.Name = "detailsToolStripMenuItem1";
-            this.detailsToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
-            this.detailsToolStripMenuItem1.Text = "Details";
             // 
             // HierarchyInspectionView
             // 
