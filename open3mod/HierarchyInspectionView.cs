@@ -79,6 +79,10 @@ namespace open3mod
         // to which tab.
         private static MeshDetailsDialog _meshDiag;
         private static NodeItemsDialog _nodeDiag;
+        private int _targetLocY;
+        private int _popupAnimFramesRemaining;
+        private Timer _popupAnimTimer;
+        private int _oldLocY;
 
         public HierarchyInspectionView(Scene scene, TabPage tabPageHierarchy)
         {
@@ -386,33 +390,70 @@ namespace open3mod
         }
 
 
+        private void PopulateMeshInfoPopup(TreeNode node)
+        {
+            Debug.Assert(node != null && node.Tag is KeyValuePair<Node, Mesh>);
+
+            var wasVisible = nodeInfoPopup.Visible || meshInfoPopup.Visible;
+
+            meshInfoPopup.Visible = true;
+            nodeInfoPopup.Visible = false;
+            if (wasVisible)
+            {
+                AnimatePopup(node.Bounds.Top);
+            }
+
+            meshInfoPopup.Populate(((KeyValuePair<Node, Mesh>)node.Tag).Value);
+        }
+
+
         private void PopulateNodeInfoPopup(TreeNode node)
         {
             Debug.Assert(node != null && node.Tag is Node);
 
+            var wasVisible = nodeInfoPopup.Visible || meshInfoPopup.Visible;
+
             meshInfoPopup.Visible = false;
             nodeInfoPopup.Visible = true;
-
-            var loc = nodeInfoPopup.Location;
-            loc.Y = node.Bounds.Top;
-            nodeInfoPopup.Location = loc;
+            if(wasVisible)
+            {
+                AnimatePopup(node.Bounds.Top);            
+            }
 
             nodeInfoPopup.Populate((Node)node.Tag, GetNodePurpose(node));
         }
 
 
-        private void PopulateMeshInfoPopup(TreeNode node)
+        private void AnimatePopup(int targetLocY)
         {
-            Debug.Assert(node != null && node.Tag is KeyValuePair<Node, Mesh>);
+            var c = (nodeInfoPopup.Visible ? (Control) nodeInfoPopup : meshInfoPopup);
 
-            meshInfoPopup.Visible = true;
-            nodeInfoPopup.Visible = false;
+            _targetLocY = targetLocY;
+            _oldLocY = c.Location.Y;
 
-            var loc = meshInfoPopup.Location;
-            loc.Y = node.Bounds.Top;
-            meshInfoPopup.Location = loc;
+            const int frameCount = 5;
+            _popupAnimFramesRemaining = frameCount;
+            
+            if(_popupAnimTimer == null)
+            {
+                _popupAnimTimer = new Timer {Interval = 30};
+                _popupAnimTimer.Tick += (sender, args) =>
+                {
+                    var cInner = (nodeInfoPopup.Visible ? (Control) nodeInfoPopup : meshInfoPopup);
+                    --_popupAnimFramesRemaining;
 
-            meshInfoPopup.Populate(((KeyValuePair<Node, Mesh>)node.Tag).Value);
+                    var loc = cInner.Location;
+                    loc.Y = _targetLocY - (int)((_targetLocY - _oldLocY) * ((double)_popupAnimFramesRemaining / frameCount));
+                    cInner.Location = loc;
+
+                    if (_popupAnimFramesRemaining == 0)
+                    {
+                        _popupAnimTimer.Stop();
+                    }
+                };
+            }
+
+            _popupAnimTimer.Start();
         }
 
 
