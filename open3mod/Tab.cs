@@ -85,9 +85,10 @@ namespace open3mod
         /// </summary>
         public enum ViewMode
         {
-            Single,
-            Two,
-            Four
+            // values pertain to CoreSettings:DefaultViewMode!
+            Single = 0,
+            Two = 1,
+            Four = 2
         }
 
 
@@ -128,6 +129,7 @@ namespace open3mod
                 // hardcoded table of viewport sizes. This is the only location
                 // so changing these constants is sufficient to adjust viewport defaults
                 _activeViewMode = value;
+                CoreSettings.CoreSettings.Default.DefaultViewMode = (int) value;
                 switch(_activeViewMode)
                 {
                     case ViewMode.Single:
@@ -250,7 +252,17 @@ namespace open3mod
         /// </summary>
         public Tab(object id, string fileBeingLoaded)
         {
-            ActiveViewMode = ViewMode.Four;
+            var vm = CoreSettings.CoreSettings.Default.DefaultViewMode;
+            if(vm <= 2 && vm >= 0)
+            {
+                ActiveViewMode = (ViewMode) vm;
+            }
+            else
+            {
+                ActiveViewMode = ViewMode.Four;
+                CoreSettings.CoreSettings.Default.DefaultViewMode = (int) ViewMode.Four;
+            }
+            
             State = fileBeingLoaded == null ? TabState.Empty : TabState.Loading;
             File = fileBeingLoaded;
             Id = id;

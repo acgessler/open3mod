@@ -15,7 +15,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="InspectorSplitterPos" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">735</Value>
+      <Value Profile="(Default)">738</Value>
     </Setting>
     <Setting Name="RenderWireframe" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -46,6 +46,9 @@
     </Setting>
     <Setting Name="ShowGlobalTrafo" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="DefaultViewMode" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2</Value>
     </Setting>
   </Settings>
 </SettingsFile>
