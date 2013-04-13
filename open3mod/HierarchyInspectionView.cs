@@ -452,7 +452,7 @@ namespace open3mod
                 _nodeDiag.BringToFront();
             }
 
-            _nodeDiag.SetNode(FindForm() as MainWindow, node);
+            _nodeDiag.SetNode(FindForm() as MainWindow, _scene, node);
         }
 
 

@@ -36,10 +36,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.labelChildrenDirect = new System.Windows.Forms.Label();
-            this.labelChildrenTotal = new System.Windows.Forms.Label();
-            this.labelMeshesDirect = new System.Windows.Forms.Label();
             this.labelMeshesTotal = new System.Windows.Forms.Label();
+            this.labelMeshesDirect = new System.Windows.Forms.Label();
+            this.labelChildrenTotal = new System.Windows.Forms.Label();
+            this.labelChildrenDirect = new System.Windows.Forms.Label();
             this.trafoMatrixViewControlGlobal = new open3mod.TrafoMatrixViewControl();
             this.trafoMatrixViewControlLocal = new open3mod.TrafoMatrixViewControl();
             this.groupBox1.SuspendLayout();
@@ -50,12 +50,16 @@
             // checkBoxShowAnimated
             // 
             this.checkBoxShowAnimated.AutoSize = true;
+            this.checkBoxShowAnimated.Checked = global::CoreSettings.CoreSettings.Default.NodeInfoShowAnimatedTrafo;
+            this.checkBoxShowAnimated.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxShowAnimated.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::CoreSettings.CoreSettings.Default, "NodeInfoShowAnimatedTrafo", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.checkBoxShowAnimated.Location = new System.Drawing.Point(247, 570);
             this.checkBoxShowAnimated.Name = "checkBoxShowAnimated";
             this.checkBoxShowAnimated.Size = new System.Drawing.Size(133, 17);
             this.checkBoxShowAnimated.TabIndex = 0;
             this.checkBoxShowAnimated.Text = "Show animated values";
             this.checkBoxShowAnimated.UseVisualStyleBackColor = true;
+            this.checkBoxShowAnimated.CheckedChanged += new System.EventHandler(this.OnChangeAnimationState);
             // 
             // groupBox1
             // 
@@ -130,25 +134,15 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Statistics";
             // 
-            // labelChildrenDirect
+            // labelMeshesTotal
             // 
-            this.labelChildrenDirect.AutoSize = true;
-            this.labelChildrenDirect.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelChildrenDirect.Location = new System.Drawing.Point(105, 28);
-            this.labelChildrenDirect.Name = "labelChildrenDirect";
-            this.labelChildrenDirect.Size = new System.Drawing.Size(52, 13);
-            this.labelChildrenDirect.TabIndex = 8;
-            this.labelChildrenDirect.Text = "<numC>";
-            // 
-            // labelChildrenTotal
-            // 
-            this.labelChildrenTotal.AutoSize = true;
-            this.labelChildrenTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelChildrenTotal.Location = new System.Drawing.Point(105, 54);
-            this.labelChildrenTotal.Name = "labelChildrenTotal";
-            this.labelChildrenTotal.Size = new System.Drawing.Size(52, 13);
-            this.labelChildrenTotal.TabIndex = 9;
-            this.labelChildrenTotal.Text = "<numC>";
+            this.labelMeshesTotal.AutoSize = true;
+            this.labelMeshesTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelMeshesTotal.Location = new System.Drawing.Point(278, 54);
+            this.labelMeshesTotal.Name = "labelMeshesTotal";
+            this.labelMeshesTotal.Size = new System.Drawing.Size(52, 13);
+            this.labelMeshesTotal.TabIndex = 11;
+            this.labelMeshesTotal.Text = "<numC>";
             // 
             // labelMeshesDirect
             // 
@@ -160,15 +154,25 @@
             this.labelMeshesDirect.TabIndex = 10;
             this.labelMeshesDirect.Text = "<numC>";
             // 
-            // labelMeshesTotal
+            // labelChildrenTotal
             // 
-            this.labelMeshesTotal.AutoSize = true;
-            this.labelMeshesTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelMeshesTotal.Location = new System.Drawing.Point(278, 54);
-            this.labelMeshesTotal.Name = "labelMeshesTotal";
-            this.labelMeshesTotal.Size = new System.Drawing.Size(52, 13);
-            this.labelMeshesTotal.TabIndex = 11;
-            this.labelMeshesTotal.Text = "<numC>";
+            this.labelChildrenTotal.AutoSize = true;
+            this.labelChildrenTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelChildrenTotal.Location = new System.Drawing.Point(105, 54);
+            this.labelChildrenTotal.Name = "labelChildrenTotal";
+            this.labelChildrenTotal.Size = new System.Drawing.Size(52, 13);
+            this.labelChildrenTotal.TabIndex = 9;
+            this.labelChildrenTotal.Text = "<numC>";
+            // 
+            // labelChildrenDirect
+            // 
+            this.labelChildrenDirect.AutoSize = true;
+            this.labelChildrenDirect.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelChildrenDirect.Location = new System.Drawing.Point(105, 28);
+            this.labelChildrenDirect.Name = "labelChildrenDirect";
+            this.labelChildrenDirect.Size = new System.Drawing.Size(52, 13);
+            this.labelChildrenDirect.TabIndex = 8;
+            this.labelChildrenDirect.Text = "<numC>";
             // 
             // trafoMatrixViewControlGlobal
             // 
@@ -197,6 +201,7 @@
             this.Name = "NodeItemsDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "<NodeName> Details";
+            this.TopMost = true;
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);

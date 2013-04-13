@@ -15,7 +15,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="InspectorSplitterPos" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">732</Value>
+      <Value Profile="(Default)">734</Value>
     </Setting>
     <Setting Name="RenderWireframe" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -40,6 +40,9 @@
     </Setting>
     <Setting Name="DefaultRotationMode" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="NodeInfoShowAnimatedTrafo" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -30,10 +30,10 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxTransX = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.labelTranslationX = new System.Windows.Forms.Label();
+            this.labelTranslationY = new System.Windows.Forms.Label();
             this.textBoxTransY = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
+            this.labelTranslationZ = new System.Windows.Forms.Label();
             this.textBoxTransZ = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.labelScalingZ = new System.Windows.Forms.Label();
@@ -73,23 +73,23 @@
             this.textBoxTransX.Size = new System.Drawing.Size(64, 20);
             this.textBoxTransX.TabIndex = 1;
             // 
-            // label2
+            // labelTranslationX
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(77, 6);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(14, 13);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "X";
+            this.labelTranslationX.AutoSize = true;
+            this.labelTranslationX.Location = new System.Drawing.Point(77, 6);
+            this.labelTranslationX.Name = "labelTranslationX";
+            this.labelTranslationX.Size = new System.Drawing.Size(14, 13);
+            this.labelTranslationX.TabIndex = 2;
+            this.labelTranslationX.Text = "X";
             // 
-            // label3
+            // labelTranslationY
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(171, 6);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(14, 13);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "Y";
+            this.labelTranslationY.AutoSize = true;
+            this.labelTranslationY.Location = new System.Drawing.Point(171, 6);
+            this.labelTranslationY.Name = "labelTranslationY";
+            this.labelTranslationY.Size = new System.Drawing.Size(14, 13);
+            this.labelTranslationY.TabIndex = 4;
+            this.labelTranslationY.Text = "Y";
             // 
             // textBoxTransY
             // 
@@ -99,14 +99,14 @@
             this.textBoxTransY.Size = new System.Drawing.Size(64, 20);
             this.textBoxTransY.TabIndex = 3;
             // 
-            // label4
+            // labelTranslationZ
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(264, 6);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(14, 13);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "Z";
+            this.labelTranslationZ.AutoSize = true;
+            this.labelTranslationZ.Location = new System.Drawing.Point(264, 6);
+            this.labelTranslationZ.Name = "labelTranslationZ";
+            this.labelTranslationZ.Size = new System.Drawing.Size(14, 13);
+            this.labelTranslationZ.TabIndex = 6;
+            this.labelTranslationZ.Text = "Z";
             // 
             // textBoxTransZ
             // 
@@ -304,11 +304,11 @@
             this.Controls.Add(this.labelScalingX);
             this.Controls.Add(this.textBoxScaleX);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
+            this.Controls.Add(this.labelTranslationZ);
             this.Controls.Add(this.textBoxTransZ);
-            this.Controls.Add(this.label3);
+            this.Controls.Add(this.labelTranslationY);
             this.Controls.Add(this.textBoxTransY);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.labelTranslationX);
             this.Controls.Add(this.textBoxTransX);
             this.Controls.Add(this.label1);
             this.Name = "TrafoMatrixViewControl";
@@ -322,10 +322,10 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBoxTransX;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label labelTranslationX;
+        private System.Windows.Forms.Label labelTranslationY;
         private System.Windows.Forms.TextBox textBoxTransY;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label labelTranslationZ;
         private System.Windows.Forms.TextBox textBoxTransZ;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label labelScalingZ;
