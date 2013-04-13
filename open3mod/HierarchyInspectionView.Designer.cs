@@ -113,6 +113,7 @@
             this.imageListIconsHierarchy.Images.SetKeyName(1, "HierarchyIconGenericNode.png");
             this.imageListIconsHierarchy.Images.SetKeyName(2, "HierarchyIconJoint.png");
             this.imageListIconsHierarchy.Images.SetKeyName(3, "HierarchyIconMesh.png");
+            this.imageListIconsHierarchy.Images.SetKeyName(4, "HierarchyIconHidden.png");
             // 
             // labelNodeStats
             // 
@@ -196,7 +197,7 @@
             // detailsToolStripMenuItem1
             // 
             this.detailsToolStripMenuItem1.Name = "detailsToolStripMenuItem1";
-            this.detailsToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.detailsToolStripMenuItem1.Size = new System.Drawing.Size(109, 22);
             this.detailsToolStripMenuItem1.Text = "Details";
             this.detailsToolStripMenuItem1.Click += new System.EventHandler(this.OnContextMenuShowDetails);
             // 

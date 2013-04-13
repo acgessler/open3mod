@@ -50,7 +50,8 @@ namespace open3mod
                     labelCaption.Text = "Node";
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("purpose");
+                    Debug.Assert(false);
+                    break;
             }
 
             //labelInfo;

@@ -74,6 +74,8 @@ namespace open3mod
         private int _hitNodeCursor;
         private List<TreeNode> _hitNodes;
 
+        private readonly HashSet<Node> _hidden = new HashSet<Node>();
+
         // static because all tabs share them - it is just annoying to have multiple
         // info dialogs open because it is impossible to keep track which belongs
         // to which tab.
@@ -296,7 +298,7 @@ namespace open3mod
         }
 
 
-        public void UpdateFilters(TreeNode hoverNode = null)
+        private void UpdateFilters(TreeNode hoverNode = null)
         {
             var node = hoverNode ?? _tree.SelectedNode;
             var item = node == null ? _scene.Raw.RootNode : node.Tag;
@@ -305,7 +307,7 @@ namespace open3mod
 
             var overrideSkeleton = false;
 
-            if (item == _scene.Raw.RootNode)
+            if (item == _scene.Raw.RootNode && !HasPermanentlyHiddenNodes)
             {
                 _scene.SetVisibleNodes(null);
 
@@ -321,7 +323,7 @@ namespace open3mod
             // if the selected item is a mesh, we render only the corresponding
             // parent node plus this mesh. Otherwise we include all child nodes.
             var itemAsNode = item as Node;
-            if (itemAsNode != null)
+            if (itemAsNode != null && !IsNodePermanentlyHidden(itemAsNode))
             {
                 var counters = new List<int>(_scene.Raw.MeshCount);
                 for (int i = 0; i < _scene.Raw.MeshCount; ++i)
@@ -538,12 +540,14 @@ namespace open3mod
 
         private static NodePurpose GetNodePurpose(TreeNode node)
         {
+            // TODO: this is ugly
             return ImageIndexToNodePurpose(node.ImageIndex);
         }
 
 
         private static NodePurpose ImageIndexToNodePurpose(int imageIndex)
         {
+            Debug.Assert(imageIndex < 4);
             return (NodePurpose) imageIndex;
         }
 
@@ -639,7 +643,10 @@ namespace open3mod
 
         private void AddNodeToSet(Dictionary<Node, List<Mesh>> filter, Node itemAsNode)
         {
-            filter.Add(itemAsNode, null);
+            if (!IsNodePermanentlyHidden(itemAsNode))
+            {
+                filter.Add(itemAsNode, null);
+            }
             if (itemAsNode.Children == null)
             {
                 return;
@@ -799,7 +806,34 @@ namespace open3mod
 
         private void OnContextMenuHideNode(object sender, EventArgs e)
         {
+            var node = GetTreeNodeForContextMenuEvent(sender);
+            HideSubhierarchyPermanently(node);
+        }
 
+
+    
+        private bool HasPermanentlyHiddenNodes
+        {
+            get { return _hidden.Count != 0; }
+        }
+
+
+        private bool IsNodePermanentlyHidden(Node node)
+        {
+            return _hidden.Contains(node);
+        }
+
+
+        private void HideSubhierarchyPermanently(TreeNode root)
+        {
+            Debug.Assert(root.Tag is Node);
+            var node = (Node) root.Tag;
+
+            _hidden.Add(node);
+            root.ImageIndex = root.SelectedImageIndex = 4;
+            root.Collapse();
+
+            UpdateFilters();
         }
 
 
