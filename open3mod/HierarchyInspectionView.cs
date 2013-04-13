@@ -400,6 +400,13 @@ namespace open3mod
                 meshInfoPopup.Location = nodeInfoPopup.Location;
             }
 
+            if(_tree.Width - node.Bounds.Right < 80)
+            {
+                meshInfoPopup.Visible = false;
+                nodeInfoPopup.Visible = false;
+                return;
+            }
+
             meshInfoPopup.Visible = true;
             nodeInfoPopup.Visible = false;
             if (wasVisible)
@@ -422,6 +429,12 @@ namespace open3mod
             Debug.Assert(node != null && node.Tag is Node);
 
             var wasVisible = nodeInfoPopup.Visible || meshInfoPopup.Visible;
+            if (_tree.Width - node.Bounds.Right < 80)
+            {
+                meshInfoPopup.Visible = false;
+                nodeInfoPopup.Visible = false;
+                return;
+            }
 
             if(meshInfoPopup.Visible)
             {
