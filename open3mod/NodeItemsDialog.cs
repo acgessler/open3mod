@@ -28,6 +28,18 @@ namespace open3mod
             var matrix4X4 = _node.Transform;
             trafoMatrixViewControlLocal.SetMatrix(ref matrix4X4);
 
+            var mat = Matrix4x4.Identity;
+            var cur = node;
+            while(cur != null)
+            {
+                var trafo = cur.Transform;
+                trafo.Transpose();
+                mat = trafo * mat;
+                cur = cur.Parent;
+            }
+            mat.Transpose();
+            trafoMatrixViewControlGlobal.SetMatrix(ref mat);
+
             Text = node.Name + " - Details";
         }
     }

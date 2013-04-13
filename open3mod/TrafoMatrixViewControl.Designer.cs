@@ -273,9 +273,10 @@
             // 
             this.checkBoxNonStandard.AutoCheck = false;
             this.checkBoxNonStandard.AutoSize = true;
+            this.checkBoxNonStandard.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.checkBoxNonStandard.Location = new System.Drawing.Point(22, 176);
             this.checkBoxNonStandard.Name = "checkBoxNonStandard";
-            this.checkBoxNonStandard.Size = new System.Drawing.Size(308, 30);
+            this.checkBoxNonStandard.Size = new System.Drawing.Size(306, 30);
             this.checkBoxNonStandard.TabIndex = 24;
             this.checkBoxNonStandard.Text = "Transformation does not define an invertible affine operation\r\nconsisting of scal" +
     "ing, rotation and translation.\r\n";
