@@ -180,7 +180,7 @@
             // labelRotationZ
             // 
             this.labelRotationZ.AutoSize = true;
-            this.labelRotationZ.Location = new System.Drawing.Point(264, 117);
+            this.labelRotationZ.Location = new System.Drawing.Point(264, 93);
             this.labelRotationZ.Name = "labelRotationZ";
             this.labelRotationZ.Size = new System.Drawing.Size(14, 13);
             this.labelRotationZ.TabIndex = 20;
@@ -188,7 +188,7 @@
             // 
             // textBoxRotZ
             // 
-            this.textBoxRotZ.Location = new System.Drawing.Point(280, 114);
+            this.textBoxRotZ.Location = new System.Drawing.Point(280, 90);
             this.textBoxRotZ.Name = "textBoxRotZ";
             this.textBoxRotZ.ReadOnly = true;
             this.textBoxRotZ.Size = new System.Drawing.Size(64, 20);
@@ -197,7 +197,7 @@
             // labelRotationY
             // 
             this.labelRotationY.AutoSize = true;
-            this.labelRotationY.Location = new System.Drawing.Point(171, 117);
+            this.labelRotationY.Location = new System.Drawing.Point(171, 93);
             this.labelRotationY.Name = "labelRotationY";
             this.labelRotationY.Size = new System.Drawing.Size(14, 13);
             this.labelRotationY.TabIndex = 18;
@@ -205,7 +205,7 @@
             // 
             // textBoxRotY
             // 
-            this.textBoxRotY.Location = new System.Drawing.Point(187, 114);
+            this.textBoxRotY.Location = new System.Drawing.Point(187, 90);
             this.textBoxRotY.Name = "textBoxRotY";
             this.textBoxRotY.ReadOnly = true;
             this.textBoxRotY.Size = new System.Drawing.Size(64, 20);
@@ -214,7 +214,7 @@
             // labelRotationX
             // 
             this.labelRotationX.AutoSize = true;
-            this.labelRotationX.Location = new System.Drawing.Point(77, 117);
+            this.labelRotationX.Location = new System.Drawing.Point(77, 93);
             this.labelRotationX.Name = "labelRotationX";
             this.labelRotationX.Size = new System.Drawing.Size(14, 13);
             this.labelRotationX.TabIndex = 16;
@@ -222,7 +222,7 @@
             // 
             // textBoxRotX
             // 
-            this.textBoxRotX.Location = new System.Drawing.Point(93, 114);
+            this.textBoxRotX.Location = new System.Drawing.Point(93, 90);
             this.textBoxRotX.Name = "textBoxRotX";
             this.textBoxRotX.ReadOnly = true;
             this.textBoxRotX.Size = new System.Drawing.Size(64, 20);
@@ -232,7 +232,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(19, 117);
+            this.label12.Location = new System.Drawing.Point(19, 93);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(59, 13);
             this.label12.TabIndex = 14;
@@ -246,7 +246,7 @@
             "Euler XYZ (degrees)",
             "Euler XYZ (radians)",
             "Quaternion"});
-            this.comboBoxRotMode.Location = new System.Drawing.Point(93, 87);
+            this.comboBoxRotMode.Location = new System.Drawing.Point(93, 63);
             this.comboBoxRotMode.Name = "comboBoxRotMode";
             this.comboBoxRotMode.Size = new System.Drawing.Size(158, 21);
             this.comboBoxRotMode.TabIndex = 21;
@@ -254,7 +254,7 @@
             // 
             // textBoxRotW
             // 
-            this.textBoxRotW.Location = new System.Drawing.Point(93, 140);
+            this.textBoxRotW.Location = new System.Drawing.Point(93, 116);
             this.textBoxRotW.Name = "textBoxRotW";
             this.textBoxRotW.ReadOnly = true;
             this.textBoxRotW.Size = new System.Drawing.Size(64, 20);
@@ -263,7 +263,7 @@
             // labelRotationW
             // 
             this.labelRotationW.AutoSize = true;
-            this.labelRotationW.Location = new System.Drawing.Point(73, 147);
+            this.labelRotationW.Location = new System.Drawing.Point(73, 123);
             this.labelRotationW.Name = "labelRotationW";
             this.labelRotationW.Size = new System.Drawing.Size(18, 13);
             this.labelRotationW.TabIndex = 23;
@@ -274,7 +274,7 @@
             this.checkBoxNonStandard.AutoCheck = false;
             this.checkBoxNonStandard.AutoSize = true;
             this.checkBoxNonStandard.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.checkBoxNonStandard.Location = new System.Drawing.Point(22, 176);
+            this.checkBoxNonStandard.Location = new System.Drawing.Point(22, 152);
             this.checkBoxNonStandard.Name = "checkBoxNonStandard";
             this.checkBoxNonStandard.Size = new System.Drawing.Size(306, 30);
             this.checkBoxNonStandard.TabIndex = 24;
@@ -312,7 +312,7 @@
             this.Controls.Add(this.textBoxTransX);
             this.Controls.Add(this.label1);
             this.Name = "TrafoMatrixViewControl";
-            this.Size = new System.Drawing.Size(347, 218);
+            this.Size = new System.Drawing.Size(347, 188);
             this.ResumeLayout(false);
             this.PerformLayout();
 

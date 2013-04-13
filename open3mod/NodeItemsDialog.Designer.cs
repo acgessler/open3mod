@@ -52,7 +52,7 @@
             this.groupBox1.Controls.Add(this.trafoMatrixViewControlLocal);
             this.groupBox1.Location = new System.Drawing.Point(12, 55);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(368, 239);
+            this.groupBox1.Size = new System.Drawing.Size(368, 208);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Node Local Transformation";
@@ -60,9 +60,9 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.trafoMatrixViewControlGlobal);
-            this.groupBox2.Location = new System.Drawing.Point(12, 311);
+            this.groupBox2.Location = new System.Drawing.Point(12, 284);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(368, 239);
+            this.groupBox2.Size = new System.Drawing.Size(368, 210);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Node Global Transformation";
@@ -71,21 +71,21 @@
             // 
             this.trafoMatrixViewControlGlobal.Location = new System.Drawing.Point(6, 20);
             this.trafoMatrixViewControlGlobal.Name = "trafoMatrixViewControlGlobal";
-            this.trafoMatrixViewControlGlobal.Size = new System.Drawing.Size(352, 213);
+            this.trafoMatrixViewControlGlobal.Size = new System.Drawing.Size(352, 188);
             this.trafoMatrixViewControlGlobal.TabIndex = 1;
             // 
             // trafoMatrixViewControlLocal
             // 
             this.trafoMatrixViewControlLocal.Location = new System.Drawing.Point(6, 20);
             this.trafoMatrixViewControlLocal.Name = "trafoMatrixViewControlLocal";
-            this.trafoMatrixViewControlLocal.Size = new System.Drawing.Size(352, 213);
+            this.trafoMatrixViewControlLocal.Size = new System.Drawing.Size(352, 190);
             this.trafoMatrixViewControlLocal.TabIndex = 1;
             // 
             // NodeItemsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(392, 573);
+            this.ClientSize = new System.Drawing.Size(392, 508);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.checkBoxShowAnimated);
