@@ -229,7 +229,7 @@ namespace open3mod
                 isSkeletonNode = node.MeshCount == 0;
             }
 
-            var root = new TreeNode(node.Name) {Tag = node};
+            var root = new TreeNode(node.Name) {Tag = node, ContextMenuStrip = contextMenuStripTreeNode};
             if (uiNode == null)
             {
                 _tree.Nodes.Add(root);
@@ -275,7 +275,7 @@ namespace open3mod
         }
 
 
-        private static void AddMeshNode(Node owner, Mesh mesh, int id, TreeNode uiNode)
+        private void AddMeshNode(Node owner, Mesh mesh, int id, TreeNode uiNode)
         {
             Debug.Assert(uiNode != null);
             Debug.Assert(mesh != null);
@@ -285,7 +285,12 @@ namespace open3mod
                 ? ("\"" + mesh.Name + "\"")
                 : id.ToString(CultureInfo.InvariantCulture));
 
-            var nod = new TreeNode(desc) {Tag = new KeyValuePair<Node, Mesh>(owner, mesh), ImageIndex = 3};
+            var nod = new TreeNode(desc)
+            {
+                Tag = new KeyValuePair<Node, Mesh>(owner, mesh),
+                ImageIndex = 3,
+                ContextMenuStrip = contextMenuStripMesh
+            };
 
             uiNode.Nodes.Add(nod);
         }
@@ -751,17 +756,50 @@ namespace open3mod
 
         private void AfterNodeDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if(e.Node.Tag is KeyValuePair<Node, Mesh>)
+            ShowDetailsForTreeNode(e.Node);           
+        }
+
+
+        private void ShowDetailsForTreeNode(TreeNode node)
+        {
+            Debug.Assert(node != null);
+            if (node.Tag is KeyValuePair<Node, Mesh>)
             {
-                var mesh = ((KeyValuePair<Node, Mesh>)e.Node.Tag).Value;
+                var mesh = ((KeyValuePair<Node, Mesh>)node.Tag).Value;
                 Debug.Assert(mesh != null);
 
-                SetMeshDetailDialogInfo(mesh, e.Node.Text);                            
+                SetMeshDetailDialogInfo(mesh, node.Text);
             }
-            else if (e.Node.Tag is Node)
+            else if (node.Tag is Node)
             {
-                SetNodeDetailDialogInfo((Node)e.Node.Tag);           
+                SetNodeDetailDialogInfo((Node)node.Tag);
             }
+        }
+
+
+        private TreeNode GetTreeNodeForContextMenuEvent(object sender)
+        {
+            // get sender TreeNode --
+            // http://www.windows-tech.info/3/61534a0f5205ea18.php
+            var cms = (ContextMenuStrip)sender;
+            var treeView = (TreeView)cms.SourceControl;
+
+            var node = _tree.GetNodeAt(treeView.PointToClient(cms.Location));
+            Debug.Assert(node != null);
+            return node;
+        }
+
+
+        private void OnContextMenuShowDetails(object sender, EventArgs e)
+        {
+            var node = GetTreeNodeForContextMenuEvent(sender);
+            ShowDetailsForTreeNode(node);
+        }
+
+
+        private void OnContextMenuHideNode(object sender, EventArgs e)
+        {
+
         }
     }
 }

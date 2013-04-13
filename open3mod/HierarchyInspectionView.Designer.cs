@@ -39,10 +39,17 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.labelHitCount = new System.Windows.Forms.Label();
+            this.contextMenuStripTreeNode = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.detailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.meshInfoPopup = new open3mod.MeshInfoPopup();
             this.nodeInfoPopup = new open3mod.NodeInfoPopup();
+            this.contextMenuStripMesh = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.detailsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.contextMenuStripTreeNode.SuspendLayout();
+            this.contextMenuStripMesh.SuspendLayout();
             this.SuspendLayout();
             // 
             // linkLabel1
@@ -155,6 +162,28 @@
             this.labelHitCount.Size = new System.Drawing.Size(0, 13);
             this.labelHitCount.TabIndex = 10;
             // 
+            // contextMenuStripTreeNode
+            // 
+            this.contextMenuStripTreeNode.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.detailsToolStripMenuItem,
+            this.hideToolStripMenuItem});
+            this.contextMenuStripTreeNode.Name = "contextMenuStripTreeNode";
+            this.contextMenuStripTreeNode.Size = new System.Drawing.Size(110, 48);
+            // 
+            // detailsToolStripMenuItem
+            // 
+            this.detailsToolStripMenuItem.Name = "detailsToolStripMenuItem";
+            this.detailsToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.detailsToolStripMenuItem.Text = "Details";
+            this.detailsToolStripMenuItem.Click += new System.EventHandler(this.OnContextMenuShowDetails);
+            // 
+            // hideToolStripMenuItem
+            // 
+            this.hideToolStripMenuItem.Name = "hideToolStripMenuItem";
+            this.hideToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.hideToolStripMenuItem.Text = "Hide";
+            this.hideToolStripMenuItem.Click += new System.EventHandler(this.OnContextMenuHideNode);
+            // 
             // meshInfoPopup
             // 
             this.meshInfoPopup.Anchor = System.Windows.Forms.AnchorStyles.Right;
@@ -170,6 +199,20 @@
             this.nodeInfoPopup.Name = "nodeInfoPopup";
             this.nodeInfoPopup.Size = new System.Drawing.Size(88, 90);
             this.nodeInfoPopup.TabIndex = 11;
+            // 
+            // contextMenuStripMesh
+            // 
+            this.contextMenuStripMesh.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.detailsToolStripMenuItem1});
+            this.contextMenuStripMesh.Name = "contextMenuStripMesh";
+            this.contextMenuStripMesh.Size = new System.Drawing.Size(153, 48);
+            this.contextMenuStripMesh.Click += new System.EventHandler(this.OnContextMenuShowDetails);
+            // 
+            // detailsToolStripMenuItem1
+            // 
+            this.detailsToolStripMenuItem1.Name = "detailsToolStripMenuItem1";
+            this.detailsToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.detailsToolStripMenuItem1.Text = "Details";
             // 
             // HierarchyInspectionView
             // 
@@ -190,6 +233,8 @@
             this.panel2.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.contextMenuStripTreeNode.ResumeLayout(false);
+            this.contextMenuStripMesh.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -208,5 +253,10 @@
         private System.Windows.Forms.ImageList imageListIconsHierarchy;
         private NodeInfoPopup nodeInfoPopup;
         private MeshInfoPopup meshInfoPopup;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripTreeNode;
+        private System.Windows.Forms.ToolStripMenuItem detailsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hideToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripMesh;
+        private System.Windows.Forms.ToolStripMenuItem detailsToolStripMenuItem1;
     }
 }
