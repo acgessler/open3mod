@@ -28,7 +28,7 @@ namespace open3mod
             var matrix4X4 = _node.Transform;
             trafoMatrixViewControlLocal.SetMatrix(ref matrix4X4);
 
-            
+            Text = node.Name + " - Details";
         }
     }
 }
