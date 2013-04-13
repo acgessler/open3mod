@@ -74,7 +74,7 @@ namespace open3mod
         private int _hitNodeCursor;
         private List<TreeNode> _hitNodes;
         private MeshDetailsDialog _meshDiag;
-
+        private NodeItemsDialog _nodeDiag;
 
         public HierarchyInspectionView(Scene scene, TabPage tabPageHierarchy)
         {
@@ -331,11 +331,17 @@ namespace open3mod
                 if (node != null)
                 {
                     PopulateNodeInfoPopup(node);
+
+                    if (_nodeDiag != null)
+                    {
+                        SetNodeDetailDialogInfo(itemAsNode);
+                    }
                 }
                 else
                 {
                     HidePopups();
                 }
+
             }
             else if (item is KeyValuePair<Node, Mesh>)
             {
@@ -423,6 +429,26 @@ namespace open3mod
             }
 
             _meshDiag.SetMesh(FindForm() as MainWindow, mesh, text);
+        }
+
+
+        private void SetNodeDetailDialogInfo(Node node)
+        {
+            if (_nodeDiag == null)
+            {
+                _nodeDiag = new NodeItemsDialog();
+                _nodeDiag.FormClosed += (o, args) =>
+                {
+                    _nodeDiag = null;
+                };
+                _nodeDiag.Show();
+            }
+            else
+            {
+                _nodeDiag.BringToFront();
+            }
+
+            _nodeDiag.SetNode(FindForm() as MainWindow, node);
         }
 
 
@@ -652,6 +678,10 @@ namespace open3mod
                 Debug.Assert(mesh != null);
 
                 SetMeshDetailDialogInfo(mesh, e.Node.Text);                            
+            }
+            else if (e.Node.Tag is Node)
+            {
+                SetNodeDetailDialogInfo((Node)e.Node.Tag);           
             }
         }
     }
