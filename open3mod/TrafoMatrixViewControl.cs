@@ -51,6 +51,14 @@ namespace open3mod
             Quaternion rot;
             Vector3D trans;
 
+            // the decomposition algorithm is not very sophisticated - it basically extracts translation
+            // and row scaling factors and then converts the rest to a quaternion. 
+            // question: what if the matrix is non-invertible? the algorithm then yields
+            // at least one scaling factor as zero, further results are undefined. We
+            // therefore catch this case by checking the determinant and inform the user
+            // that the results may be wrong.
+            checkBoxNonStandard.Checked = Math.Abs(mat.Determinant()) < 1e-5;
+
             mat.Decompose(out scale, out rot, out trans);
             // translation
             

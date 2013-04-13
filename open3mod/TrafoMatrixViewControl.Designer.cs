@@ -52,7 +52,7 @@
             this.comboBoxRotMode = new System.Windows.Forms.ComboBox();
             this.textBoxRotW = new System.Windows.Forms.TextBox();
             this.labelRotationW = new System.Windows.Forms.Label();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.checkBoxNonStandard = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -245,7 +245,7 @@
             this.comboBoxRotMode.Items.AddRange(new object[] {
             "Euler XYZ (degrees)",
             "Euler XYZ (radians)",
-            "Unit Quaternion"});
+            "Quaternion"});
             this.comboBoxRotMode.Location = new System.Drawing.Point(93, 87);
             this.comboBoxRotMode.Name = "comboBoxRotMode";
             this.comboBoxRotMode.Size = new System.Drawing.Size(158, 21);
@@ -269,22 +269,23 @@
             this.labelRotationW.TabIndex = 23;
             this.labelRotationW.Text = "W";
             // 
-            // checkBox1
+            // checkBoxNonStandard
             // 
-            this.checkBox1.AutoCheck = false;
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(22, 179);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(211, 30);
-            this.checkBox1.TabIndex = 24;
-            this.checkBox1.Text = "Transformation is not fully described by \r\n translation, scaling and rotation.";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBoxNonStandard.AutoCheck = false;
+            this.checkBoxNonStandard.AutoSize = true;
+            this.checkBoxNonStandard.Location = new System.Drawing.Point(22, 176);
+            this.checkBoxNonStandard.Name = "checkBoxNonStandard";
+            this.checkBoxNonStandard.Size = new System.Drawing.Size(308, 30);
+            this.checkBoxNonStandard.TabIndex = 24;
+            this.checkBoxNonStandard.Text = "Transformation does not define an invertible affine operation\r\nconsisting of scal" +
+    "ing, rotation and translation.\r\n";
+            this.checkBoxNonStandard.UseVisualStyleBackColor = true;
             // 
             // TrafoMatrixViewControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.checkBoxNonStandard);
             this.Controls.Add(this.labelRotationW);
             this.Controls.Add(this.textBoxRotW);
             this.Controls.Add(this.comboBoxRotMode);
@@ -310,7 +311,7 @@
             this.Controls.Add(this.textBoxTransX);
             this.Controls.Add(this.label1);
             this.Name = "TrafoMatrixViewControl";
-            this.Size = new System.Drawing.Size(347, 212);
+            this.Size = new System.Drawing.Size(347, 218);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -342,6 +343,6 @@
         private System.Windows.Forms.ComboBox comboBoxRotMode;
         private System.Windows.Forms.TextBox textBoxRotW;
         private System.Windows.Forms.Label labelRotationW;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox checkBoxNonStandard;
     }
 }
