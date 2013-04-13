@@ -395,12 +395,22 @@ namespace open3mod
             Debug.Assert(node != null && node.Tag is KeyValuePair<Node, Mesh>);
 
             var wasVisible = nodeInfoPopup.Visible || meshInfoPopup.Visible;
+            if (nodeInfoPopup.Visible)
+            {
+                meshInfoPopup.Location = nodeInfoPopup.Location;
+            }
 
             meshInfoPopup.Visible = true;
             nodeInfoPopup.Visible = false;
             if (wasVisible)
             {
                 AnimatePopup(node.Bounds.Top);
+            }
+            else
+            {
+                var loc = meshInfoPopup.Location;
+                loc.Y = node.Bounds.Top;
+                meshInfoPopup.Location = loc;
             }
 
             meshInfoPopup.Populate(((KeyValuePair<Node, Mesh>)node.Tag).Value);
@@ -413,11 +423,22 @@ namespace open3mod
 
             var wasVisible = nodeInfoPopup.Visible || meshInfoPopup.Visible;
 
+            if(meshInfoPopup.Visible)
+            {
+                nodeInfoPopup.Location = meshInfoPopup.Location;
+            }
+
             meshInfoPopup.Visible = false;
             nodeInfoPopup.Visible = true;
             if(wasVisible)
             {
                 AnimatePopup(node.Bounds.Top);            
+            }
+            else
+            {
+                var loc = nodeInfoPopup.Location;
+                loc.Y = node.Bounds.Top;
+                nodeInfoPopup.Location = loc;
             }
 
             nodeInfoPopup.Populate((Node)node.Tag, GetNodePurpose(node));
