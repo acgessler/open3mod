@@ -158,17 +158,17 @@
             // meshInfoPopup
             // 
             this.meshInfoPopup.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.meshInfoPopup.Location = new System.Drawing.Point(191, 335);
+            this.meshInfoPopup.Location = new System.Drawing.Point(223, 335);
             this.meshInfoPopup.Name = "meshInfoPopup";
-            this.meshInfoPopup.Size = new System.Drawing.Size(97, 103);
+            this.meshInfoPopup.Size = new System.Drawing.Size(88, 90);
             this.meshInfoPopup.TabIndex = 12;
             // 
             // nodeInfoPopup
             // 
             this.nodeInfoPopup.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.nodeInfoPopup.Location = new System.Drawing.Point(191, 43);
+            this.nodeInfoPopup.Location = new System.Drawing.Point(223, 43);
             this.nodeInfoPopup.Name = "nodeInfoPopup";
-            this.nodeInfoPopup.Size = new System.Drawing.Size(97, 96);
+            this.nodeInfoPopup.Size = new System.Drawing.Size(88, 90);
             this.nodeInfoPopup.TabIndex = 11;
             // 
             // HierarchyInspectionView
