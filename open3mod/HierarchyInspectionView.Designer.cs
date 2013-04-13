@@ -35,8 +35,8 @@
             this._tree = new System.Windows.Forms.TreeView();
             this.imageListIconsHierarchy = new System.Windows.Forms.ImageList(this.components);
             this.labelNodeStats = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.labelHiddenCount = new System.Windows.Forms.Label();
+            this.panelHiddenInfo = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.labelHitCount = new System.Windows.Forms.Label();
             this.contextMenuStripTreeNode = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -46,7 +46,7 @@
             this.detailsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.meshInfoPopup = new open3mod.MeshInfoPopup();
             this.nodeInfoPopup = new open3mod.NodeInfoPopup();
-            this.panel2.SuspendLayout();
+            this.panelHiddenInfo.SuspendLayout();
             this.panel1.SuspendLayout();
             this.contextMenuStripTreeNode.SuspendLayout();
             this.contextMenuStripMesh.SuspendLayout();
@@ -56,12 +56,13 @@
             // 
             this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(247, 5);
+            this.linkLabel1.Location = new System.Drawing.Point(245, 3);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(54, 13);
             this.linkLabel1.TabIndex = 1;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "Unhide all";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.UnhideAllNodes);
             // 
             // textBoxFilter
             // 
@@ -124,25 +125,28 @@
             this.labelNodeStats.TabIndex = 0;
             this.labelNodeStats.Text = "Showing m of n nodes. ";
             // 
-            // label2
+            // labelHiddenCount
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 5);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(158, 13);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "p nodes are permanently hidden";
+            this.labelHiddenCount.AutoSize = true;
+            this.labelHiddenCount.Location = new System.Drawing.Point(10, 3);
+            this.labelHiddenCount.Name = "labelHiddenCount";
+            this.labelHiddenCount.Size = new System.Drawing.Size(158, 13);
+            this.labelHiddenCount.TabIndex = 0;
+            this.labelHiddenCount.Text = "p nodes are permanently hidden";
             // 
-            // panel2
+            // panelHiddenInfo
             // 
-            this.panel2.BackColor = System.Drawing.Color.LemonChiffon;
-            this.panel2.Controls.Add(this.linkLabel1);
-            this.panel2.Controls.Add(this.label2);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 612);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(311, 21);
-            this.panel2.TabIndex = 9;
+            this.panelHiddenInfo.BackColor = System.Drawing.Color.LemonChiffon;
+            this.panelHiddenInfo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelHiddenInfo.Controls.Add(this.linkLabel1);
+            this.panelHiddenInfo.Controls.Add(this.labelHiddenCount);
+            this.panelHiddenInfo.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panelHiddenInfo.Location = new System.Drawing.Point(0, 612);
+            this.panelHiddenInfo.Margin = new System.Windows.Forms.Padding(3, 3, 3, 6);
+            this.panelHiddenInfo.Name = "panelHiddenInfo";
+            this.panelHiddenInfo.Size = new System.Drawing.Size(311, 21);
+            this.panelHiddenInfo.TabIndex = 9;
+            this.panelHiddenInfo.Visible = false;
             // 
             // panel1
             // 
@@ -227,13 +231,13 @@
             this.Controls.Add(this.labelHitCount);
             this.Controls.Add(this.textBoxFilter);
             this.Controls.Add(this._tree);
-            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.panelHiddenInfo);
             this.Controls.Add(this.panel1);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "HierarchyInspectionView";
             this.Size = new System.Drawing.Size(311, 654);
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
+            this.panelHiddenInfo.ResumeLayout(false);
+            this.panelHiddenInfo.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.contextMenuStripTreeNode.ResumeLayout(false);
@@ -249,8 +253,8 @@
         private System.Windows.Forms.TextBox textBoxFilter;
         private System.Windows.Forms.TreeView _tree;
         private System.Windows.Forms.Label labelNodeStats;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label labelHiddenCount;
+        private System.Windows.Forms.Panel panelHiddenInfo;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label labelHitCount;
         private System.Windows.Forms.ImageList imageListIconsHierarchy;

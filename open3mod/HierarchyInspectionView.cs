@@ -74,7 +74,8 @@ namespace open3mod
         private int _hitNodeCursor;
         private List<TreeNode> _hitNodes;
 
-        private readonly HashSet<Node> _hidden = new HashSet<Node>();
+        private readonly Dictionary<Node, TreeNode> _hidden;
+        private readonly Dictionary<Node, NodePurpose> _nodePurposes;
 
         // static because all tabs share them - it is just annoying to have multiple
         // info dialogs open because it is impossible to keep track which belongs
@@ -99,6 +100,9 @@ namespace open3mod
 
             _scene = scene;
             tabPageHierarchy.Controls.Add(this);
+
+            _hidden = new Dictionary<Node, TreeNode>();
+            _nodePurposes = new Dictionary<Node, NodePurpose>();
 
             Debug.Assert(_scene != null);
 
@@ -215,7 +219,7 @@ namespace open3mod
             Debug.Assert(node != null);
 
             // default node icon
-            var index = (int)NodePurpose.GenericMeshHolder;
+            var index = NodePurpose.GenericMeshHolder;
             var isSkeletonNode = false;
 
             // mark nodes introduced by assimp (i.e. nodes not present in the source file)
@@ -263,10 +267,11 @@ namespace open3mod
 
             if(isSkeletonNode)
             {
-                index = (int)NodePurpose.Joint;
+                index = NodePurpose.Joint;
             }
 
-            root.ImageIndex = root.SelectedImageIndex = index;
+            _nodePurposes.Add(node, index);
+            root.ImageIndex = root.SelectedImageIndex = (int)index;
 
             if (level < AutoExpandLevels)
             {
@@ -338,7 +343,7 @@ namespace open3mod
                 _visibleInstancedMeshes = counters.Sum();
                 _visibleMeshes = counters.Count(i => i != 0);
 
-                if (node != null && GetNodePurpose(node) == NodePurpose.Joint)
+                if (node != null && GetNodePurpose(itemAsNode) == NodePurpose.Joint)
                 {
                     overrideSkeleton = true;           
                 }
@@ -461,7 +466,7 @@ namespace open3mod
                 nodeInfoPopup.Location = loc;
             }
 
-            nodeInfoPopup.Populate((Node)node.Tag, GetNodePurpose(node));
+            nodeInfoPopup.Populate((Node)node.Tag, GetNodePurpose((Node)node.Tag));
         }
 
 
@@ -538,17 +543,10 @@ namespace open3mod
         }
 
 
-        private static NodePurpose GetNodePurpose(TreeNode node)
+        private NodePurpose GetNodePurpose(Node node)
         {
-            // TODO: this is ugly
-            return ImageIndexToNodePurpose(node.ImageIndex);
-        }
-
-
-        private static NodePurpose ImageIndexToNodePurpose(int imageIndex)
-        {
-            Debug.Assert(imageIndex < 4);
-            return (NodePurpose) imageIndex;
+            Debug.Assert(_nodePurposes.ContainsKey(node));
+            return _nodePurposes[node];
         }
 
 
@@ -820,7 +818,7 @@ namespace open3mod
 
         private bool IsNodePermanentlyHidden(Node node)
         {
-            return _hidden.Contains(node);
+            return _hidden.ContainsKey(node);
         }
 
 
@@ -829,9 +827,13 @@ namespace open3mod
             Debug.Assert(root.Tag is Node);
             var node = (Node) root.Tag;
 
-            _hidden.Add(node);
+            _hidden.Add(node, root);
             root.ImageIndex = root.SelectedImageIndex = 4;
             root.Collapse();
+
+            panelHiddenInfo.Visible = true;
+            labelHiddenCount.Text = _hidden.Count.ToString(CultureInfo.InvariantCulture) +
+                (_hidden.Count > 1 ? " items are permanently hidden" : " item is permanently hidden");
 
             UpdateFilters();
         }
@@ -856,6 +858,21 @@ namespace open3mod
 
             _tree.SelectedNode = treeNodeAtMousePosition;
             UpdateFilters();
+        }
+
+
+        private void UnhideAllNodes(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            linkLabel1.LinkVisited = false;
+            foreach (var kv in _hidden)
+            {
+                kv.Value.ImageIndex = kv.Value.SelectedImageIndex = (int)GetNodePurpose(kv.Key);
+            }
+
+            _hidden.Clear();
+            UpdateFilters();
+
+            panelHiddenInfo.Visible = false;
         }
     }
 }
