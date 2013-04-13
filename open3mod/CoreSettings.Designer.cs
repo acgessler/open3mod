@@ -72,7 +72,7 @@ namespace CoreSettings {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("734")]
+        [global::System.Configuration.DefaultSettingValueAttribute("735")]
         public int InspectorSplitterPos {
             get {
                 return ((int)(this["InspectorSplitterPos"]));
@@ -187,6 +187,18 @@ namespace CoreSettings {
             }
             set {
                 this["NodeInfoShowAnimatedTrafo"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowGlobalTrafo {
+            get {
+                return ((bool)(this["ShowGlobalTrafo"]));
+            }
+            set {
+                this["ShowGlobalTrafo"] = value;
             }
         }
     }

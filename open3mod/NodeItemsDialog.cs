@@ -32,6 +32,8 @@ namespace open3mod
             {
                 _timer.Start();
             }
+
+            UpdateCollapseState();
         }
 
 
@@ -124,6 +126,33 @@ namespace open3mod
                 anim.GetLocalTransform(_node, out m);
                 OpenTkToAssimp.FromMatrix(ref m, out mm);
                 trafoMatrixViewControlLocal.SetAnimatedMatrix(ref mm);
+            }
+        }
+
+
+        private void OnToggleShowGlobalTrafo(object sender, EventArgs e)
+        {
+            UpdateCollapseState();
+           
+        }
+
+
+        private void UpdateCollapseState()
+        {
+            const int collapseOffset = 34;
+            if (checkBoxShowGlobalTransformation.Checked)
+            {
+                checkBoxShowGlobalTransformation.Text = "Show Global Transformation ...";
+                Height -= trafoMatrixViewControlGlobal.Height + collapseOffset;
+
+                trafoMatrixViewControlGlobal.Visible = false;
+            }
+            else
+            {
+                checkBoxShowGlobalTransformation.Text = "Hide Global Transformation ...";
+                Height += trafoMatrixViewControlGlobal.Height + collapseOffset;
+
+                trafoMatrixViewControlGlobal.Visible = true;
             }
         }
     }

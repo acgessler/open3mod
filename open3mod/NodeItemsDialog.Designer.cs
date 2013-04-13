@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.checkBoxShowAnimated = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -40,6 +39,8 @@
             this.labelMeshesDirect = new System.Windows.Forms.Label();
             this.labelChildrenTotal = new System.Windows.Forms.Label();
             this.labelChildrenDirect = new System.Windows.Forms.Label();
+            this.checkBoxShowGlobalTransformation = new System.Windows.Forms.CheckBox();
+            this.checkBoxShowAnimated = new System.Windows.Forms.CheckBox();
             this.trafoMatrixViewControlGlobal = new open3mod.TrafoMatrixViewControl();
             this.trafoMatrixViewControlLocal = new open3mod.TrafoMatrixViewControl();
             this.groupBox1.SuspendLayout();
@@ -47,24 +48,10 @@
             this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
-            // checkBoxShowAnimated
-            // 
-            this.checkBoxShowAnimated.AutoSize = true;
-            this.checkBoxShowAnimated.Checked = global::CoreSettings.CoreSettings.Default.NodeInfoShowAnimatedTrafo;
-            this.checkBoxShowAnimated.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxShowAnimated.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::CoreSettings.CoreSettings.Default, "NodeInfoShowAnimatedTrafo", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxShowAnimated.Location = new System.Drawing.Point(247, 570);
-            this.checkBoxShowAnimated.Name = "checkBoxShowAnimated";
-            this.checkBoxShowAnimated.Size = new System.Drawing.Size(133, 17);
-            this.checkBoxShowAnimated.TabIndex = 0;
-            this.checkBoxShowAnimated.Text = "Show animated values";
-            this.checkBoxShowAnimated.UseVisualStyleBackColor = true;
-            this.checkBoxShowAnimated.CheckedChanged += new System.EventHandler(this.OnChangeAnimationState);
-            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.trafoMatrixViewControlLocal);
-            this.groupBox1.Location = new System.Drawing.Point(12, 113);
+            this.groupBox1.Location = new System.Drawing.Point(12, 137);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(368, 210);
             this.groupBox1.TabIndex = 2;
@@ -74,7 +61,7 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.trafoMatrixViewControlGlobal);
-            this.groupBox2.Location = new System.Drawing.Point(12, 342);
+            this.groupBox2.Location = new System.Drawing.Point(12, 392);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(368, 210);
             this.groupBox2.TabIndex = 3;
@@ -174,6 +161,35 @@
             this.labelChildrenDirect.TabIndex = 8;
             this.labelChildrenDirect.Text = "<numC>";
             // 
+            // checkBoxShowGlobalTransformation
+            // 
+            this.checkBoxShowGlobalTransformation.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBoxShowGlobalTransformation.AutoSize = true;
+            this.checkBoxShowGlobalTransformation.Checked = global::CoreSettings.CoreSettings.Default.ShowGlobalTrafo;
+            this.checkBoxShowGlobalTransformation.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::CoreSettings.CoreSettings.Default, "ShowGlobalTrafo", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxShowGlobalTransformation.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.checkBoxShowGlobalTransformation.Location = new System.Drawing.Point(218, 361);
+            this.checkBoxShowGlobalTransformation.Name = "checkBoxShowGlobalTransformation";
+            this.checkBoxShowGlobalTransformation.Size = new System.Drawing.Size(162, 23);
+            this.checkBoxShowGlobalTransformation.TabIndex = 9;
+            this.checkBoxShowGlobalTransformation.Text = "Show Global Transformation ...";
+            this.checkBoxShowGlobalTransformation.UseVisualStyleBackColor = true;
+            this.checkBoxShowGlobalTransformation.CheckedChanged += new System.EventHandler(this.OnToggleShowGlobalTrafo);
+            // 
+            // checkBoxShowAnimated
+            // 
+            this.checkBoxShowAnimated.AutoSize = true;
+            this.checkBoxShowAnimated.Checked = global::CoreSettings.CoreSettings.Default.NodeInfoShowAnimatedTrafo;
+            this.checkBoxShowAnimated.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxShowAnimated.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::CoreSettings.CoreSettings.Default, "NodeInfoShowAnimatedTrafo", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxShowAnimated.Location = new System.Drawing.Point(247, 114);
+            this.checkBoxShowAnimated.Name = "checkBoxShowAnimated";
+            this.checkBoxShowAnimated.Size = new System.Drawing.Size(133, 17);
+            this.checkBoxShowAnimated.TabIndex = 0;
+            this.checkBoxShowAnimated.Text = "Show animated values";
+            this.checkBoxShowAnimated.UseVisualStyleBackColor = true;
+            this.checkBoxShowAnimated.CheckedChanged += new System.EventHandler(this.OnChangeAnimationState);
+            // 
             // trafoMatrixViewControlGlobal
             // 
             this.trafoMatrixViewControlGlobal.Location = new System.Drawing.Point(6, 20);
@@ -192,7 +208,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(392, 599);
+            this.ClientSize = new System.Drawing.Size(392, 615);
+            this.Controls.Add(this.checkBoxShowGlobalTransformation);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -227,5 +244,6 @@
         private System.Windows.Forms.Label labelChildrenTotal;
         private System.Windows.Forms.Label labelMeshesTotal;
         private System.Windows.Forms.Label labelMeshesDirect;
+        private System.Windows.Forms.CheckBox checkBoxShowGlobalTransformation;
     }
 }
