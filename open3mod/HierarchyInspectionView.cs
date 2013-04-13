@@ -73,8 +73,12 @@ namespace open3mod
         private bool _searchLocked;
         private int _hitNodeCursor;
         private List<TreeNode> _hitNodes;
-        private MeshDetailsDialog _meshDiag;
-        private NodeItemsDialog _nodeDiag;
+
+        // static because all tabs share them - it is just annoying to have multiple
+        // info dialogs open because it is impossible to keep track which belongs
+        // to which tab.
+        private static MeshDetailsDialog _meshDiag;
+        private static NodeItemsDialog _nodeDiag;
 
         public HierarchyInspectionView(Scene scene, TabPage tabPageHierarchy)
         {
