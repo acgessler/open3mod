@@ -322,7 +322,8 @@ namespace open3mod
         {
             if (showGhost)
             {
-                Owner.MaterialMapper.ApplyGhostMaterial(mesh, Owner.Raw.Materials[mesh.MaterialIndex]);
+                Owner.MaterialMapper.ApplyGhostMaterial(mesh, Owner.Raw.Materials[mesh.MaterialIndex], 
+                    flags.HasFlag(RenderFlags.Shaded));
             }
             else
             {
