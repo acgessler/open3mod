@@ -282,6 +282,17 @@ namespace open3mod
                 // ReSharper restore CompareOfFloatsByEqualityOperator
             }
 
+            // hack to make sure the HUD is redrawn if the active camera mode changed without the
+            // user hovering over the HUD area. This can happen when auto-changing from one of the
+            // axis-lock-in modes to orbit mode.
+            var newMode = ui.ActiveCameraControllerForView(_hoverViewIndex).GetCameraMode();
+            if (newMode != _lastHoverViewCameraMode)
+            {
+                _hudDirty = true;
+            }
+
+            _lastHoverViewCameraMode = newMode;
+
             _lastActiveVp[0] = x1;
             _lastActiveVp[1] = y1;
             _lastActiveVp[2] = x2;
@@ -426,6 +437,7 @@ namespace open3mod
         };
 
         private bool _hudHidden;
+        private CameraMode _lastHoverViewCameraMode;
 
 
         /// <summary>
