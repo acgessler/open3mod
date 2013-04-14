@@ -155,6 +155,7 @@ namespace open3mod
 
         partial void OnMouseDown(object sender, MouseEventArgs e)
         {
+            UpdateActiveViewIfNeeded(e);
             if(e.Button == MouseButtons.Middle)
             {
                 _mouseWheelDown = true;
@@ -192,9 +193,7 @@ namespace open3mod
                 var view = UiState.ActiveTab.ActiveViews[(int)index];
                 Debug.Assert(view != null);
                 _renderer.OnMouseClick(e, view.Bounds, index);
-            }
-
-            UpdateActiveViewIfNeeded(e);
+            }           
         }
 
 
