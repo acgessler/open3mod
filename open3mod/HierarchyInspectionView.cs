@@ -40,6 +40,9 @@ namespace open3mod
         Joint = 2,
         ImporterGenerated = 0,
         GenericMeshHolder = 1,
+
+        Camera = 3,
+        Light = 4
     }
 
 
@@ -219,20 +222,43 @@ namespace open3mod
             Debug.Assert(node != null);
 
             // default node icon
-            var index = NodePurpose.GenericMeshHolder;
+            var purpose = NodePurpose.GenericMeshHolder;
             var isSkeletonNode = false;
 
             // mark nodes introduced by assimp (i.e. nodes not present in the source file)
             if (node.Name.StartsWith("<") && node.Name.EndsWith(">"))
             {
-                index = (int)NodePurpose.ImporterGenerated;
+                purpose = NodePurpose.ImporterGenerated;
             }
             else
             {
-                // mark skeleton nodes (joints) with a special icon. The algorithm to
-                // detect them is easy: check whether if this node or any children 
-                // carry meshes. if not, assume this is a joint.
-                isSkeletonNode = node.MeshCount == 0;
+                // first check if this node has assimp lights or cameras assigned.
+                for (var i = 0; i < _scene.Raw.CameraCount; ++i )
+                {
+                    if (_scene.Raw.Cameras[i].Name == node.Name)
+                    {
+                        purpose = NodePurpose.Camera;
+                        break;
+                    }   
+                }
+                if (purpose == NodePurpose.GenericMeshHolder)
+                {
+                    for (var i = 0; i < _scene.Raw.LightCount; ++i)
+                    {
+                        if (_scene.Raw.Lights[i].Name == node.Name)
+                        {
+                            purpose = NodePurpose.Light;
+                            break;
+                        }
+                    }
+                }
+                if (purpose == NodePurpose.GenericMeshHolder)
+                {
+                    // mark skeleton nodes (joints) with a special icon. The algorithm to
+                    // detect them is easy: check whether if this node or any children 
+                    // carry meshes. if not, assume this is a joint.
+                    isSkeletonNode = node.MeshCount == 0;
+                }
             }
 
             var root = new TreeNode(node.Name) {Tag = node, ContextMenuStrip = contextMenuStripTreeNode};
@@ -267,11 +293,17 @@ namespace open3mod
 
             if(isSkeletonNode)
             {
-                index = NodePurpose.Joint;
+                purpose = NodePurpose.Joint;
             }
 
-            _nodePurposes.Add(node, index);
-            root.ImageIndex = root.SelectedImageIndex = (int)index;
+            _nodePurposes.Add(node, purpose);
+            // todo: proper icons for lights and cameras
+            var index = (int) purpose;
+            if(purpose == NodePurpose.Light || purpose == NodePurpose.Camera)
+            {
+                index = 1;
+            }
+            root.ImageIndex = root.SelectedImageIndex = index;
 
             if (level < AutoExpandLevels)
             {

@@ -49,6 +49,12 @@ namespace open3mod
                 case NodePurpose.GenericMeshHolder:
                     labelCaption.Text = "Node";
                     break;
+                case NodePurpose.Camera:
+                    labelCaption.Text = "Camera";
+                    break;
+                case NodePurpose.Light:
+                    labelCaption.Text = "Light";
+                    break;
                 default:
                     Debug.Assert(false);
                     break;
