@@ -38,6 +38,8 @@ namespace open3mod
         private readonly Vector3 _up;
         private CameraMode _mode;
 
+        private Vector3 _panVector;
+
 
         private const float ZoomSpeed = 1.00105f;
         private const float MinimumCameraDistance = 0.1f;
@@ -46,6 +48,7 @@ namespace open3mod
         /// Rotation speed, in degrees per pixels
         /// </summary>
         private const float RotationSpeed = 0.5f;
+        private const float PanSpeed = 0.004f;
         private const float InitialCameraDistance = 3.0f;
 
 
@@ -106,13 +109,16 @@ namespace open3mod
 
         public void Pan(float x, float y)
         {
-            
+            _panVector.X += x * PanSpeed;
+            _panVector.Y += -y * PanSpeed;
+
+            UpdateViewMatrix();
         }
 
 
         public void MovementKey(float x, float y, float z)
         {
-            // XXX switch to FPS camera at current position?
+            // TODO switch to FPS camera at current position?
         }
 
 
@@ -125,6 +131,7 @@ namespace open3mod
         private void UpdateViewMatrix()
         {
             _viewWithOffset = Matrix4.LookAt(_view.Column2.Xyz * _cameraDistance, Vector3.Zero, _view.Column1.Xyz);
+            _viewWithOffset *= Matrix4.CreateTranslation(_panVector);
         }
 
 
