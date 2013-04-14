@@ -230,6 +230,8 @@ namespace open3mod
                 GL.Disable(EnableCap.Texture2D);
             }         
 
+            GL.Enable(EnableCap.Normalize);
+
             var alpha = 1.0f;
             if (mat.HasOpacity)
             {
