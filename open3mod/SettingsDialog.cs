@@ -170,5 +170,14 @@ namespace open3mod
                 scene.RecreateRenderingBackend();
             }
         }
+
+
+        private void checkBoxBFCulling_CheckedChanged(object sender, EventArgs e)
+        {
+            foreach (var scene in _main.UiState.ActiveScenes())
+            {
+                scene.RequestRenderRefresh();
+            }
+        }
     }
 }

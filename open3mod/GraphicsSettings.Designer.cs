@@ -94,5 +94,17 @@ namespace open3mod {
                 this["LightingQuality"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool BackFaceCulling {
+            get {
+                return ((bool)(this["BackFaceCulling"]));
+            }
+            set {
+                this["BackFaceCulling"] = value;
+            }
+        }
     }
 }

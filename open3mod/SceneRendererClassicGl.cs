@@ -97,7 +97,6 @@ namespace open3mod
             GL.Disable(EnableCap.Texture2D);
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
             GL.Enable(EnableCap.DepthTest);
-            GL.FrontFace(FrontFaceDirection.Ccw);
 
             // set fixed-function lighting parameters
             GL.ShadeModel(ShadingModel.Smooth);
@@ -332,6 +331,17 @@ namespace open3mod
                     flags.HasFlag(RenderFlags.Shaded));
             }
 
+            if (GraphicsSettings.Default.BackFaceCulling)
+            {
+                GL.FrontFace(FrontFaceDirection.Ccw);
+                GL.CullFace(CullFaceMode.Back);
+                GL.Enable(EnableCap.CullFace);
+            }
+            else
+            {
+                GL.Disable(EnableCap.CullFace);
+            }   
+
             var hasColors = mesh.HasVertexColors(0);
             var hasTexCoords = mesh.HasTextureCoords(0);
 
@@ -398,6 +408,7 @@ namespace open3mod
                 }
                 GL.End();
             }
+            GL.Disable(EnableCap.CullFace);
             return skinning;
         }
 

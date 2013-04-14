@@ -94,6 +94,7 @@ namespace open3mod
             this.toolStripStatistics = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.glControl1 = new open3mod.RenderControl();
             this.menuStrip1.SuspendLayout();
             this.toolStripSelectRenderer.SuspendLayout();
@@ -695,6 +696,7 @@ namespace open3mod
         private ToolStripSeparator toolStripSeparator8;
         private ToolStripMenuItem optionsToolStripMenuItem;
         private System.DirectoryServices.DirectorySearcher directorySearcher1;
+        private ColorDialog colorDialog1;
     }
 }
 

@@ -46,13 +46,14 @@
             this.comboBoxSetMultiSampling = new System.Windows.Forms.ComboBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label7 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label8 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.checkBoxLinearMIP = new System.Windows.Forms.CheckBox();
             this.labelPleaseRestart = new System.Windows.Forms.Label();
+            this.checkBoxBFCulling = new System.Windows.Forms.CheckBox();
+            this.checkBoxLinearMIP = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -88,6 +89,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.checkBoxBFCulling);
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.comboBoxSetLightingMode);
             this.groupBox1.Controls.Add(this.checkBox3);
@@ -265,6 +267,16 @@
             this.tabPage2.Text = "Import";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.ForeColor = System.Drawing.Color.Red;
+            this.label7.Location = new System.Drawing.Point(235, 160);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(38, 13);
+            this.label7.TabIndex = 0;
+            this.label7.Text = "TODO";
+            // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.label8);
@@ -275,6 +287,16 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Animation";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.ForeColor = System.Drawing.Color.Red;
+            this.label8.Location = new System.Drawing.Point(232, 163);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(38, 13);
+            this.label8.TabIndex = 1;
+            this.label8.Text = "TODO";
             // 
             // button1
             // 
@@ -294,25 +316,29 @@
             this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // label7
+            // labelPleaseRestart
             // 
-            this.label7.AutoSize = true;
-            this.label7.ForeColor = System.Drawing.Color.Red;
-            this.label7.Location = new System.Drawing.Point(235, 160);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(38, 13);
-            this.label7.TabIndex = 0;
-            this.label7.Text = "TODO";
+            this.labelPleaseRestart.AutoSize = true;
+            this.labelPleaseRestart.ForeColor = System.Drawing.Color.Red;
+            this.labelPleaseRestart.Location = new System.Drawing.Point(23, 434);
+            this.labelPleaseRestart.Name = "labelPleaseRestart";
+            this.labelPleaseRestart.Size = new System.Drawing.Size(232, 13);
+            this.labelPleaseRestart.TabIndex = 2;
+            this.labelPleaseRestart.Text = "Please restart the application to see all changes";
+            this.labelPleaseRestart.Visible = false;
             // 
-            // label8
+            // checkBoxBFCulling
             // 
-            this.label8.AutoSize = true;
-            this.label8.ForeColor = System.Drawing.Color.Red;
-            this.label8.Location = new System.Drawing.Point(232, 163);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(38, 13);
-            this.label8.TabIndex = 1;
-            this.label8.Text = "TODO";
+            this.checkBoxBFCulling.AutoSize = true;
+            this.checkBoxBFCulling.Checked = global::open3mod.GraphicsSettings.Default.BackFaceCulling;
+            this.checkBoxBFCulling.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.GraphicsSettings.Default, "BackFaceCulling", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxBFCulling.Location = new System.Drawing.Point(188, 253);
+            this.checkBoxBFCulling.Name = "checkBoxBFCulling";
+            this.checkBoxBFCulling.Size = new System.Drawing.Size(112, 17);
+            this.checkBoxBFCulling.TabIndex = 13;
+            this.checkBoxBFCulling.Text = "Back-Face Culling";
+            this.checkBoxBFCulling.UseVisualStyleBackColor = true;
+            this.checkBoxBFCulling.CheckedChanged += new System.EventHandler(this.checkBoxBFCulling_CheckedChanged);
             // 
             // checkBoxLinearMIP
             // 
@@ -327,17 +353,6 @@
             this.checkBoxLinearMIP.Text = "Use MIPs";
             this.checkBoxLinearMIP.UseVisualStyleBackColor = true;
             this.checkBoxLinearMIP.CheckedChanged += new System.EventHandler(this.OnChangeMipSettings);
-            // 
-            // labelPleaseRestart
-            // 
-            this.labelPleaseRestart.AutoSize = true;
-            this.labelPleaseRestart.ForeColor = System.Drawing.Color.Red;
-            this.labelPleaseRestart.Location = new System.Drawing.Point(23, 434);
-            this.labelPleaseRestart.Name = "labelPleaseRestart";
-            this.labelPleaseRestart.Size = new System.Drawing.Size(232, 13);
-            this.labelPleaseRestart.TabIndex = 2;
-            this.labelPleaseRestart.Text = "Please restart the application to see all changes";
-            this.labelPleaseRestart.Visible = false;
             // 
             // SettingsDialog
             // 
@@ -392,5 +407,6 @@
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label labelPleaseRestart;
+        private System.Windows.Forms.CheckBox checkBoxBFCulling;
     }
 }

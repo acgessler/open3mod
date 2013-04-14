@@ -411,6 +411,12 @@ namespace open3mod
         }
 
 
+        /// <summary>
+        /// Sets a flag for the renderer that at least one of the textures in the
+        /// scene was changed and needs to be updated.
+        /// 
+        /// This method may be called from any thread.
+        /// </summary>
         private void SetTexturesChangedFlag()
         {
             lock (_texChangeLock)
@@ -424,6 +430,8 @@ namespace open3mod
         /// <summary>
         /// Requests that all textures be re-uploaded as soon as possible.
         /// This is called when the texture settings are changed.
+        /// 
+        /// This method may only be called from the UI thread.
         /// </summary>
         public void RequestReuploadTextures()
         {
@@ -441,6 +449,8 @@ namespace open3mod
         /// <summary>
         /// Requests that texture filters be re-configured as soon as possible.
         /// This is called when the texture settings are changed.
+        /// 
+        /// This method may only be called from the UI thread.
         /// </summary>
         public void RequestReconfigureTextures()
         {
@@ -452,6 +462,18 @@ namespace open3mod
                     tex.ReconfigureUploadedTextureRequested = true;
                 }
             }
+        }
+
+
+        /// <summary>
+        /// Requests the renderer to update next frame even if it seems as if
+        /// nothing changed.
+        /// 
+        /// This method may only be called from the UI thread.
+        /// </summary>
+        public void RequestRenderRefresh()
+        {
+            _nodesToShowChanged = true;
         }
 
 
