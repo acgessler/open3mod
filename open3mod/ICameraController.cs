@@ -75,6 +75,13 @@ namespace open3mod
         void Scroll(int z);
 
         /// <summary>
+        /// Processes pan events (i.e. mousewheel pressed)
+        /// </summary>
+        /// <param name="x">Signed x axis cursor movement, normalized by time</param>
+        /// <param name="y">Signed y axis cursor movement, normalized by time</param>
+        void Pan(float x, float y);
+
+        /// <summary>
         /// Processes movement keys
         /// </summary>
         /// <param name="x">Signed X axis movement, normalized by time</param>

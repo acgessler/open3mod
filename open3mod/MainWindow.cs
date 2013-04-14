@@ -42,11 +42,6 @@ namespace open3mod
         private Renderer _renderer;
         private readonly FpsTracker _fps;
         private LogViewer _logViewer;
-        private int _previousMousePosX = -1;
-        private int _previousMousePosY = -1;
-        private bool _mouseDown;
-
- 
 
         private delegate void DelegateSelectTab(TabPage tab);
         private readonly DelegateSelectTab _delegateSelectTab;
@@ -54,13 +49,6 @@ namespace open3mod
         private delegate void DelegatePopulateInspector(Tab tab);
         private readonly DelegatePopulateInspector _delegatePopulateInspector;
 
-
-        private bool _forwardPressed;
-        private bool _leftPressed;
-        private bool _rightPressed;
-        private bool _backPressed;
-        private bool _upPressed;
-        private bool _downPressed;
 
         private readonly bool _initialized;
 

@@ -13,6 +13,21 @@ namespace open3mod
     // and mouse and dispatching it to camera controllers, implement viewport dragging etc.
     public partial class MainWindow
     {
+        private bool _mouseWheelDown;
+
+        private bool _forwardPressed;
+        private bool _leftPressed;
+        private bool _rightPressed;
+        private bool _backPressed;
+        private bool _upPressed;
+        private bool _downPressed;
+
+        private int _previousMousePosX = -1;
+        private int _previousMousePosY = -1;
+        private bool _mouseDown;
+
+
+
         private void ProcessKeys()
         {
             var cam = UiState.ActiveTab.ActiveCameraController;
@@ -140,8 +155,20 @@ namespace open3mod
 
         partial void OnMouseDown(object sender, MouseEventArgs e)
         {
-            _mouseDown = true;
+            if(e.Button == MouseButtons.Middle)
+            {
+                _mouseWheelDown = true;
+                _previousMousePosX = e.X;
+                _previousMousePosY = e.Y;
+                return;
+            }
 
+            if (e.Button != MouseButtons.Left)
+            {
+                return;
+            }
+
+            _mouseDown = true;
             _previousMousePosX = e.X;
             _previousMousePosY = e.Y;
 
@@ -174,6 +201,7 @@ namespace open3mod
         partial void OnMouseUp(object sender, MouseEventArgs e)
         {
             _mouseDown = false;
+            _mouseWheelDown = false;
             if (!IsDraggingViewportSeparator)
             {
                 return;
@@ -191,6 +219,17 @@ namespace open3mod
 
         partial void OnMouseMove(object sender, MouseEventArgs e)
         {
+            if(_mouseWheelDown)
+            {
+                if (UiState.ActiveTab.ActiveCameraController != null)
+                {
+                    UiState.ActiveTab.ActiveCameraController.Pan(e.X - _previousMousePosX, e.Y - _previousMousePosY);
+                }
+                _previousMousePosX = e.X;
+                _previousMousePosY = e.Y;
+                return;
+            }
+
             var sep = _dragSeparator != Tab.ViewSeparator._Max ? _dragSeparator : MousePosToViewportSeparator(e.X, e.Y);
             if (sep != Tab.ViewSeparator._Max)
             {

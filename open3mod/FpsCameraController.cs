@@ -62,6 +62,13 @@ namespace open3mod
         }
 
 
+        public void Pan(float x, float y)
+        {
+            
+
+        }
+
+
         public void MovementKey(float x, float y, float z)
         {
             var v = new Vector3(x, y, z) * MovementBaseSpeed;

@@ -72,18 +72,6 @@ namespace CoreSettings {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("738")]
-        public int InspectorSplitterPos {
-            get {
-                return ((int)(this["InspectorSplitterPos"]));
-            }
-            set {
-                this["InspectorSplitterPos"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool RenderWireframe {
             get {
@@ -211,6 +199,18 @@ namespace CoreSettings {
             }
             set {
                 this["DefaultViewMode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("742")]
+        public int InspectorSplitterPos {
+            get {
+                return ((int)(this["InspectorSplitterPos"]));
+            }
+            set {
+                this["InspectorSplitterPos"] = value;
             }
         }
     }

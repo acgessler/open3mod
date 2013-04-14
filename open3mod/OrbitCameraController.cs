@@ -104,6 +104,12 @@ namespace open3mod
         }
 
 
+        public void Pan(float x, float y)
+        {
+            
+        }
+
+
         public void MovementKey(float x, float y, float z)
         {
             // XXX switch to FPS camera at current position?
