@@ -296,6 +296,7 @@ namespace open3mod
             {
                 Tag = new KeyValuePair<Node, Mesh>(owner, mesh),
                 ImageIndex = 3,
+                SelectedImageIndex = 3,
                 ContextMenuStrip = contextMenuStripMesh
             };
 
