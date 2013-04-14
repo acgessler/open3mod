@@ -24,17 +24,17 @@ namespace open3mod
             var dt = (float)_fps.LastFrameDelta;
             float x = 0.0f, y = 0.0f, z = 0.0f;
 
-            bool changed = false;
+            var changed = false;
 
             if (_forwardPressed)
             {
                 changed = true;
-                z += dt;
+                z -= dt;
             }
             if (_backPressed)
             {
                 changed = true;
-                z -= dt;
+                z += dt;
             }
 
             if (_rightPressed)
@@ -350,13 +350,13 @@ namespace open3mod
                     break;
 
                 case Keys.S:
-                case Keys.Right:
-                    _rightPressed = false;
+                case Keys.Down:
+                    _backPressed = false;
                     break;
 
                 case Keys.D:
-                case Keys.Back:
-                    _backPressed = false;
+                case Keys.Right:
+                    _rightPressed = false;
                     break;
 
                 case Keys.PageUp:

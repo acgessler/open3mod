@@ -36,8 +36,9 @@ namespace open3mod
         private Vector3 _translation;
 
         private static readonly Vector3 StartPosition = new Vector3(0.0f,2.0f,10.0f);
+        private bool _dirty = true;
         private const float MovementBaseSpeed = 1.0f;
-        private const float BaseZoomSpeed = 0.005f;
+        private const float BaseZoomSpeed = 0.002f;
         private const float RotationSpeed = 0.5f;
 
 
@@ -45,7 +46,6 @@ namespace open3mod
         {
             _view = Matrix4.Identity;
             _orientation = Matrix4.Identity;
-
             _translation = StartPosition;
 
             UpdateViewMatrix();
@@ -54,6 +54,10 @@ namespace open3mod
 
         public Matrix4 GetView()
         {
+            if(_dirty)
+            {
+                UpdateViewMatrix();
+            }
             return _view;
         }
 
@@ -61,10 +65,9 @@ namespace open3mod
         public void MovementKey(float x, float y, float z)
         {
             var v = new Vector3(x, y, z) * MovementBaseSpeed;
-            Vector3.Transform(ref v, ref _orientation, out v);
+            Vector3.TransformVector(ref v, ref _orientation, out v);
             _translation += v;
-
-            UpdateViewMatrix();
+            _dirty = true;
         }
 
 
@@ -79,7 +82,7 @@ namespace open3mod
             if (y != 0)
             {
                 _orientation *= Matrix4.CreateFromAxisAngle(_orientation.Column0.Xyz,
-                    (float)(y * RotationSpeed * Math.PI / 180.0));
+                    (float)(-y * RotationSpeed * Math.PI / 180.0));
             }
 
             if (x != 0)
@@ -88,24 +91,30 @@ namespace open3mod
                     Vector3.UnitY, (float)(-x * RotationSpeed * Math.PI / 180.0));
             }
 
-            UpdateViewMatrix();
+            _dirty = true;
         }
 
 
         public void Scroll(int z)
         {
-            _translation += new Vector3(_orientation.Column2) *z*BaseZoomSpeed;
+            _translation -= _orientation.Column2.Xyz *z*BaseZoomSpeed;
+            _dirty = true;
         }
 
 
         private void UpdateViewMatrix()
         {
+            // Derivation:
+            //     view = (orientation*translation)^-1
+            // =>  view = translation^-1 * orientation^-1
+            // =>  view = translation^-1 * orientation^T      ; orientation is ONB
+            // where translation^-1 is simply the negated translation vector.
+
             _view = _orientation;
             _view.Transpose();
 
-            _view.M41 = -_translation.X;
-            _view.M42 = -_translation.Y;
-            _view.M43 = -_translation.Z;
+            _view = Matrix4.CreateTranslation(-_translation) * _view;
+            _dirty = false;
         }
     }
 }

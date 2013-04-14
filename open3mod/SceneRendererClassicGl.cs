@@ -112,9 +112,9 @@ namespace open3mod
 
             GL.MatrixMode(MatrixMode.Modelview);
             var lookat = cam == null ? Matrix4.LookAt(0, 10, 5, 0, 0, 0, 0, 1, 0) : cam.GetView();
-
             GL.LoadMatrix(ref lookat);
-
+            //var tmp = 1.0f;
+            
             var tmp = InitposeMax.X - InitposeMin.X;
             tmp = Math.Max(InitposeMax.Y - InitposeMin.Y, tmp);
             tmp = Math.Max(InitposeMax.Z - InitposeMin.Z, tmp);
@@ -122,7 +122,7 @@ namespace open3mod
             GL.Scale(tmp,tmp,tmp);
 
             GL.Translate(-(InitposeMin + InitposeMax) * 0.5f);
-
+            
             // If textures changed, we may need to upload some of them to VRAM.
             // it is important this happens here and not accidentially while
             // compiling a displist.
@@ -130,6 +130,8 @@ namespace open3mod
             {
                 UploadTextures();
             }
+
+            GL.PushMatrix();
 
             // Build and cache Gl displaylists and update only when the scene changes.
             // when the scene is being animated, this is bad because it changes every
@@ -146,9 +148,9 @@ namespace open3mod
                     {
                         _displayList = GL.GenLists(1);
                     }
-                    GL.NewList(_displayList, ListMode.Compile); 
+                    GL.NewList(_displayList, ListMode.Compile);
                 }
-
+                
                 var needAlpha = RecursiveRender(Owner.Raw.RootNode, visibleMeshesByNode, flags, animated);
 
                 if (flags.HasFlag(RenderFlags.ShowSkeleton) || flags.HasFlag(RenderFlags.ShowNormals))
@@ -194,6 +196,8 @@ namespace open3mod
                     GL.CallList(_displayListAlpha);
                 }
             }
+
+            GL.PopMatrix();
 
             // always switch back to FILL
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
