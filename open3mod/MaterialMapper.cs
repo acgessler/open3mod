@@ -251,7 +251,7 @@ namespace open3mod
             color.A *= alpha;
             hasAlpha = hasAlpha || color.A < 1.0f;
             GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, color);
-
+            
             color = new Color4(0, 0, 0, 1.0f);
             if (mat.HasColorSpecular)
             {
@@ -296,14 +296,22 @@ namespace open3mod
             if (mat.HasShininess)
             {
                 shininess = mat.Shininess;
+         
             }
+            // todo: I don't even remember how shininess strength was supposed to be handled in assimp
             if (mat.HasShininessStrength)
             {
                 strength = mat.ShininessStrength;
             }
 
-            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Shininess, shininess * strength);
+            var exp = shininess*strength;
+            if (exp >= 128.0f) // 128 is the maximum exponent as per the Gl spec
+            {
+                exp = 128.0f;
+            }
 
+            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Shininess, exp);
+            
             if (hasAlpha)
             {
                 GL.Enable(EnableCap.Blend);
