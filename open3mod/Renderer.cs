@@ -505,7 +505,7 @@ namespace open3mod
             GL.Viewport((int) (xs*w), (int) (ys*h), (int) ((xe - xs)*w), (int) ((ye - ys)*h));
 
             DrawViewportColorsPre(active);
-            var aspectRatio = (float) ((xe - xs)/(ye - ys));
+            var aspectRatio = (float)vw/vh;
 
             // set a proper perspective matrix for rendering
             Matrix4 perspective = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspectRatio, 0.001f, 100.0f);
