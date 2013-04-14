@@ -180,7 +180,8 @@ namespace open3mod
 
         private void ApplyFixedFunctionMaterial(Mesh mesh, Material mat, bool textured, bool shaded)
         {
-            if ((mesh == null || mesh.HasNormals) && shaded)
+            shaded = shaded && (mesh == null || mesh.HasNormals);
+            if (shaded)
             {
                 GL.Enable(EnableCap.Lighting);
             }
@@ -250,68 +251,58 @@ namespace open3mod
             }
             color.A *= alpha;
             hasAlpha = hasAlpha || color.A < 1.0f;
-            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, color);
-            
-            color = new Color4(0, 0, 0, 1.0f);
-            if (mat.HasColorSpecular)
+
+            if (shaded)
             {
-                color = AssimpToOpenTk.FromColor(mat.ColorSpecular);
-                if (color.A < AlphaSuppressionThreshold) // s.a.
+                GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, color);
+
+                color = new Color4(0, 0, 0, 1.0f);
+                if (mat.HasColorSpecular)
                 {
-                    color.A = 1.0f;
+                    color = AssimpToOpenTk.FromColor(mat.ColorSpecular);              
                 }
-            }
-            color.A *= alpha;
-            hasAlpha = hasAlpha || color.A < 1.0f;
-            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Specular, color);
+                GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Specular, color);
 
-            color = new Color4(.2f, .2f, .2f, 1.0f);
-            if (mat.HasColorAmbient)
-            {
-                color = AssimpToOpenTk.FromColor(mat.ColorAmbient);
-                if (color.A < AlphaSuppressionThreshold) // s.a.
+                color = new Color4(.2f, .2f, .2f, 1.0f);
+                if (mat.HasColorAmbient)
                 {
-                    color.A = 1.0f;
+                    color = AssimpToOpenTk.FromColor(mat.ColorAmbient);
                 }
-            }
-            color.A *= alpha;
-            hasAlpha = hasAlpha || color.A < 1.0f;
-            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, color);
+                GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, color);
 
-            color = new Color4(0, 0, 0, 1.0f);
-            if (mat.HasColorEmissive)
-            {
-                color = AssimpToOpenTk.FromColor(mat.ColorEmissive);
-                if (color.A < AlphaSuppressionThreshold) // s.a.
+                color = new Color4(0, 0, 0, 1.0f);
+                if (mat.HasColorEmissive)
                 {
-                    color.A = 1.0f;
+                    color = AssimpToOpenTk.FromColor(mat.ColorEmissive);
                 }
-            }
-            color.A *= alpha;
-            hasAlpha = hasAlpha || color.A < 1.0f;
-            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, color);
+                GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, color);
 
-            float shininess = 1;
-            float strength = 1;
-            if (mat.HasShininess)
-            {
-                shininess = mat.Shininess;
-         
+                float shininess = 1;
+                float strength = 1;
+                if (mat.HasShininess)
+                {
+                    shininess = mat.Shininess;
+
+                }
+                // todo: I don't even remember how shininess strength was supposed to be handled in assimp
+                if (mat.HasShininessStrength)
+                {
+                    strength = mat.ShininessStrength;
+                }
+
+                var exp = shininess*strength;
+                if (exp >= 128.0f) // 128 is the maximum exponent as per the Gl spec
+                {
+                    exp = 128.0f;
+                }
+
+                GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Shininess, exp);
             }
-            // todo: I don't even remember how shininess strength was supposed to be handled in assimp
-            if (mat.HasShininessStrength)
+            else if (!hasColors)
             {
-                strength = mat.ShininessStrength;
+                GL.Color3(color.R, color.G, color.B);
             }
 
-            var exp = shininess*strength;
-            if (exp >= 128.0f) // 128 is the maximum exponent as per the Gl spec
-            {
-                exp = 128.0f;
-            }
-
-            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Shininess, exp);
-            
             if (hasAlpha)
             {
                 GL.Enable(EnableCap.Blend);
