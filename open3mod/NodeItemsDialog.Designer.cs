@@ -56,7 +56,7 @@
             this.groupBox1.Size = new System.Drawing.Size(368, 210);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Node Local Transformation";
+            this.groupBox1.Text = "Local Transformation";
             // 
             // groupBox2
             // 
@@ -66,7 +66,7 @@
             this.groupBox2.Size = new System.Drawing.Size(368, 210);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Node Global Transformation";
+            this.groupBox2.Text = "Global Transformation";
             // 
             // label1
             // 
