@@ -744,11 +744,14 @@ namespace open3mod
         private void OnCloseAllTabsButThisFromContextMenu(object sender, EventArgs e)
         {
             Debug.Assert(_tabContextMenuOwner != null);
-            for (int i = 0; i < tabControl1.TabCount; i++)
+            while (tabControl1.TabCount > 1)
             {
-                if (_tabContextMenuOwner != tabControl1.TabPages[i])
+                for (int i = 0; i < tabControl1.TabCount; i++)
                 {
-                    CloseTab(tabControl1.TabPages[i]);
+                    if (_tabContextMenuOwner != tabControl1.TabPages[i])
+                    {
+                        CloseTab(tabControl1.TabPages[i]);
+                    }
                 }
             }
         }
