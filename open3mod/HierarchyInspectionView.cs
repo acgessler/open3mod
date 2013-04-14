@@ -805,11 +805,17 @@ namespace open3mod
         private void OnContextMenuHideNode(object sender, EventArgs e)
         {
             var node = GetTreeNodeForContextMenuEvent(sender);
-            HideSubhierarchyPermanently(node);
+            if (IsNodePermanentlyHidden((Node)node.Tag))
+            {
+                UnhideSubhierarchy(node);
+            }
+            else
+            {
+                HideSubhierarchyPermanently(node);
+            }
         }
 
 
-    
         private bool HasPermanentlyHiddenNodes
         {
             get { return _hidden.Count != 0; }
@@ -831,11 +837,34 @@ namespace open3mod
             root.ImageIndex = root.SelectedImageIndex = 4;
             root.Collapse();
 
+            UpdateFilters();
+            UpdateHiddenNodesInfoPanel();
+        }
+
+
+        private void UpdateHiddenNodesInfoPanel()
+        {
+            if (_hidden.Count == 0)
+            {
+                panelHiddenInfo.Visible = false;
+                return;
+            }
             panelHiddenInfo.Visible = true;
             labelHiddenCount.Text = _hidden.Count.ToString(CultureInfo.InvariantCulture) +
                 (_hidden.Count > 1 ? " items are permanently hidden" : " item is permanently hidden");
+        }
 
+
+        private void UnhideSubhierarchy(TreeNode root)
+        {
+            var node = (Node)root.Tag;
+            Debug.Assert(_hidden.ContainsKey(node));
+
+            root.ImageIndex = root.SelectedImageIndex = (int) GetNodePurpose(node);
+            _hidden.Remove(node);   
+       
             UpdateFilters();
+            UpdateHiddenNodesInfoPanel();
         }
 
 
@@ -870,9 +899,26 @@ namespace open3mod
             }
 
             _hidden.Clear();
-            UpdateFilters();
 
-            panelHiddenInfo.Visible = false;
+            UpdateFilters();
+            UpdateHiddenNodesInfoPanel();
+        }
+
+
+        private void OpOpenNodeContextMenu(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var cm = (ContextMenuStrip) sender;
+            var root = GetTreeNodeForContextMenuEvent(sender);
+            var node = root.Tag as Node;
+            Debug.Assert(node != null);
+
+            Debug.Assert(cm.Items.Count >= 2);
+
+            // joints cannot be hidden - it would not make any sense because
+            // they don't carry meshes anyway.
+            cm.Items[1].Enabled = GetNodePurpose(node) != NodePurpose.Joint;
+
+            cm.Items[1].Text = IsNodePermanentlyHidden(node) ? "Unhide" : "Hide";
         }
     }
 }
