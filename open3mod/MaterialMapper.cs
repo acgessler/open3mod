@@ -190,7 +190,7 @@ namespace open3mod
                 GL.Disable(EnableCap.Lighting);
             }
 
-            var hasColors = mesh == null || mesh.HasVertexColors(0);
+            var hasColors = mesh != null && mesh.HasVertexColors(0);
             if (hasColors)
             {
                 GL.Enable(EnableCap.ColorMaterial);

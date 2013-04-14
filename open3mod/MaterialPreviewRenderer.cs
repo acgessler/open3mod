@@ -261,16 +261,17 @@ namespace open3mod
                 _sphereElements = SphereGeometry.CalculateElements(SphereSegments, SphereSegments);
             }
 
-            _scene.MaterialMapper.ApplyMaterial(null, _material, true, true);
-
             // reset color and alpha blending
             GL.Color4(Color.White);
             GL.Disable(EnableCap.Blend);
 
+            _scene.MaterialMapper.ApplyMaterial(null, _material, true, true);
+
             // set fixed-function lighting parameters
             GL.ShadeModel(ShadingModel.Smooth);
             GL.Enable(EnableCap.Light0);
-            GL.Light(LightName.Light0, LightParameter.Position, new float[] { 1, 1, -1 });
+      
+            GL.Light(LightName.Light0, LightParameter.Position, new float[] { 0.5f, -0.6f, -0.8f });
             GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { 1, 1, 1, 1 });
             GL.Light(LightName.Light0, LightParameter.Specular, new float[] { 1, 1, 1, 1 });     
 
