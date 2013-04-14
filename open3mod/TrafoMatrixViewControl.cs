@@ -214,6 +214,34 @@ namespace open3mod
         }
 
 
+        // quat4 -> (roll, pitch, yaw)
+        private static void QuatToEulerXyz(ref Quaternion q1, out Vector3 outVector)
+        {
+            // http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToEuler/
+            double sqw = q1.W*q1.W;
+            double sqx = q1.X*q1.X;
+            double sqy = q1.Y*q1.Y;
+            double sqz = q1.Z*q1.Z;
+	        double unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
+	        double test = q1.X*q1.Y + q1.Z*q1.W;
+	        if (test > 0.499*unit) { // singularity at north pole
+                outVector.Z = (float)(2 * Math.Atan2(q1.X, q1.W));
+                outVector.Y = (float)(Math.PI / 2);
+                outVector.X = 0;
+		        return;
+	        }
+	        if (test < -0.499*unit) { // singularity at south pole
+                outVector.Z = (float)(-2 * Math.Atan2(q1.X, q1.W));
+                outVector.Y = (float)(-Math.PI / 2);
+                outVector.X = 0;
+		        return;
+	        }
+            outVector.Z = (float)Math.Atan2(2 * q1.Y * q1.W - 2 * q1.X * q1.Z, sqx - sqy - sqz + sqw);
+            outVector.Y = (float)Math.Asin(2 * test / unit);
+            outVector.X = (float)Math.Atan2(2 * q1.X * q1.W - 2 * q1.Y * q1.Z, -sqx + sqy - sqz + sqw);
+        }
+
+
         private void SetRotation(bool diffAgainstBaseMatrix)
         {
             switch ((RotationMode)comboBoxRotMode.SelectedIndex)
@@ -223,7 +251,45 @@ namespace open3mod
                     labelRotationW.Visible = false;
                     textBoxRotW.Visible = false;
 
-                    // TODO
+                    Vector3 v;
+                    QuatToEulerXyz(ref _rotCurrent, out v);
+
+                    if ((RotationMode)comboBoxRotMode.SelectedIndex == RotationMode.EulerXyzDegrees)
+                    {
+                        v *= 180.0f/(float)Math.PI;
+                    }
+                    
+                    textBoxRotX.Text = v.X.ToString(Format);
+                    textBoxRotY.Text = v.Y.ToString(Format);
+                    textBoxRotZ.Text = v.Z.ToString(Format);
+
+                    if (diffAgainstBaseMatrix)
+                    {
+                        Vector3 vbase;
+                        QuatToEulerXyz(ref _rot, out vbase);
+
+                        if ((RotationMode)comboBoxRotMode.SelectedIndex == RotationMode.EulerXyzDegrees)
+                        {
+                            vbase *= 180.0f / (float)Math.PI;
+                        }
+
+                        const double epsilon = 1e-5f;
+                        if (Math.Abs(v.X - vbase.X) > epsilon)
+                        {
+                            labelRotationX.ForeColor = ColorIsAnimated;
+                            textBoxRotX.ForeColor = ColorIsAnimated;
+                        }
+                        if (Math.Abs(v.Y - vbase.Y) > epsilon)
+                        {
+                            labelRotationY.ForeColor = ColorIsAnimated;
+                            textBoxRotY.ForeColor = ColorIsAnimated;
+                        }
+                        if (Math.Abs(v.Z - vbase.Z) > epsilon)
+                        {
+                            labelRotationZ.ForeColor = ColorIsAnimated;
+                            textBoxRotZ.ForeColor = ColorIsAnimated;
+                        }
+                    }
                     break;
 
                 case RotationMode.Quaternion:
