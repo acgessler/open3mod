@@ -499,7 +499,7 @@ namespace open3mod
                 nodeInfoPopup.Location = loc;
             }
 
-            nodeInfoPopup.Populate((Node)node.Tag, GetNodePurpose((Node)node.Tag));
+            nodeInfoPopup.Populate(_scene.Raw, (Node)node.Tag, GetNodePurpose((Node)node.Tag));
         }
 
 
