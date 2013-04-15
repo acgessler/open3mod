@@ -13,7 +13,7 @@ namespace open3mod
     /// <summary>
     /// Provides a selectable thumbnail control for textures, goes together with the TextureInspectionView class.
     /// </summary>
-    public class TextureThumbnailControl : ThumbnailControlBase
+    public sealed class TextureThumbnailControl : ThumbnailControlBase
     {
         private readonly TextureInspectionView _owner;
         private readonly Scene _scene;
@@ -36,6 +36,22 @@ namespace open3mod
             _filePath = filePath;
          
             SetLoadingState();
+
+            ContextMenuStrip = new ContextMenuStrip();
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Show Alpha",null, OnContextMenuToggleAlpha));
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Details", null, OnContextMenuDetails));
+        }
+
+
+        private void OnContextMenuDetails(object sender, EventArgs eventArgs)
+        {
+            
+        }
+
+
+        private void OnContextMenuToggleAlpha(object sender, EventArgs eventArgs)
+        {
+
         }
 
 
