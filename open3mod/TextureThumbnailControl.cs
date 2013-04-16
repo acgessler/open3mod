@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -26,6 +27,8 @@ namespace open3mod
         private static Image _loadError;
         private static Image _background;
         private static Image _loadAnimImage;
+        private Image _imageWithAlpha;
+        private Image _imageWithoutAlpha;
 
 
         public TextureThumbnailControl(TextureInspectionView owner, Scene scene, string filePath)
@@ -38,8 +41,24 @@ namespace open3mod
             SetLoadingState();
 
             ContextMenuStrip = new ContextMenuStrip();
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Show Alpha",null, OnContextMenuToggleAlpha));
+
+            var s = new ToolStripMenuItem("Show Transparency", null, OnContextMenuToggleAlpha);
+            ContextMenuStrip.Items.Add(s);
+            s.CheckOnClick = true;
+            s.Checked = true;
+
+            s = new ToolStripMenuItem("Zoom", null, OnContextMenuZoom);
+            ContextMenuStrip.Items.Add(s);
+            s.CheckOnClick = true;
+            s.Checked = false;
+
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Details", null, OnContextMenuDetails));
+        }
+
+
+        private void OnContextMenuZoom(object sender, EventArgs eventArgs)
+        {
+            SetZoom();
         }
 
 
@@ -51,7 +70,7 @@ namespace open3mod
 
         private void OnContextMenuToggleAlpha(object sender, EventArgs eventArgs)
         {
-
+            SetPictureBoxImage();
         }
 
 
@@ -75,20 +94,78 @@ namespace open3mod
 
             BeginInvoke(new MethodInvoker(() =>
             {
-                pictureBox.Image = image;
+                _imageWithAlpha = image;
+                SetPictureBoxImage();
 
-                if (image.Width < pictureBox.Width && image.Height < pictureBox.Height)
-                {
-                    pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
-                }
-                else
-                {
-                    pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                }
+                SetZoom();
 
                 Invalidate();
             }));
 
+        }
+
+
+        private void SetPictureBoxImage()
+        {
+            if (GetState() != State.Good)
+            {
+                return;
+            }
+
+            var item = ((ToolStripMenuItem)ContextMenuStrip.Items[0]);
+            if (!Image.IsAlphaPixelFormat(_imageWithAlpha.PixelFormat))
+            {
+                item.Enabled = false;
+                item.Checked = false;
+                pictureBox.Image = _imageWithAlpha;
+                return;
+            }
+            if (item.Checked)
+            {
+                pictureBox.Image = _imageWithAlpha;
+            }
+            else
+            {
+                if (_imageWithoutAlpha == null)
+                {
+                    var clone = new Bitmap(_imageWithAlpha.Width, _imageWithAlpha.Height, PixelFormat.Format24bppRgb);
+                    using (var gr = Graphics.FromImage(clone)) {
+                        gr.Clear(Color.White);
+                        gr.DrawImage(_imageWithAlpha, new Rectangle(0, 0, clone.Width, clone.Height));
+                    }
+
+                    _imageWithoutAlpha = clone;
+                }
+                pictureBox.Image = _imageWithoutAlpha;
+            }
+        }
+
+
+
+        private void SetZoom()
+        {
+            if (GetState() != State.Good)
+            {
+                return;
+            }
+
+            var item = ((ToolStripMenuItem)ContextMenuStrip.Items[1]);
+            if(_imageWithAlpha.Width >= pictureBox.Width && _imageWithAlpha.Height >= pictureBox.Height)
+            {
+                item.Enabled = false;
+                item.Checked = false;
+                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+                return;
+            }
+            
+            if (_imageWithAlpha.Width < pictureBox.Width && _imageWithAlpha.Height < pictureBox.Height && !item.Checked)
+            {
+                pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
+            }
+            else
+            {
+                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+            }
         }
 
 
