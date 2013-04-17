@@ -375,11 +375,11 @@ namespace open3mod
                     }
 
                     var img = _hudImages[i, imageIndex];
-                    Debug.Assert(img.Width == imageWidth && img.Height == imageHeight, 
-                        "all images must be of the same size");
+                    //Debug.Assert(img.Width == imageWidth && img.Height == imageHeight, 
+                    //    "all images must be of the same size");
 
                     graphics.DrawImage(img, x, y, w, h);
-                    xPoint += img.Width;
+                    xPoint += imageWidth;
                 }
             }
         }
