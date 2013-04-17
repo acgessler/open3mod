@@ -96,9 +96,17 @@ namespace open3mod
             BeginInvoke(new MethodInvoker(() =>
             {
                 _imageWithAlpha = image;
-                SetPictureBoxImage();
 
-                SetZoom();
+                if (GetState() == State.Good)
+                {
+                    SetPictureBoxImage();
+                    SetZoom();
+                }
+                else
+                {
+                    pictureBox.Image = _imageWithAlpha;
+                    pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
+                }
 
                 Invalidate();
             }));
