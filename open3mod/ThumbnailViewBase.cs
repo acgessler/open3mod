@@ -12,7 +12,7 @@ namespace open3mod
     /// Defines base behavior for the thumbnail panels used in the materials and textures tabs
     /// </summary>
     /// <typeparam name="TThumbnailType">(User) control type that pertains to a single thumbnail</typeparam>
-    public abstract class ThumbnailViewBase<TThumbnailType> where TThumbnailType : ThumbnailControlBase
+    public abstract class ThumbnailViewBase<TThumbnailType> where TThumbnailType : ThumbnailControlBase<TThumbnailType>
     {
         protected readonly FlowLayoutPanel Flow;
         protected readonly List<TThumbnailType> Entries;

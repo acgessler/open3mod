@@ -13,13 +13,13 @@ namespace open3mod
     /// <summary>
     /// Provides a selectable thumbnail control for materials, goes together with the TextureInspectionView class.
     /// </summary>
-    public class MaterialThumbnailControl : ThumbnailControlBase
+    public class MaterialThumbnailControl : ThumbnailControlBase<MaterialThumbnailControl>
     {
-        private readonly MaterialInspectionView _owner;
+        private new readonly MaterialInspectionView _owner;
         private readonly Scene _scene;
         private readonly Material _material;
        
-        private object _lock = new object();
+        private readonly object _lock = new object();
 
         private static Image _loadError;
         private static Image _background;
@@ -31,13 +31,13 @@ namespace open3mod
 
 
         public MaterialThumbnailControl(MaterialInspectionView owner, Scene scene, Material material)
-            : base(GetBackgroundImage(), material.HasName ? material.Name : "Unnamed Material")
+            : base(owner, GetBackgroundImage(), material.HasName ? material.Name : "Unnamed Material")
         {
             _owner = owner;
             _scene = scene;
             _material = material;
 
-            _superSample = true;
+            _superSample = true;         
 
             UpdatePreview();
             SetLoadingState();            

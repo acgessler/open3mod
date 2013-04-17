@@ -1,6 +1,8 @@
-﻿namespace open3mod
+﻿using System.Windows.Forms;
+
+namespace open3mod
 {
-    partial class ThumbnailControlBase
+    public abstract partial class ThumbnailControlBase<TDeriving>  
     {
         /// <summary> 
         /// Required designer variable.

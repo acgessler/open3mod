@@ -41,8 +41,10 @@ namespace open3mod
     /// 
     /// See TextureThumbnailControl for example use.
     /// </summary>
-    public abstract partial class ThumbnailControlBase : UserControl
+    public abstract partial class ThumbnailControlBase<TDeriving> : UserControl 
+            where TDeriving  : ThumbnailControlBase<TDeriving>  
     {
+        protected readonly ThumbnailViewBase<TDeriving> _owner;
         private bool _selected;
 
         /// <summary>
@@ -72,8 +74,9 @@ namespace open3mod
         private const int FadeTime = 500;
 
 
-        protected ThumbnailControlBase(Image backgroundImage, string initialCaption)
-        {           
+        protected ThumbnailControlBase(ThumbnailViewBase<TDeriving> owner, Image backgroundImage, string initialCaption)
+        {
+            _owner = owner;
             InitializeComponent();
 
             labelOldTexture.Text = "";
@@ -91,8 +94,17 @@ namespace open3mod
                     cc.MouseEnter += (sender, args) => OnMouseEnter(new EventArgs());
                     cc.MouseLeave += (sender, args) => OnMouseLeave(new EventArgs());
                 }
-            }           
+            }
+
+            MouseDown += (sender, args) => owner.SelectEntry((TDeriving)this);
         }
+
+ 
+        protected void OnContextMenuOpen(object sender, EventArgs e)
+        {
+            _owner.SelectEntry((TDeriving)this);
+        }
+
 
 
         protected abstract State GetState();
@@ -237,11 +249,7 @@ namespace open3mod
 
         }
 
-        protected virtual void OnContextMenuOpen(object sender, EventArgs e)
-        {
-            // TODO NIY
-        }
-
+   
         protected virtual void OnContextMenuExport(object sender, EventArgs e)
         {
             // TODO NIY
