@@ -110,10 +110,10 @@
             // 
             this.imageListIconsHierarchy.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListIconsHierarchy.ImageStream")));
             this.imageListIconsHierarchy.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageListIconsHierarchy.Images.SetKeyName(0, "HierarchyIconGenerated.png");
-            this.imageListIconsHierarchy.Images.SetKeyName(1, "HierarchyIconGenericNode.png");
-            this.imageListIconsHierarchy.Images.SetKeyName(2, "HierarchyIconJoint.png");
-            this.imageListIconsHierarchy.Images.SetKeyName(3, "HierarchyIconMesh.png");
+            this.imageListIconsHierarchy.Images.SetKeyName(0, "root.png");
+            this.imageListIconsHierarchy.Images.SetKeyName(1, "normal.png");
+            this.imageListIconsHierarchy.Images.SetKeyName(2, "joints.png");
+            this.imageListIconsHierarchy.Images.SetKeyName(3, "mesh.png");
             this.imageListIconsHierarchy.Images.SetKeyName(4, "HierarchyIconHidden.png");
             // 
             // labelNodeStats
@@ -174,20 +174,20 @@
             this.detailsToolStripMenuItem,
             this.hideToolStripMenuItem});
             this.contextMenuStripTreeNode.Name = "contextMenuStripTreeNode";
-            this.contextMenuStripTreeNode.Size = new System.Drawing.Size(153, 70);
+            this.contextMenuStripTreeNode.Size = new System.Drawing.Size(110, 48);
             this.contextMenuStripTreeNode.Opening += new System.ComponentModel.CancelEventHandler(this.OpOpenNodeContextMenu);
             // 
             // detailsToolStripMenuItem
             // 
             this.detailsToolStripMenuItem.Name = "detailsToolStripMenuItem";
-            this.detailsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.detailsToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
             this.detailsToolStripMenuItem.Text = "Details";
             this.detailsToolStripMenuItem.Click += new System.EventHandler(this.OnContextMenuShowDetails);
             // 
             // hideToolStripMenuItem
             // 
             this.hideToolStripMenuItem.Name = "hideToolStripMenuItem";
-            this.hideToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.hideToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
             this.hideToolStripMenuItem.Text = "Hide";
             this.hideToolStripMenuItem.Click += new System.EventHandler(this.OnContextMenuHideNode);
             // 
