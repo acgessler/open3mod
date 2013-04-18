@@ -41,8 +41,10 @@ namespace open3mod
         Z = 2,
         Orbit = 3,
         Fps = 4,
+        Pick = 5,
 
-        _Max = 5
+        _Max = 6,
+        
     }
 
     /// <summary>

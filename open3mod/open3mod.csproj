@@ -167,6 +167,7 @@
     <Compile Include="OrbitCameraController.cs" />
     <Compile Include="OverlayNormals.cs" />
     <Compile Include="OverlaySkeleton.cs" />
+    <Compile Include="PickingCameraController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RenderControl.cs">
