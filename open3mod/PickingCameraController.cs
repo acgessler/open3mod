@@ -31,12 +31,21 @@ namespace open3mod
     public class PickingCameraController : ICameraController
     {
         private Matrix4 _view;
-
-
-
         public PickingCameraController(Matrix4 view)
         {
             _view = view;    
+        }
+
+
+        public PickingCameraController()
+        {
+            
+        }
+
+
+        public void SetView(Matrix4 view)
+        {
+            _view = view;
         }
 
 
@@ -71,7 +80,6 @@ namespace open3mod
         {
 
         }
-
     }
 }
 

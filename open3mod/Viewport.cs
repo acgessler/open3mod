@@ -103,6 +103,9 @@ namespace open3mod
                         _cameraImpls[(int)CameraMode.Z] = orbit;
                         _cameraImpls[(int)CameraMode.Orbit] = orbit;
                         break;
+                    case CameraMode.Pick:
+                        _cameraImpls[(int)camMode] = new PickingCameraController();
+                        break;
                     default:
                         Debug.Assert(false);
                         break;
@@ -114,6 +117,25 @@ namespace open3mod
 
         public void ChangeCameraModeForView(CameraMode cameraMode)
         {
+            if(_camMode == cameraMode)
+            {
+                return;
+            }
+
+            var oldCam = _cameraImpls[(int) _camMode];
+
+            // when changing to the picking camera mode, preserve the old view matrix
+            if (cameraMode == CameraMode.Pick)
+            {
+                Debug.Assert(oldCam != null);
+                if (_cameraImpls[(int)cameraMode] == null)
+                {
+                    _cameraImpls[(int)cameraMode] = new PickingCameraController();
+                }
+                var picker = (PickingCameraController)_cameraImpls[(int)cameraMode];
+                picker.SetView(oldCam.GetView());
+            }
+
             _camMode = cameraMode;
 
             // special handling to switch the orbit camera controller between the x,y,z and full orbit modes

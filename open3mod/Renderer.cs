@@ -425,7 +425,8 @@ namespace open3mod
             "open3mod.Images.HUD_Y",
             "open3mod.Images.HUD_Z",
             "open3mod.Images.HUD_Orbit",
-            "open3mod.Images.HUD_FPS"
+            "open3mod.Images.HUD_FPS",
+            "open3mod.Images.HUD_Picking"
         };
 
 
@@ -447,7 +448,7 @@ namespace open3mod
         {
             if (_hudImages == null)
             {
-                _hudImages = new Image[5,3];
+                _hudImages = new Image[PrefixTable.Length, 3];
                 
 
                 for (var i = 0; i < _hudImages.GetLength(0); ++i)
