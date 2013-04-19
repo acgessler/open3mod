@@ -104,7 +104,8 @@ namespace open3mod
                         _cameraImpls[(int)CameraMode.Orbit] = orbit;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        Debug.Assert(false);
+                        break;
                 }
             }
             return _cameraImpls[(int)camMode];
