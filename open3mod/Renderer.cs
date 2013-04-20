@@ -183,32 +183,35 @@ namespace open3mod
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             var ui = Window.UiState.ActiveTab;
+
+            // draw viewport 3D contents
             if (ui.ActiveScene != null)
             {
                 var index = Tab.ViewIndex.Index0;
                 foreach (var viewport in ui.ActiveViews)
-                {
-
-                    // draw the active viewport last (to make sure its contour line is on top)
+                {   
+                    // always draw the active viewport last 
                     if (viewport == null || ui.ActiveViewIndex == index)
                     {
                         ++index;
                         continue;
                     }
-
                     var view = viewport.Bounds;
-
                     var cam = viewport.ActiveCameraControllerForView();
-                    DrawViewport(cam, activeTab, view.X, view.Y, view.Z, view.W, false);
+                    DrawViewport(cam, activeTab, view.X, view.Y, view.Z, view.W, ui.ActiveViewIndex == index);
                     ++index;
                 }
 
-                var activeVp = ui.ActiveViews[(int) ui.ActiveViewIndex];
+                var activeVp = ui.ActiveViews[(int)ui.ActiveViewIndex];
                 Debug.Assert(activeVp != null);
 
                 var activeVpBounds = activeVp.Bounds;
-                DrawViewport(ui.ActiveCameraController, activeTab, activeVpBounds.X, activeVpBounds.Y,
-                             activeVpBounds.Z, activeVpBounds.W, true);
+                DrawViewport(activeVp.ActiveCameraControllerForView(),
+                    activeTab, 
+                    activeVpBounds.X, 
+                    activeVpBounds.Y, 
+                    activeVpBounds.Z, 
+                    activeVpBounds.W, true);
 
                 if (ui.ActiveViewMode != Tab.ViewMode.Single)
                 {
@@ -251,6 +254,31 @@ namespace open3mod
                 }
             }
             _textOverlay.Draw();
+
+            // draw viewport finishing (i.e. contours)
+            if (ui.ActiveScene != null)
+            {
+                var index = Tab.ViewIndex.Index0;
+                foreach (var viewport in ui.ActiveViews)
+                {
+                    // always draw the active viewport last 
+                    if (viewport == null || ui.ActiveViewIndex == index)
+                    {
+                        ++index;
+                        continue;
+                    }
+
+                    var view = viewport.Bounds;
+                    DrawViewportPost(view.X, view.Y, view.Z, view.W, false);
+                    ++index;
+                }
+
+                var activeVp = ui.ActiveViews[(int) ui.ActiveViewIndex];
+                Debug.Assert(activeVp != null);
+
+                var activeVpBounds = activeVp.Bounds;
+                DrawViewportPost(activeVpBounds.X, activeVpBounds.Y,activeVpBounds.Z, activeVpBounds.W, true);
+            }
 
             // handle other Gl jobs such as drawing preview images - components
             // use this event to register their jobs.
@@ -524,8 +552,6 @@ namespace open3mod
             {
                 DrawScene(activeTab.ActiveScene, view);
             }
-
-            DrawViewportColorsPost(active, vw, vh);
         }
 
 
