@@ -96,6 +96,7 @@ namespace open3mod
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.glControl1 = new open3mod.RenderControl();
+            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             this.toolStripSelectRenderer.SuspendLayout();
             this.tabContextMenuStrip.SuspendLayout();
@@ -347,12 +348,13 @@ namespace open3mod
             this.toolStripButtonWireframe,
             this.toolStripButtonShowTextures,
             this.toolStripButtonShowShaded,
-            this.toolStripButtonShowFPS,
             this.toolStripSeparator1,
             this.toolStripButtonShowBB,
             this.toolStripButtonShowNormals,
             this.toolStripButtonShowSkeleton,
             this.toolStripSeparator5,
+            this.toolStripButtonShowFPS,
+            this.toolStripSeparator9,
             this.toolStripButtonShowSettings});
             this.toolStripSelectRenderer.Location = new System.Drawing.Point(0, 24);
             this.toolStripSelectRenderer.Name = "toolStripSelectRenderer";
@@ -605,6 +607,11 @@ namespace open3mod
             this.glControl1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.OnPreviewKeyDown);
             this.glControl1.Resize += new System.EventHandler(this.OnGlResize);
             // 
+            // toolStripSeparator9
+            // 
+            this.toolStripSeparator9.Name = "toolStripSeparator9";
+            this.toolStripSeparator9.Size = new System.Drawing.Size(6, 25);
+            // 
             // MainWindow
             // 
             this.AllowDrop = true;
@@ -697,6 +704,7 @@ namespace open3mod
         private ToolStripMenuItem optionsToolStripMenuItem;
         private System.DirectoryServices.DirectorySearcher directorySearcher1;
         private ColorDialog colorDialog1;
+        private ToolStripSeparator toolStripSeparator9;
     }
 }
 
