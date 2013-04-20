@@ -226,7 +226,7 @@ namespace open3mod
             var isSkeletonNode = false;
 
             // mark nodes introduced by assimp (i.e. nodes not present in the source file)
-            if (node.Name.StartsWith("<") && node.Name.EndsWith(">"))
+            if (node.Name.StartsWith("<") && node.Name.EndsWith(">") || level == 0)
             {
                 purpose = NodePurpose.ImporterGenerated;
             }
