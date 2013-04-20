@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -327,60 +328,63 @@ namespace open3mod
             var imageHeight = _hudImages[0, 0].Height;
 
             var regionWidth = imageWidth*_hudImages.GetLength(0) + xSpacing*(_hudImages.GetLength(0) - 1);
-            const int regionHeight = 25;
+            const int regionHeight = 27;
 
             xPoint -= regionWidth;
             _hoverRegion = new Rectangle(xPoint, yPoint, regionWidth - 2, regionHeight);
 
-            var color = HudColor;
             if (_hoverFadeInTime > 0.0f)
             {
-                color = Color.FromArgb((int) (color.A*(1.0f - _hoverFadeInTime/HudHoverTime)), color);
+                var cm = new ColorMatrix();
+                var ia = new ImageAttributes();
+                cm.Matrix33 = 1.0f - _hoverFadeInTime/HudHoverTime;
+                ia.SetColorMatrix(cm);
+
+                graphics.DrawImage(_hudBar, _hoverRegion, 0, 0, _hudBar.Width, _hudBar.Height, GraphicsUnit.Pixel, ia);
+            }
+            else
+            {
+                graphics.DrawImage(_hudBar, _hoverRegion);
             }
 
-            using (var brush = new SolidBrush(color))
+            xPoint += _hudImages.GetLength(0) / 2;
+            for (var i = 0; i < _hudImages.GetLength(0); ++i)
             {
-                graphics.FillRectangle(brush, _hoverRegion);
+                var x = xPoint;
+                var y = yPoint + 3;
+                var w = (int)(imageWidth * 2.0 / 3);
+                var h = (int)(imageHeight * 2.0 / 3);
 
-                xPoint += _hudImages.GetLength(0) / 2;
-                for (var i = 0; i < _hudImages.GetLength(0); ++i)
+                if (_processHudClick &&
+                    _mouseClickPos.X > x && _mouseClickPos.X <= x + w &&
+                    _mouseClickPos.Y > y && _mouseClickPos.Y <= y + h)
                 {
-                    var x = xPoint;
-                    var y = yPoint + 2;
-                    var w = (int)(imageWidth * 2.0 / 3);
-                    var h = (int)(imageHeight * 2.0 / 3);
+                    _processHudClick = false;
 
-                    if (_processHudClick &&
-                        _mouseClickPos.X > x && _mouseClickPos.X <= x + w &&
-                        _mouseClickPos.Y > y && _mouseClickPos.Y <= y + h)
-                    {
-                        _processHudClick = false;
-
-                        ui.ChangeCameraModeForView(_hoverViewIndex, (CameraMode)i);
-                        Debug.Assert(ui.ActiveCameraControllerForView(_hoverViewIndex).GetCameraMode() == (CameraMode)i);
-                    }
-
-                    // normal image
-                    var imageIndex = 0;
-
-                    if (ui.ActiveCameraControllerForView(_hoverViewIndex).GetCameraMode() == (CameraMode)i)
-                    {
-                        // selected image
-                        imageIndex = 2;
-                    }
-                    else if (_mousePos.X > x && _mousePos.X <= x + w && _mousePos.Y > y && _mousePos.Y <= y + h)
-                    {
-                        // hover image
-                        imageIndex = 1;
-                    }
-
-                    var img = _hudImages[i, imageIndex];
-                    //Debug.Assert(img.Width == imageWidth && img.Height == imageHeight, 
-                    //    "all images must be of the same size");
-
-                    graphics.DrawImage(img, x, y, w, h);
-                    xPoint += imageWidth;
+                    ui.ChangeCameraModeForView(_hoverViewIndex, (CameraMode)i);
+                    Debug.Assert(ui.ActiveCameraControllerForView(_hoverViewIndex).GetCameraMode() == (CameraMode)i);
                 }
+
+                // normal image
+                var imageIndex = 0;
+
+                if (ui.ActiveCameraControllerForView(_hoverViewIndex).GetCameraMode() == (CameraMode)i)
+                {
+                    // selected image
+                    imageIndex = 2;
+                }
+                else if (_mousePos.X > x && _mousePos.X <= x + w && _mousePos.Y > y && _mousePos.Y <= y + h)
+                {
+                    // hover image
+                    imageIndex = 1;
+                }
+
+                var img = _hudImages[i, imageIndex];
+                //Debug.Assert(img.Width == imageWidth && img.Height == imageHeight, 
+                //    "all images must be of the same size");
+
+                graphics.DrawImage(img, x, y, w, h);
+                xPoint += imageWidth;
             }
         }
 
@@ -439,6 +443,7 @@ namespace open3mod
 
         private bool _hudHidden;
         private CameraMode _lastHoverViewCameraMode;
+        private Image _hudBar;
 
 
         /// <summary>
@@ -446,19 +451,21 @@ namespace open3mod
         /// </summary>
         private void LoadHudImages()
         {
-            if (_hudImages == null)
+            if (_hudImages != null)
             {
-                _hudImages = new Image[PrefixTable.Length, 3];
-                
+                return;
+            }
 
-                for (var i = 0; i < _hudImages.GetLength(0); ++i)
+            _hudImages = new Image[PrefixTable.Length, 3];              
+            for (var i = 0; i < _hudImages.GetLength(0); ++i)
+            {
+                for (var j = 0; j < _hudImages.GetLength(1); ++j)
                 {
-                    for (var j = 0; j < _hudImages.GetLength(1); ++j)
-                    {
-                        _hudImages[i, j] = ImageFromResource.Get(PrefixTable[i] + PostFixTable[j] + ".png");
-                    }
+                    _hudImages[i, j] = ImageFromResource.Get(PrefixTable[i] + PostFixTable[j] + ".png");
                 }
             }
+
+            _hudBar = ImageFromResource.Get("open3mod.Images.HUDBar.png");
         }
 
 
@@ -518,6 +525,20 @@ namespace open3mod
                 DrawScene(activeTab.ActiveScene, view);
             }
 
+            DrawViewportColorsPost(active, vw, vh);
+        }
+
+
+        private void DrawViewportPost(double xs, double ys, double xe,
+                                  double ye, bool active = false)
+        {
+            // update viewport 
+            var w = (double)RenderResolution.Width;
+            var h = (double)RenderResolution.Height;
+
+            var vw = (int)((xe - xs) * w);
+            var vh = (int)((ye - ys) * h);
+            GL.Viewport((int)(xs * w), (int)(ys * h), (int)((xe - xs) * w), (int)((ye - ys) * h));
             DrawViewportColorsPost(active, vw, vh);
         }
 
