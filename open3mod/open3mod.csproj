@@ -219,6 +219,12 @@
     <Compile Include="TimeSlideControl.Designer.cs">
       <DependentUpon>TimeSlideControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="TipOfTheDayDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TipOfTheDayDialog.Designer.cs">
+      <DependentUpon>TipOfTheDayDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="TrafoMatrixViewControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -281,6 +287,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="TimeSlideControl.resx">
       <DependentUpon>TimeSlideControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TipOfTheDayDialog.resx">
+      <DependentUpon>TipOfTheDayDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TrafoMatrixViewControl.resx">
       <DependentUpon>TrafoMatrixViewControl.cs</DependentUpon>
