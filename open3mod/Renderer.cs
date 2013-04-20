@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
@@ -91,13 +92,13 @@ namespace open3mod
 
         protected Color BackgroundColor
         {
-            get { return Color.FromArgb(255, 170, 170, 170); }
+            get { return Color.FromArgb(255, 150, 150, 150); }
         }
 
 
         protected Color ActiveViewColor
         {
-            get { return Color.FromArgb(255, 180, 180, 180); }
+            get { return Color.FromArgb(255, 160, 160, 160); }
         }
 
 
@@ -365,7 +366,7 @@ namespace open3mod
             {
                 var cm = new ColorMatrix();
                 var ia = new ImageAttributes();
-                cm.Matrix33 = 1.0f - _hoverFadeInTime/HudHoverTime;
+                //cm.Matrix33 = 1.0f - _hoverFadeInTime/HudHoverTime;
                 ia.SetColorMatrix(cm);
 
                 graphics.DrawImage(_hudBar, _hoverRegion, 0, 0, _hudBar.Width, _hudBar.Height, GraphicsUnit.Pixel, ia);
@@ -379,7 +380,7 @@ namespace open3mod
             for (var i = 0; i < _hudImages.GetLength(0); ++i)
             {
                 var x = xPoint;
-                var y = yPoint + 3;
+                var y = yPoint + 4;
                 var w = (int)(imageWidth * 2.0 / 3);
                 var h = (int)(imageHeight * 2.0 / 3);
 
@@ -390,7 +391,7 @@ namespace open3mod
                     _processHudClick = false;
 
                     ui.ChangeCameraModeForView(_hoverViewIndex, (CameraMode)i);
-                    Debug.Assert(ui.ActiveCameraControllerForView(_hoverViewIndex).GetCameraMode() == (CameraMode)i);
+                    //Debug.Assert(ui.ActiveCameraControllerForView(_hoverViewIndex).GetCameraMode() == (CameraMode)i);
                 }
 
                 // normal image
@@ -411,7 +412,15 @@ namespace open3mod
                 //Debug.Assert(img.Width == imageWidth && img.Height == imageHeight, 
                 //    "all images must be of the same size");
 
-                graphics.DrawImage(img, x, y, w, h);
+                /*
+                var cm = new ColorMatrix();
+                var ia = new ImageAttributes();
+                cm.Matrix00 = 1.5f;
+                cm.Matrix11 = 1.5f;
+                cm.Matrix22 = 1.5f;
+                ia.SetColorMatrix(cm);
+                */
+                graphics.DrawImage(img, new Rectangle(x, y, w, h), 0,0,img.Width,img.Height,GraphicsUnit.Pixel,null);
                 xPoint += imageWidth;
             }
         }
