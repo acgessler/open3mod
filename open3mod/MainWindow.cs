@@ -114,7 +114,7 @@ namespace open3mod
             KeyPreview = true;
             _initialized = true;
 
-            InitRecentList();
+            InitRecentList();            
         }
 
 
@@ -145,6 +145,9 @@ namespace open3mod
         {
             base.OnCreateControl();
             AddTab("../../../testdata/scenes/spider.obj");
+
+            var tip = new TipOfTheDayDialog();
+            tip.ShowDialog();
         }
 
 
