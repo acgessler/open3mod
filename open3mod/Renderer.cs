@@ -92,13 +92,13 @@ namespace open3mod
 
         protected Color BackgroundColor
         {
-            get { return Color.FromArgb(255, 150, 150, 150); }
+            get { return Color.FromArgb(255, 165, 166, 165); }
         }
 
 
         protected Color ActiveViewColor
         {
-            get { return Color.FromArgb(255, 160, 160, 160); }
+            get { return Color.FromArgb(255, 175, 175, 175); }
         }
 
 
