@@ -223,6 +223,9 @@ namespace open3mod
 
             const float offset = 0;
 
+            // clear color
+            GL.Color3(1.0f,1.0f,1.0f);
+
             GL.Begin(BeginMode.Quads);
             GL.TexCoord2(0f, 0f); GL.Vertex2(0f - offset, 0f - offset);
             GL.TexCoord2(1f, 0f); GL.Vertex2(cs.Width - offset, 0f - offset);
