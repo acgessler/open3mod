@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////////////////////
 // Open 3D Model Viewer (open3mod) (v0.1)
 // [HierarchyInspectionView.cs]
 // (c) 2012-2013, Alexander C. Gessler
@@ -900,16 +900,27 @@ namespace open3mod
         }
 
 
+        private bool _preventExpand = false;
+        private DateTime _lastMouseDown = DateTime.Now;
+
         private void OnMouseClick(object sender, MouseEventArgs e)
-        {
+        {            
+            if(e.Button != MouseButtons.Right)
+            {
+                if(e.Button == MouseButtons.Left)
+                {
+                    // http://stackoverflow.com/questions/1249312/disable-expanding-after-doubleclick
+                    int delta = (int)DateTime.Now.Subtract(_lastMouseDown).TotalMilliseconds;
+                    _preventExpand = (delta < SystemInformation.DoubleClickTime);
+                    _lastMouseDown = DateTime.Now;
+                }
+                return;
+            }      
+
             // http://stackoverflow.com/questions/3166643/windows-forms-treeview-node-context-menu-problem
             // select a node on which the user invokes the context menu - this
             // avoids some ugly glitches with the popups and should also improve
             // user experience.
-            if(e.Button != MouseButtons.Right)
-            {
-                return;
-            }
             var treeNodeAtMousePosition = _tree.GetNodeAt(_tree.PointToClient(e.Location));
             var selectedTreeNode = _tree.SelectedNode;
             if (treeNodeAtMousePosition == null || treeNodeAtMousePosition == selectedTreeNode)
@@ -919,6 +930,14 @@ namespace open3mod
 
             _tree.SelectedNode = treeNodeAtMousePosition;
             UpdateFilters();
+        }
+
+
+        private void BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        {
+            // see OnMouseClick()
+            e.Cancel = _preventExpand;
+            _preventExpand = false;
         }
 
 
@@ -951,7 +970,7 @@ namespace open3mod
             cm.Items[1].Enabled = GetNodePurpose(node) != NodePurpose.Joint;
 
             cm.Items[1].Text = IsNodePermanentlyHidden(node) ? "Unhide" : "Hide";
-        }
+        }  
     }
 }
 

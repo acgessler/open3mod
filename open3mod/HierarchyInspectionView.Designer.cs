@@ -97,6 +97,8 @@
             this._tree.ShowNodeToolTips = true;
             this._tree.Size = new System.Drawing.Size(311, 573);
             this._tree.TabIndex = 5;
+            this._tree.BeforeCollapse += new System.Windows.Forms.TreeViewCancelEventHandler(this.BeforeExpand);
+            this._tree.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.BeforeExpand);
             this._tree.NodeMouseHover += new System.Windows.Forms.TreeNodeMouseHoverEventHandler(this.OnNodeHover);
             this._tree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.AfterSelect);
             this._tree.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.AfterNodeDoubleClick);
