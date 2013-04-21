@@ -32,12 +32,14 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBoxBFCulling = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
             this.comboBoxSetLightingMode = new System.Windows.Forms.ComboBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.label5 = new System.Windows.Forms.Label();
             this.comboBoxSetBackend = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.checkBoxLinearMIP = new System.Windows.Forms.CheckBox();
             this.comboBoxTexResolution = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -52,8 +54,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.labelPleaseRestart = new System.Windows.Forms.Label();
-            this.checkBoxBFCulling = new System.Windows.Forms.CheckBox();
-            this.checkBoxLinearMIP = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -109,6 +109,19 @@
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Custom Settings";
+            // 
+            // checkBoxBFCulling
+            // 
+            this.checkBoxBFCulling.AutoSize = true;
+            this.checkBoxBFCulling.Checked = global::open3mod.GraphicsSettings.Default.BackFaceCulling;
+            this.checkBoxBFCulling.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.GraphicsSettings.Default, "BackFaceCulling", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxBFCulling.Location = new System.Drawing.Point(188, 253);
+            this.checkBoxBFCulling.Name = "checkBoxBFCulling";
+            this.checkBoxBFCulling.Size = new System.Drawing.Size(112, 17);
+            this.checkBoxBFCulling.TabIndex = 13;
+            this.checkBoxBFCulling.Text = "Back-Face Culling";
+            this.checkBoxBFCulling.UseVisualStyleBackColor = true;
+            this.checkBoxBFCulling.CheckedChanged += new System.EventHandler(this.checkBoxBFCulling_CheckedChanged);
             // 
             // label6
             // 
@@ -173,6 +186,20 @@
             this.label4.Size = new System.Drawing.Size(102, 13);
             this.label4.TabIndex = 7;
             this.label4.Text = "Rendering Backend";
+            // 
+            // checkBoxLinearMIP
+            // 
+            this.checkBoxLinearMIP.AutoSize = true;
+            this.checkBoxLinearMIP.Checked = global::open3mod.GraphicsSettings.Default.UseMips;
+            this.checkBoxLinearMIP.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxLinearMIP.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.GraphicsSettings.Default, "UseMips", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxLinearMIP.Location = new System.Drawing.Point(362, 178);
+            this.checkBoxLinearMIP.Name = "checkBoxLinearMIP";
+            this.checkBoxLinearMIP.Size = new System.Drawing.Size(72, 17);
+            this.checkBoxLinearMIP.TabIndex = 6;
+            this.checkBoxLinearMIP.Text = "Use MIPs";
+            this.checkBoxLinearMIP.UseVisualStyleBackColor = true;
+            this.checkBoxLinearMIP.CheckedChanged += new System.EventHandler(this.OnChangeMipSettings);
             // 
             // comboBoxTexResolution
             // 
@@ -327,33 +354,6 @@
             this.labelPleaseRestart.Text = "Please restart the application to see all changes";
             this.labelPleaseRestart.Visible = false;
             // 
-            // checkBoxBFCulling
-            // 
-            this.checkBoxBFCulling.AutoSize = true;
-            this.checkBoxBFCulling.Checked = global::open3mod.GraphicsSettings.Default.BackFaceCulling;
-            this.checkBoxBFCulling.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.GraphicsSettings.Default, "BackFaceCulling", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxBFCulling.Location = new System.Drawing.Point(188, 253);
-            this.checkBoxBFCulling.Name = "checkBoxBFCulling";
-            this.checkBoxBFCulling.Size = new System.Drawing.Size(112, 17);
-            this.checkBoxBFCulling.TabIndex = 13;
-            this.checkBoxBFCulling.Text = "Back-Face Culling";
-            this.checkBoxBFCulling.UseVisualStyleBackColor = true;
-            this.checkBoxBFCulling.CheckedChanged += new System.EventHandler(this.checkBoxBFCulling_CheckedChanged);
-            // 
-            // checkBoxLinearMIP
-            // 
-            this.checkBoxLinearMIP.AutoSize = true;
-            this.checkBoxLinearMIP.Checked = global::open3mod.GraphicsSettings.Default.UseMips;
-            this.checkBoxLinearMIP.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxLinearMIP.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.GraphicsSettings.Default, "UseMips", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxLinearMIP.Location = new System.Drawing.Point(362, 178);
-            this.checkBoxLinearMIP.Name = "checkBoxLinearMIP";
-            this.checkBoxLinearMIP.Size = new System.Drawing.Size(72, 17);
-            this.checkBoxLinearMIP.TabIndex = 6;
-            this.checkBoxLinearMIP.Text = "Use MIPs";
-            this.checkBoxLinearMIP.UseVisualStyleBackColor = true;
-            this.checkBoxLinearMIP.CheckedChanged += new System.EventHandler(this.OnChangeMipSettings);
-            // 
             // SettingsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -365,7 +365,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.Name = "SettingsDialog";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "open3mod Settings";
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
