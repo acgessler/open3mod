@@ -213,5 +213,29 @@ namespace CoreSettings {
                 this["InspectorSplitterPos"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowTipsOnStartup {
+            get {
+                return ((bool)(this["ShowTipsOnStartup"]));
+            }
+            set {
+                this["ShowTipsOnStartup"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int NextTip {
+            get {
+                return ((int)(this["NextTip"]));
+            }
+            set {
+                this["NextTip"] = value;
+            }
+        }
     }
 }
