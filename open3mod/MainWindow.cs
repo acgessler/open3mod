@@ -146,10 +146,43 @@ namespace open3mod
             base.OnCreateControl();
             AddTab("../../../testdata/scenes/spider.obj");
 
+            MaybeShowDonationDialog();
+            MaybeShowTipOfTheDay();
+        }
+
+
+        private static void MaybeShowTipOfTheDay()
+        {
             if (CoreSettings.CoreSettings.Default.ShowTipsOnStartup)
             {
                 var tip = new TipOfTheDayDialog();
                 tip.ShowDialog();
+            }
+        }
+
+
+        /// <summary>
+        /// Initial value for the donation countdown - every time the application is launched,
+        /// a counter is decremented. Upon reaching 0, the user is asked to donate.
+        /// </summary>
+        private const int DonationCounterStart = 4;
+
+
+        private static void MaybeShowDonationDialog()
+        {
+            // first time: init donation countdown
+            if (CoreSettings.CoreSettings.Default.DonationUseCountDown == 0)
+            {
+                CoreSettings.CoreSettings.Default.DonationUseCountDown = DonationCounterStart;
+            }
+
+            // -1 means the countdown is disabled, otherwise the dialog is shown when 0 is reached 
+            if (CoreSettings.CoreSettings.Default.DonationUseCountDown != -1 &&
+                --CoreSettings.CoreSettings.Default.DonationUseCountDown == 0)
+            {
+                CoreSettings.CoreSettings.Default.DonationUseCountDown = DonationCounterStart;
+                var don = new DonationDialog();
+                don.ShowDialog();
             }
         }
 

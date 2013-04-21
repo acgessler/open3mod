@@ -237,5 +237,17 @@ namespace CoreSettings {
                 this["NextTip"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int DonationUseCountDown {
+            get {
+                return ((int)(this["DonationUseCountDown"]));
+            }
+            set {
+                this["DonationUseCountDown"] = value;
+            }
+        }
     }
 }

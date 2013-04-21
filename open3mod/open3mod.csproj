@@ -87,6 +87,12 @@
       <DependentUpon>CoreSettings.settings</DependentUpon>
     </Compile>
     <Compile Include="CpuSkinningEvaluator.cs" />
+    <Compile Include="DonationDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DonationDialog.Designer.cs">
+      <DependentUpon>DonationDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="MeshDetailsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -238,6 +244,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AnimationInspectionView.resx">
       <DependentUpon>AnimationInspectionView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DonationDialog.resx">
+      <DependentUpon>DonationDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ExportDialog.resx">
       <DependentUpon>ExportDialog.cs</DependentUpon>
