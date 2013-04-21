@@ -53,6 +53,7 @@ namespace open3mod
             s.Checked = false;
 
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Details", null, OnContextMenuDetails));
+            ContextMenuStrip.Opened += OnContextMenuOpen;
         }
 
 
