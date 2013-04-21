@@ -18,8 +18,6 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///////////////////////////////////////////////////////////////////////////////////
 
-// this means we use Application.OnIdle to power the rendering "loop".
-// if this is commented, a Forms.Timer with an interval of 20ms is used instead.
 #define USE_APP_IDLE
 
 using System;

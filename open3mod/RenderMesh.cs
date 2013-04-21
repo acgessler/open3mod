@@ -1,4 +1,4 @@
-﻿///////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
 // Open 3D Model Viewer (open3mod) (v0.1)
 // [RenderMesh.cs]
 // (c) 2012-2013, Alexander C. Gessler
@@ -17,7 +17,6 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///////////////////////////////////////////////////////////////////////////////////
-
 
 using System;
 using System.Collections.Generic;
@@ -374,3 +373,5 @@ namespace open3mod
         }       
     }
 }
+
+/* vi: set shiftwidth=4 tabstop=4: */ 
