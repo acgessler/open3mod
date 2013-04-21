@@ -18,12 +18,6 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///////////////////////////////////////////////////////////////////////////////////
 
-
-// DETECT_ALPHA_EARLY
-// Check for alpha pixels directly after receiving the Image-Loaded callback.
-// this happens on the texture loader thread, so we can save rendering
-// interruptions later by checking for alpha pixels at this early stage. 
-// It means we have to lock the bitmap twice and hold the monitor longer, though.
 #define DETECT_ALPHA_EARLY
 
 using System;
