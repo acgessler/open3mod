@@ -74,14 +74,14 @@
             // 
             this.checkBoxDoNotShowAgain.AutoSize = true;
             this.checkBoxDoNotShowAgain.Checked = global::CoreSettings.CoreSettings.Default.ShowTipsOnStartup;
-            this.checkBoxDoNotShowAgain.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxDoNotShowAgain.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::CoreSettings.CoreSettings.Default, "DoNotShowTips", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxDoNotShowAgain.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::CoreSettings.CoreSettings.Default, "ShowTipsOnStartup", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.checkBoxDoNotShowAgain.Location = new System.Drawing.Point(268, 227);
             this.checkBoxDoNotShowAgain.Name = "checkBoxDoNotShowAgain";
             this.checkBoxDoNotShowAgain.Size = new System.Drawing.Size(103, 17);
             this.checkBoxDoNotShowAgain.TabIndex = 3;
             this.checkBoxDoNotShowAgain.Text = "Show on startup";
             this.checkBoxDoNotShowAgain.UseVisualStyleBackColor = true;
+            this.checkBoxDoNotShowAgain.CheckedChanged += new System.EventHandler(this.OnChangeStartup);
             // 
             // panel1
             // 

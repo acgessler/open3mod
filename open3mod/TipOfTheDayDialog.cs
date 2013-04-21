@@ -61,9 +61,17 @@ Therefore, use it with caution.
             SetTip(_cursor + 1);
         }
 
+
         private void OnClose(object sender, FormClosingEventArgs e)
         {
             CoreSettings.CoreSettings.Default.NextTip = (_cursor + 1)%_tips.Length;
+        }
+
+
+        private void OnChangeStartup(object sender, EventArgs e)
+        {
+            // for some reason the prop binding does not work.
+            CoreSettings.CoreSettings.Default.ShowTipsOnStartup = checkBoxDoNotShowAgain.Checked;
         }
     }
 }

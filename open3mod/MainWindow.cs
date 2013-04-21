@@ -146,8 +146,11 @@ namespace open3mod
             base.OnCreateControl();
             AddTab("../../../testdata/scenes/spider.obj");
 
-            var tip = new TipOfTheDayDialog();
-            tip.ShowDialog();
+            if (CoreSettings.CoreSettings.Default.ShowTipsOnStartup)
+            {
+                var tip = new TipOfTheDayDialog();
+                tip.ShowDialog();
+            }
         }
 
 
@@ -969,6 +972,13 @@ namespace open3mod
         partial void OnMouseMove(object sender, MouseEventArgs e);
         partial void OnMouseUp(object sender, MouseEventArgs e);
         partial void OnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e);
+
+
+        private void OnTipOfTheDay(object sender, EventArgs e)
+        {
+            var tip = new TipOfTheDayDialog();
+            tip.ShowDialog();
+        }
     }
 }
 

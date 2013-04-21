@@ -51,7 +51,7 @@
       <Value Profile="(Default)">742</Value>
     </Setting>
     <Setting Name="ShowTipsOnStartup" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="NextTip" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
