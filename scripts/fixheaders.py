@@ -247,7 +247,7 @@ def run():
                 # first non-comment line, skipping maximally one
                 # group of empty lines. This should work fine.
                 #
-                # FIXME: wtf, why not simply regex for the old header?
+                # FIXME: why not simply regex for the old header?
                 # At least optionally this would be a nice feature,
                 # especially as many headers use keywords at their 
                 # start and end respectively.
@@ -271,7 +271,7 @@ def run():
                         if incomment:
                             continue
                     
-                    if len(lins) <= 1:
+                    if len(lins.strip()) <= 1:
                         if not was_empty:
                             gcount = 1 + gcount
                         
@@ -279,7 +279,6 @@ def run():
                             # the second is treated as end of the header section
                             if gcount > maxemptylines[ext]:
                                 outp = True                       
-                                arr = arr + lins
                                             
                             was_empty = True
                         
