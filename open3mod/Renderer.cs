@@ -369,7 +369,7 @@ namespace open3mod
             {
                 var cm = new ColorMatrix();
                 var ia = new ImageAttributes();
-                //cm.Matrix33 = 1.0f - _hoverFadeInTime/HudHoverTime;
+                cm.Matrix33 = 1.0f - _hoverFadeInTime/HudHoverTime;
                 ia.SetColorMatrix(cm);
 
                 graphics.DrawImage(_hudBar, _hoverRegion, 0, 0, _hudBar.Width, _hudBar.Height, GraphicsUnit.Pixel, ia);
