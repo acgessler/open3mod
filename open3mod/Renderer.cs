@@ -332,8 +332,7 @@ namespace open3mod
                 if (_hudDirty)
                 {
                     _textOverlay.WantRedrawNextFrame = true;
-                }
-                
+                }            
                 return;
             }
 
@@ -357,6 +356,11 @@ namespace open3mod
 
             var regionWidth = imageWidth*_hudImages.GetLength(0) + xSpacing*(_hudImages.GetLength(0) - 1);
             const int regionHeight = 27;
+
+            if (regionWidth > (x2 - x1) * RenderResolution.Width || regionHeight > (y2 - y1) * RenderResolution.Height)
+            {
+                return;
+            }
 
             xPoint -= regionWidth;
             _hoverRegion = new Rectangle(xPoint, yPoint, regionWidth - 2, regionHeight);
