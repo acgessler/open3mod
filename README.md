@@ -1,7 +1,7 @@
 Open 3D Model Viewer 
 ========
 
-A general-purpose 3D model viewer intended to replace the former AssimpView. Based on 
+A general-purpose 3D model viewer. Based on 
 [Open Asset Import Library] (https://github.com/assimp/assimp), it supports 
 reading about __thirty 3D file formats__, including __FBX, DXF, Collada, Obj, X, PLY, 3DS, LWO, LWS, STL__ 
 and  __IFC__ ([full list] (http://assimp.sourceforge.net/main_features_formats.html)).
