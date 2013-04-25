@@ -1010,6 +1010,14 @@ namespace open3mod
             var tip = new TipOfTheDayDialog();
             tip.ShowDialog();
         }
+
+
+        private void OnDonate(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            linkLabelDonate.LinkVisited = false;
+            var donate = new DonationDialog();
+            donate.ShowDialog();
+        }
     }
 }
 
