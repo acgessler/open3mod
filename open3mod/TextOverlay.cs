@@ -113,7 +113,7 @@ namespace open3mod
                 {
                     _tempContext = Graphics.FromImage(_textBmp);
                 }
-                catch(Exception ex)
+                catch(Exception)
                 {
                     // this happens when _textBmp is not a valid bitmap. It seems, this
                     // can happen if the application is inactive and then switched to.
