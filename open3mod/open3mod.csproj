@@ -205,6 +205,12 @@
     </Compile>
     <Compile Include="TextOverlay.cs" />
     <Compile Include="Texture.cs" />
+    <Compile Include="TextureDetailsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TextureDetailsDialog.Designer.cs">
+      <DependentUpon>TextureDetailsDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="TextureInspectionView.cs" />
     <Compile Include="TextureLoader.cs" />
     <Compile Include="TextureQueue.cs" />
@@ -290,6 +296,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="TabUISkeleton.resx">
       <DependentUpon>TabUISkeleton.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TextureDetailsDialog.resx">
+      <DependentUpon>TextureDetailsDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ThumbnailControlBase.resx">
       <DependentUpon>ThumbnailControlBase.cs</DependentUpon>
