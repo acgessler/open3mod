@@ -74,6 +74,8 @@ namespace open3mod
 
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Details", null, OnContextMenuDetails));
             ContextMenuStrip.Opened += OnContextMenuOpen;
+
+            DoubleClick += OnContextMenuDetails;
         }
 
 
@@ -86,7 +88,7 @@ namespace open3mod
 
         private void OnContextMenuDetails(object sender, EventArgs eventArgs)
         {
-            
+            _owner.ShowDetails(this);
         }
 
 
@@ -96,9 +98,15 @@ namespace open3mod
         }
 
 
+
         public string FilePath
         {
             get { return _filePath; }
+        }
+
+        public Texture Texture
+        {
+            get { return _texture; }
         }
 
 
@@ -215,7 +223,7 @@ namespace open3mod
         {
             Debug.Assert(CanChangeTextureSource());
 
-            if (_texture.FileName == newFile)
+            if (Texture.FileName == newFile)
             {
                 return;
             }
@@ -223,7 +231,7 @@ namespace open3mod
             // note: it is important to keep _newFileId as a field just in case the
             // users drags and drops another texture onto the control while this
             // texture is still being loaded.
-            _newFileId = _owner.Scene.TextureSet.Replace(_texture.FileName, newFile);
+            _newFileId = _owner.Scene.TextureSet.Replace(Texture.FileName, newFile);
 
             // SetLoadingState() needs to be run on the GUI thread - AddCallback()
             // need not, but it needs to be sequenced after SetLoadingState().
@@ -263,11 +271,11 @@ namespace open3mod
 
         protected override State GetState()
         {
-            if (_texture == null)
+            if (Texture == null)
             {
                 return State.Pending;
             }
-            return _texture.State == Texture.TextureState.LoadingFailed ? State.Failed : State.Good;
+            return Texture.State == Texture.TextureState.LoadingFailed ? State.Failed : State.Good;
         }
 
 
@@ -281,7 +289,7 @@ namespace open3mod
 
         public bool CanChangeTextureSource()
         {
-            return _texture != null;
+            return Texture != null;
         }
 
 

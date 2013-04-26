@@ -32,7 +32,7 @@ namespace open3mod
     public class TextureInspectionView : ThumbnailViewBase<TextureThumbnailControl>
     {
         private readonly Scene _scene;
-        
+        private TextureDetailsDialog _details;
 
         private delegate void SetLabelTextDelegate(string name, Texture tex);
 
@@ -106,6 +106,21 @@ namespace open3mod
                 return;
             }
             control.SetTexture(tex);
+        }
+
+
+        public void ShowDetails(TextureThumbnailControl textureThumbnailControl)
+        {
+            if(_details == null)
+            {
+                _details = new TextureDetailsDialog();
+                _details.Closed += (sender, args) =>
+                    {
+                        _details = null;
+                    };
+            }
+            _details.SetTexture(textureThumbnailControl);
+            _details.Show();
         }
     }
 }

@@ -96,6 +96,11 @@ namespace open3mod
             }
 
             MouseDown += (sender, args) => owner.SelectEntry((TDeriving)this);
+
+            // TODO is there a better way to bubble events up?
+            pictureBox.DoubleClick += (sender, args) => ((TDeriving) this).OnDoubleClick(args);
+            labelOldTexture.DoubleClick += (sender, args) => ((TDeriving)this).OnDoubleClick(args);
+            texCaptionLabel.DoubleClick += (sender, args) => ((TDeriving)this).OnDoubleClick(args);
         }
 
  
