@@ -56,6 +56,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -92,6 +93,12 @@
     </Compile>
     <Compile Include="DonationDialog.Designer.cs">
       <DependentUpon>DonationDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FolderSetDisplay.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FolderSetDisplay.Designer.cs">
+      <DependentUpon>FolderSetDisplay.cs</DependentUpon>
     </Compile>
     <Compile Include="MeshDetailsDialog.cs">
       <SubType>Form</SubType>
@@ -256,6 +263,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ExportDialog.resx">
       <DependentUpon>ExportDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FolderSetDisplay.resx">
+      <DependentUpon>FolderSetDisplay.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="HierarchyInspectionView.resx">
       <DependentUpon>HierarchyInspectionView.cs</DependentUpon>

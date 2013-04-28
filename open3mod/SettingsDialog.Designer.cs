@@ -54,6 +54,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.labelPleaseRestart = new System.Windows.Forms.Label();
+            this.folderSetDisplay1 = new open3mod.FolderSetDisplay();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -285,6 +286,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.folderSetDisplay1);
             this.tabPage2.Controls.Add(this.label7);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
@@ -297,12 +299,11 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.ForeColor = System.Drawing.Color.Red;
-            this.label7.Location = new System.Drawing.Point(235, 160);
+            this.label7.Location = new System.Drawing.Point(18, 201);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(38, 13);
-            this.label7.TabIndex = 0;
-            this.label7.Text = "TODO";
+            this.label7.Size = new System.Drawing.Size(177, 13);
+            this.label7.TabIndex = 3;
+            this.label7.Text = "Additional search folders for textures";
             // 
             // tabPage3
             // 
@@ -354,6 +355,13 @@
             this.labelPleaseRestart.Text = "Please restart the application to see all changes";
             this.labelPleaseRestart.Visible = false;
             // 
+            // folderSetDisplay1
+            // 
+            this.folderSetDisplay1.Location = new System.Drawing.Point(7, 217);
+            this.folderSetDisplay1.Name = "folderSetDisplay1";
+            this.folderSetDisplay1.Size = new System.Drawing.Size(499, 152);
+            this.folderSetDisplay1.TabIndex = 4;
+            // 
             // SettingsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -403,10 +411,11 @@
         private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ComboBox comboBoxSetLightingMode;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label labelPleaseRestart;
         private System.Windows.Forms.CheckBox checkBoxBFCulling;
+        private System.Windows.Forms.Label label7;
+        private FolderSetDisplay folderSetDisplay1;
     }
 }
