@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -22,6 +23,8 @@ namespace open3mod
 
         public void SetTexture(TextureThumbnailControl tex)
         {
+            Debug.Assert(tex.Texture != null);
+
             var img = tex.Texture.Image;
 
             Text = Path.GetFileName(tex.FilePath) + " - Details"; 

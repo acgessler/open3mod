@@ -72,9 +72,11 @@ namespace open3mod
             s.CheckOnClick = true;
             s.Checked = false;
 
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Details", null, OnContextMenuDetails));
-            ContextMenuStrip.Opened += OnContextMenuOpen;
+            s = new ToolStripMenuItem("Details", null, OnContextMenuDetails);
+            ContextMenuStrip.Items.Add(s);
+            s.Enabled = false;
 
+            ContextMenuStrip.Opened += OnContextMenuOpen;
             DoubleClick += OnContextMenuDetails;
         }
 
@@ -130,6 +132,10 @@ namespace open3mod
                 {
                     SetPictureBoxImage();
                     SetZoom();
+
+                    // enable "Details" menu
+                    var item = ((ToolStripMenuItem)ContextMenuStrip.Items[2]);
+                    item.Enabled = true;
                 }
                 else
                 {
