@@ -141,6 +141,12 @@ namespace open3mod
                 {
                     pictureBox.Image = _imageWithAlpha;
                     pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
+
+                    // disable all menu items
+                    foreach (var item in ContextMenuStrip.Items)
+                    {
+                        ((ToolStripMenuItem) item).Enabled = false;
+                    }
                 }
 
                 Invalidate();
