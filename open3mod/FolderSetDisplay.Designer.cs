@@ -30,7 +30,7 @@
         {
             this.buttonRemoveFolder = new System.Windows.Forms.Button();
             this.buttonAddFolder = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBoxFolder = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
             this.listBoxFolders = new System.Windows.Forms.ListBox();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
@@ -44,6 +44,7 @@
             this.buttonRemoveFolder.TabIndex = 11;
             this.buttonRemoveFolder.Text = "Remove";
             this.buttonRemoveFolder.UseVisualStyleBackColor = true;
+            this.buttonRemoveFolder.Click += new System.EventHandler(this.OnRemoveFolder);
             // 
             // buttonAddFolder
             // 
@@ -53,13 +54,14 @@
             this.buttonAddFolder.TabIndex = 10;
             this.buttonAddFolder.Text = "Add";
             this.buttonAddFolder.UseVisualStyleBackColor = true;
+            this.buttonAddFolder.Click += new System.EventHandler(this.OnAddFolder);
             // 
-            // textBox1
+            // textBoxFolder
             // 
-            this.textBox1.Location = new System.Drawing.Point(14, 13);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(338, 20);
-            this.textBox1.TabIndex = 9;
+            this.textBoxFolder.Location = new System.Drawing.Point(14, 13);
+            this.textBoxFolder.Name = "textBoxFolder";
+            this.textBoxFolder.Size = new System.Drawing.Size(338, 20);
+            this.textBoxFolder.TabIndex = 9;
             // 
             // button2
             // 
@@ -69,6 +71,7 @@
             this.button2.TabIndex = 8;
             this.button2.Text = "...";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.OnBrowse);
             // 
             // listBoxFolders
             // 
@@ -77,6 +80,7 @@
             this.listBoxFolders.Name = "listBoxFolders";
             this.listBoxFolders.Size = new System.Drawing.Size(377, 95);
             this.listBoxFolders.TabIndex = 7;
+            this.listBoxFolders.SelectedIndexChanged += new System.EventHandler(this.OnSelectFolder);
             // 
             // FolderSetDisplay
             // 
@@ -84,7 +88,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.buttonRemoveFolder);
             this.Controls.Add(this.buttonAddFolder);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.textBoxFolder);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.listBoxFolders);
             this.Name = "FolderSetDisplay";
@@ -98,7 +102,7 @@
 
         private System.Windows.Forms.Button buttonRemoveFolder;
         private System.Windows.Forms.Button buttonAddFolder;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBoxFolder;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.ListBox listBoxFolders;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
