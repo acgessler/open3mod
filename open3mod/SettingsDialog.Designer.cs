@@ -56,6 +56,8 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.folderSetDisplaySearchPaths = new open3mod.FolderSetDisplay();
+            this.checkBoxLoadTextures = new System.Windows.Forms.CheckBox();
             this.checkBoxBFCulling = new System.Windows.Forms.CheckBox();
             this.checkBoxLinearMIP = new System.Windows.Forms.CheckBox();
             this.checkBoxmergeDuplicateVertices = new System.Windows.Forms.CheckBox();
@@ -65,7 +67,6 @@
             this.checkBoxSortByPrimitiveType = new System.Windows.Forms.CheckBox();
             this.checkBoxGenerateTangentSpace = new System.Windows.Forms.CheckBox();
             this.checkBoxComputeNormals = new System.Windows.Forms.CheckBox();
-            this.folderSetDisplaySearchPaths = new open3mod.FolderSetDisplay();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -338,6 +339,7 @@
             // 
             // tabPageTextures
             // 
+            this.tabPageTextures.Controls.Add(this.checkBoxLoadTextures);
             this.tabPageTextures.Controls.Add(this.folderSetDisplaySearchPaths);
             this.tabPageTextures.Controls.Add(this.label7);
             this.tabPageTextures.Location = new System.Drawing.Point(4, 22);
@@ -390,6 +392,27 @@
             this.groupBox4.TabIndex = 13;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Optimization";
+            // 
+            // folderSetDisplaySearchPaths
+            // 
+            this.folderSetDisplaySearchPaths.Folders = new string[0];
+            this.folderSetDisplaySearchPaths.Location = new System.Drawing.Point(17, 122);
+            this.folderSetDisplaySearchPaths.Name = "folderSetDisplaySearchPaths";
+            this.folderSetDisplaySearchPaths.Size = new System.Drawing.Size(499, 152);
+            this.folderSetDisplaySearchPaths.TabIndex = 6;
+            // 
+            // checkBoxLoadTextures
+            // 
+            this.checkBoxLoadTextures.AutoSize = true;
+            this.checkBoxLoadTextures.Checked = global::CoreSettings.CoreSettings.Default.LoadTextures;
+            this.checkBoxLoadTextures.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxLoadTextures.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::CoreSettings.CoreSettings.Default, "LoadTextures", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxLoadTextures.Location = new System.Drawing.Point(31, 49);
+            this.checkBoxLoadTextures.Name = "checkBoxLoadTextures";
+            this.checkBoxLoadTextures.Size = new System.Drawing.Size(94, 17);
+            this.checkBoxLoadTextures.TabIndex = 7;
+            this.checkBoxLoadTextures.Text = "Load Textures";
+            this.checkBoxLoadTextures.UseVisualStyleBackColor = true;
             // 
             // checkBoxBFCulling
             // 
@@ -510,14 +533,6 @@
             this.checkBoxComputeNormals.UseVisualStyleBackColor = true;
             this.checkBoxComputeNormals.CheckedChanged += new System.EventHandler(this.checkBoxComputeNormals_CheckedChanged);
             // 
-            // folderSetDisplaySearchPaths
-            // 
-            this.folderSetDisplaySearchPaths.Folders = new string[0];
-            this.folderSetDisplaySearchPaths.Location = new System.Drawing.Point(17, 122);
-            this.folderSetDisplaySearchPaths.Name = "folderSetDisplaySearchPaths";
-            this.folderSetDisplaySearchPaths.Size = new System.Drawing.Size(499, 152);
-            this.folderSetDisplaySearchPaths.TabIndex = 6;
-            // 
             // SettingsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -591,5 +606,6 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.CheckBox checkBoxmergeDuplicateVertices;
+        private System.Windows.Forms.CheckBox checkBoxLoadTextures;
     }
 }

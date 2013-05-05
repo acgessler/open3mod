@@ -102,7 +102,15 @@ namespace open3mod
             _file = file;
             _baseDir = baseDir;
             _callback = (s, image, status) => callback(this);
-            LoadAsync();
+
+            if (CoreSettings.CoreSettings.Default.LoadTextures)
+            {
+                LoadAsync();
+            }
+            else
+            {
+                SetImage(null, TextureLoader.LoadResult.FileNotFound);
+            }
         }
 
 
@@ -120,7 +128,15 @@ namespace open3mod
             _file = refName;
             _dataSource = dataSource;
             _callback = (s, image, status) => callback(this);
-            LoadAsync();
+
+            if (CoreSettings.CoreSettings.Default.LoadTextures)
+            {
+                LoadAsync();
+            }
+            else
+            {
+                SetImage(null, TextureLoader.LoadResult.FileNotFound);
+            }
         }
 
 

@@ -333,5 +333,17 @@ namespace CoreSettings {
                 this["ImportMergeDuplicates"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool LoadTextures {
+            get {
+                return ((bool)(this["LoadTextures"]));
+            }
+            set {
+                this["LoadTextures"] = value;
+            }
+        }
     }
 }
