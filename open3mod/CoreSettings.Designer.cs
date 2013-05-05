@@ -249,5 +249,89 @@ namespace CoreSettings {
                 this["DonationUseCountDown"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ImportGenNormals {
+            get {
+                return ((bool)(this["ImportGenNormals"]));
+            }
+            set {
+                this["ImportGenNormals"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ImportGenTangents {
+            get {
+                return ((bool)(this["ImportGenTangents"]));
+            }
+            set {
+                this["ImportGenTangents"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ImportOptimize {
+            get {
+                return ((bool)(this["ImportOptimize"]));
+            }
+            set {
+                this["ImportOptimize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ImportSortByPType {
+            get {
+                return ((bool)(this["ImportSortByPType"]));
+            }
+            set {
+                this["ImportSortByPType"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ImportRemoveDegenerates {
+            get {
+                return ((bool)(this["ImportRemoveDegenerates"]));
+            }
+            set {
+                this["ImportRemoveDegenerates"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ImportFixInfacing {
+            get {
+                return ((bool)(this["ImportFixInfacing"]));
+            }
+            set {
+                this["ImportFixInfacing"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ImportMergeDuplicates {
+            get {
+                return ((bool)(this["ImportMergeDuplicates"]));
+            }
+            set {
+                this["ImportMergeDuplicates"] = value;
+            }
+        }
     }
 }

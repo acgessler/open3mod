@@ -221,9 +221,13 @@ namespace open3mod
                     //    angle of 66 degrees.
                     imp.SetConfig(new NormalSmoothingAngleConfig(66.0f));
 
+                    // start with TargetRealTimeMaximumQuality and add/remove flags
+                    // according to the import configuration
+                    var postprocess = GetPostProcessStepsFlags();
+
                     //  - request lots of post processing steps, the details of which
                     //    can be found in the TargetRealTimeMaximumQuality docs.
-                    _raw = imp.ImportFile(file, PostProcessPreset.TargetRealTimeMaximumQuality);
+                    _raw = imp.ImportFile(file, postprocess);
                     if (_raw == null)
                     {
                         Dispose();
@@ -253,6 +257,76 @@ namespace open3mod
             CountVertsAndFaces(out _totalVertexCount, out _totalTriangleCount, out _totalLineCount, out _totalPointCount);
 
             CreateRenderingBackend();
+        }
+
+
+        private static PostProcessSteps GetPostProcessStepsFlags()
+        {
+            var postprocess = PostProcessPreset.TargetRealTimeMaximumQuality;
+            var s = CoreSettings.CoreSettings.Default;
+            if (s.ImportGenNormals)
+            {
+                postprocess |= PostProcessSteps.GenerateSmoothNormals;
+            }
+            else
+            {
+                postprocess &= ~PostProcessSteps.GenerateSmoothNormals;
+            }
+
+            if (s.ImportGenTangents)
+            {
+                postprocess |= PostProcessSteps.CalculateTangentSpace;
+            }
+            else
+            {
+                postprocess &= ~PostProcessSteps.CalculateTangentSpace;
+            }
+
+            if (s.ImportOptimize)
+            {
+                postprocess |= PostProcessSteps.ImproveCacheLocality;
+            }
+            else
+            {
+                postprocess &= ~PostProcessSteps.ImproveCacheLocality;
+            }
+
+            if (s.ImportSortByPType)
+            {
+                postprocess |= PostProcessSteps.SortByPrimitiveType;
+            }
+            else
+            {
+                postprocess &= ~PostProcessSteps.SortByPrimitiveType;
+            }
+
+            if (s.ImportRemoveDegenerates)
+            {
+                postprocess |= (PostProcessSteps.FindDegenerates | PostProcessSteps.FindInvalidData);
+            }
+            else
+            {
+                postprocess &= ~(PostProcessSteps.FindDegenerates | PostProcessSteps.FindInvalidData);
+            }
+
+            if (s.ImportFixInfacing)
+            {
+                postprocess |= PostProcessSteps.FixInFacingNormals;
+            }
+            else
+            {
+                postprocess &= ~PostProcessSteps.FixInFacingNormals;
+            }
+
+            if (s.ImportMergeDuplicates)
+            {
+                postprocess |= PostProcessSteps.JoinIdenticalVertices;
+            }
+            else
+            {
+                postprocess &= ~PostProcessSteps.JoinIdenticalVertices;
+            }
+            return postprocess;
         }
 
 

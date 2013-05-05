@@ -199,6 +199,16 @@ namespace open3mod
                 scene.RequestRenderRefresh();
             }
         }
+
+        private void checkBoxGenerateTangentSpace_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBoxComputeNormals_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
 
