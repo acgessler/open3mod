@@ -89,6 +89,7 @@ namespace open3mod
             _delegatePopulateInspector = PopulateInspector;
          
             InitializeComponent();
+            _captionStub = Text;
 
             AddEmptyTab();           
    
@@ -113,6 +114,12 @@ namespace open3mod
             _initialized = true;
 
             InitRecentList();            
+        }
+
+        public override sealed string Text
+        {
+            get { return base.Text; }
+            set { base.Text = value; }
         }
 
 
@@ -201,6 +208,23 @@ namespace open3mod
             if (_renderer != null)
             {
                 _renderer.TextOverlay.Clear();
+            }
+
+            // add postfix to main window title
+            if (UiState != null)
+            {
+                var tab = UiState.TabForId(ui);
+                if (tab != null)
+                {
+                    if (tab.File.Length > 0)
+                    {
+                        Text = _captionStub + "  [" + tab.File + "]";
+                    }
+                    else
+                    {
+                        Text = _captionStub;
+                    }
+                }
             }
         }
 
@@ -456,6 +480,7 @@ namespace open3mod
         private TabPage _emptyTab;
         private SettingsDialog _settings;
         private Tab.ViewSeparator _dragSeparator = Tab.ViewSeparator._Max;
+        private string _captionStub;
         private const string LoadingTitlePostfix = " (loading)";
         private const string FailedTitlePostfix = " (failed)";
 
