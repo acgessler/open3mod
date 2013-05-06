@@ -98,8 +98,8 @@ namespace open3mod
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.glControl1 = new open3mod.RenderControl();
             this.linkLabelDonate = new System.Windows.Forms.LinkLabel();
+            this.glControl1 = new open3mod.RenderControl();
             this.menuStrip1.SuspendLayout();
             this.toolStripSelectRenderer.SuspendLayout();
             this.tabContextMenuStrip.SuspendLayout();
@@ -603,6 +603,18 @@ namespace open3mod
             this.directorySearcher1.ServerPageTimeLimit = System.TimeSpan.Parse("-00:00:01");
             this.directorySearcher1.ServerTimeLimit = System.TimeSpan.Parse("-00:00:01");
             // 
+            // linkLabelDonate
+            // 
+            this.linkLabelDonate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabelDonate.AutoSize = true;
+            this.linkLabelDonate.Location = new System.Drawing.Point(1003, 9);
+            this.linkLabelDonate.Name = "linkLabelDonate";
+            this.linkLabelDonate.Size = new System.Drawing.Size(42, 13);
+            this.linkLabelDonate.TabIndex = 5;
+            this.linkLabelDonate.TabStop = true;
+            this.linkLabelDonate.Text = "Donate";
+            this.linkLabelDonate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OnDonate);
+            // 
             // glControl1
             // 
             this.glControl1.AllowDrop = true;
@@ -629,18 +641,6 @@ namespace open3mod
             this.glControl1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.OnPreviewKeyDown);
             this.glControl1.Resize += new System.EventHandler(this.OnGlResize);
             // 
-            // linkLabelDonate
-            // 
-            this.linkLabelDonate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkLabelDonate.AutoSize = true;
-            this.linkLabelDonate.Location = new System.Drawing.Point(1003, 9);
-            this.linkLabelDonate.Name = "linkLabelDonate";
-            this.linkLabelDonate.Size = new System.Drawing.Size(42, 13);
-            this.linkLabelDonate.TabIndex = 5;
-            this.linkLabelDonate.TabStop = true;
-            this.linkLabelDonate.Text = "Donate";
-            this.linkLabelDonate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OnDonate);
-            // 
             // MainWindow
             // 
             this.AllowDrop = true;
@@ -659,7 +659,7 @@ namespace open3mod
             this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(600, 500);
             this.Name = "MainWindow";
-            this.Text = "Open 3D Model Viewer (Beta1)";
+            this.Text = "Open 3D Model Viewer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OnCloseForm);
             this.Load += new System.EventHandler(this.OnLoad);
