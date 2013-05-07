@@ -1,3 +1,5 @@
+_Release Date: June 2013 (est)_
+
 Open 3D Model Viewer 
 ========
 
