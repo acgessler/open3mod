@@ -1050,7 +1050,11 @@ namespace open3mod
             using (var imp = new Assimp.AssimpImporter())
             {
                 var list = imp.GetSupportedImportFormats();
-                var listString = string.Join(", ", list);
+
+                // do not associate .xml - it is too generic 
+                var filteredList = list.Where(s => s != ".xml");           
+
+                var listString = string.Join(", ", filteredList);
                 if(DialogResult.OK == MessageBox.Show(this, "The following file extensions will be associated with open3mod: " + listString,
                     "Set file associations",
                     MessageBoxButtons.OKCancel))
