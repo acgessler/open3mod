@@ -1043,6 +1043,25 @@ namespace open3mod
             var donate = new DonationDialog();
             donate.ShowDialog();
         }
+
+
+        private void OnSetFileAssociations(object sender, EventArgs e)
+        {
+            using (var imp = new Assimp.AssimpImporter())
+            {
+                var list = imp.GetSupportedImportFormats();
+                var listString = string.Join(", ", list);
+                if(DialogResult.OK == MessageBox.Show(this, "The following file extensions will be associated with open3mod: " + listString,
+                    "Set file associations",
+                    MessageBoxButtons.OKCancel))
+                {
+                    if (!FileAssociations.SetAssociations(list))
+                    {
+                        MessageBox.Show(this, "Failed to set file extensions","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
     }
 }
 

@@ -100,6 +100,8 @@ namespace open3mod
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.linkLabelDonate = new System.Windows.Forms.LinkLabel();
             this.glControl1 = new open3mod.RenderControl();
+            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStripSelectRenderer.SuspendLayout();
             this.tabContextMenuStrip.SuspendLayout();
@@ -280,6 +282,8 @@ namespace open3mod
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem3,
+            this.toolStripSeparator11,
             this.logViewerToolStripMenuItem,
             this.exportToolStripMenuItem,
             this.exportAllToolStripMenuItem,
@@ -293,7 +297,7 @@ namespace open3mod
             // logViewerToolStripMenuItem
             // 
             this.logViewerToolStripMenuItem.Name = "logViewerToolStripMenuItem";
-            this.logViewerToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.logViewerToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.logViewerToolStripMenuItem.Text = "Log Viewer";
             this.logViewerToolStripMenuItem.Click += new System.EventHandler(this.OnShowLogViewer);
             // 
@@ -301,7 +305,7 @@ namespace open3mod
             // 
             this.exportToolStripMenuItem.Enabled = false;
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.exportToolStripMenuItem.Text = "Export";
             this.exportToolStripMenuItem.Click += new System.EventHandler(this.OnExport);
             // 
@@ -309,18 +313,18 @@ namespace open3mod
             // 
             this.exportAllToolStripMenuItem.Enabled = false;
             this.exportAllToolStripMenuItem.Name = "exportAllToolStripMenuItem";
-            this.exportAllToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.exportAllToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.exportAllToolStripMenuItem.Text = "Export all";
             // 
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(129, 6);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(173, 6);
             // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.optionsToolStripMenuItem.Text = "Options";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.OnShowSettings);
             // 
@@ -641,6 +645,18 @@ namespace open3mod
             this.glControl1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.OnPreviewKeyDown);
             this.glControl1.Resize += new System.EventHandler(this.OnGlResize);
             // 
+            // toolStripSeparator11
+            // 
+            this.toolStripSeparator11.Name = "toolStripSeparator11";
+            this.toolStripSeparator11.Size = new System.Drawing.Size(173, 6);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(176, 22);
+            this.toolStripMenuItem3.Text = "Set file associations";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.OnSetFileAssociations);
+            // 
             // MainWindow
             // 
             this.AllowDrop = true;
@@ -738,6 +754,8 @@ namespace open3mod
         private ToolStripMenuItem toolStripMenuItem2;
         private ToolStripSeparator toolStripSeparator10;
         private LinkLabel linkLabelDonate;
+        private ToolStripMenuItem toolStripMenuItem3;
+        private ToolStripSeparator toolStripSeparator11;
     }
 }
 

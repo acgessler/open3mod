@@ -94,6 +94,7 @@
     <Compile Include="DonationDialog.Designer.cs">
       <DependentUpon>DonationDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="FileAssociations.cs" />
     <Compile Include="FolderSetDisplay.cs">
       <SubType>UserControl</SubType>
     </Compile>
