@@ -1063,6 +1063,10 @@ namespace open3mod
                     {
                         MessageBox.Show(this, "Failed to set file extensions","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
                     }
+                    else
+                    {
+                        MessageBox.Show(this, "File extensions have been successfully associated", "open3mod", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
             }
         }
