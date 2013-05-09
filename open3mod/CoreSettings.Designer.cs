@@ -345,5 +345,16 @@ namespace CoreSettings {
                 this["LoadTextures"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection AdditionalTextureFolders {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["AdditionalTextureFolders"]));
+            }
+            set {
+                this["AdditionalTextureFolders"] = value;
+            }
+        }
     }
 }

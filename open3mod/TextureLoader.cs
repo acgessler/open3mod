@@ -155,7 +155,29 @@ namespace open3mod
                 }
                 catch (IOException)
                 {
-                    s = new FileStream(name, FileMode.Open, FileAccess.Read);
+                    try
+                    {
+                        s = new FileStream(name, FileMode.Open, FileAccess.Read);
+                    }
+                    catch (IOException)
+                    {
+                        foreach(var folder in CoreSettings.CoreSettings.Default.AdditionalTextureFolders)
+                        {
+                            try
+                            {
+                                s = new FileStream(Path.Combine(folder, fileName), FileMode.Open, FileAccess.Read);
+                                break;
+                            }
+                            catch(IOException)
+                            {
+                                continue;
+                            }
+                        }
+                        if (s == null)
+                        {
+                            throw new IOException();
+                        }
+                    }
                 }
             }
 
