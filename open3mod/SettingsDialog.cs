@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
@@ -47,6 +48,26 @@ namespace open3mod
             InitMultiSampling();
             InitLightingQuality();
             InitRenderingBackend();
+
+            if (CoreSettings.CoreSettings.Default.AdditionalTextureFolders != null)
+            {
+                folderSetDisplaySearchPaths.Folders =
+                    CoreSettings.CoreSettings.Default.AdditionalTextureFolders.Cast<string>().ToArray();
+            }
+            folderSetDisplaySearchPaths.Change += sender =>
+                {
+                    if(CoreSettings.CoreSettings.Default.AdditionalTextureFolders == null)
+                    {
+                        CoreSettings.CoreSettings.Default.AdditionalTextureFolders = new StringCollection();
+                    }
+                    var add = CoreSettings.CoreSettings.Default.AdditionalTextureFolders;
+                 
+                    add.Clear();
+                    foreach (var v in folderSetDisplaySearchPaths.Folders)
+                    {
+                        add.Add(v);
+                    }
+                };
         }
 
 
