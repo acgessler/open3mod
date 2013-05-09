@@ -18,7 +18,16 @@ namespace open3mod
         }
 
 
-  
+        public event OnChangeHandler Change;
+
+        public void OnChange()
+        {
+            OnChangeHandler handler = Change;
+            if (handler != null) handler(this);
+        }
+
+        public delegate void OnChangeHandler(object sender);
+
 
         public String[] Folders { 
             get {
@@ -36,6 +45,8 @@ namespace open3mod
                 foreach (var f in value) {
                     listBoxFolders.Items.Add(f);
                 }
+
+                OnChange();
             }
         }
 
@@ -49,6 +60,7 @@ namespace open3mod
             }
             listBoxFolders.Items.Insert(0, t);
             listBoxFolders.SelectedItem = listBoxFolders.Items[0];
+            OnChange();
         }
 
 
@@ -61,6 +73,7 @@ namespace open3mod
 
             listBoxFolders.Items.Remove(listBoxFolders.SelectedItem);
             textBoxFolder.Text = "";
+            OnChange();
         }
 
 
@@ -81,4 +94,6 @@ namespace open3mod
             }
         }
     }
+
+    
 }
