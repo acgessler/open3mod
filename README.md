@@ -8,7 +8,7 @@ A general-purpose 3D model viewer. Based on
 reading about __thirty 3D file formats__, including __FBX, DXF, Collada, Obj, X, PLY, 3DS, LWO, LWS, STL__ 
 and  __IFC__ ([full list] (http://assimp.sourceforge.net/main_features_formats.html)).
 
-![Screenshot of open3mod (14-03-2013)](http://www.greentoken.de/download/open3mod1.png)
+![Screenshot of open3mod (09-05-2013)](http://s1.directupload.net/images/130509/44lqi4p9.png)
 
 Currently it is  _work in progress_ and there is no downloadable release yet, but the latest source
 versions are good for productive use. At the time being only Windows is supported even though the 
