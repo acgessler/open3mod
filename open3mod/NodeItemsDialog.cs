@@ -53,7 +53,7 @@ namespace open3mod
                 _timer.Start();
             }
 
-            UpdateCollapseState();
+            UpdateCollapseState(true);
         }
 
 
@@ -157,7 +157,7 @@ namespace open3mod
         }
 
 
-        private void UpdateCollapseState()
+        private void UpdateCollapseState(bool initial = false)
         {
             const int collapseOffset = 34;
             if (checkBoxShowGlobalTransformation.Checked)
@@ -169,9 +169,11 @@ namespace open3mod
             }
             else
             {
-                checkBoxShowGlobalTransformation.Text = "Hide Global Transformation ...";
-                Height += trafoMatrixViewControlGlobal.Height + collapseOffset;
-
+                if (!initial)
+                {
+                    checkBoxShowGlobalTransformation.Text = "Hide Global Transformation ...";
+                    Height += trafoMatrixViewControlGlobal.Height + collapseOffset;
+                }
                 trafoMatrixViewControlGlobal.Visible = true;
             }
         }
