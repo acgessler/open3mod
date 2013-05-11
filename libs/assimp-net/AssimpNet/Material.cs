@@ -816,22 +816,6 @@ namespace Assimp {
         #endregion
 
         /// <summary>
-        /// Constructs a new Material.
-        /// </summary>
-        /// <param name="material">Unmanaged AiMaterial struct.</param>
-        internal Material(ref AiMaterial material) {
-            m_properties = new Dictionary<String, MaterialProperty>();
-
-            if(material.NumProperties > 0 && material.Properties != IntPtr.Zero) {
-                AiMaterialProperty[] properties = MemoryHelper.MarshalArray<AiMaterialProperty>(material.Properties, (int) material.NumProperties, true);
-                for(int i = 0; i < properties.Length; i++) {
-                    MaterialProperty prop = new MaterialProperty(ref material, ref properties[i]);
-                    m_properties.Add(prop.FullyQualifiedName, prop);
-                }
-            }
-        }
-
-        /// <summary>
         /// Constructs a new instance of the <see cref="Material"/> class.
         /// </summary>
         public Material() {
@@ -1283,7 +1267,7 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Frees unmanaged memory created by <see cref="ToNative"/>.
+        /// Frees unmanaged memory created by <see cref="IMarshalable{Material, AiMaterial}.ToNative"/>.
         /// </summary>
         /// <param name="nativeValue">Native value to free</param>
         /// <param name="freeNative">True if the unmanaged memory should be freed, false otherwise.</param>

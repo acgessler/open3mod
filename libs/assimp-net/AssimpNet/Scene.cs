@@ -233,74 +233,6 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Constructs a new Scene.
-        /// </summary>
-        /// <param name="scene">Unmanaged AiScene struct.</param>
-        internal Scene(AiScene scene) {
-            m_flags = scene.Flags;
-            m_meshes = new List<Mesh>();
-            m_lights = new List<Light>();
-            m_cameras = new List<Camera>();
-            m_textures = new List<EmbeddedTexture>();
-            m_animations = new List<Animation>();
-            m_materials = new List<Material>();
-
-            //Read materials
-            if(scene.NumMaterials > 0 && scene.Materials != IntPtr.Zero) {
-                AiMaterial[] materials = MemoryHelper.MarshalArray<AiMaterial>(scene.Materials, (int) scene.NumMaterials, true);
-                for(int i = 0; i < materials.Length; i++) {
-                    m_materials.Add(new Material(ref materials[i]));
-                }
-            }
-
-            //Read scenegraph
-            if(scene.RootNode != IntPtr.Zero) {
-                AiNode aiRootNode = MemoryHelper.MarshalStructure<AiNode>(scene.RootNode);
-                m_rootNode = new Node(ref aiRootNode, null);
-            }
-
-            //Read meshes
-            if(scene.NumMeshes > 0 && scene.Meshes != IntPtr.Zero) {
-                AiMesh[] meshes = MemoryHelper.MarshalArray<AiMesh>(scene.Meshes, (int) scene.NumMeshes, true);
-                for(int i = 0; i < meshes.Length; i++) {
-                    m_meshes.Add(new Mesh(ref meshes[i]));
-                }
-            }
-
-            //Read lights
-            if(scene.NumLights > 0 && scene.Lights != IntPtr.Zero) {
-                AiLight[] lights = MemoryHelper.MarshalArray<AiLight>(scene.Lights, (int) scene.NumLights, true);
-                for(int i = 0; i < lights.Length; i++) {
-                    m_lights.Add(new Light(ref lights[i]));
-                }
-            }
-
-            //Read cameras
-            if(scene.NumCameras > 0 && scene.Cameras != IntPtr.Zero) {
-                AiCamera[] cameras = MemoryHelper.MarshalArray<AiCamera>(scene.Cameras, (int) scene.NumCameras, true);
-                for(int i = 0; i < cameras.Length; i++) {
-                    m_cameras.Add(new Camera(ref cameras[i]));
-                }
-            }
-            /*
-            //Read Textures
-            if(scene.NumTextures > 0 && scene.Textures != IntPtr.Zero) {
-                AiTexture[] textures = MemoryHelper.MarshalArray<AiTexture>(scene.Textures, (int) scene.NumTextures, true);
-                for(int i = 0; i < textures.Length; i++) {
-                    m_textures[i] = EmbeddedTexture.CreateTexture(ref textures[i]);
-                }
-            }*/
-
-            //Read animations
-            if(scene.NumAnimations > 0 && scene.Animations != IntPtr.Zero) {
-                AiAnimation[] animations = MemoryHelper.MarshalArray<AiAnimation>(scene.Animations, (int) scene.NumAnimations, true);
-                for(int i = 0; i < animations.Length; i++) {
-                    m_animations.Add(new Animation(ref animations[i]));
-                }
-            }
-        }
-
-        /// <summary>
         /// Constructs a new instance of the <see cref="Scene"/> class.
         /// </summary>
         public Scene() {
@@ -327,6 +259,12 @@ namespace Assimp {
             m_materials.Clear();
         }
 
+        /// <summary>
+        /// Marshals a managed scene to unmanaged memory. The unmanaged memory must be freed with a call to
+        /// <see cref="FreeUnmanagedScene"/>, the memory is owned by AssimpNet and cannot be freed by the native library.
+        /// </summary>
+        /// <param name="scene">Scene data</param>
+        /// <returns>Unmanaged scene or NULL if the scene is null.</returns>
         public static IntPtr ToUnmanagedScene(Scene scene) {
             if(scene == null)
                 return IntPtr.Zero;
@@ -334,6 +272,11 @@ namespace Assimp {
             return MemoryHelper.ToNativePointer<Scene, AiScene>(scene);
         }
 
+        /// <summary>
+        /// Marshals an unmanaged scene to managed memory.
+        /// </summary>
+        /// <param name="scenePtr">The unmanaged scene data</param>
+        /// <returns>The managed scene, or null if the pointer is NULL</returns>
         public static Scene FromUnmanagedScene(IntPtr scenePtr) {
             if(scenePtr == IntPtr.Zero)
                 return null;
@@ -341,6 +284,10 @@ namespace Assimp {
             return MemoryHelper.FromNativePointer<Scene, AiScene>(scenePtr);
         }
 
+        /// <summary>
+        /// Frees unmanaged memory allocated in <see cref="ToUnmanagedScene"/>.
+        /// </summary>
+        /// <param name="scenePtr">Pointer to unmanaged scene data.</param>
         public static void FreeUnmanagedScene(IntPtr scenePtr) {
             if(scenePtr == IntPtr.Zero)
                 return;
@@ -449,7 +396,7 @@ namespace Assimp {
 
 
         /// <summary>
-        /// Frees unmanaged memory created by <see cref="ToNative"/>.
+        /// Frees unmanaged memory created by <see cref="IMarshalable{Scene, AiScene}.ToNative"/>.
         /// </summary>
         /// <param name="nativeValue">Native value to free</param>
         /// <param name="freeNative">True if the unmanaged memory should be freed, false otherwise.</param>

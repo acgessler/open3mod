@@ -250,7 +250,7 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Frees unmanaged memory created by <see cref="ToNative"/>.
+        /// Frees unmanaged memory created by <see cref="IMarshalable{EmbeddedTexture, AiTexture}.ToNative"/>.
         /// </summary>
         /// <param name="nativeValue">Native value to free</param>
         /// <param name="freeNative">True if the unmanaged memory should be freed, false otherwise.</param>

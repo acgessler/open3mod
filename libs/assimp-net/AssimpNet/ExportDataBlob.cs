@@ -92,7 +92,10 @@ namespace Assimp {
         /// <param name="dataBlob">Unmanaged structure.</param>
         internal ExportDataBlob(ref AiExportDataBlob dataBlob) {
             m_name = dataBlob.Name.GetString();
-            m_data = MemoryHelper.MarshalArray<byte>(dataBlob.Data, (int) dataBlob.Size.ToUInt32());
+
+            if(dataBlob.Size.ToUInt32() > 0 && dataBlob.Data != IntPtr.Zero)
+                m_data = MemoryHelper.FromNativeArray<byte>(dataBlob.Data, (int) dataBlob.Size.ToUInt32());
+
             m_next = null;
 
             if(dataBlob.NextBlob != IntPtr.Zero) {

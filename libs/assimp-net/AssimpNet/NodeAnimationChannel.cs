@@ -170,35 +170,6 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Constructs a new NodeAnimation.
-        /// </summary>
-        /// <param name="nodeAnim">Unmanaged AiNodeAnim struct</param>
-        internal NodeAnimationChannel(ref AiNodeAnim nodeAnim) {
-            m_nodeName = nodeAnim.NodeName.GetString();
-            m_preState = nodeAnim.Prestate;
-            m_postState = nodeAnim.PostState;
-
-            m_positionKeys = new List<VectorKey>();
-            m_rotationKeys = new List<QuaternionKey>();
-            m_scalingKeys = new List<VectorKey>();
-
-            //Load position keys
-            if(nodeAnim.NumPositionKeys > 0 && nodeAnim.PositionKeys != IntPtr.Zero) {
-                m_positionKeys.AddRange(MemoryHelper.MarshalArray<VectorKey>(nodeAnim.PositionKeys, (int) nodeAnim.NumPositionKeys));
-            }
-
-            //Load rotation keys
-            if(nodeAnim.NumRotationKeys > 0 && nodeAnim.RotationKeys != IntPtr.Zero) {
-                m_rotationKeys.AddRange(MemoryHelper.MarshalArray<QuaternionKey>(nodeAnim.RotationKeys, (int) nodeAnim.NumRotationKeys));
-            }
-
-            //Load scaling keys
-            if(nodeAnim.NumScalingKeys > 0 && nodeAnim.ScalingKeys != IntPtr.Zero) {
-                m_scalingKeys.AddRange(MemoryHelper.MarshalArray<VectorKey>(nodeAnim.ScalingKeys, (int) nodeAnim.NumScalingKeys));
-            }
-        }
-
-        /// <summary>
         /// Constructs a new instance of the <see cref="NodeAnimationChannel"/> class.
         /// </summary>
         public NodeAnimationChannel() {
@@ -275,7 +246,7 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Frees unmanaged memory created by <see cref="ToNative"/>.
+        /// Frees unmanaged memory created by <see cref="IMarshalable{NodeAnimationChannel, AiNodeAnim}.ToNative"/>.
         /// </summary>
         /// <param name="nativeValue">Native value to free</param>
         /// <param name="freeNative">True if the unmanaged memory should be freed, false otherwise.</param>

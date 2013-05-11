@@ -73,7 +73,7 @@ namespace Assimp {
             fileIO.CloseProc = Marshal.GetFunctionPointerForDelegate(m_closeProc);
             fileIO.UserData = IntPtr.Zero;
 
-            m_fileIOPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(AiFileIO)));
+            m_fileIOPtr = MemoryHelper.AllocateMemory(MemoryHelper.SizeOf<AiFileIO>());
             Marshal.StructureToPtr(fileIO, m_fileIOPtr, false);
 
             m_openedFiles = new Dictionary<IntPtr, IOStream>();
@@ -136,7 +136,7 @@ namespace Assimp {
         protected virtual void Dispose(bool disposing) {
             if(!m_isDisposed) {
                 if(m_fileIOPtr != IntPtr.Zero) {
-                    Marshal.FreeHGlobal(m_fileIOPtr);
+                    MemoryHelper.FreeMemory(m_fileIOPtr);
                     m_fileIOPtr = IntPtr.Zero;
                 }
 
