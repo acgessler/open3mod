@@ -38,12 +38,15 @@ namespace open3mod
         protected readonly List<TThumbnailType> Entries;
         private TThumbnailType _selectedEntry;
 
+        private ToolTip _toolTip;
 
         protected ThumbnailViewBase(FlowLayoutPanel flow)
         {
             Flow = flow;
             Flow.AutoScroll = true;
             Entries = new List<TThumbnailType>();
+
+            _toolTip = new ToolTip();
         }
 
 
@@ -116,6 +119,8 @@ namespace open3mod
 
             Entries.Add(control);
             Flow.Controls.Add(control);
+
+            control.OnSetTooltips(_toolTip);
             return control;
         }
     }

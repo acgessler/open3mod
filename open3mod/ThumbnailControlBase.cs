@@ -110,6 +110,17 @@ namespace open3mod
         }
 
 
+        public void OnSetTooltips(ToolTip tips)
+        {
+            const string text = "Right-click for tools and options";
+            tips.SetToolTip(this,text);
+
+            tips.SetToolTip(pictureBox,text);
+            tips.SetToolTip(labelOldTexture,text);
+            tips.SetToolTip(texCaptionLabel,text);
+        }
+
+
 
         protected abstract State GetState();
 
