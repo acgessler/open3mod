@@ -149,7 +149,6 @@ namespace open3mod
         protected override void OnCreateControl()
         {
             base.OnCreateControl();
-            AddTab("../../../testdata/scenes/spider.obj");
 
             MaybeShowDonationDialog();
             MaybeShowTipOfTheDay();

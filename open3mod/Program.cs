@@ -42,6 +42,10 @@ namespace open3mod
             {
                 mainWindow.AddTab(args[0]);
             }
+            else
+            {
+                mainWindow.AddTab("../../../testdata/scenes/spider.obj");
+            }
             Application.Run(mainWindow);
 
             TextureQueue.Terminate();
