@@ -96,8 +96,15 @@ namespace open3mod
         public readonly Font DefaultFont16;
 
 
+        /// <summary>
+        /// Font to be used for textual overlays in 3D view (size ~ 10px)
+        /// </summary>
+        public readonly Font DefaultFont10;
+
+
         public UiState(Tab defaultTab)
         {
+            DefaultFont10 = new Font("Segoe UI", 10);
             DefaultFont12 = new Font("Segoe UI", 12);
             DefaultFont16 = new Font("Segoe UI", 18);
 

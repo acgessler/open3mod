@@ -89,6 +89,12 @@ namespace open3mod
         }
 
 
+        protected Color ActiveBorderColor
+        {
+            get { return Color.GreenYellow; }
+        }
+
+
         protected Color BackgroundColor
         {
             get { return Color.FromArgb(255, 165, 166, 165); }
@@ -286,6 +292,17 @@ namespace open3mod
         }
 
 
+        private static readonly string[] DescTable = new[] 
+        { 
+            "Lock on X axis", 
+            "Lock on Y axis", 
+            "Lock on Z axis", 
+            "Orbit view", 
+            "First-person view (use WASD or arrows to move)",
+            "Info picker"
+        };
+
+
         /// <summary>
         /// Draw HUD (camera panel) at the viewport that the mouse is currently hovering over
         /// </summary>
@@ -409,9 +426,23 @@ namespace open3mod
                 {
                     // hover image
                     imageIndex = 1;
+
+                    // draw tooltip
+                    Debug.Assert(i < DescTable.Length);
+                    using(var sb = new SolidBrush(BorderColor))
+                    {
+                        var format = new StringFormat {LineAlignment = StringAlignment.Far, Alignment = StringAlignment.Far};
+                        var rect = new RectangleF(x1 * RenderResolution.Width, 
+                            (1-y2) * RenderResolution.Height, 
+                            (x2 - x1) * RenderResolution.Width - 2, 
+                            (y2 - y1) * RenderResolution.Height - 2);
+
+                        graphics.DrawString(DescTable[i], Window.UiState.DefaultFont10, sb, rect, format);
+                    }
                 }
 
                 var img = _hudImages[i, imageIndex];
+
                 //Debug.Assert(img.Width == imageWidth && img.Height == imageHeight, 
                 //    "all images must be of the same size");
 
@@ -622,7 +653,7 @@ namespace open3mod
 
             // draw contour line
             GL.LineWidth(lineWidth);
-            GL.Color4(active ? Color.GreenYellow : BorderColor);
+            GL.Color4(active ? ActiveBorderColor : BorderColor);
 
             var xofs = lineWidth*0.5*texW;
             var yofs = lineWidth*0.5*texH;
