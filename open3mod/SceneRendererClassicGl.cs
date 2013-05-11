@@ -339,7 +339,7 @@ namespace open3mod
             else
             {
                 GL.Disable(EnableCap.CullFace);
-            }   
+            }
 
             var hasColors = mesh.HasVertexColors(0);
             var hasTexCoords = mesh.HasTextureCoords(0);
