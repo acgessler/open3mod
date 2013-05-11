@@ -22,7 +22,7 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -33,7 +33,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>bin\Release\AssimpNet.XML</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -115,9 +116,9 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>"$(SolutionDir)\libs\Tesla.Interop.Generator\Tesla.Interop.Generator.exe" "$(TargetDir)$(TargetFileName)" "$(ProjectDir)AssimpKey.snk"
-copy  $(TargetDir)$(TargetFileName) $(SolutionDir)open3mod\$(OutDir)
-copy $(TargetDir)Assimp32.dll $(SolutionDir)open3mod\bin\$(OutDir)
-copy $(TargetDir)Assimp64.dll $(SolutionDir)open3mod\bin\$(OutDir)</PostBuildEvent>
+copy  "$(TargetDir)$(TargetFileName)" $(SolutionDir)open3mod\$(OutDir)
+copy "$(TargetDir)Assimp32.dll" "$(SolutionDir)open3mod\$(OutDir)"
+copy "$(TargetDir)Assimp64.dll" "$(SolutionDir)open3mod\$(OutDir)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
