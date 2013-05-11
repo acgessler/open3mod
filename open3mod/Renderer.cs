@@ -292,17 +292,6 @@ namespace open3mod
         }
 
 
-        private static readonly string[] DescTable = new[] 
-        { 
-            "Lock on X axis", 
-            "Lock on Y axis", 
-            "Lock on Z axis", 
-            "Orbit view", 
-            "First-person view (use WASD or arrows to move)",
-            "Info picker"
-        };
-
-
         /// <summary>
         /// Draw HUD (camera panel) at the viewport that the mouse is currently hovering over
         /// </summary>
@@ -434,7 +423,7 @@ namespace open3mod
                         var format = new StringFormat {LineAlignment = StringAlignment.Far, Alignment = StringAlignment.Far};
                         var rect = new RectangleF(x1 * RenderResolution.Width, 
                             (1-y2) * RenderResolution.Height, 
-                            (x2 - x1) * RenderResolution.Width - 2, 
+                            (x2 - x1) * RenderResolution.Width - 4, 
                             (y2 - y1) * RenderResolution.Height - 2);
 
                         graphics.DrawString(DescTable[i], Window.UiState.DefaultFont10, sb, rect, format);
@@ -494,7 +483,18 @@ namespace open3mod
         }
 
 
-        static readonly string[] PrefixTable = new[]
+        private static readonly string[] DescTable = new[] 
+        { 
+            "Lock on X axis", 
+            "Lock on Y axis", 
+            "Lock on Z axis", 
+            "Orbit view", 
+            "First-person view - use WASD or arrows to move",
+            "Info picker"
+        };
+
+
+        private static readonly string[] PrefixTable = new[]
         {
             "open3mod.Images.HUD_X",
             "open3mod.Images.HUD_Y",
@@ -505,7 +505,7 @@ namespace open3mod
         };
 
 
-        static readonly string[] PostFixTable = new[]
+        private static readonly string[] PostFixTable = new[]
         {
             "_Normal",
             "_Hover",

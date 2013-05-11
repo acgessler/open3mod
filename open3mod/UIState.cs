@@ -104,7 +104,7 @@ namespace open3mod
 
         public UiState(Tab defaultTab)
         {
-            DefaultFont10 = new Font("Segoe UI", 10);
+            DefaultFont10 = new Font("Segoe UI", 8);
             DefaultFont12 = new Font("Segoe UI", 12);
             DefaultFont16 = new Font("Segoe UI", 18);
 
