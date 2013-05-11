@@ -44,6 +44,7 @@
             this.hideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripMesh = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.detailsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.meshInfoPopup = new open3mod.MeshInfoPopup();
             this.nodeInfoPopup = new open3mod.NodeInfoPopup();
             this.panelHiddenInfo.SuspendLayout();
@@ -75,6 +76,7 @@
             this.textBoxFilter.Size = new System.Drawing.Size(287, 20);
             this.textBoxFilter.TabIndex = 7;
             this.textBoxFilter.Text = "Type to search";
+            this.toolTip1.SetToolTip(this.textBoxFilter, "Enter search text here. Press Enter to lock search and to cycle through results.");
             this.textBoxFilter.Click += new System.EventHandler(this.OnClickSearchBox);
             this.textBoxFilter.TextChanged += new System.EventHandler(this.OnChangeFilterText);
             this.textBoxFilter.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDown);
@@ -268,5 +270,6 @@
         private System.Windows.Forms.ToolStripMenuItem hideToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripMesh;
         private System.Windows.Forms.ToolStripMenuItem detailsToolStripMenuItem1;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

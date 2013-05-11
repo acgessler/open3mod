@@ -61,6 +61,8 @@ namespace open3mod
             this.showNormalVectorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showAnimationSkeletonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.logViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -100,8 +102,6 @@ namespace open3mod
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.linkLabelDonate = new System.Windows.Forms.LinkLabel();
             this.glControl1 = new open3mod.RenderControl();
-            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStripSelectRenderer.SuspendLayout();
             this.tabContextMenuStrip.SuspendLayout();
@@ -294,6 +294,18 @@ namespace open3mod
             this.toolsToolStripMenuItem.Text = "Tools";
             this.toolsToolStripMenuItem.Click += new System.EventHandler(this.ToolsToolStripMenuItemClick);
             // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(176, 22);
+            this.toolStripMenuItem3.Text = "Set file associations";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.OnSetFileAssociations);
+            // 
+            // toolStripSeparator11
+            // 
+            this.toolStripSeparator11.Name = "toolStripSeparator11";
+            this.toolStripSeparator11.Size = new System.Drawing.Size(173, 6);
+            // 
             // logViewerToolStripMenuItem
             // 
             this.logViewerToolStripMenuItem.Name = "logViewerToolStripMenuItem";
@@ -391,6 +403,7 @@ namespace open3mod
             this.openToolStripButton.Name = "openToolStripButton";
             this.openToolStripButton.Size = new System.Drawing.Size(23, 22);
             this.openToolStripButton.Text = "&Open";
+            this.openToolStripButton.ToolTipText = "Open a 3D file";
             this.openToolStripButton.Click += new System.EventHandler(this.OnFileMenuOpen);
             // 
             // toolStripSeparator4
@@ -406,6 +419,7 @@ namespace open3mod
             this.toolStripButtonFullView.Name = "toolStripButtonFullView";
             this.toolStripButtonFullView.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonFullView.Text = "Full View";
+            this.toolStripButtonFullView.ToolTipText = "Show full-size 3D view";
             this.toolStripButtonFullView.Click += new System.EventHandler(this.ToggleFullView);
             // 
             // toolStripButtonTwoViews
@@ -416,6 +430,7 @@ namespace open3mod
             this.toolStripButtonTwoViews.Name = "toolStripButtonTwoViews";
             this.toolStripButtonTwoViews.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonTwoViews.Text = "Two Views";
+            this.toolStripButtonTwoViews.ToolTipText = "Split into two 3D views stacked on top of each other";
             this.toolStripButtonTwoViews.Click += new System.EventHandler(this.ToggleTwoViews);
             // 
             // toolStripButtonFourViews
@@ -426,6 +441,7 @@ namespace open3mod
             this.toolStripButtonFourViews.Name = "toolStripButtonFourViews";
             this.toolStripButtonFourViews.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonFourViews.Text = "Four Views";
+            this.toolStripButtonFourViews.ToolTipText = "Split into four 3D views";
             this.toolStripButtonFourViews.Click += new System.EventHandler(this.ToggleFourViews);
             // 
             // toolStripSeparator
@@ -442,6 +458,7 @@ namespace open3mod
             this.toolStripButtonWireframe.Name = "toolStripButtonWireframe";
             this.toolStripButtonWireframe.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonWireframe.Text = "Enable Wireframe Mode";
+            this.toolStripButtonWireframe.ToolTipText = "Enable wireframe mode";
             this.toolStripButtonWireframe.Click += new System.EventHandler(this.ToggleWireframe);
             // 
             // toolStripButtonShowTextures
@@ -453,6 +470,7 @@ namespace open3mod
             this.toolStripButtonShowTextures.Name = "toolStripButtonShowTextures";
             this.toolStripButtonShowTextures.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonShowTextures.Text = "Enable Textures";
+            this.toolStripButtonShowTextures.ToolTipText = "Enable textures in 3D view";
             this.toolStripButtonShowTextures.Click += new System.EventHandler(this.ToggleTextures);
             // 
             // toolStripButtonShowShaded
@@ -464,6 +482,7 @@ namespace open3mod
             this.toolStripButtonShowShaded.Name = "toolStripButtonShowShaded";
             this.toolStripButtonShowShaded.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonShowShaded.Text = "Enable Shading";
+            this.toolStripButtonShowShaded.ToolTipText = "Enable shading (lighting) in 3D view";
             this.toolStripButtonShowShaded.Click += new System.EventHandler(this.ToggleShading);
             // 
             // toolStripSeparator1
@@ -480,6 +499,7 @@ namespace open3mod
             this.toolStripButtonShowBB.Name = "toolStripButtonShowBB";
             this.toolStripButtonShowBB.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonShowBB.Text = "Show Bounding Boxes";
+            this.toolStripButtonShowBB.ToolTipText = "Show axis-aligned bounding boxes for nodes";
             this.toolStripButtonShowBB.Click += new System.EventHandler(this.ToggleShowBb);
             // 
             // toolStripButtonShowNormals
@@ -491,6 +511,7 @@ namespace open3mod
             this.toolStripButtonShowNormals.Name = "toolStripButtonShowNormals";
             this.toolStripButtonShowNormals.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonShowNormals.Text = "Show Normals";
+            this.toolStripButtonShowNormals.ToolTipText = "Show geometric normal vectors";
             this.toolStripButtonShowNormals.Click += new System.EventHandler(this.ToggleShowNormals);
             // 
             // toolStripButtonShowSkeleton
@@ -502,6 +523,7 @@ namespace open3mod
             this.toolStripButtonShowSkeleton.Name = "toolStripButtonShowSkeleton";
             this.toolStripButtonShowSkeleton.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonShowSkeleton.Text = "Show Skeleton";
+            this.toolStripButtonShowSkeleton.ToolTipText = "Show skeleton joints in 3D view";
             this.toolStripButtonShowSkeleton.Click += new System.EventHandler(this.ToggleShowSkeleton);
             // 
             // toolStripSeparator5
@@ -518,6 +540,7 @@ namespace open3mod
             this.toolStripButtonShowFPS.Name = "toolStripButtonShowFPS";
             this.toolStripButtonShowFPS.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonShowFPS.Text = "Show Frames per Second (FPS)";
+            this.toolStripButtonShowFPS.ToolTipText = "Show frames per second (FPS)";
             this.toolStripButtonShowFPS.Click += new System.EventHandler(this.ToggleFps);
             // 
             // toolStripSeparator9
@@ -533,6 +556,7 @@ namespace open3mod
             this.toolStripButtonShowSettings.Name = "toolStripButtonShowSettings";
             this.toolStripButtonShowSettings.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonShowSettings.Text = "Settings";
+            this.toolStripButtonShowSettings.ToolTipText = "Open settings dialog";
             this.toolStripButtonShowSettings.Click += new System.EventHandler(this.OnShowSettings);
             // 
             // tabControl1
@@ -644,18 +668,6 @@ namespace open3mod
             this.glControl1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.OnMouseUp);
             this.glControl1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.OnPreviewKeyDown);
             this.glControl1.Resize += new System.EventHandler(this.OnGlResize);
-            // 
-            // toolStripSeparator11
-            // 
-            this.toolStripSeparator11.Name = "toolStripSeparator11";
-            this.toolStripSeparator11.Size = new System.Drawing.Size(173, 6);
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(176, 22);
-            this.toolStripMenuItem3.Text = "Set file associations";
-            this.toolStripMenuItem3.Click += new System.EventHandler(this.OnSetFileAssociations);
             // 
             // MainWindow
             // 
