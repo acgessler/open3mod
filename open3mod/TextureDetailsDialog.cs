@@ -15,16 +15,24 @@ namespace open3mod
 {
     public partial class TextureDetailsDialog : Form
     {
+        private TextureThumbnailControl _tex;
         public TextureDetailsDialog()
         {
             InitializeComponent();
         }
 
 
+        public TextureThumbnailControl GetTexture()
+        {
+            return _tex;
+        }
+
+
         public void SetTexture(TextureThumbnailControl tex)
         {
-            Debug.Assert(tex.Texture != null);
+            Debug.Assert(tex != null && tex.Texture != null);
 
+            _tex = tex;
             var img = tex.Texture.Image;
 
             Text = Path.GetFileName(tex.FilePath) + " - Details"; 

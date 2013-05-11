@@ -90,7 +90,26 @@ namespace open3mod
 
         private void AddTextureEntry(string filePath)
         {
-            AddEntry(new TextureThumbnailControl(this, Scene, filePath));
+            var t = new TextureThumbnailControl(this, Scene, filePath);
+            AddEntry(t);
+
+            TextureThumbnailControl old = null;
+            t.MouseEnter += (sender, args) =>
+                {
+                    if (_details != null)
+                    {
+                        old = _details.GetTexture();
+                        _details.SetTexture(t);
+                    }
+                };
+            t.MouseLeave += (sender, args) =>
+                {
+                    if (_details != null && old != null)
+                    {
+                        _details.SetTexture(old);
+                        old = null;
+                    }
+                };
         }
    
 
