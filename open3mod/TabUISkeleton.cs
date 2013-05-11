@@ -38,6 +38,12 @@ namespace open3mod
         public TabUiSkeleton()
         {
             InitializeComponent();
+
+            var settings = CoreSettings.CoreSettings.Default;
+            if (settings.InspectorRecordedWidth >= 0)
+            {
+                splitContainer.SplitterDistance -= (splitContainer.Panel1.Width - settings.InspectorRecordedWidth);
+            }
         }
 
 
@@ -73,6 +79,8 @@ namespace open3mod
 
         private void OnSplitterMove(object sender, SplitterEventArgs e)
         {
+            var settings = CoreSettings.CoreSettings.Default;
+            settings.InspectorRecordedWidth = splitContainer.Panel1.Width;
             // for some reason this is necessary to keep the layout from breaking up.
             inspectionView1.ClientSize = splitContainer.Panel2.ClientSize;
         }    
