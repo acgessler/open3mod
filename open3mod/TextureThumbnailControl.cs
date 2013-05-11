@@ -76,6 +76,10 @@ namespace open3mod
             ContextMenuStrip.Items.Add(s);
             s.Enabled = false;
 
+            s = new ToolStripMenuItem("Export", null, OnContextMenuExport);
+            ContextMenuStrip.Items.Add(s);
+            s.Enabled = false;
+
             ContextMenuStrip.Opened += OnContextMenuOpen;
             DoubleClick += OnContextMenuDetails;
         }
@@ -91,6 +95,36 @@ namespace open3mod
         private void OnContextMenuDetails(object sender, EventArgs eventArgs)
         {
             _owner.ShowDetails(this);
+        }
+
+
+        private void OnContextMenuExport(object sender, EventArgs eventArgs)
+        {
+            var image = _texture.Image;
+            var exporter = new TextureExporter(_texture); 
+            
+            var saver = new SaveFileDialog();
+            saver.Title = "Specify file to export " + Path.GetFileName(_texture.FileName) + " to";
+
+            if (_texture.FileName.Length > 0 && _texture.FileName[0] == '*')
+            {
+                saver.FileName = "EmbeddedTexture_" + _texture.FileName.Substring(1) + ".png";
+            }
+            else
+            {
+                saver.FileName = Path.GetFileName(_texture.FileName);
+            }
+
+            var extensions = string.Join(";", exporter.GetExtensionList().Select(s => "*." + s));
+            saver.Filter = "Image Files ("+extensions+")|"+extensions+"|All files (*.*)|*.*";
+            if(saver.ShowDialog(FindForm()) == DialogResult.OK)
+            {
+
+                if (!exporter.Export(saver.FileName))
+                {
+                    MessageBox.Show(FindForm(), "Failed to export to " + saver.FileName);
+                }
+            }          
         }
 
 
@@ -135,6 +169,10 @@ namespace open3mod
 
                     // enable "Details" menu
                     var item = ((ToolStripMenuItem)ContextMenuStrip.Items[2]);
+                    item.Enabled = true;
+
+                    // enable "Export" menu
+                    item = ((ToolStripMenuItem)ContextMenuStrip.Items[3]);
                     item.Enabled = true;
                 }
                 else

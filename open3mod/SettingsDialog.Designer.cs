@@ -32,12 +32,14 @@
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBoxBFCulling = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
             this.comboBoxSetLightingMode = new System.Windows.Forms.ComboBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.label5 = new System.Windows.Forms.Label();
             this.comboBoxSetBackend = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.checkBoxLinearMIP = new System.Windows.Forms.CheckBox();
             this.comboBoxTexResolution = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -46,36 +48,34 @@
             this.comboBoxSetMultiSampling = new System.Windows.Forms.ComboBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.label8 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.labelPleaseRestart = new System.Windows.Forms.Label();
-            this.tabPageTextures = new System.Windows.Forms.TabPage();
-            this.label7 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.folderSetDisplaySearchPaths = new open3mod.FolderSetDisplay();
-            this.checkBoxLoadTextures = new System.Windows.Forms.CheckBox();
-            this.checkBoxBFCulling = new System.Windows.Forms.CheckBox();
-            this.checkBoxLinearMIP = new System.Windows.Forms.CheckBox();
             this.checkBoxmergeDuplicateVertices = new System.Windows.Forms.CheckBox();
             this.checkBoxOptimize = new System.Windows.Forms.CheckBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.checkBoxRemoveDegenerates = new System.Windows.Forms.CheckBox();
             this.checkBoxFixWinding = new System.Windows.Forms.CheckBox();
             this.checkBoxSortByPrimitiveType = new System.Windows.Forms.CheckBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkBoxGenerateTangentSpace = new System.Windows.Forms.CheckBox();
             this.checkBoxComputeNormals = new System.Windows.Forms.CheckBox();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label8 = new System.Windows.Forms.Label();
+            this.tabPageTextures = new System.Windows.Forms.TabPage();
+            this.checkBoxLoadTextures = new System.Windows.Forms.CheckBox();
+            this.folderSetDisplaySearchPaths = new open3mod.FolderSetDisplay();
+            this.label7 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.labelPleaseRestart = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPageTextures.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
@@ -127,6 +127,19 @@
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Custom Settings";
+            // 
+            // checkBoxBFCulling
+            // 
+            this.checkBoxBFCulling.AutoSize = true;
+            this.checkBoxBFCulling.Checked = global::open3mod.GraphicsSettings.Default.BackFaceCulling;
+            this.checkBoxBFCulling.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.GraphicsSettings.Default, "BackFaceCulling", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxBFCulling.Location = new System.Drawing.Point(188, 253);
+            this.checkBoxBFCulling.Name = "checkBoxBFCulling";
+            this.checkBoxBFCulling.Size = new System.Drawing.Size(112, 17);
+            this.checkBoxBFCulling.TabIndex = 13;
+            this.checkBoxBFCulling.Text = "Back-Face Culling";
+            this.checkBoxBFCulling.UseVisualStyleBackColor = true;
+            this.checkBoxBFCulling.CheckedChanged += new System.EventHandler(this.checkBoxBFCulling_CheckedChanged);
             // 
             // label6
             // 
@@ -186,11 +199,25 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(17, 38);
+            this.label4.Location = new System.Drawing.Point(17, 35);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(102, 13);
             this.label4.TabIndex = 7;
             this.label4.Text = "Rendering Backend";
+            // 
+            // checkBoxLinearMIP
+            // 
+            this.checkBoxLinearMIP.AutoSize = true;
+            this.checkBoxLinearMIP.Checked = global::open3mod.GraphicsSettings.Default.UseMips;
+            this.checkBoxLinearMIP.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxLinearMIP.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.GraphicsSettings.Default, "UseMips", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxLinearMIP.Location = new System.Drawing.Point(362, 178);
+            this.checkBoxLinearMIP.Name = "checkBoxLinearMIP";
+            this.checkBoxLinearMIP.Size = new System.Drawing.Size(72, 17);
+            this.checkBoxLinearMIP.TabIndex = 6;
+            this.checkBoxLinearMIP.Text = "Use MIPs";
+            this.checkBoxLinearMIP.UseVisualStyleBackColor = true;
+            this.checkBoxLinearMIP.CheckedChanged += new System.EventHandler(this.OnChangeMipSettings);
             // 
             // comboBoxTexResolution
             // 
@@ -287,101 +314,6 @@
             this.tabPage2.Text = "Import";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add(this.label8);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(532, 381);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Animation";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.ForeColor = System.Drawing.Color.Red;
-            this.label8.Location = new System.Drawing.Point(232, 163);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(38, 13);
-            this.label8.TabIndex = 1;
-            this.label8.Text = "TODO";
-            // 
-            // button1
-            // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button1.Location = new System.Drawing.Point(430, 434);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(97, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "OK";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.OnOk);
-            // 
-            // imageList1
-            // 
-            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            // 
-            // labelPleaseRestart
-            // 
-            this.labelPleaseRestart.AutoSize = true;
-            this.labelPleaseRestart.ForeColor = System.Drawing.Color.Red;
-            this.labelPleaseRestart.Location = new System.Drawing.Point(23, 434);
-            this.labelPleaseRestart.Name = "labelPleaseRestart";
-            this.labelPleaseRestart.Size = new System.Drawing.Size(232, 13);
-            this.labelPleaseRestart.TabIndex = 2;
-            this.labelPleaseRestart.Text = "Please restart the application to see all changes";
-            this.labelPleaseRestart.Visible = false;
-            // 
-            // tabPageTextures
-            // 
-            this.tabPageTextures.Controls.Add(this.checkBoxLoadTextures);
-            this.tabPageTextures.Controls.Add(this.folderSetDisplaySearchPaths);
-            this.tabPageTextures.Controls.Add(this.label7);
-            this.tabPageTextures.Location = new System.Drawing.Point(4, 22);
-            this.tabPageTextures.Name = "tabPageTextures";
-            this.tabPageTextures.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageTextures.Size = new System.Drawing.Size(532, 381);
-            this.tabPageTextures.TabIndex = 3;
-            this.tabPageTextures.Text = "Textures";
-            this.tabPageTextures.UseVisualStyleBackColor = true;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(28, 106);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(177, 13);
-            this.label7.TabIndex = 5;
-            this.label7.Text = "Additional search folders for textures";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.checkBoxGenerateTangentSpace);
-            this.groupBox2.Controls.Add(this.checkBoxComputeNormals);
-            this.groupBox2.Location = new System.Drawing.Point(21, 23);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(477, 88);
-            this.groupBox2.TabIndex = 11;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Derived data";
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.checkBoxRemoveDegenerates);
-            this.groupBox3.Controls.Add(this.checkBoxFixWinding);
-            this.groupBox3.Controls.Add(this.checkBoxSortByPrimitiveType);
-            this.groupBox3.Location = new System.Drawing.Point(21, 126);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(477, 96);
-            this.groupBox3.TabIndex = 12;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Cleanup";
-            // 
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.checkBoxmergeDuplicateVertices);
@@ -392,54 +324,6 @@
             this.groupBox4.TabIndex = 13;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Optimization";
-            // 
-            // folderSetDisplaySearchPaths
-            // 
-            this.folderSetDisplaySearchPaths.Folders = new string[0];
-            this.folderSetDisplaySearchPaths.Location = new System.Drawing.Point(17, 122);
-            this.folderSetDisplaySearchPaths.Name = "folderSetDisplaySearchPaths";
-            this.folderSetDisplaySearchPaths.Size = new System.Drawing.Size(499, 152);
-            this.folderSetDisplaySearchPaths.TabIndex = 6;
-            // 
-            // checkBoxLoadTextures
-            // 
-            this.checkBoxLoadTextures.AutoSize = true;
-            this.checkBoxLoadTextures.Checked = global::CoreSettings.CoreSettings.Default.LoadTextures;
-            this.checkBoxLoadTextures.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxLoadTextures.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::CoreSettings.CoreSettings.Default, "LoadTextures", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxLoadTextures.Location = new System.Drawing.Point(31, 49);
-            this.checkBoxLoadTextures.Name = "checkBoxLoadTextures";
-            this.checkBoxLoadTextures.Size = new System.Drawing.Size(94, 17);
-            this.checkBoxLoadTextures.TabIndex = 7;
-            this.checkBoxLoadTextures.Text = "Load Textures";
-            this.checkBoxLoadTextures.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxBFCulling
-            // 
-            this.checkBoxBFCulling.AutoSize = true;
-            this.checkBoxBFCulling.Checked = global::open3mod.GraphicsSettings.Default.BackFaceCulling;
-            this.checkBoxBFCulling.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.GraphicsSettings.Default, "BackFaceCulling", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxBFCulling.Location = new System.Drawing.Point(188, 253);
-            this.checkBoxBFCulling.Name = "checkBoxBFCulling";
-            this.checkBoxBFCulling.Size = new System.Drawing.Size(112, 17);
-            this.checkBoxBFCulling.TabIndex = 13;
-            this.checkBoxBFCulling.Text = "Back-Face Culling";
-            this.checkBoxBFCulling.UseVisualStyleBackColor = true;
-            this.checkBoxBFCulling.CheckedChanged += new System.EventHandler(this.checkBoxBFCulling_CheckedChanged);
-            // 
-            // checkBoxLinearMIP
-            // 
-            this.checkBoxLinearMIP.AutoSize = true;
-            this.checkBoxLinearMIP.Checked = global::open3mod.GraphicsSettings.Default.UseMips;
-            this.checkBoxLinearMIP.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxLinearMIP.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.GraphicsSettings.Default, "UseMips", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxLinearMIP.Location = new System.Drawing.Point(362, 178);
-            this.checkBoxLinearMIP.Name = "checkBoxLinearMIP";
-            this.checkBoxLinearMIP.Size = new System.Drawing.Size(72, 17);
-            this.checkBoxLinearMIP.TabIndex = 6;
-            this.checkBoxLinearMIP.Text = "Use MIPs";
-            this.checkBoxLinearMIP.UseVisualStyleBackColor = true;
-            this.checkBoxLinearMIP.CheckedChanged += new System.EventHandler(this.OnChangeMipSettings);
             // 
             // checkBoxmergeDuplicateVertices
             // 
@@ -466,6 +350,18 @@
             this.checkBoxOptimize.TabIndex = 8;
             this.checkBoxOptimize.Text = "Optimize geometry for vertex cache throughput";
             this.checkBoxOptimize.UseVisualStyleBackColor = true;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.checkBoxRemoveDegenerates);
+            this.groupBox3.Controls.Add(this.checkBoxFixWinding);
+            this.groupBox3.Controls.Add(this.checkBoxSortByPrimitiveType);
+            this.groupBox3.Location = new System.Drawing.Point(21, 126);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(477, 96);
+            this.groupBox3.TabIndex = 12;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Cleanup";
             // 
             // checkBoxRemoveDegenerates
             // 
@@ -505,6 +401,17 @@
             this.checkBoxSortByPrimitiveType.Text = "Sort meshes by primitive types (i.e. line, points, triangles)";
             this.checkBoxSortByPrimitiveType.UseVisualStyleBackColor = true;
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.checkBoxGenerateTangentSpace);
+            this.groupBox2.Controls.Add(this.checkBoxComputeNormals);
+            this.groupBox2.Location = new System.Drawing.Point(21, 23);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(477, 88);
+            this.groupBox2.TabIndex = 11;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Derived data";
+            // 
             // checkBoxGenerateTangentSpace
             // 
             this.checkBoxGenerateTangentSpace.AutoSize = true;
@@ -533,6 +440,99 @@
             this.checkBoxComputeNormals.UseVisualStyleBackColor = true;
             this.checkBoxComputeNormals.CheckedChanged += new System.EventHandler(this.checkBoxComputeNormals_CheckedChanged);
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.label8);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(532, 381);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Animation";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.ForeColor = System.Drawing.Color.Red;
+            this.label8.Location = new System.Drawing.Point(232, 163);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(38, 13);
+            this.label8.TabIndex = 1;
+            this.label8.Text = "TODO";
+            // 
+            // tabPageTextures
+            // 
+            this.tabPageTextures.Controls.Add(this.checkBoxLoadTextures);
+            this.tabPageTextures.Controls.Add(this.folderSetDisplaySearchPaths);
+            this.tabPageTextures.Controls.Add(this.label7);
+            this.tabPageTextures.Location = new System.Drawing.Point(4, 22);
+            this.tabPageTextures.Name = "tabPageTextures";
+            this.tabPageTextures.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageTextures.Size = new System.Drawing.Size(532, 381);
+            this.tabPageTextures.TabIndex = 3;
+            this.tabPageTextures.Text = "Textures";
+            this.tabPageTextures.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxLoadTextures
+            // 
+            this.checkBoxLoadTextures.AutoSize = true;
+            this.checkBoxLoadTextures.Checked = global::CoreSettings.CoreSettings.Default.LoadTextures;
+            this.checkBoxLoadTextures.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxLoadTextures.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::CoreSettings.CoreSettings.Default, "LoadTextures", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxLoadTextures.Location = new System.Drawing.Point(31, 49);
+            this.checkBoxLoadTextures.Name = "checkBoxLoadTextures";
+            this.checkBoxLoadTextures.Size = new System.Drawing.Size(94, 17);
+            this.checkBoxLoadTextures.TabIndex = 7;
+            this.checkBoxLoadTextures.Text = "Load Textures";
+            this.checkBoxLoadTextures.UseVisualStyleBackColor = true;
+            // 
+            // folderSetDisplaySearchPaths
+            // 
+            this.folderSetDisplaySearchPaths.Folders = new string[0];
+            this.folderSetDisplaySearchPaths.Location = new System.Drawing.Point(17, 122);
+            this.folderSetDisplaySearchPaths.Name = "folderSetDisplaySearchPaths";
+            this.folderSetDisplaySearchPaths.Size = new System.Drawing.Size(499, 152);
+            this.folderSetDisplaySearchPaths.TabIndex = 6;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(28, 106);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(177, 13);
+            this.label7.TabIndex = 5;
+            this.label7.Text = "Additional search folders for textures";
+            // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.button1.Location = new System.Drawing.Point(430, 434);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(97, 23);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "OK";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.OnOk);
+            // 
+            // imageList1
+            // 
+            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            // 
+            // labelPleaseRestart
+            // 
+            this.labelPleaseRestart.AutoSize = true;
+            this.labelPleaseRestart.ForeColor = System.Drawing.Color.Red;
+            this.labelPleaseRestart.Location = new System.Drawing.Point(23, 434);
+            this.labelPleaseRestart.Name = "labelPleaseRestart";
+            this.labelPleaseRestart.Size = new System.Drawing.Size(232, 13);
+            this.labelPleaseRestart.TabIndex = 2;
+            this.labelPleaseRestart.Text = "Please restart the application to see all changes";
+            this.labelPleaseRestart.Visible = false;
+            // 
             // SettingsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -552,16 +552,16 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.tabPageTextures.ResumeLayout(false);
             this.tabPageTextures.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -112,7 +112,7 @@ namespace open3mod
 
         public void OnSetTooltips(ToolTip tips)
         {
-            const string text = "Right-click for tools and options";
+            var text = "Right-click for tools and options";
             tips.SetToolTip(this,text);
 
             tips.SetToolTip(pictureBox,text);
@@ -257,18 +257,6 @@ namespace open3mod
 
             t.Start();
         }
-
-
-        protected virtual void OnContextMenuReplace(object sender, EventArgs e)
-        {
-
-        }
-
-   
-        protected virtual void OnContextMenuExport(object sender, EventArgs e)
-        {
-            // TODO NIY
-        }  
     }
 }
 

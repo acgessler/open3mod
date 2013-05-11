@@ -96,7 +96,7 @@ namespace open3mod
             this.replaceToolStripMenuItem1.Name = "replaceToolStripMenuItem1";
             this.replaceToolStripMenuItem1.Size = new System.Drawing.Size(115, 22);
             this.replaceToolStripMenuItem1.Text = "Replace";
-            this.replaceToolStripMenuItem1.Click += new System.EventHandler(this.OnContextMenuReplace);
+            //this.replaceToolStripMenuItem1.Click += new System.EventHandler(this.OnContextMenuReplace);
             // 
             // exportToolStripMenuItem
             // 
@@ -104,7 +104,7 @@ namespace open3mod
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
             this.exportToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
             this.exportToolStripMenuItem.Text = "Export";
-            this.exportToolStripMenuItem.Click += new System.EventHandler(this.OnContextMenuExport);
+            //this.exportToolStripMenuItem.Click += new System.EventHandler(this.OnContextMenuExport);
             // 
             // ThumbnailControlBase
             // 
