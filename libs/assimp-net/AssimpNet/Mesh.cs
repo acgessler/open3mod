@@ -309,112 +309,21 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Constructs a new Mesh.
+        /// Constructs a new instance of the <see cref="Mesh"/> class.
         /// </summary>
-        /// <param name="mesh">Unmanaged AiMesh struct.</param>
-        internal Mesh(ref AiMesh mesh) {
-            m_name = mesh.Name.GetString();
-            m_primitiveType = mesh.PrimitiveTypes;
-            m_materialIndex = (int) mesh.MaterialIndex;
-
-            int vertexCount = (int) mesh.NumVertices;
-
-            m_vertices = new List<Vector3D>(vertexCount);
-            m_normals = new List<Vector3D>();
-            m_tangents = new List<Vector3D>();
-            m_bitangents = new List<Vector3D>();
-            m_colors = new List<Color4D>[AiDefines.AI_MAX_NUMBER_OF_COLOR_SETS];
-
-            for(int i = 0; i < m_colors.Length; i++) {
-                m_colors[i] = new List<Color4D>();
-            }
-
-            m_texCoords = new List<Vector3D>[AiDefines.AI_MAX_NUMBER_OF_TEXTURECOORDS];
-
-            for(int i = 0; i < m_texCoords.Length; i++) {
-                m_texCoords[i] = new List<Vector3D>();
-            }
-
-            m_texComponentCount = new int[AiDefines.AI_MAX_NUMBER_OF_TEXTURECOORDS];
-            m_bones = new List<Bone>();
-            m_faces = new List<Face>();
-            m_meshAttachments = new List<MeshAnimationAttachment>();
-
-            //Load per-vertex arrays
-            if(mesh.NumVertices > 0) {
-                if(mesh.Vertices != IntPtr.Zero) {
-                    m_vertices.AddRange(MemoryHelper.MarshalArray<Vector3D>(mesh.Vertices, vertexCount));
-                }
-                if(mesh.Normals != IntPtr.Zero) {
-                    m_normals.AddRange(MemoryHelper.MarshalArray<Vector3D>(mesh.Normals, vertexCount));
-                }
-                if(mesh.Tangents != IntPtr.Zero) {
-                    m_tangents.AddRange(MemoryHelper.MarshalArray<Vector3D>(mesh.Tangents, vertexCount));
-                }
-                if(mesh.BiTangents != IntPtr.Zero) {
-                    m_bitangents.AddRange(MemoryHelper.MarshalArray<Vector3D>(mesh.BiTangents, vertexCount));
-                }
-            }
-
-            //Load faces
-            if(mesh.NumFaces > 0 && mesh.Faces != IntPtr.Zero) {
-                AiFace[] faces = MemoryHelper.MarshalArray<AiFace>(mesh.Faces, (int) mesh.NumFaces);
-                for(int i = 0; i < faces.Length; i++) {
-                    m_faces.Add(new Face(ref faces[i]));
-                }
-            }
-
-            //Load UVW components - this should match the texture coordinate channels
-            uint[] components = mesh.NumUVComponents;
-            if(components != null) {
-                for(int i = 0; i < components.Length; i++) {
-                    m_texComponentCount[i] = (int) components[i];
-                }
-            }
-
-            //Load texture coordinate channels
-            IntPtr[] texCoords = mesh.TextureCoords;
-            if(texCoords != null) {
-                for(int i = 0; i < texCoords.Length; i++) {
-                    IntPtr texPtr = texCoords[i];
-
-                    if(texPtr != IntPtr.Zero)
-                        m_texCoords[i] = new List<Vector3D>(MemoryHelper.MarshalArray<Vector3D>(texPtr, vertexCount));
-                }
-            }
-
-            //Load vertex color channels
-            IntPtr[] vertexColors = mesh.Colors;
-            if(vertexColors != null) {
-                for(int i = 0; i < vertexColors.Length; i++) {
-                    IntPtr colorPtr = vertexColors[i];
-
-                    if(colorPtr != IntPtr.Zero) 
-                        m_colors[i] = new List<Color4D>(MemoryHelper.MarshalArray<Color4D>(colorPtr, vertexCount));
-                }
-            }
-
-            //Load bones
-            if(mesh.NumBones > 0 && mesh.Bones != IntPtr.Zero) {
-                AiBone[] bones = MemoryHelper.MarshalArray<AiBone>(mesh.Bones, (int) mesh.NumBones, true);
-                for(int i = 0; i < bones.Length; i++) {
-                    m_bones.Add(new Bone(ref bones[i]));
-                }
-            }
-
-            //Load anim meshes (attachment meshes)
-            if(mesh.NumAnimMeshes > 0 && mesh.AnimMeshes != IntPtr.Zero) {
-                AiAnimMesh[] animMeshes = MemoryHelper.MarshalArray<AiAnimMesh>(mesh.AnimMeshes, (int) mesh.NumAnimMeshes, true);
-                for(int i = 0; i < animMeshes.Length; i++) {
-                    m_meshAttachments.Add(new MeshAnimationAttachment(ref animMeshes[i]));
-                }
-            }
-        }
-
         public Mesh() : this(String.Empty, PrimitiveType.Triangle) { }
 
+        /// <summary>
+        /// Constructs a new instance of the <see cref="Mesh"/> class.
+        /// </summary>
+        /// <param name="name">Name of the mesh.</param>
         public Mesh(String name) : this(name, PrimitiveType.Triangle) { }
 
+        /// <summary>
+        /// Constructs a new instance of the <see cref="Mesh"/> class.
+        /// </summary>
+        /// <param name="name">Name of the mesh</param>
+        /// <param name="primType">Primitive types contained in the mesh.</param>
         public Mesh(String name, PrimitiveType primType) {
             m_name = name;
             m_primitiveType = primType;
@@ -678,12 +587,15 @@ namespace Assimp {
                 }
             }
 
+            //Faces
             if(nativeValue.NumFaces > 0)
                 nativeValue.Faces = MemoryHelper.ToNativeArray<Face, AiFace>(m_faces.ToArray());
 
+            //Bones
             if(nativeValue.NumBones > 0)
                 nativeValue.Bones = MemoryHelper.ToNativeArray<Bone, AiBone>(m_bones.ToArray(), true);
 
+            //Attachment meshes
             if(nativeValue.NumAnimMeshes > 0)
                 nativeValue.AnimMeshes = MemoryHelper.ToNativeArray<MeshAnimationAttachment, AiAnimMesh>(m_meshAttachments.ToArray());
         }
@@ -764,7 +676,7 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Frees unmanaged memory created by <see cref="ToNative"/>.
+        /// Frees unmanaged memory created by <see cref="IMarshalable{Mesh, AiMesh}.ToNative"/>.
         /// </summary>
         /// <param name="nativeValue">Native value to free</param>
         /// <param name="freeNative">True if the unmanaged memory should be freed, false otherwise.</param>
@@ -812,12 +724,15 @@ namespace Assimp {
                 }
             }
 
+            //Faces
             if(aiMesh.NumFaces > 0 && aiMesh.Faces != IntPtr.Zero)
                 MemoryHelper.FreeNativeArray<AiFace>(aiMesh.Faces, (int) aiMesh.NumFaces, Face.FreeNative);
 
+            //Bones
             if(aiMesh.NumBones > 0 && aiMesh.Bones != IntPtr.Zero)
                 MemoryHelper.FreeNativeArray<AiBone>(aiMesh.Bones, (int) aiMesh.NumBones, Bone.FreeNative, true);
 
+            //Attachment meshes
             if(aiMesh.NumAnimMeshes > 0 && aiMesh.AnimMeshes != IntPtr.Zero)
                 MemoryHelper.FreeNativeArray<AiAnimMesh>(aiMesh.AnimMeshes, (int) aiMesh.NumAnimMeshes, MeshAnimationAttachment.FreeNative, true);
 

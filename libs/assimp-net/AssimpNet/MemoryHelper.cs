@@ -37,84 +37,10 @@ namespace Assimp {
     /// Helper static class containing functions that aid dealing with unmanaged memory to managed memory conversions.
     /// </summary>
     public static class MemoryHelper {
+        /// <summary>
+        /// FOR DEBUG, will be removed soon
+        /// </summary>
         public static int ALLOCCOUNT = 0;
-        /// <summary>
-        /// Marshals a c-style pointer array to a managed array of structs. This will read
-        /// from the start of the IntPtr provided and care should be taken in ensuring that the number
-        /// of elements to read is correct.
-        /// </summary>
-        /// <typeparam name="T">Struct type</typeparam>
-        /// <param name="pointer">Pointer to unmanaged memory</param>
-        /// <param name="length">Number of elements to marshal</param>
-        /// <returns>Managed array, or null if the pointer was not valid</returns>
-        public static T[] MarshalArray<T>(IntPtr pointer, int length) where T : struct {
-            return MarshalArray<T>(pointer, length, false);
-        }
-
-        /// <summary>
-        /// Marshals a c-style pointer array to a manged array of structs. Takes in a parameter denoting if the
-        /// pointer is a "pointer to a pointer" (void**) which requires some extra care. This will read from the start of
-        /// the IntPtr and care should be taken in ensuring that the number of elements to read is correct.
-        /// </summary>
-        /// <typeparam name="T">Struct type</typeparam>
-        /// <param name="pointer">Pointer to unmanaged memory</param>
-        /// <param name="length">Number of elements to marshal</param>
-        /// <param name="arrayOfPointers">True if the unmanaged pointer is void** (array of pointers) or not.</param>
-        /// <returns>Managed array</returns>
-        public static T[] MarshalArray<T>(IntPtr pointer, int length, bool arrayOfPointers) where T : struct {
-            if(pointer == IntPtr.Zero) {
-                return new T[0];
-            }
-
-            try {
-                Type type = typeof(T);
-                //If the pointer is a void** we need to step by the pointer size, otherwise it's just a void* and step by the type size.
-                int stride = (arrayOfPointers) ? IntPtr.Size : Marshal.SizeOf(typeof(T));
-                T[] array = new T[length];
-
-                for(int i = 0; i < length; i++) {
-                    IntPtr currPos = AddIntPtr(pointer, stride * i);
-                    //If pointer is a void**, read the current position to get the proper pointer
-                    if(arrayOfPointers) {
-                        currPos = Marshal.ReadIntPtr(currPos);
-                    }
-                    array[i] = (T) Marshal.PtrToStructure(currPos, type);
-                }
-
-                return array;
-            } catch(Exception) {
-                return new T[0];
-            }
-        }
-
-        /// <summary>
-        /// Marshals a managed array of structs to a c-style pointer array.
-        /// </summary>
-        /// <typeparam name="T">Struct type</typeparam>
-        /// <param name="array">Managed array</param>
-        /// <returns>Pointer to unmanaged array</returns>
-        public static IntPtr MarshalArray<T>(T[] array) where T : struct {
-            if(array == null || array.Length == 0)
-                return IntPtr.Zero;
-
-            int size = SizeOf<T>();
-            IntPtr ptr = Marshal.AllocHGlobal(size * array.Length);
-
-            Write<T>(ptr, array, 0, array.Length);
-
-            return ptr;
-        }
-
-        public static T[] MarshalArrayFromNative<T>(IntPtr ptr, int length) where T : struct {
-            if(ptr == IntPtr.Zero || length == 0)
-                return new T[0];
-
-            T[] array = new T[length];
-
-            Read<T>(ptr, array, 0, length);
-
-            return array;
-        }
 
         #region Marshaling Interop
 
@@ -512,7 +438,7 @@ namespace Assimp {
 
         /// <summary>
         /// Computes the size of the struct type. Not safe if any fields have a MarshalAs attribute, use
-        /// <see cref="MarshalSizeOf"/> instead.
+        /// <see cref="MarshalSizeOf{T}()"/> instead.
         /// </summary>
         /// <typeparam name="T">Struct type</typeparam>
         /// <returns>Size of the struct in bytes.</returns>
@@ -522,7 +448,7 @@ namespace Assimp {
 
         /// <summary>
         /// Computes the size of the struct array. Not safe if any fields have a MarshalAs attribute, use
-        /// <see cref="MarshalSizeOf"/> instead.
+        /// <see cref="MarshalSizeOf{T}()"/> instead.
         /// </summary>
         /// <typeparam name="T">Struct type</typeparam>
         /// <param name="array">Array of structs</param>

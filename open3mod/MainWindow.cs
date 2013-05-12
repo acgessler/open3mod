@@ -215,7 +215,7 @@ namespace open3mod
                 var tab = UiState.TabForId(ui);
                 if (tab != null)
                 {
-                    if (tab.File.Length > 0)
+                    if (!string.IsNullOrEmpty(tab.File))
                     {
                         Text = _captionStub + "  [" + tab.File + "]";
                     }

@@ -243,6 +243,8 @@ namespace open3mod
                         shouldDisposeBitmap = true;
                     }
 
+                    GL.GetError();
+
                     // apply texture resolution bias? (i.e. low quality textures)
                     if(GraphicsSettings.Default.TexQualityBias > 0)
                     {
@@ -288,9 +290,11 @@ namespace open3mod
                     textureBitmap.UnlockBits(textureData);
 
                     // set final state only if the Gl texture object has been filled successfully
-                    // TODO handle glError
-                    _gl = tex;
-                    State = TextureState.GlTextureCreated;
+                    if (GL.GetError() == ErrorCode.NoError)
+                    {
+                        _gl = tex;
+                        State = TextureState.GlTextureCreated;
+                    }
                 }       
                 finally {
                     if (shouldDisposeBitmap)

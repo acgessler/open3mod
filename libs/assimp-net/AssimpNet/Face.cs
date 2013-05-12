@@ -65,17 +65,6 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Constructs a new Face.
-        /// </summary>
-        /// <param name="face">Unmanaged AiFace structure</param>
-        internal Face(ref AiFace face) {
-            m_indices = new List<int>();
-
-            if(face.NumIndices > 0 && face.Indices != IntPtr.Zero)
-                m_indices.AddRange(MemoryHelper.MarshalArray<int>(face.Indices, (int) face.NumIndices));
-        }
-
-        /// <summary>
         /// Constructs a new instance of the <see cref="Face"/> class.
         /// </summary>
         public Face() {
@@ -127,7 +116,7 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Frees unmanaged memory created by <see cref="ToNative"/>.
+        /// Frees unmanaged memory created by <see cref="IMarshalable{Face, AiFace}.ToNative"/>.
         /// </summary>
         /// <param name="nativeValue">Native value to free</param>
         /// <param name="freeNative">True if the unmanaged memory should be freed, false otherwise.</param>
