@@ -77,19 +77,6 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Construct a new MeshAnimation.
-        /// </summary>
-        /// <param name="meshAnim">Unmanaged AiMeshAnim struct.</param>
-        internal MeshAnimationChannel(ref AiMeshAnim meshAnim) {
-            m_name = meshAnim.Name.GetString();
-            
-            //Load mesh keys
-            if(meshAnim.NumKeys > 0 && meshAnim.Keys != IntPtr.Zero) {
-                m_meshKeys.AddRange(MemoryHelper.MarshalArray<MeshKey>(meshAnim.Keys, (int) meshAnim.NumKeys));
-            }
-        }
-
-        /// <summary>
         /// Constructs a new instance of the <see cref="MeshAnimationChannel"/> class.
         /// </summary>
         public MeshAnimationChannel() {
@@ -133,7 +120,7 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Frees unmanaged memory created by <see cref="ToNative"/>.
+        /// Frees unmanaged memory created by <see cref="IMarshalable{MeshAnimationChannel, AiMeshAnim}.ToNative"/>.
         /// </summary>
         /// <param name="nativeValue">Native value to free</param>
         /// <param name="freeNative">True if the unmanaged memory should be freed, false otherwise.</param>

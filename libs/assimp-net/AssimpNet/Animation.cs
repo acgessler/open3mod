@@ -131,34 +131,6 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Constructs a new Animation.
-        /// </summary>
-        /// <param name="animation">Unmanaged AiAnimation.</param>
-        internal Animation(ref AiAnimation animation) {
-            m_name = animation.Name.GetString();
-            m_duration = animation.Duration;
-            m_ticksPerSecond = animation.TicksPerSecond;
-            m_nodeChannels = new List<NodeAnimationChannel>();
-            m_meshChannels = new List<MeshAnimationChannel>();
-
-            //Load node animations
-            if(animation.NumChannels > 0 && animation.Channels != IntPtr.Zero) {
-                AiNodeAnim[] nodeAnims = MemoryHelper.MarshalArray<AiNodeAnim>(animation.Channels, (int) animation.NumChannels, true);
-                for(int i = 0; i < nodeAnims.Length; i++) {
-                    m_nodeChannels.Add(new NodeAnimationChannel(ref nodeAnims[i]));
-                }
-            }
-
-            //Load mesh animations
-            if(animation.NumMeshChannels > 0 && animation.MeshChannels != IntPtr.Zero) {
-                AiMeshAnim[] meshAnims = MemoryHelper.MarshalArray<AiMeshAnim>(animation.MeshChannels, (int) animation.NumMeshChannels, true);
-                for(int i = 0; i < meshAnims.Length; i++) {
-                    m_meshChannels.Add(new MeshAnimationChannel(ref meshAnims[i]));
-                }
-            }
-        }
-
-        /// <summary>
         /// Constructs a new instance of the <see cref="Animation"/> class.
         /// </summary>
         public Animation() {
@@ -220,7 +192,7 @@ namespace Assimp {
 
 
         /// <summary>
-        /// Frees unmanaged memory created by <see cref="ToNative"/>.
+        /// Frees unmanaged memory created by <see cref="IMarshalable{Animation, AiAnimation}.ToNative"/>.
         /// </summary>
         /// <param name="nativeValue">Native value to free</param>
         /// <param name="freeNative">True if the unmanaged memory should be freed, false otherwise.</param>

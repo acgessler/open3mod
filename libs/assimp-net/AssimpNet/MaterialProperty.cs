@@ -134,20 +134,6 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Constructs a new MaterialProperty.
-        /// </summary>
-        /// <param name="property">Umananaged AiMaterialProperty struct</param>
-        internal MaterialProperty(ref AiMaterial material, ref AiMaterialProperty property) {
-            m_name = property.Key.GetString();
-            m_type = property.Type;
-            m_texIndex = (int) property.Index;
-            m_texType = property.Semantic;
-            
-            if(property.DataLength > 0 && property.Data != IntPtr.Zero)
-                m_rawValue = MemoryHelper.MarshalArray<byte>(property.Data, (int)property.DataLength);
-        }
-
-        /// <summary>
         /// Constructs a new instance of the <see cref="MaterialProperty"/> class.
         /// </summary>
         public MaterialProperty() {
@@ -162,7 +148,7 @@ namespace Assimp {
         /// Constructs a new instance of the <see cref="MaterialProperty"/> class. Constructs a buffer property.
         /// </summary>
         /// <param name="name">Name of the property</param>
-        /// <param name="values">Property value</param>
+        /// <param name="buffer">Property value</param>
         public MaterialProperty(String name, byte[] buffer) {
             m_name = name;
             m_type = PropertyType.Buffer;
@@ -175,7 +161,7 @@ namespace Assimp {
         /// Constructs a new instance of the <see cref="MaterialProperty"/> class. Constructs a float property.
         /// </summary>
         /// <param name="name">Name of the property</param>
-        /// <param name="values">Property value</param>
+        /// <param name="value">Property value</param>
         public MaterialProperty(String name, float value) {
             m_name = name;
             m_type = PropertyType.Float;
@@ -190,7 +176,7 @@ namespace Assimp {
         /// Constructs a new instance of the <see cref="MaterialProperty"/> class. Constructs an integer property.
         /// </summary>
         /// <param name="name">Name of the property</param>
-        /// <param name="values">Property value</param>
+        /// <param name="value">Property value</param>
         public MaterialProperty(String name, int value) {
             m_name = name;
             m_type = PropertyType.Integer;
@@ -205,7 +191,7 @@ namespace Assimp {
         /// Constructs a new instance of the <see cref="MaterialProperty"/> class. Constructs a boolean property.
         /// </summary>
         /// <param name="name">Name of the property</param>
-        /// <param name="values">Property value</param>
+        /// <param name="value">Property value</param>
         public MaterialProperty(String name, bool value) {
             m_name = name;
             m_type = PropertyType.Integer;
@@ -220,7 +206,7 @@ namespace Assimp {
         /// Constructs a new instance of the <see cref="MaterialProperty"/> class. Creates a string property.
         /// </summary>
         /// <param name="name">Name of the property</param>
-        /// <param name="values">Property value</param>
+        /// <param name="value">Property value</param>
         public MaterialProperty(String name, String value) {
             m_name = name;
             m_type = PropertyType.String;
@@ -236,7 +222,7 @@ namespace Assimp {
         /// Constructs a new instance of the <see cref="MaterialProperty"/> class. Creates a texture property.
         /// </summary>
         /// <param name="name">Name of the property</param>
-        /// <param name="values">Property value</param>
+        /// <param name="value">Property value</param>
         /// <param name="texType">Texture type</param>
         /// <param name="textureIndex">Texture index</param>
         public MaterialProperty(String name, String value, TextureType texType, int textureIndex) {
@@ -283,7 +269,7 @@ namespace Assimp {
         /// Constructs a new instance of the <see cref="MaterialProperty"/> class. Creates a Color3D property.
         /// </summary>
         /// <param name="name">Name of the property</param>
-        /// <param name="values">Property value</param>
+        /// <param name="value">Property value</param>
         public MaterialProperty(String name, Color3D value) {
             m_name = name;
             m_type = PropertyType.Float;
@@ -298,7 +284,7 @@ namespace Assimp {
         /// Constructs a new instance of the <see cref="MaterialProperty"/> class. Creates a Color4D property.
         /// </summary>
         /// <param name="name">Name of the property</param>
-        /// <param name="values">Property value</param>
+        /// <param name="value">Property value</param>
         public MaterialProperty(String name, Color4D value) {
             m_name = name;
             m_type = PropertyType.Float;
@@ -672,7 +658,7 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Frees unmanaged memory created by <see cref="ToNative"/>.
+        /// Frees unmanaged memory created by <see cref="IMarshalable{MaterialProperty, AiMaterialProperty}.ToNative"/>.
         /// </summary>
         /// <param name="nativeValue">Native value to free</param>
         /// <param name="freeNative">True if the unmanaged memory should be freed, false otherwise.</param>

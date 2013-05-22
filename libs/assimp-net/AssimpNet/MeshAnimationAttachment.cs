@@ -173,68 +173,6 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Constructs a new MeshAttachment.
-        /// </summary>
-        /// <param name="animMesh">Unmanaged AiAnimMesh struct.</param>
-        internal MeshAnimationAttachment(ref AiAnimMesh animMesh) {
-            int vertexCount = (int) animMesh.NumVertices;
-
-            m_vertices = new List<Vector3D>(vertexCount);
-            m_normals = new List<Vector3D>();
-            m_tangents = new List<Vector3D>();
-            m_bitangents = new List<Vector3D>();
-            m_colors = new List<Color4D>[AiDefines.AI_MAX_NUMBER_OF_COLOR_SETS];
-
-            for(int i = 0; i < m_colors.Length; i++) {
-                m_colors[i] = new List<Color4D>();
-            }
-
-            m_texCoords = new List<Vector3D>[AiDefines.AI_MAX_NUMBER_OF_TEXTURECOORDS];
-
-            for(int i = 0; i < m_texCoords.Length; i++) {
-                m_texCoords[i] = new List<Vector3D>();
-            }
-
-            //Load per-vertex arrays
-            if(animMesh.NumVertices > 0) {
-                if(animMesh.Vertices != IntPtr.Zero) {
-                    m_vertices.AddRange(MemoryHelper.MarshalArray<Vector3D>(animMesh.Vertices, vertexCount));
-                }
-                if(animMesh.Normals != IntPtr.Zero) {
-                    m_normals.AddRange(MemoryHelper.MarshalArray<Vector3D>(animMesh.Normals, vertexCount));
-                }
-                if(animMesh.Tangents != IntPtr.Zero) {
-                    m_tangents.AddRange(MemoryHelper.MarshalArray<Vector3D>(animMesh.Tangents, vertexCount));
-                }
-                if(animMesh.BiTangents != IntPtr.Zero) {
-                    m_bitangents.AddRange(MemoryHelper.MarshalArray<Vector3D>(animMesh.BiTangents, vertexCount));
-                }
-
-                //Load texture coordinate channels
-                IntPtr[] texCoords = animMesh.TextureCoords;
-                if(texCoords != null) {
-                    for(int i = 0; i < texCoords.Length; i++) {
-                        IntPtr texPtr = texCoords[i];
-
-                        if(texPtr != IntPtr.Zero)
-                            m_texCoords[i] = new List<Vector3D>(MemoryHelper.MarshalArray<Vector3D>(texPtr, vertexCount));
-                    }
-                }
-
-                //Load vertex color channels
-                IntPtr[] vertexColors = animMesh.Colors;
-                if(vertexColors != null) {
-                    for(int i = 0; i < vertexColors.Length; i++) {
-                        IntPtr colorPtr = vertexColors[i];
-
-                        if(colorPtr != IntPtr.Zero)
-                            m_colors[i] = new List<Color4D>(MemoryHelper.MarshalArray<Color4D>(colorPtr, vertexCount));
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Constructs a new instance of the <see cref="MeshAnimationAttachment"/> class.
         /// </summary>
         public MeshAnimationAttachment() {
@@ -436,7 +374,7 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Frees unmanaged memory created by <see cref="ToNative"/>.
+        /// Frees unmanaged memory created by <see cref="IMarshalable{MeshAnimationAttachment, AiAnimMesh}.ToNative"/>.
         /// </summary>
         /// <param name="nativeValue">Native value to free</param>
         /// <param name="freeNative">True if the unmanaged memory should be freed, false otherwise.</param>

@@ -48,7 +48,7 @@
       <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="InspectorSplitterPos" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">742</Value>
+      <Value Profile="(Default)">714</Value>
     </Setting>
     <Setting Name="ShowTipsOnStartup" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -85,6 +85,9 @@
     </Setting>
     <Setting Name="AdditionalTextureFolders" Type="System.Collections.Specialized.StringCollection" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="InspectorRecordedWidth" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-1</Value>
     </Setting>
   </Settings>
 </SettingsFile>

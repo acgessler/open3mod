@@ -125,33 +125,6 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Constructs a new Node.
-        /// </summary>
-        /// <param name="aiNode">Unmanaged AiNode structure</param>
-        /// <param name="parent">Parent of this node or null</param>
-        internal Node(ref AiNode aiNode, Node parent) {
-            m_name = aiNode.Name.GetString();
-            m_transform = aiNode.Transformation;
-            m_meshes = new List<int>();
-            m_children = new NodeCollection(this);
-            m_parent = parent;
-
-            if(aiNode.NumChildren > 0 && aiNode.Children != IntPtr.Zero) {
-                AiNode[] childNodes = MemoryHelper.MarshalArray<AiNode>(aiNode.Children, (int) aiNode.NumChildren, true);
-                for(int i = 0; i < childNodes.Length; i++) {
-                    m_children.Add(new Node(ref childNodes[i], this));
-                }
-            }
-
-            if(aiNode.NumMeshes > 0 && aiNode.Meshes != IntPtr.Zero) {
-                int[] meshes = MemoryHelper.MarshalArray<int>(aiNode.Meshes, (int) aiNode.NumMeshes);
-
-                if(meshes != null)
-                    m_meshes.AddRange(meshes);
-            }
-        }
-
-        /// <summary>
         /// Constructs a new instance of the <see cref="Node"/> class.
         /// </summary>
         public Node() {
@@ -333,7 +306,7 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Frees unmanaged memory created by <see cref="ToNative"/>.
+        /// Frees unmanaged memory created by <see cref="IMarshalable{Node, AiNode}.ToNative"/>.
         /// </summary>
         /// <param name="nativeValue">Native value to free</param>
         /// <param name="freeNative">True if the unmanaged memory should be freed, false otherwise.</param>

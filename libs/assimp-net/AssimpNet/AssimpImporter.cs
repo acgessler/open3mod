@@ -227,7 +227,7 @@ namespace Assimp {
                     if(postProcessFlags != PostProcessSteps.None)
                         ptr = AssimpLibrary.Instance.ApplyPostProcessing(ptr, postProcessFlags);
 
-                    return new Scene(MemoryHelper.MarshalStructure<AiScene>(ptr));
+                    return Scene.FromUnmanagedScene(ptr);
                 } finally {
                     CleanupImport();
 
@@ -293,7 +293,7 @@ namespace Assimp {
                     if(postProcessFlags != PostProcessSteps.None)
                         ptr = AssimpLibrary.Instance.ApplyPostProcessing(ptr, postProcessFlags);
 
-                    return new Scene(MemoryHelper.MarshalStructure<AiScene>(ptr));
+                    return Scene.FromUnmanagedScene(ptr);
                 } finally {
                     CleanupImport();
 
@@ -862,29 +862,20 @@ namespace Assimp {
                     if(aiScene.RootNode == IntPtr.Zero)
                         return false;
 
-                    IntPtr matrixPtr = MemoryHelper.AddIntPtr(aiScene.RootNode, Marshal.SizeOf(typeof(AiString))); //Skip over Node Name
+                    IntPtr matrixPtr = MemoryHelper.AddIntPtr(aiScene.RootNode, MemoryHelper.SizeOf<AiString>()); //Skip over Node Name
 
-                    Matrix4x4 matrix = MemoryHelper.MarshalStructure<Matrix4x4>(matrixPtr); //Get the root transform
+                    Matrix4x4 matrix = MemoryHelper.Read<Matrix4x4>(matrixPtr); //Get the root transform
                     matrix = matrix * m_scaleRot; //Transform
 
-                    //Save back to unmanaged mem
-                    int index = 0;
-                    for(int i = 1; i <= 4; i++) {
-                        for(int j = 1; j <= 4; j++) {
-                            float value = matrix[i, j];
-                            byte[] bytes = BitConverter.GetBytes(value);
-                            foreach(byte b in bytes) {
-                                Marshal.WriteByte(matrixPtr, index, b);
-                                index++;
-                            }
-                        }
-                    }
+                    //Write back to unmanaged mem
+                    MemoryHelper.Write<Matrix4x4>(matrixPtr, ref matrix);
 
                     return true;
                 }
             } catch(Exception) {
 
             }
+
             return false;
         }
 

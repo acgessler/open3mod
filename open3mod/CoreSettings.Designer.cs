@@ -204,7 +204,7 @@ namespace CoreSettings {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("742")]
+        [global::System.Configuration.DefaultSettingValueAttribute("714")]
         public int InspectorSplitterPos {
             get {
                 return ((int)(this["InspectorSplitterPos"]));
@@ -354,6 +354,18 @@ namespace CoreSettings {
             }
             set {
                 this["AdditionalTextureFolders"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int InspectorRecordedWidth {
+            get {
+                return ((int)(this["InspectorRecordedWidth"]));
+            }
+            set {
+                this["InspectorRecordedWidth"] = value;
             }
         }
     }

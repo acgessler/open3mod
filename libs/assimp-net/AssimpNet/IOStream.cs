@@ -108,7 +108,7 @@ namespace Assimp {
             file.FlushProc = Marshal.GetFunctionPointerForDelegate(m_flushProc);
             file.UserData = IntPtr.Zero;
 
-            m_filePtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(AiFile)));
+            m_filePtr = MemoryHelper.AllocateMemory(MemoryHelper.SizeOf<AiFile>());
             Marshal.StructureToPtr(file, m_filePtr, false);
         }
 
@@ -134,7 +134,7 @@ namespace Assimp {
         protected virtual void Dispose(bool disposing) {
             if(!m_isDiposed) {
                 if(m_filePtr != IntPtr.Zero) {
-                    Marshal.FreeHGlobal(m_filePtr);
+                    MemoryHelper.FreeMemory(m_filePtr);
                     m_filePtr = IntPtr.Zero;
                 }
 
@@ -209,7 +209,7 @@ namespace Assimp {
             long count = longSize * longNum;
 
             byte[] byteBuffer = GetByteBuffer(longSize, longNum);
-            Marshal.Copy(dataToWrite, byteBuffer, 0, (int) (count));
+            MemoryHelper.Read<byte>(dataToWrite, byteBuffer, 0, (int) count);
 
             long actualCount = 0;
 
@@ -234,7 +234,7 @@ namespace Assimp {
 
             try {
                 actualCount = Read(byteBuffer, count);
-                Marshal.Copy(byteBuffer, 0, dataRead, (int) actualCount);
+                MemoryHelper.Write<byte>(dataRead, byteBuffer, 0, (int) actualCount);
             } catch(Exception) { /*Assimp will report an IO error*/ }
 
             return new UIntPtr((ulong) actualCount);

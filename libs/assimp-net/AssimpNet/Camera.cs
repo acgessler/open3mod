@@ -167,21 +167,6 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Constructs a new Camera.
-        /// </summary>
-        /// <param name="camera">Unmanaged aiCamera</param>
-        internal Camera(ref AiCamera camera) {
-            m_name = camera.Name.GetString();
-            m_position = camera.Position;
-            m_direction = camera.LookAt;
-            m_up = camera.Up;
-            m_fieldOfView = camera.HorizontalFOV;
-            m_clipPlaneFar = camera.ClipPlaneFar;
-            m_clipPlaneNear = camera.ClipPlaneNear;
-            m_aspectRatio = camera.Aspect;
-        }
-
-        /// <summary>
         /// Constructs a new instance of the <see cref="Camera"/> class.
         /// </summary>
         public Camera() {
@@ -229,7 +214,7 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Frees unmanaged memory created by <see cref="ToNative"/>.
+        /// Frees unmanaged memory created by <see cref="IMarshalable{Camera, AiCamera}.ToNative"/>.
         /// </summary>
         /// <param name="nativeValue">Native value to free</param>
         /// <param name="freeNative">True if the unmanaged memory should be freed, false otherwise.</param>

@@ -89,25 +89,12 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Constructs a new Bone.
-        /// </summary>
-        /// <param name="bone">Unmanaged AiBone struct.</param>
-        internal Bone(ref AiBone bone) {
-            m_name = bone.Name.GetString();
-            m_offsetMatrix = bone.OffsetMatrix;
-            m_weights = new List<VertexWeight>();
-
-            if(bone.NumWeights > 0 && bone.Weights != IntPtr.Zero)
-                m_weights.AddRange(MemoryHelper.MarshalArray<VertexWeight>(bone.Weights, (int) bone.NumWeights));
-        }
-
-        /// <summary>
         /// Constructs a new instance of the <see cref="Bone"/> class.
         /// </summary>
         public Bone() {
             m_name = null;
             m_offsetMatrix = Matrix3x3.Identity;
-            m_weights = null;
+            m_weights = new List<VertexWeight>();
         }
 
         /// <summary>
@@ -159,11 +146,11 @@ namespace Assimp {
             m_weights.Clear();
 
             if(nativeValue.NumWeights > 0 && nativeValue.Weights != IntPtr.Zero)
-                m_weights.AddRange(MemoryHelper.MarshalArray<VertexWeight>(nativeValue.Weights, (int) nativeValue.NumWeights));
+                m_weights.AddRange(MemoryHelper.FromNativeArray<VertexWeight>(nativeValue.Weights, (int) nativeValue.NumWeights));
         }
 
         /// <summary>
-        /// Frees unmanaged memory created by <see cref="ToNative"/>.
+        /// Frees unmanaged memory created by <see cref="IMarshalable{Bone, AiBone}.ToNative"/>.
         /// </summary>
         /// <param name="nativeValue">Native value to free</param>
         /// <param name="freeNative">True if the unmanaged memory should be freed, false otherwise.</param>

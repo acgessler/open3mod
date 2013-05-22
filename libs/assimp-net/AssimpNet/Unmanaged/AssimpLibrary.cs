@@ -192,7 +192,8 @@ namespace Assimp.Unmanaged {
         }
 
         /// <summary>
-        /// Releases the unmanaged scene data structure.
+        /// Releases the unmanaged scene data structure. This should NOT be used for unmanaged scenes that were marshaled
+        /// from the managed scene structure - only for scenes whose memory was allocated by the native library!
         /// </summary>
         /// <param name="scene">Pointer to the unmanaged scene data structure.</param>
         public void ReleaseImport(IntPtr scene) {
@@ -530,7 +531,7 @@ namespace Assimp.Unmanaged {
                 float[] array = null;
                 if(code == ReturnCode.Success && floatCount > 0) {
                     array = new float[floatCount];
-                    Marshal.Copy(ptr, array, 0, (int) floatCount);
+                    MemoryHelper.Read<float>(ptr, array, 0, (int) floatCount);
                 }
                 return array;
             } finally {
@@ -562,7 +563,7 @@ namespace Assimp.Unmanaged {
                 int[] array = null;
                 if(code == ReturnCode.Success && intCount > 0) {
                     array = new int[intCount];
-                    Marshal.Copy(ptr, array, 0, (int) intCount);
+                    MemoryHelper.Read<int>(ptr, array, 0, (int) intCount);
                 }
                 return array;
             } finally {

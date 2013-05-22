@@ -115,7 +115,7 @@ namespace Assimp {
         protected virtual void Dispose(bool disposing) {
             if(!m_isDisposed) {
                 if(m_logstreamPtr != IntPtr.Zero) {
-                    Marshal.FreeHGlobal(m_logstreamPtr);
+                    MemoryHelper.FreeMemory(m_logstreamPtr);
                     m_logstreamPtr = IntPtr.Zero;
                 }
 
@@ -176,7 +176,7 @@ namespace Assimp {
             logStream.Callback = Marshal.GetFunctionPointerForDelegate(m_assimpCallback);
             logStream.UserData = IntPtr.Zero;
 
-            m_logstreamPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(AiLogStream)));
+            m_logstreamPtr = MemoryHelper.AllocateMemory(MemoryHelper.SizeOf<AiLogStream>());
             Marshal.StructureToPtr(logStream, m_logstreamPtr, false);
         }
     }
