@@ -609,6 +609,8 @@ namespace Assimp {
 
             int vertexCount = (int) nativeValue.NumVertices;
 
+            m_materialIndex = (int)nativeValue.MaterialIndex;
+
             //Load Per-vertex components
             if(vertexCount > 0) {
 
