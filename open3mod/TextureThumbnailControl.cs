@@ -94,7 +94,10 @@ namespace open3mod
 
         private void OnContextMenuDetails(object sender, EventArgs eventArgs)
         {
-            _owner.ShowDetails(this);
+            if (GetState() == State.Good)
+            {
+                _owner.ShowDetails(this);
+            }
         }
 
 
