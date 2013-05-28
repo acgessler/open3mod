@@ -350,13 +350,22 @@ namespace open3mod
         {
             try
             {
-                var a = (Array)e.Data.GetData(DataFormats.FileDrop);
+                var a = (Array)e.Data.GetData(DataFormats.FileDrop, false);
 
                 if (a != null)
                 {
                     // Extract string from first array element
                     // (ignore all files except first if more than one file was dropped)
                     string s = a.GetValue(0).ToString();
+
+                    if (Directory.Exists(s))
+                    {
+                        // different behaviour when folders are dragged onto the panel:
+                        // all FAILED textures are auto-matched against the file names
+                        // in the folder in the hope that they can be resolved.
+                        _owner.MatchWithFolder(s);
+                        return;
+                    }
 
                     // Do it async to avoid stalling the cursor
                     BeginInvoke((MethodInvoker)(() => ChangeTextureSource(s)), new object[] { this });

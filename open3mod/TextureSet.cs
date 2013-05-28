@@ -296,12 +296,12 @@ namespace open3mod
                 Add(newPath);
             }
 
+            var tex = GetOriginalOrReplacement(path);
             _replacements[path] = new KeyValuePair<string, string>(newId, newPath);
 
             
             if (_replaceCallbacks.Count > 0)
-            {
-                var tex = GetOriginalOrReplacement(path);
+            {           
                 foreach (var v in _replaceCallbacks)
                 {
                     v(path, tex);
