@@ -37,15 +37,19 @@
             // 
             // splitContainer
             // 
+            this.splitContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.splitContainer.DataBindings.Add(new System.Windows.Forms.Binding("SplitterDistance", global::CoreSettings.CoreSettings.Default, "InspectorSplitterPos", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.splitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.splitContainer.Location = new System.Drawing.Point(0, 0);
             this.splitContainer.Name = "splitContainer";
+            this.splitContainer.Panel1MinSize = 0;
             // 
             // splitContainer.Panel2
             // 
             this.splitContainer.Panel2.Controls.Add(this.inspectionView1);
+            this.splitContainer.Panel2MinSize = 265;
             this.splitContainer.Size = new System.Drawing.Size(971, 650);
             this.splitContainer.SplitterDistance = global::CoreSettings.CoreSettings.Default.InspectorSplitterPos;
             this.splitContainer.SplitterWidth = 3;
@@ -54,16 +58,13 @@
             // 
             // inspectionView1
             // 
-            this.inspectionView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.inspectionView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.inspectionView1.Enabled = false;
             this.inspectionView1.Location = new System.Drawing.Point(0, 0);
             this.inspectionView1.Margin = new System.Windows.Forms.Padding(0);
             this.inspectionView1.Name = "inspectionView1";
-            this.inspectionView1.Size = new System.Drawing.Size(238, 647);
+            this.inspectionView1.Size = new System.Drawing.Size(711, 650);
             this.inspectionView1.TabIndex = 0;
-            this.inspectionView1.Load += new System.EventHandler(this.OnLoad);
             // 
             // TabUiSkeleton
             // 

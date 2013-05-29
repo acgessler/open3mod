@@ -196,7 +196,9 @@ namespace open3mod
             var tui = new TabUiSkeleton();
 
             tui.Size = ui.ClientSize;
-            tui.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+            tui.AutoSize = false;
+            tui.Dock = DockStyle.Fill;
+            ;
             ui.Controls.Add(tui);
         }
 

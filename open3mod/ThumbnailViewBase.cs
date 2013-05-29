@@ -43,7 +43,7 @@ namespace open3mod
         protected ThumbnailViewBase(FlowLayoutPanel flow)
         {
             Flow = flow;
-            Flow.AutoScroll = true;
+            Flow.AutoScroll = false;
             Entries = new List<TThumbnailType>();
 
             _toolTip = new ToolTip();

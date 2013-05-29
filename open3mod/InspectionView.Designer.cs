@@ -48,6 +48,7 @@
             this.tabControlInfoViewPicker.Controls.Add(this.tabPageMaterials);
             this.tabControlInfoViewPicker.Controls.Add(this.tabPageAnimations);
             this.tabControlInfoViewPicker.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlInfoViewPicker.HotTrack = true;
             this.tabControlInfoViewPicker.Location = new System.Drawing.Point(0, 0);
             this.tabControlInfoViewPicker.Margin = new System.Windows.Forms.Padding(0);
             this.tabControlInfoViewPicker.Multiline = true;
@@ -62,12 +63,13 @@
             this.tabPageTree.Location = new System.Drawing.Point(4, 22);
             this.tabPageTree.Name = "tabPageTree";
             this.tabPageTree.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageTree.Size = new System.Drawing.Size(346, 662);
+            this.tabPageTree.Size = new System.Drawing.Size(349, 668);
             this.tabPageTree.TabIndex = 0;
             this.tabPageTree.Text = "Tree";
             // 
             // tabPageTextures
             // 
+            this.tabPageTextures.AutoScrollMinSize = new System.Drawing.Size(0, 1000);
             this.tabPageTextures.Controls.Add(this.textureFlowPanel);
             this.tabPageTextures.Location = new System.Drawing.Point(4, 22);
             this.tabPageTextures.Name = "tabPageTextures";
@@ -80,13 +82,9 @@
             // textureFlowPanel
             // 
             this.textureFlowPanel.AllowDrop = true;
-            this.textureFlowPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.textureFlowPanel.AutoScroll = true;
-            this.textureFlowPanel.AutoScrollMinSize = new System.Drawing.Size(0, 1000);
-            this.textureFlowPanel.AutoSize = true;
             this.textureFlowPanel.BackColor = System.Drawing.Color.Transparent;
+            this.textureFlowPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textureFlowPanel.Location = new System.Drawing.Point(3, 3);
             this.textureFlowPanel.Name = "textureFlowPanel";
             this.textureFlowPanel.Size = new System.Drawing.Size(343, 662);
@@ -98,7 +96,7 @@
             this.tabPageMaterials.Location = new System.Drawing.Point(4, 22);
             this.tabPageMaterials.Name = "tabPageMaterials";
             this.tabPageMaterials.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageMaterials.Size = new System.Drawing.Size(346, 662);
+            this.tabPageMaterials.Size = new System.Drawing.Size(349, 668);
             this.tabPageMaterials.TabIndex = 3;
             this.tabPageMaterials.Text = "Materials";
             this.tabPageMaterials.UseVisualStyleBackColor = true;
@@ -114,7 +112,7 @@
             this.materialFlowPanel.BackColor = System.Drawing.Color.Transparent;
             this.materialFlowPanel.Location = new System.Drawing.Point(3, 3);
             this.materialFlowPanel.Name = "materialFlowPanel";
-            this.materialFlowPanel.Size = new System.Drawing.Size(340, 656);
+            this.materialFlowPanel.Size = new System.Drawing.Size(343, 662);
             this.materialFlowPanel.TabIndex = 1;
             // 
             // tabPageAnimations
@@ -122,7 +120,7 @@
             this.tabPageAnimations.Location = new System.Drawing.Point(4, 22);
             this.tabPageAnimations.Name = "tabPageAnimations";
             this.tabPageAnimations.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAnimations.Size = new System.Drawing.Size(346, 662);
+            this.tabPageAnimations.Size = new System.Drawing.Size(349, 668);
             this.tabPageAnimations.TabIndex = 2;
             this.tabPageAnimations.Text = "Animations";
             this.tabPageAnimations.UseVisualStyleBackColor = true;
@@ -135,14 +133,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
             this.Controls.Add(this.tabControlInfoViewPicker);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "InspectionView";
             this.Size = new System.Drawing.Size(357, 694);
             this.tabControlInfoViewPicker.ResumeLayout(false);
             this.tabPageTextures.ResumeLayout(false);
-            this.tabPageTextures.PerformLayout();
             this.tabPageMaterials.ResumeLayout(false);
             this.tabPageMaterials.PerformLayout();
             this.ResumeLayout(false);

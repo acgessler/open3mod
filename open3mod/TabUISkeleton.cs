@@ -39,11 +39,18 @@ namespace open3mod
         {
             InitializeComponent();
 
-            var settings = CoreSettings.CoreSettings.Default;
+            //var settings = CoreSettings.CoreSettings.Default;
+
+            // commented because it does not seem to avoid a slight offset every time the splitter is restored
+            /* 
             if (settings.InspectorRecordedWidth >= 0)
             {
                 splitContainer.SplitterDistance -= (splitContainer.Panel1.Width - settings.InspectorRecordedWidth);
-            }
+            } */
+            
+            
+            splitContainer.SplitterDistance = splitContainer.Width - 440;
+            //inspectionView1.ClientSize = splitContainer.Panel2.ClientSize;
         }
 
 
@@ -79,10 +86,13 @@ namespace open3mod
 
         private void OnSplitterMove(object sender, SplitterEventArgs e)
         {
+            // commented because it does not seem to avoid a slight offset every time the splitter is restored
+            /*
             var settings = CoreSettings.CoreSettings.Default;
             settings.InspectorRecordedWidth = splitContainer.Panel1.Width;
             // for some reason this is necessary to keep the layout from breaking up.
-            inspectionView1.ClientSize = splitContainer.Panel2.ClientSize;
+            inspectionView1.ClientSize = splitContainer.Panel2.ClientSize; */
+            //inspectionView1.ClientSize = splitContainer.Panel2.ClientSize;
         }    
     }
 }
