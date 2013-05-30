@@ -42,6 +42,14 @@ namespace open3mod
         { }
 
 
+
+        public override void Dispose()
+        {
+            // no dispose semantics in this implementation
+        }
+
+
+
         public override void ApplyMaterial(Mesh mesh, Material mat, bool textured, bool shaded)
         {
             ApplyFixedFunctionMaterial(mesh, mat, textured, shaded);

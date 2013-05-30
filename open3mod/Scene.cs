@@ -55,7 +55,7 @@ namespace open3mod
 
         private readonly TextureSet _textureSet;
 
-        private readonly MaterialMapper _mapper;
+        private MaterialMapper _mapper;
         private ISceneRenderer _renderer;
 
 
@@ -246,7 +246,6 @@ namespace open3mod
             stopwatch.Stop();
             _loadingTime = stopwatch.ElapsedMilliseconds;
 
-            _mapper = new MaterialMapperClassicGl(this); 
             _animator = new SceneAnimator(this);
             _textureSet = new TextureSet(BaseDir);
             LoadTextures();
@@ -341,6 +340,12 @@ namespace open3mod
                 _renderer.Dispose();
                 _renderer = null;
             }
+
+            if (_mapper != null)
+            {
+                _mapper.Dispose();
+                _mapper = null;
+            }
             CreateRenderingBackend();
         }
 
@@ -350,10 +355,12 @@ namespace open3mod
             Debug.Assert(_renderer == null);
             if (GraphicsSettings.Default.RenderingBackend == 0)
             {
+                _mapper = new MaterialMapperClassicGl(this); 
                 _renderer = new SceneRendererClassicGl(this, _sceneMin, _sceneMax);
             }
             else
             {
+                _mapper = new MaterialMapperModernGl(this); 
                 _renderer = new SceneRendererModernGl(this, _sceneMin, _sceneMax);
             }
         }

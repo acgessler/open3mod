@@ -40,7 +40,7 @@ namespace open3mod
     /// 
     /// The class interface is implemented for every type of renderer.
     /// </summary>
-    public abstract class MaterialMapper
+    public abstract class MaterialMapper : IDisposable
     {
         protected readonly Scene _scene;
 
@@ -48,6 +48,9 @@ namespace open3mod
         {
             _scene = scene;
         }
+
+
+        public abstract void Dispose();
 
 
         /// <summary>
