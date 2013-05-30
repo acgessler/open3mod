@@ -246,7 +246,7 @@ namespace open3mod
             stopwatch.Stop();
             _loadingTime = stopwatch.ElapsedMilliseconds;
 
-            _mapper = new MaterialMapper(this); 
+            _mapper = new MaterialMapperClassicGl(this); 
             _animator = new SceneAnimator(this);
             _textureSet = new TextureSet(BaseDir);
             LoadTextures();

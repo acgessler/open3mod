@@ -37,12 +37,14 @@ namespace open3mod
     /// <summary>
     /// Map assimp materials to OpenGl materials and shaders. Each scene has its own
     /// MaterialMapper, which is accessible via the Scene.MaterialMapper property.
+    /// 
+    /// The class interface is implemented for every type of renderer.
     /// </summary>
-    public class MaterialMapper
+    public abstract class MaterialMapper
     {
-        private readonly Scene _scene;
+        protected readonly Scene _scene;
 
-        internal MaterialMapper(Scene scene)
+        protected MaterialMapper(Scene scene)
         {
             _scene = scene;
         }
@@ -55,6 +57,7 @@ namespace open3mod
         /// bad considering this is a 3D viewer.
         /// </summary>
         public const float AlphaSuppressionThreshold = 1e-5f;
+
 
         /// <summary>
         /// Check if a given assimp material requires alpha-blending for rendering
@@ -131,17 +134,9 @@ namespace open3mod
         ///    TODO tangents, bitangents?
         /// </param>
         /// <param name="mat">Material to be applied, must be non-null</param>
-        public void ApplyMaterial(Mesh mesh, Material mat, bool textured, bool shaded)
-        {
-            ApplyFixedFunctionMaterial(mesh, mat, textured, shaded);
-        }
-
-
-        public void ApplyGhostMaterial(Mesh mesh, Material material, bool shaded)
-        {
-            ApplyFixedFunctionGhostMaterial(mesh, material, shaded);
-        }
-
+        public abstract void ApplyMaterial(Mesh mesh, Material mat, bool textured, bool shaded);
+        public abstract void ApplyGhostMaterial(Mesh mesh, Material material, bool shaded);
+      
 
         /// <summary>
         /// Uploads all the textures required for a given material to VRAM (i.e.
@@ -174,185 +169,6 @@ namespace open3mod
                 }
             }
             return any;
-        }
-
-
-        private void ApplyFixedFunctionMaterial(Mesh mesh, Material mat, bool textured, bool shaded)
-        {
-            shaded = shaded && (mesh == null || mesh.HasNormals);
-            if (shaded)
-            {
-                GL.Enable(EnableCap.Lighting);
-            }
-            else
-            {
-                GL.Disable(EnableCap.Lighting);
-            }
-
-            var hasColors = mesh != null && mesh.HasVertexColors(0);
-            if (hasColors)
-            {
-                GL.Enable(EnableCap.ColorMaterial);
-                GL.ColorMaterial(MaterialFace.FrontAndBack, ColorMaterialParameter.AmbientAndDiffuse);
-            }
-            else
-            {
-                GL.Disable(EnableCap.ColorMaterial);
-            }
-
-            // note: keep semantics of hasAlpha consistent with IsAlphaMaterial()
-            var hasAlpha = false;
-
-            // note: keep this up-to-date with the code in UploadTextures()
-            if (textured && mat.GetMaterialTextureCount(TextureType.Diffuse) > 0)
-            {
-                TextureSlot tex;
-                mat.GetMaterialTexture(TextureType.Diffuse, 0, out tex);
-                var gtex = _scene.TextureSet.GetOriginalOrReplacement(tex.FilePath);
-
-                hasAlpha = hasAlpha || gtex.HasAlpha == Texture.AlphaState.HasAlpha;
-
-                if(gtex.State == Texture.TextureState.GlTextureCreated)
-                {
-                    GL.ActiveTexture(TextureUnit.Texture0);
-                    gtex.BindGlTexture();
-   
-                    GL.Enable(EnableCap.Texture2D);
-                }
-                else
-                {
-                    GL.Disable(EnableCap.Texture2D);
-                }
-            }
-            else
-            {
-                GL.Disable(EnableCap.Texture2D);
-            }         
-
-            GL.Enable(EnableCap.Normalize);
-
-            var alpha = 1.0f;
-            if (mat.HasOpacity)
-            {
-                alpha = mat.Opacity;
-                if (alpha < AlphaSuppressionThreshold) // suppress zero opacity, this is likely wrong input data
-                {
-                    alpha = 1.0f;
-                }
-            }
-
-            var color = new Color4(.8f, .8f, .8f, 1.0f);
-            if (mat.HasColorDiffuse)
-            {
-                color = AssimpToOpenTk.FromColor(mat.ColorDiffuse);
-                if (color.A < AlphaSuppressionThreshold) // s.a.
-                {
-                    color.A = 1.0f;
-                }
-            }
-            color.A *= alpha;
-            hasAlpha = hasAlpha || color.A < 1.0f;
-
-            if (shaded)
-            {
-                GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, color);
-
-                color = new Color4(0, 0, 0, 1.0f);
-                if (mat.HasColorSpecular)
-                {
-                    color = AssimpToOpenTk.FromColor(mat.ColorSpecular);              
-                }
-                GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Specular, color);
-
-                color = new Color4(.2f, .2f, .2f, 1.0f);
-                if (mat.HasColorAmbient)
-                {
-                    color = AssimpToOpenTk.FromColor(mat.ColorAmbient);
-                }
-                GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, color);
-
-                color = new Color4(0, 0, 0, 1.0f);
-                if (mat.HasColorEmissive)
-                {
-                    color = AssimpToOpenTk.FromColor(mat.ColorEmissive);
-                }
-                GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, color);
-
-                float shininess = 1;
-                float strength = 1;
-                if (mat.HasShininess)
-                {
-                    shininess = mat.Shininess;
-
-                }
-                // todo: I don't even remember how shininess strength was supposed to be handled in assimp
-                if (mat.HasShininessStrength)
-                {
-                    strength = mat.ShininessStrength;
-                }
-
-                var exp = shininess*strength;
-                if (exp >= 128.0f) // 128 is the maximum exponent as per the Gl spec
-                {
-                    exp = 128.0f;
-                }
-
-                GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Shininess, exp);
-            }
-            else if (!hasColors)
-            {
-                GL.Color3(color.R, color.G, color.B);
-            }
-
-            if (hasAlpha)
-            {
-                GL.Enable(EnableCap.Blend);
-                GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-                GL.DepthMask(false);
-            }
-            else
-            {
-                GL.Disable(EnableCap.Blend);
-                GL.DepthMask(true);
-            }
-        }
-
-
-        private void ApplyFixedFunctionGhostMaterial(Mesh mesh, Material mat, bool shaded)
-        {
-            GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-            GL.DepthMask(false);
-
-            var color = new Color4(.6f, .6f, .9f, 0.15f);           
-
-            shaded = shaded && (mesh == null || mesh.HasNormals);
-            if (shaded)
-            {
-                GL.Enable(EnableCap.Lighting);
-
-                
-                GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, color);
-
-                color = new Color4(1, 1, 1, 0.4f);
-                GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Specular, color);
-
-                color = new Color4(.2f, .2f, .2f, 0.1f);
-                GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, color);
-
-                color = new Color4(0, 0, 0, 0.0f);       
-                GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, color);
-
-                GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Shininess, 16.0f);
-            }
-            else
-            {
-                GL.Disable(EnableCap.Lighting);
-                GL.Color3(color.R, color.G, color.B);
-            }
-
-            GL.Disable(EnableCap.ColorMaterial);
-            GL.Disable(EnableCap.Texture2D);
         }
     }
 }
