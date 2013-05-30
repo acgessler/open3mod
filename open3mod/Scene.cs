@@ -674,6 +674,11 @@ namespace open3mod
                 _renderer.Dispose();
             }
 
+            if (_mapper != null)
+            {
+                _mapper.Dispose();
+            }
+
             GC.SuppressFinalize(this);
         }
 

@@ -62,11 +62,11 @@
             this.label8 = new System.Windows.Forms.Label();
             this.tabPageTextures = new System.Windows.Forms.TabPage();
             this.checkBoxLoadTextures = new System.Windows.Forms.CheckBox();
-            this.folderSetDisplaySearchPaths = new open3mod.FolderSetDisplay();
             this.label7 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.labelPleaseRestart = new System.Windows.Forms.Label();
+            this.folderSetDisplaySearchPaths = new open3mod.FolderSetDisplay();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -189,7 +189,8 @@
             this.comboBoxSetBackend.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSetBackend.FormattingEnabled = true;
             this.comboBoxSetBackend.Items.AddRange(new object[] {
-            "OpenGl Legacy / Fixed Function Pipeline"});
+            "OpenGl Legacy / Fixed Function Pipeline",
+            "OpenGl 3.0 / Shader Based Pipeline"});
             this.comboBoxSetBackend.Location = new System.Drawing.Point(186, 35);
             this.comboBoxSetBackend.Name = "comboBoxSetBackend";
             this.comboBoxSetBackend.Size = new System.Drawing.Size(248, 21);
@@ -464,8 +465,8 @@
             // tabPageTextures
             // 
             this.tabPageTextures.Controls.Add(this.checkBoxLoadTextures);
-            this.tabPageTextures.Controls.Add(this.folderSetDisplaySearchPaths);
             this.tabPageTextures.Controls.Add(this.label7);
+            this.tabPageTextures.Controls.Add(this.folderSetDisplaySearchPaths);
             this.tabPageTextures.Location = new System.Drawing.Point(4, 22);
             this.tabPageTextures.Name = "tabPageTextures";
             this.tabPageTextures.Padding = new System.Windows.Forms.Padding(3);
@@ -486,14 +487,6 @@
             this.checkBoxLoadTextures.TabIndex = 7;
             this.checkBoxLoadTextures.Text = "Load Textures";
             this.checkBoxLoadTextures.UseVisualStyleBackColor = true;
-            // 
-            // folderSetDisplaySearchPaths
-            // 
-            this.folderSetDisplaySearchPaths.Folders = new string[0];
-            this.folderSetDisplaySearchPaths.Location = new System.Drawing.Point(17, 122);
-            this.folderSetDisplaySearchPaths.Name = "folderSetDisplaySearchPaths";
-            this.folderSetDisplaySearchPaths.Size = new System.Drawing.Size(499, 152);
-            this.folderSetDisplaySearchPaths.TabIndex = 6;
             // 
             // label7
             // 
@@ -532,6 +525,14 @@
             this.labelPleaseRestart.TabIndex = 2;
             this.labelPleaseRestart.Text = "Please restart the application to see all changes";
             this.labelPleaseRestart.Visible = false;
+            // 
+            // folderSetDisplaySearchPaths
+            // 
+            this.folderSetDisplaySearchPaths.Folders = new string[0];
+            this.folderSetDisplaySearchPaths.Location = new System.Drawing.Point(17, 122);
+            this.folderSetDisplaySearchPaths.Name = "folderSetDisplaySearchPaths";
+            this.folderSetDisplaySearchPaths.Size = new System.Drawing.Size(499, 152);
+            this.folderSetDisplaySearchPaths.TabIndex = 6;
             // 
             // SettingsDialog
             // 
