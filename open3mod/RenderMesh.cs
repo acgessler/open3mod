@@ -265,8 +265,14 @@ namespace open3mod
                 GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)byteCount, 
                     temp, BufferUsageHint.StaticDraw);
             }
-            
-            VerifyBufferSize(byteCount);
+
+            int bufferSize;
+            GL.GetBufferParameter(BufferTarget.ElementArrayBuffer, BufferParameterName.BufferSize, out bufferSize);
+            if (byteCount != bufferSize)
+            {
+                throw new Exception("Index data array not uploaded correctly - buffer size does not match upload size");
+            }
+
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
             return triCount * 3;
         }

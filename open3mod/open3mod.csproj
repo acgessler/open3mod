@@ -347,6 +347,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Shader\UberFragmentShader.glsl" />
+    <EmbeddedResource Include="Shader\UberVertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

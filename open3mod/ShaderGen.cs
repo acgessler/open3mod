@@ -28,6 +28,49 @@ namespace open3mod
 {
     public class ShaderGen
     {
+        [Flags]
+        public enum GenFlags
+        {
+            ColorMap = 0x1,
+            VertexColor = 0x2,
+            PhongSpecularShading = 0x4,
+            Skinning = 0x8,
+            Lighting = 0x10
+        };
+
+
+        public Shader Generate( GenFlags flags ) 
+        {
+            string pp = "";
+
+            if (flags.HasFlag(GenFlags.ColorMap))
+            {
+                pp += "#define HAS_COLOR_MAP\n";
+            }
+
+            if (flags.HasFlag(GenFlags.VertexColor))
+            {
+                pp += "#define HAS_VERTEX_COLOR\n";
+            }
+
+            if (flags.HasFlag(GenFlags.PhongSpecularShading))
+            {
+                pp += "#define HAS_PHONG_SPECULAR_SHADING\n";
+            }
+
+            if (flags.HasFlag(GenFlags.Skinning))
+            {
+                pp += "#define HAS_SKINNING\n";
+            }
+
+            if (flags.HasFlag(GenFlags.Lighting))
+            {
+                pp += "#define HAS_LIGHTING\n";
+            }
+
+            return new Shader("open3mod.Shader.UberVertexShader.glsl", "open3mod.Shader.UberFragmentShader.glsl", pp);
+        }
+
     }
 }
 
