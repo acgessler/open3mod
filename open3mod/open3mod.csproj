@@ -104,6 +104,7 @@
     <Compile Include="FolderSetDisplay.Designer.cs">
       <DependentUpon>FolderSetDisplay.cs</DependentUpon>
     </Compile>
+    <Compile Include="LogPipe.cs" />
     <Compile Include="MaterialMapperClassicGl.cs" />
     <Compile Include="MaterialMapperModernGl.cs" />
     <Compile Include="MeshDetailsDialog.cs">
