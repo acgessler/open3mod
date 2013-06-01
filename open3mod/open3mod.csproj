@@ -104,6 +104,9 @@
     <Compile Include="FolderSetDisplay.Designer.cs">
       <DependentUpon>FolderSetDisplay.cs</DependentUpon>
     </Compile>
+    <Compile Include="LogPipe.cs" />
+    <Compile Include="MaterialMapperClassicGl.cs" />
+    <Compile Include="MaterialMapperModernGl.cs" />
     <Compile Include="MeshDetailsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -344,6 +347,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Shader\UberFragmentShader.glsl" />
+    <EmbeddedResource Include="Shader\UberVertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

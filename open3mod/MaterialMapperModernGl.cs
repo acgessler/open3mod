@@ -1,6 +1,6 @@
-///////////////////////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////////////////////
 // Open 3D Model Viewer (open3mod) (v0.1)
-// [ShaderGen.cs]
+// [MaterialMapperModernGl.cs]
 // (c) 2012-2013, Alexander C. Gessler
 //
 // Licensed under the terms and conditions of the 3-clause BSD license. See
@@ -24,54 +24,46 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Assimp;
+using Assimp.Configs;
+using OpenTK;
+using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
+
+using System.Diagnostics;
+
 namespace open3mod
 {
-    public class ShaderGen
+    public sealed class MaterialMapperModernGl : MaterialMapper
     {
-        [Flags]
-        public enum GenFlags
+
+        internal MaterialMapperModernGl(Scene scene)
+            : base(scene)
+        { }
+
+
+#if DEBUG
+        ~MaterialMapperModernGl()
         {
-            ColorMap = 0x1,
-            VertexColor = 0x2,
-            PhongSpecularShading = 0x4,
-            Skinning = 0x8,
-            Lighting = 0x10
-        };
+            Debug.Assert(false);
+        }
+#endif
 
-
-        public Shader Generate( GenFlags flags ) 
+        public override void Dispose()
         {
-            string pp = "";
-
-            if (flags.HasFlag(GenFlags.ColorMap))
-            {
-                pp += "#define HAS_COLOR_MAP\n";
-            }
-
-            if (flags.HasFlag(GenFlags.VertexColor))
-            {
-                pp += "#define HAS_VERTEX_COLOR\n";
-            }
-
-            if (flags.HasFlag(GenFlags.PhongSpecularShading))
-            {
-                pp += "#define HAS_PHONG_SPECULAR_SHADING\n";
-            }
-
-            if (flags.HasFlag(GenFlags.Skinning))
-            {
-                pp += "#define HAS_SKINNING\n";
-            }
-
-            if (flags.HasFlag(GenFlags.Lighting))
-            {
-                pp += "#define HAS_LIGHTING\n";
-            }
-
-            return new Shader("open3mod.Shader.UberVertexShader.glsl", "open3mod.Shader.UberFragmentShader.glsl", pp);
+            GC.SuppressFinalize(this);
         }
 
+
+        public override void ApplyMaterial(Mesh mesh, Material mat, bool textured, bool shaded)
+        {
+            
+        }
+
+
+        public override void ApplyGhostMaterial(Mesh mesh, Material material, bool shaded)
+        {
+            
+        }
     }
 }
-
-/* vi: set shiftwidth=4 tabstop=4: */ 

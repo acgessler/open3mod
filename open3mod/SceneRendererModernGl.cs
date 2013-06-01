@@ -77,11 +77,20 @@ namespace open3mod
                 UploadTextures();
             }
 
-            var tmp = 1.0f; // todo
+            GL.MatrixMode(MatrixMode.Modelview);
+            var lookat = cam == null ? Matrix4.LookAt(0, 10, 5, 0, 0, 0, 0, 1, 0) : cam.GetView();
+         
 
+            var tmp = InitposeMax.X - InitposeMin.X;
+            tmp = Math.Max(InitposeMax.Y - InitposeMin.Y, tmp);
+            tmp = Math.Max(InitposeMax.Z - InitposeMin.Z, tmp);
+            tmp = 2.0f / tmp;
+
+            var world = Matrix4.Scale(tmp);
+            world *= Matrix4.CreateTranslation(-(InitposeMin + InitposeMax) * 0.5f);
             //
             var animated = Owner.SceneAnimator.IsAnimationActive;
-            var needAlpha = RecursiveRender(Owner.Raw.RootNode, visibleMeshesByNode, flags, animated);
+            var needAlpha = RecursiveRender(Owner.Raw.RootNode, visibleMeshesByNode, flags, animated, ref world);
             if (flags.HasFlag(RenderFlags.ShowSkeleton) || flags.HasFlag(RenderFlags.ShowNormals))
             {
                 //RecursiveRenderNoScale(Owner.Raw.RootNode, visibleMeshesByNode, flags, 1.0f / tmp, animated);
@@ -114,7 +123,9 @@ namespace open3mod
         /// <returns>whether there is any need to do a second render pass with alpha blending enabled</returns>
         private bool RecursiveRender(Node node,
             Dictionary<Node, List<Mesh>> visibleMeshesByNode,
-            RenderFlags flags, bool animated)
+            RenderFlags flags, 
+            bool animated,
+            ref Matrix4 world)
         {
             var needAlpha = false;
 
@@ -130,6 +141,8 @@ namespace open3mod
             // TODO for some reason, all OpenTk matrices need a ^T - we should clarify our conventions somewhere
             m.Transpose();
 
+            var newWorld = world * m;
+
             // the following permutations could be compacted into one big loop with lots of
             // condition magic, but at the cost of readability and also performance.
             // we therefore keep it redundant and stupid.
@@ -141,7 +154,7 @@ namespace open3mod
 
             for (var i = 0; i < node.ChildCount; i++)
             {
-                needAlpha = RecursiveRender(node.Children[i], visibleMeshesByNode, flags, animated) || needAlpha;
+                needAlpha = RecursiveRender(node.Children[i], visibleMeshesByNode, flags, animated, ref newWorld) || needAlpha;
             }
             return needAlpha;
         }
@@ -192,8 +205,14 @@ namespace open3mod
         }
 
 
-        protected override bool DrawMesh(Node node, bool animated, bool p2, int index, Mesh mesh, RenderFlags flags)
+        protected override bool DrawMesh(Node node, bool animated, bool showGhost, int index, Mesh mesh, RenderFlags flags)
         {
+            if (_meshes[index] == null) {
+                _meshes[index] = new RenderMesh(mesh);
+            }
+
+            _meshes[index].Render(flags);
+
             return true;
         }
 

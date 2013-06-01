@@ -55,7 +55,7 @@ namespace open3mod
 
         private readonly TextureSet _textureSet;
 
-        private readonly MaterialMapper _mapper;
+        private MaterialMapper _mapper;
         private ISceneRenderer _renderer;
 
 
@@ -246,7 +246,6 @@ namespace open3mod
             stopwatch.Stop();
             _loadingTime = stopwatch.ElapsedMilliseconds;
 
-            _mapper = new MaterialMapper(this); 
             _animator = new SceneAnimator(this);
             _textureSet = new TextureSet(BaseDir);
             LoadTextures();
@@ -341,6 +340,12 @@ namespace open3mod
                 _renderer.Dispose();
                 _renderer = null;
             }
+
+            if (_mapper != null)
+            {
+                _mapper.Dispose();
+                _mapper = null;
+            }
             CreateRenderingBackend();
         }
 
@@ -350,10 +355,12 @@ namespace open3mod
             Debug.Assert(_renderer == null);
             if (GraphicsSettings.Default.RenderingBackend == 0)
             {
+                _mapper = new MaterialMapperClassicGl(this); 
                 _renderer = new SceneRendererClassicGl(this, _sceneMin, _sceneMax);
             }
             else
             {
+                _mapper = new MaterialMapperModernGl(this); 
                 _renderer = new SceneRendererModernGl(this, _sceneMin, _sceneMax);
             }
         }
@@ -667,6 +674,11 @@ namespace open3mod
                 _renderer.Dispose();
             }
 
+            if (_mapper != null)
+            {
+                _mapper.Dispose();
+            }
+
             GC.SuppressFinalize(this);
         }
 
@@ -687,98 +699,6 @@ namespace open3mod
         public void SetSkeletonVisibleOverride(bool overrideSkeleton)
         {
             _overrideSkeleton = overrideSkeleton;
-        }
-    }
-
-
-    /// <summary>
-    /// Utility class to generate an assimp logstream to capture the logging
-    /// into a LogStore
-    /// </summary>
-    class LogPipe 
-    {
-        private readonly LogStore _logStore;
-        private Stopwatch _timer;
-
-        public LogPipe(LogStore logStore) 
-        {
-            _logStore = logStore;
-            
-        }
-
-        public LogStream GetStream()
-        {
-            return new LogStream(LogStreamCallback);
-        }
-
-
-        private void LogStreamCallback(string msg, string userdata)
-        {
-            // Start timing with the very first logging messages. This
-            // is relatively reliable because assimp writes a log header
-            // as soon as it starts processing a file.
-            if (_timer == null)
-            {
-                _timer = new Stopwatch();
-                _timer.Start(); 
-              
-            }
-
-            long millis = _timer.ElapsedMilliseconds;
-
-            // Unfortunately, assimp-net does not wrap assimp's native
-            // logging interfaces so log streams (which receive
-            // pre-formatted messages) are the only way to capture
-            // the logging. This means we have to recover the original
-            // information (such as log level and the thread/job id) 
-            // from the string contents.
-
-
-
-            int start = msg.IndexOf(':');
-            if(start == -1)
-            {
-                // this should not happen but nonetheless check for it
-                //Debug.Assert(false);
-                return;
-            }
-
-            var cat = LogStore.Category.Info;
-            if (msg.StartsWith("Error, "))
-            {
-                cat = LogStore.Category.Error;        
-            }
-            else if (msg.StartsWith("Debug, "))
-            {
-                cat = LogStore.Category.Debug;
-            }
-            else if (msg.StartsWith("Warn, "))
-            {
-                cat = LogStore.Category.Warn;
-            }
-            else if (msg.StartsWith("Info, "))
-            {
-                cat = LogStore.Category.Info;
-            }
-            else
-            {
-                // this should not happen but nonetheless check for it
-                //Debug.Assert(false);
-                return;
-            }
-
-            int startThread = msg.IndexOf('T');
-            if (startThread == -1 || startThread >= start)
-            {
-                // this should not happen but nonetheless check for it
-                //Debug.Assert(false);
-                return;
-            }
-
-            int threadId = 0;
-            int.TryParse(msg.Substring(startThread + 1, start - startThread - 1), out threadId);
-
-            _logStore.Add(cat, msg.Substring(start + 1), millis, threadId);
         }
     }
 }
