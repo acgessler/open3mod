@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Assimp.Unmanaged;
 
 namespace Assimp {
@@ -997,7 +996,10 @@ namespace Assimp {
         /// </summary>
         /// <returns>All properties in the material property map.</returns>
         public MaterialProperty[] GetAllProperties() {
-            return m_properties.Values.ToArray<MaterialProperty>();
+            MaterialProperty[] matProps = new MaterialProperty[m_properties.Values.Count];
+            m_properties.Values.CopyTo(matProps, 0);
+
+            return matProps;
         }
 
         /// <summary>
@@ -1246,8 +1248,10 @@ namespace Assimp {
             nativeValue.NumAllocated = nativeValue.NumProperties = (uint) m_properties.Count;
             nativeValue.Properties = IntPtr.Zero;
 
-            if(m_properties.Count > 0)
-                nativeValue.Properties = MemoryHelper.ToNativeArray<MaterialProperty, AiMaterialProperty>(m_properties.Values.ToArray<MaterialProperty>(), true);
+            if(m_properties.Count > 0) {
+                MaterialProperty[] matProps = new MaterialProperty[m_properties.Values.Count];
+                nativeValue.Properties = MemoryHelper.ToNativeArray<MaterialProperty, AiMaterialProperty>(matProps, true);
+            }
         }
 
         /// <summary>

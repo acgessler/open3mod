@@ -1,7 +1,10 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssimpNet", "AssimpNet\AssimpNet.csproj", "{3415FF29-C0BE-44FC-AD34-94796118E690}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EA4EF0BE-B8A9-4149-8B5A-7E353AD628C0} = {EA4EF0BE-B8A9-4149-8B5A-7E353AD628C0}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssimpNet.Test", "AssimpNet.Test\AssimpNet.Test.csproj", "{72D6BF28-1217-405E-BE22-DFDFC37BC805}"
 EndProject
@@ -10,28 +13,51 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssimpNet.Sample", "AssimpN
 		{3415FF29-C0BE-44FC-AD34-94796118E690} = {3415FF29-C0BE-44FC-AD34-94796118E690}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssimpNet.Interop.Generator", "AssimpNet.Interop.Generator\AssimpNet.Interop.Generator.csproj", "{EA4EF0BE-B8A9-4149-8B5A-7E353AD628C0}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
 		Manager = AnkhSVN - Subversion Support for Visual Studio
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
+		Net20-Debug|Any CPU = Net20-Debug|Any CPU
+		Net20-Release|Any CPU = Net20-Release|Any CPU
+		Net45-Debug|Any CPU = Net45-Debug|Any CPU
+		Net45-Release|Any CPU = Net45-Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3415FF29-C0BE-44FC-AD34-94796118E690}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3415FF29-C0BE-44FC-AD34-94796118E690}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3415FF29-C0BE-44FC-AD34-94796118E690}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3415FF29-C0BE-44FC-AD34-94796118E690}.Release|Any CPU.Build.0 = Release|Any CPU
-		{72D6BF28-1217-405E-BE22-DFDFC37BC805}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{72D6BF28-1217-405E-BE22-DFDFC37BC805}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{72D6BF28-1217-405E-BE22-DFDFC37BC805}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{72D6BF28-1217-405E-BE22-DFDFC37BC805}.Release|Any CPU.Build.0 = Release|Any CPU
-		{67282517-89C5-4F57-AF65-D80E8B16BB95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{67282517-89C5-4F57-AF65-D80E8B16BB95}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{67282517-89C5-4F57-AF65-D80E8B16BB95}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{67282517-89C5-4F57-AF65-D80E8B16BB95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3415FF29-C0BE-44FC-AD34-94796118E690}.Net20-Debug|Any CPU.ActiveCfg = Net20-Debug|Any CPU
+		{3415FF29-C0BE-44FC-AD34-94796118E690}.Net20-Debug|Any CPU.Build.0 = Net20-Debug|Any CPU
+		{3415FF29-C0BE-44FC-AD34-94796118E690}.Net20-Release|Any CPU.ActiveCfg = NET20-Release|Any CPU
+		{3415FF29-C0BE-44FC-AD34-94796118E690}.Net20-Release|Any CPU.Build.0 = NET20-Release|Any CPU
+		{3415FF29-C0BE-44FC-AD34-94796118E690}.Net45-Debug|Any CPU.ActiveCfg = Net45-Debug|Any CPU
+		{3415FF29-C0BE-44FC-AD34-94796118E690}.Net45-Debug|Any CPU.Build.0 = Net45-Debug|Any CPU
+		{3415FF29-C0BE-44FC-AD34-94796118E690}.Net45-Release|Any CPU.ActiveCfg = Net45-Release|Any CPU
+		{3415FF29-C0BE-44FC-AD34-94796118E690}.Net45-Release|Any CPU.Build.0 = Net45-Release|Any CPU
+		{72D6BF28-1217-405E-BE22-DFDFC37BC805}.Net20-Debug|Any CPU.ActiveCfg = Net20-Debug|Any CPU
+		{72D6BF28-1217-405E-BE22-DFDFC37BC805}.Net20-Debug|Any CPU.Build.0 = Net20-Debug|Any CPU
+		{72D6BF28-1217-405E-BE22-DFDFC37BC805}.Net20-Release|Any CPU.ActiveCfg = Net20-Debug|Any CPU
+		{72D6BF28-1217-405E-BE22-DFDFC37BC805}.Net45-Debug|Any CPU.ActiveCfg = Net45-Debug|Any CPU
+		{72D6BF28-1217-405E-BE22-DFDFC37BC805}.Net45-Debug|Any CPU.Build.0 = Net45-Debug|Any CPU
+		{72D6BF28-1217-405E-BE22-DFDFC37BC805}.Net45-Release|Any CPU.ActiveCfg = Net45-Release|Any CPU
+		{72D6BF28-1217-405E-BE22-DFDFC37BC805}.Net45-Release|Any CPU.Build.0 = Net45-Release|Any CPU
+		{67282517-89C5-4F57-AF65-D80E8B16BB95}.Net20-Debug|Any CPU.ActiveCfg = Net20-Debug|Any CPU
+		{67282517-89C5-4F57-AF65-D80E8B16BB95}.Net20-Debug|Any CPU.Build.0 = Net20-Debug|Any CPU
+		{67282517-89C5-4F57-AF65-D80E8B16BB95}.Net20-Release|Any CPU.ActiveCfg = NET20-Release|Any CPU
+		{67282517-89C5-4F57-AF65-D80E8B16BB95}.Net20-Release|Any CPU.Build.0 = NET20-Release|Any CPU
+		{67282517-89C5-4F57-AF65-D80E8B16BB95}.Net45-Debug|Any CPU.ActiveCfg = Net45-Debug|Any CPU
+		{67282517-89C5-4F57-AF65-D80E8B16BB95}.Net45-Debug|Any CPU.Build.0 = Net45-Debug|Any CPU
+		{67282517-89C5-4F57-AF65-D80E8B16BB95}.Net45-Release|Any CPU.ActiveCfg = Net45-Release|Any CPU
+		{67282517-89C5-4F57-AF65-D80E8B16BB95}.Net45-Release|Any CPU.Build.0 = Net45-Release|Any CPU
+		{EA4EF0BE-B8A9-4149-8B5A-7E353AD628C0}.Net20-Debug|Any CPU.ActiveCfg = Net20-Debug|Any CPU
+		{EA4EF0BE-B8A9-4149-8B5A-7E353AD628C0}.Net20-Debug|Any CPU.Build.0 = Net20-Debug|Any CPU
+		{EA4EF0BE-B8A9-4149-8B5A-7E353AD628C0}.Net20-Release|Any CPU.ActiveCfg = NET20-Release|Any CPU
+		{EA4EF0BE-B8A9-4149-8B5A-7E353AD628C0}.Net20-Release|Any CPU.Build.0 = NET20-Release|Any CPU
+		{EA4EF0BE-B8A9-4149-8B5A-7E353AD628C0}.Net45-Debug|Any CPU.ActiveCfg = Net45-Debug|Any CPU
+		{EA4EF0BE-B8A9-4149-8B5A-7E353AD628C0}.Net45-Debug|Any CPU.Build.0 = Net45-Debug|Any CPU
+		{EA4EF0BE-B8A9-4149-8B5A-7E353AD628C0}.Net45-Release|Any CPU.ActiveCfg = Net45-Release|Any CPU
+		{EA4EF0BE-B8A9-4149-8B5A-7E353AD628C0}.Net45-Release|Any CPU.Build.0 = Net45-Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
