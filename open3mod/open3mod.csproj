@@ -429,6 +429,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app_icon.ico" />
+    <EmbeddedResource Include="Images\TipOfTheDay\Tip5.png" />
+    <EmbeddedResource Include="Images\TipOfTheDay\Tip3.png" />
+    <EmbeddedResource Include="Images\TipOfTheDay\Tip4.png" />
+    <EmbeddedResource Include="Images\TipOfTheDay\Tip2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

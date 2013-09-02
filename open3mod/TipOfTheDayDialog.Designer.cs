@@ -63,7 +63,7 @@
             // buttonOk
             // 
             this.buttonOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOk.Location = new System.Drawing.Point(389, 223);
+            this.buttonOk.Location = new System.Drawing.Point(430, 223);
             this.buttonOk.Name = "buttonOk";
             this.buttonOk.Size = new System.Drawing.Size(100, 23);
             this.buttonOk.TabIndex = 2;
@@ -75,7 +75,7 @@
             this.checkBoxDoNotShowAgain.AutoSize = true;
             this.checkBoxDoNotShowAgain.Checked = global::CoreSettings.CoreSettings.Default.ShowTipsOnStartup;
             this.checkBoxDoNotShowAgain.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::CoreSettings.CoreSettings.Default, "ShowTipsOnStartup", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxDoNotShowAgain.Location = new System.Drawing.Point(268, 227);
+            this.checkBoxDoNotShowAgain.Location = new System.Drawing.Point(321, 227);
             this.checkBoxDoNotShowAgain.Name = "checkBoxDoNotShowAgain";
             this.checkBoxDoNotShowAgain.Size = new System.Drawing.Size(103, 17);
             this.checkBoxDoNotShowAgain.TabIndex = 3;
@@ -90,14 +90,14 @@
             this.panel1.Controls.Add(this.pictureBoxTipPic);
             this.panel1.Location = new System.Drawing.Point(-1, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(502, 207);
+            this.panel1.Size = new System.Drawing.Size(543, 207);
             this.panel1.TabIndex = 4;
             // 
             // labelTipText
             // 
             this.labelTipText.AutoSize = true;
             this.labelTipText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTipText.Location = new System.Drawing.Point(266, 46);
+            this.labelTipText.Location = new System.Drawing.Point(229, 25);
             this.labelTipText.Name = "labelTipText";
             this.labelTipText.Size = new System.Drawing.Size(205, 96);
             this.labelTipText.TabIndex = 1;
@@ -117,7 +117,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(501, 258);
+            this.ClientSize = new System.Drawing.Size(542, 258);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.checkBoxDoNotShowAgain);
             this.Controls.Add(this.buttonOk);

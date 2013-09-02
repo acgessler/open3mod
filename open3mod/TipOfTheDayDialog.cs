@@ -34,16 +34,38 @@ namespace open3mod
     {
         private static String[] _tips = new[]
             {
-@"You can use the force to control 
-almost everything.
+@"You can lock on a search by pressing ENTER.
 
-Just make sure the force is strong
-in you. Do not attempt to count
-Midi-Chlorians.",
+Pressing ENTER again cycles through the search 
+results. The current selection is highlighted
+in yellow then.",
 
-@"This is actually just a dummy entry.
+@"You can permanently hide parts of a scene by
+right-clicking on it in the Scene Browser 
+and selecting 'Hide'.
+",
 
-Therefore, use it with caution.
+ @"Double-click on a texture to see it in full size. 
+If the texture viewer is already open, hovering 
+over a mini texture shows a quick preview of it.
+",
+
+  @"In the toolbar you can highlight the joints in 
+a scene. This is extremely useful when viewing 
+rigged models. When animations are played, 
+the visualization reflects the skeletal 
+movements.
+",
+
+  @"When hovering over a joint in the Scene Browser,
+joint highlighting is automatically turned on and 
+the selected joint highlighted.
+",
+
+   @"Use Bullseye mode to lock the current 3D view.
+When you hover with your mouse over parts of the
+3D scene, the Scene Browser automatically 
+highlights them in the scene hierarchy.
 ",
             };
 
