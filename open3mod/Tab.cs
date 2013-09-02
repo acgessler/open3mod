@@ -417,6 +417,7 @@ namespace open3mod
             {
                 return;
             }
+
             if (f < MinimumViewportSplit)
             {
                 f = MinimumViewportSplit;
@@ -428,12 +429,12 @@ namespace open3mod
             foreach (var viewport in ActiveViews.Where(viewport => viewport != null))
             {
                 var b = viewport.Bounds;
-                if (Math.Abs(b.X - f) < Math.Abs(b.Z - f))
+                if (Math.Abs(b.X - f) < Math.Abs(b.Z - f) && b.X >= MinimumViewportSplit * 0.99999f)
                 {                
                     b.X = f;
                     viewport.Bounds = b;
                 }
-                else 
+                else if (b.Z <= 1.0f - MinimumViewportSplit * 0.99999f)
                 {
                     b.Z = f;
                     viewport.Bounds = b;
@@ -466,12 +467,12 @@ namespace open3mod
             foreach (var viewport in ActiveViews.Where(viewport => viewport != null))
             {
                 var b = viewport.Bounds;
-                if (Math.Abs(b.Y - f) < Math.Abs(b.W - f))
+                if (Math.Abs(b.Y - f) < Math.Abs(b.W - f) && b.Y >= MinimumViewportSplit * 0.99999f)
                 {
                     b.Y = f;
                     viewport.Bounds = b;
                 }
-                else 
+                else if (b.W <= 1.0f - MinimumViewportSplit * 0.99999f)
                 {
                     b.W = f;
                     viewport.Bounds = b;
