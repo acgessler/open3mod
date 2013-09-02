@@ -117,14 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label3.Text" xml:space="preserve">
-    <value>A quick and powerful viewing and conversion tool for all kinds of 3D files. open3mod is Open Source - this means if you 
-don't like what it does, you can help make it better by hacking the source code yourself.
-
-It also means you can make unlimited use of this software in the making of your commercial projects.
-
-</value>
-  </data>
   <metadata name="helpProvider1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
@@ -355,8 +347,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
   </data>
   <data name="label2.Text" xml:space="preserve">
     <value>open3mod is distributed under the terms and conditions of a 3-clause BSD license. It incorporates third-party components 
-(such as assimp, assimp-net, devil and devil-net) that are licensed under similarly compatible licenses, which any 
-redistribution must retain:</value>
+(such as assimp, assimp-net, devil and devil-net) that are licensed under compatible licenses</value>
   </data>
   <metadata name="pageSetupDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>144, 17</value>

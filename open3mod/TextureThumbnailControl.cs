@@ -122,7 +122,6 @@ namespace open3mod
             saver.Filter = "Image Files ("+extensions+")|"+extensions+"|All files (*.*)|*.*";
             if(saver.ShowDialog(FindForm()) == DialogResult.OK)
             {
-
                 if (!exporter.Export(saver.FileName))
                 {
                     MessageBox.Show(FindForm(), "Failed to export to " + saver.FileName);
