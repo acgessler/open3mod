@@ -50,6 +50,9 @@
     <ApplicationIcon>app_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LeapCSharp.NET4.0">
+      <HintPath>..\libs\Leap\LeapCSharp.NET4.0.dll</HintPath>
+    </Reference>
     <Reference Include="OpenTK">
       <HintPath>..\libs\OpenTK\OpenTK.dll</HintPath>
     </Reference>
@@ -104,6 +107,7 @@
     <Compile Include="FolderSetDisplay.Designer.cs">
       <DependentUpon>FolderSetDisplay.cs</DependentUpon>
     </Compile>
+    <Compile Include="LeapListener.cs" />
     <Compile Include="LogPipe.cs" />
     <Compile Include="MaterialMapperClassicGl.cs" />
     <Compile Include="MaterialMapperModernGl.cs" />
@@ -435,6 +439,9 @@
     <EmbeddedResource Include="Images\TipOfTheDay\Tip2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy  /y "$(SolutionDir)\libs\Leap\x86\*.dll" "$(TargetDir)"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

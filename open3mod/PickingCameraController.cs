@@ -79,6 +79,11 @@ namespace open3mod
         {
 
         }
+
+        public void LeapInput(float x, float y, float z, float pitch, float roll, float yaw)
+        {
+
+        }
     }
 }
 

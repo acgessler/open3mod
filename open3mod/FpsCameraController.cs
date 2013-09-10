@@ -122,6 +122,11 @@ namespace open3mod
             _view = Matrix4.CreateTranslation(-_translation) * _view;
             _dirty = false;
         }
+
+        public void LeapInput(float x, float y, float z, float pitch, float roll, float yaw)
+        {
+
+        }
     }
 }
 

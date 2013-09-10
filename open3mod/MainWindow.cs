@@ -32,6 +32,8 @@ using System.Threading;
 
 using OpenTK;
 
+using Leap;
+
 namespace open3mod
 {
     public partial class MainWindow : Form
@@ -47,6 +49,8 @@ namespace open3mod
         private delegate void DelegatePopulateInspector(Tab tab);
         private readonly DelegatePopulateInspector _delegatePopulateInspector;
 
+        private Controller _leapController;
+        private LeapListener _leapListener;
 
         private readonly bool _initialized;
 
@@ -113,7 +117,11 @@ namespace open3mod
             KeyPreview = true;
             _initialized = true;
 
-            InitRecentList();            
+            InitRecentList();
+
+            //LeapMotion Support
+            _leapListener = new LeapListener(this as MainWindow);
+            _leapController = new Controller(_leapListener);
         }
 
         public override sealed string Text
@@ -1015,6 +1023,10 @@ namespace open3mod
                 CoreSettings.CoreSettings.Default.Maximized = false;
             }
             CoreSettings.CoreSettings.Default.Save();
+
+            //Cleanup LeapMotion Controller
+            _leapController.RemoveListener(_leapListener);
+            _leapController.Dispose();
         }
 
 

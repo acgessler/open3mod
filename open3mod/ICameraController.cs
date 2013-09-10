@@ -98,6 +98,17 @@ namespace open3mod
         /// </summary>
         /// <returns></returns>
         CameraMode GetCameraMode();
+
+        /// <summary>
+        /// Process the 3D Input of the LeapMotion device
+        /// </summary>
+        /// <param name="x">X delta</param>
+        /// <param name="y">Y delta</param>
+        /// <param name="z">Z delta</param>
+        /// <param name="pitch">absolute rotation around the X axis</param>
+        /// <param name="roll">absolute rotation around the Z axis</param>
+        /// <param name="yaw">absolute rotation around the Y axis</param>
+        void LeapInput(float x, float y, float z, float pitch, float roll, float yaw);
     }
 }
 
