@@ -99,8 +99,9 @@ namespace open3mod
 
             // set fixed-function lighting parameters
             GL.ShadeModel(ShadingModel.Smooth);
+            GL.Enable(EnableCap.Lighting);
             GL.Enable(EnableCap.Light0);
-            GL.Light(LightName.Light0, LightParameter.Position, new float[] { 1, 1, 0 });
+            GL.Light(LightName.Light0, LightParameter.Position, new float[] { 1, 1, 0, 0 });
             GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { 1, 1, 1, 1 });
             GL.Light(LightName.Light0, LightParameter.Specular, new float[] { 1, 1, 1, 1 });
 
