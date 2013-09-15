@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,9 +47,12 @@ namespace open3mod
         }
 
 
-        public void OpenMaterialsTab()
+        public void OpenMaterialsTabAndScrollTo(MaterialThumbnailControl thumb)
         {
+            Debug.Assert(tabPageMaterials.Contains(thumb));
+            tabPageMaterials.ScrollControlIntoView(thumb);
             tabControlInfoViewPicker.SelectedTab = tabPageMaterials;
+            tabPageMaterials.Focus();
         }
 
 
@@ -102,6 +106,19 @@ namespace open3mod
         private void Clear()
         {
             //treeViewNodeGraph.Nodes.Clear();
+        }
+
+        /// <summary>
+        /// Focus the pages, to be able to scroll with the mousewheel
+        /// </summary>
+        private void tabPageMaterials_MouseEnter(object sender, EventArgs e)
+        {
+            tabPageMaterials.Focus();
+        }
+
+        private void tabPageTextures_MouseEnter(object sender, EventArgs e)
+        {
+            tabPageTextures.Focus();
         }
     }
 }
