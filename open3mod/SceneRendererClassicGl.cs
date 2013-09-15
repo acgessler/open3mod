@@ -108,9 +108,12 @@ namespace open3mod
             var mat = renderer.LightRotation;
             Vector3.TransformNormal(ref dir, ref mat, out dir);
 
+            var col = new Vector3(1, 1, 1);
+            col *= (0.25f + 1.5f * GraphicsSettings.Default.OutputBrightness/100.0f) * 1.5f;
+
             GL.Light(LightName.Light0, LightParameter.Position, new float[] { dir.X, dir.Y, dir.Z, 0 });
-            GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { 1, 1, 1, 1 });
-            GL.Light(LightName.Light0, LightParameter.Specular, new float[] { 1, 1, 1, 1 });
+            GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { col.X, col.Y, col.Z, 1 });
+            GL.Light(LightName.Light0, LightParameter.Specular, new float[] { col.X, col.Y, col.Z, 1 });
 
             if (flags.HasFlag(RenderFlags.Wireframe))
             {

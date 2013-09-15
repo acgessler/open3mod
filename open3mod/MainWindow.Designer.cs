@@ -101,11 +101,14 @@ namespace open3mod
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.linkLabelDonate = new System.Windows.Forms.LinkLabel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.trackBarBrightness = new System.Windows.Forms.TrackBar();
             this.glControl1 = new open3mod.RenderControl();
             this.menuStrip1.SuspendLayout();
             this.toolStripSelectRenderer.SuspendLayout();
             this.tabContextMenuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarBrightness)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -643,6 +646,31 @@ namespace open3mod
             this.linkLabelDonate.Text = "Donate";
             this.linkLabelDonate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OnDonate);
             // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.label1.Location = new System.Drawing.Point(806, 713);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(61, 21);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "Brightness";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // trackBarBrightness
+            // 
+            this.trackBarBrightness.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBarBrightness.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.trackBarBrightness.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::open3mod.GraphicsSettings.Default, "OutputBrightness", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.trackBarBrightness.Location = new System.Drawing.Point(863, 713);
+            this.trackBarBrightness.Margin = new System.Windows.Forms.Padding(0);
+            this.trackBarBrightness.Maximum = 100;
+            this.trackBarBrightness.Name = "trackBarBrightness";
+            this.trackBarBrightness.Size = new System.Drawing.Size(188, 45);
+            this.trackBarBrightness.TabIndex = 6;
+            this.trackBarBrightness.Value = global::open3mod.GraphicsSettings.Default.OutputBrightness;
+            // 
             // glControl1
             // 
             this.glControl1.AllowDrop = true;
@@ -676,6 +704,8 @@ namespace open3mod
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(1051, 734);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.trackBarBrightness);
             this.Controls.Add(this.linkLabelDonate);
             this.Controls.Add(this.buttonTabClose);
             this.Controls.Add(this.glControl1);
@@ -699,6 +729,7 @@ namespace open3mod
             this.tabContextMenuStrip.ResumeLayout(false);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarBrightness)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -769,6 +800,8 @@ namespace open3mod
         private LinkLabel linkLabelDonate;
         private ToolStripMenuItem toolStripMenuItem3;
         private ToolStripSeparator toolStripSeparator11;
+        private TrackBar trackBarBrightness;
+        private Label label1;
     }
 }
 
