@@ -262,7 +262,7 @@ namespace open3mod
             _textOverlay.Draw();
 
             // draw viewport finishing (i.e. contours)
-            if (ui.ActiveScene != null)
+            if (ui.ActiveScene != null && ui.ActiveViewMode != Tab.ViewMode.Single)
             {
                 var index = Tab.ViewIndex.Index0;
                 foreach (var viewport in ui.ActiveViews)
@@ -353,8 +353,16 @@ namespace open3mod
                 return;
             }
 
-            var xPoint = (int) (x2*(double) RenderResolution.Width);
-            var yPoint = 3 + (int) ((1.0f - y2)*(double) RenderResolution.Height); // note: y is flipped
+            var xPoint = 3 + (int) (x2*(double) RenderResolution.Width);
+            var yPoint = (int) ((1.0f - y2)*(double) RenderResolution.Height); // note: y is flipped
+
+            //padding if bounds are drawn
+            if (ui.ActiveViewMode != Tab.ViewMode.Single)
+            {
+                xPoint -= 3;
+                yPoint += 3;
+            }
+
             const int xSpacing = 4;
 
             var imageWidth = _hudImages[0, 0].Width;
