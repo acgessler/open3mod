@@ -381,12 +381,16 @@ namespace open3mod
         /// viewport separator. If not, the separator that was hit.</returns>
         public ViewSeparator GetViewportSeparatorHit(float x, float y)
         {
+            if (_activeViewMode == ViewMode.Single)
+            {
+                return ViewSeparator._Max;
+            }
             var vp = ActiveViews[0];
             Debug.Assert(vp != null);
 
             const float threshold = 0.01f;
 
-            if (Math.Abs(x - vp.Bounds.Z) < threshold)
+            if (Math.Abs(x - vp.Bounds.Z) < threshold && _activeViewMode != ViewMode.Two)
             {
                 if (Math.Abs(y - vp.Bounds.W) < threshold)
                 {
