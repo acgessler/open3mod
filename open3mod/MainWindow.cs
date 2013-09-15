@@ -128,10 +128,6 @@ namespace open3mod
         /// </summary>
         private void AddEmptyTab()
         {
-            if (_emptyTab != null)
-            {
-                return;
-            }
             // create default tab
             tabControl1.TabPages.Add("empty");
             _emptyTab = tabControl1.TabPages[tabControl1.TabPages.Count-1];
@@ -398,7 +394,15 @@ namespace open3mod
             // If this is the last tab, we need to add an empty tab before we remove it
             if (tabControl1.TabCount == 1)
             {
-                AddEmptyTab();
+                if (CoreSettings.CoreSettings.Default.ExitOnTabClosing)
+                {
+                    Application.Exit();
+                    return;
+                }
+                else
+                {
+                    AddEmptyTab();
+                }
             }
 
             if (tab == tabControl1.SelectedTab)
