@@ -52,7 +52,7 @@
 	<summary>
 		<codepage>1252</codepage>
 		<title>Installation Database</title>
-		<subject/>
+		<subject>Open 3D Model Viewer</subject>
 		<author>##ID_STRING3##</author>
 		<keywords>Installer,MSI,Database</keywords>
 		<comments>Contact:  Your local administrator</comments>
@@ -1152,7 +1152,7 @@
 		<row><td>FavoritesFolder</td><td>TARGETDIR</td><td>.:FAVORI~1|Favorites</td><td/><td>0</td><td/></row>
 		<row><td>FontsFolder</td><td>TARGETDIR</td><td>.:Fonts</td><td/><td>0</td><td/></row>
 		<row><td>GlobalAssemblyCache</td><td>TARGETDIR</td><td>.:Global~1|GlobalAssemblyCache</td><td/><td>0</td><td/></row>
-		<row><td>INSTALLDIR</td><td>MY_PRODUCT_NAME2</td><td>.</td><td/><td>0</td><td/></row>
+		<row><td>INSTALLDIR</td><td>OPEN_3D_MODEL_VIEWER</td><td>.</td><td/><td>0</td><td/></row>
 		<row><td>ISCommonFilesFolder</td><td>CommonFilesFolder</td><td>Instal~1|InstallShield</td><td/><td>0</td><td/></row>
 		<row><td>ISMyCompanyDir</td><td>ProgramFilesFolder</td><td>MYCOMP~1|My Company Name</td><td/><td>0</td><td/></row>
 		<row><td>ISMyProductDir</td><td>ISMyCompanyDir</td><td>MYPROD~1|My Product Name</td><td/><td>0</td><td/></row>
@@ -1165,6 +1165,7 @@
 		<row><td>NetHoodFolder</td><td>TARGETDIR</td><td>.:NetHood</td><td/><td>0</td><td/></row>
 		<row><td>OPEN3MOD_</td><td>ProgramFilesFolder</td><td>OPEN3M~1|open3mod </td><td/><td>0</td><td/></row>
 		<row><td>OPEN3MOD_CONTRIBUTORS</td><td>ProgramFilesFolder</td><td>OPEN3M~1|open3mod contributors</td><td/><td>0</td><td/></row>
+		<row><td>OPEN_3D_MODEL_VIEWER</td><td>OPEN3MOD_</td><td>OPEN3D~1|Open 3D Model Viewer</td><td/><td>0</td><td/></row>
 		<row><td>PRIVATE</td><td>ProgramFilesFolder</td><td>Private</td><td/><td>0</td><td/></row>
 		<row><td>PersonalFolder</td><td>TARGETDIR</td><td>.:Personal</td><td/><td>0</td><td/></row>
 		<row><td>PrimaryVolumePath</td><td>TARGETDIR</td><td>.:Primar~1|PrimaryVolumePath</td><td/><td>0</td><td/></row>
@@ -1903,20 +1904,20 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
-		<row><td>assimp32.dll</td><td>Assimp32.dll</td><td>Assimp32.dll</td><td>0</td><td/><td/><td/><td>1</td><td>J:\dev\open3mod.git\open3mod\open3mod\bin\Release\Assimp32.dll</td><td>1</td><td/></row>
-		<row><td>assimp64.dll</td><td>Assimp64.dll</td><td>Assimp64.dll</td><td>0</td><td/><td/><td/><td>1</td><td>J:\dev\open3mod.git\open3mod\open3mod\bin\Release\Assimp64.dll</td><td>1</td><td/></row>
-		<row><td>assimplicense.txt</td><td>ISX_DEFAULTCOMPONENT</td><td>ASSIMP~1.TXT|AssimpLicense.txt</td><td>0</td><td/><td/><td/><td>1</td><td>J:\dev\open3mod.git\open3mod\open3mod\bin\Release\AssimpLicense.txt</td><td>1</td><td/></row>
-		<row><td>assimpnet.dll</td><td>AssimpNet.dll</td><td>ASSIMP~1.DLL|AssimpNet.dll</td><td>0</td><td/><td/><td/><td>1</td><td>J:\dev\open3mod.git\open3mod\open3mod\bin\Release\AssimpNet.dll</td><td>1</td><td/></row>
-		<row><td>devil.dll</td><td>DevIL.dll</td><td>DevIL.dll</td><td>0</td><td/><td/><td/><td>1</td><td>J:\dev\open3mod.git\open3mod\open3mod\bin\Release\DevIL.dll</td><td>1</td><td/></row>
-		<row><td>devilnet.dll</td><td>DevILNet.dll</td><td>DevILNet.dll</td><td>0</td><td/><td/><td/><td>1</td><td>J:\dev\open3mod.git\open3mod\open3mod\bin\Release\DevILNet.dll</td><td>1</td><td/></row>
-		<row><td>ilu.dll</td><td>ILU.dll</td><td>ILU.dll</td><td>0</td><td/><td/><td/><td>1</td><td>J:\dev\open3mod.git\open3mod\open3mod\bin\Release\ILU.dll</td><td>1</td><td/></row>
-		<row><td>leap.dll</td><td>Leap.dll</td><td>Leap.dll</td><td>0</td><td/><td/><td/><td>1</td><td>J:\dev\open3mod.git\open3mod\open3mod\bin\Release\Leap.dll</td><td>1</td><td/></row>
-		<row><td>leapcsharp.dll</td><td>LeapCSharp.dll</td><td>LEAPCS~1.DLL|LeapCSharp.dll</td><td>0</td><td/><td/><td/><td>1</td><td>J:\dev\open3mod.git\open3mod\open3mod\bin\Release\LeapCSharp.dll</td><td>1</td><td/></row>
-		<row><td>leapcsharp.net4.0.dll</td><td>LeapCSharp.NET4.0.dll</td><td>LEAPCS~1.DLL|LeapCSharp.NET4.0.dll</td><td>0</td><td/><td/><td/><td>1</td><td>J:\dev\open3mod.git\open3mod\open3mod\bin\Release\LeapCSharp.NET4.0.dll</td><td>1</td><td/></row>
-		<row><td>open3mod.exe</td><td>open3mod.exe</td><td>open3mod.exe</td><td>0</td><td/><td/><td/><td>1</td><td>J:\dev\open3mod.git\open3mod\open3mod\bin\Release\open3mod.exe</td><td>1</td><td/></row>
-		<row><td>open3mod.vshost.exe.config</td><td>ISX_DEFAULTCOMPONENT</td><td>OPEN3M~1.CON|open3mod.vshost.exe.config</td><td>0</td><td/><td/><td/><td>1</td><td>J:\dev\open3mod.git\open3mod\open3mod\bin\Release\open3mod.vshost.exe.config</td><td>1</td><td/></row>
-		<row><td>opentk.dll</td><td>OpenTK.dll</td><td>OpenTK.dll</td><td>0</td><td/><td/><td/><td>1</td><td>J:\dev\open3mod.git\open3mod\open3mod\bin\Release\OpenTK.dll</td><td>1</td><td/></row>
-		<row><td>opentk.glcontrol.dll</td><td>OpenTK.GLControl.dll</td><td>OPENTK~1.DLL|OpenTK.GLControl.dll</td><td>0</td><td/><td/><td/><td>1</td><td>J:\dev\open3mod.git\open3mod\open3mod\bin\Release\OpenTK.GLControl.dll</td><td>1</td><td/></row>
+		<row><td>assimp32.dll</td><td>Assimp32.dll</td><td>Assimp32.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\Assimp32.dll</td><td>1</td><td/></row>
+		<row><td>assimp64.dll</td><td>Assimp64.dll</td><td>Assimp64.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\Assimp64.dll</td><td>1</td><td/></row>
+		<row><td>assimplicense.txt</td><td>ISX_DEFAULTCOMPONENT</td><td>ASSIMP~1.TXT|AssimpLicense.txt</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\AssimpLicense.txt</td><td>1</td><td/></row>
+		<row><td>assimpnet.dll</td><td>AssimpNet.dll</td><td>ASSIMP~1.DLL|AssimpNet.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\AssimpNet.dll</td><td>1</td><td/></row>
+		<row><td>devil.dll</td><td>DevIL.dll</td><td>DevIL.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\DevIL.dll</td><td>1</td><td/></row>
+		<row><td>devilnet.dll</td><td>DevILNet.dll</td><td>DevILNet.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\DevILNet.dll</td><td>1</td><td/></row>
+		<row><td>ilu.dll</td><td>ILU.dll</td><td>ILU.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\ILU.dll</td><td>1</td><td/></row>
+		<row><td>leap.dll</td><td>Leap.dll</td><td>Leap.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\Leap.dll</td><td>1</td><td/></row>
+		<row><td>leapcsharp.dll</td><td>LeapCSharp.dll</td><td>LEAPCS~1.DLL|LeapCSharp.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\LeapCSharp.dll</td><td>1</td><td/></row>
+		<row><td>leapcsharp.net4.0.dll</td><td>LeapCSharp.NET4.0.dll</td><td>LEAPCS~1.DLL|LeapCSharp.NET4.0.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\LeapCSharp.NET4.0.dll</td><td>1</td><td/></row>
+		<row><td>open3mod.exe</td><td>open3mod.exe</td><td>open3mod.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\open3mod.exe</td><td>1</td><td/></row>
+		<row><td>open3mod.vshost.exe.config</td><td>ISX_DEFAULTCOMPONENT</td><td>OPEN3M~1.CON|open3mod.vshost.exe.config</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\open3mod.vshost.exe.config</td><td>1</td><td/></row>
+		<row><td>opentk.dll</td><td>OpenTK.dll</td><td>OpenTK.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\OpenTK.dll</td><td>1</td><td/></row>
+		<row><td>opentk.glcontrol.dll</td><td>OpenTK.GLControl.dll</td><td>OPENTK~1.DLL|OpenTK.GLControl.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\OpenTK.GLControl.dll</td><td>1</td><td/></row>
 	</table>
 
 	<table name="FileSFPCatalog">
@@ -4030,8 +4031,8 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I2">ISIconIndex</col>
 		<row><td>ARPPRODUCTICON.exe</td><td/><td>&lt;ISProductFolder&gt;\redist\Language Independent\OS Independent\setupicon.ico</td><td>0</td></row>
-		<row><td>open3mod.exe_5E612A489B094CD9B0FB2FFF66C1272E.exe</td><td/><td>J:\dev\open3mod.git\open3mod\open3mod\bin\Release\open3mod.exe</td><td>0</td></row>
-		<row><td>open3mod.exe_9DE2137B31474B92BED12573A660F717.exe</td><td/><td>J:\dev\open3mod.git\open3mod\open3mod\bin\Release\open3mod.exe</td><td>0</td></row>
+		<row><td>open3mod.exe_5E612A489B094CD9B0FB2FFF66C1272E.exe</td><td/><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\open3mod.exe</td><td>0</td></row>
+		<row><td>open3mod.exe_9DE2137B31474B92BED12573A660F717.exe</td><td/><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\open3mod.exe</td><td>0</td></row>
 	</table>
 
 	<table name="IniFile">
@@ -4541,7 +4542,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
 		<row><td>PROGRAMFILETOLAUNCHATEND</td><td>[INSTALLDIR]open3mod.exe</td><td/></row>
 		<row><td>ProductCode</td><td>{3F984DBF-B568-405C-B29F-F9D6D207AE62}</td><td/></row>
-		<row><td>ProductName</td><td>Setup</td><td/></row>
+		<row><td>ProductName</td><td>Open 3D Model Viewer</td><td/></row>
 		<row><td>ProductVersion</td><td>1.00.0000</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
