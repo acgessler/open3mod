@@ -72,7 +72,7 @@ namespace open3mod
         void Render(ICameraController cam, 
             Dictionary<Node, List<Mesh>> visibleMeshesByNode,
             bool visibleSetChanged, bool texturesChanged, 
-            RenderFlags flags);
+            RenderFlags flags, Renderer renderer);
     }
 }
 

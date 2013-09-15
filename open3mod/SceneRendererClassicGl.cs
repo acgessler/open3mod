@@ -91,7 +91,8 @@ namespace open3mod
         public void Render(ICameraController cam, Dictionary<Node, List<Mesh>> visibleMeshesByNode, 
             bool visibleSetChanged, 
             bool texturesChanged,
-            RenderFlags flags)
+            RenderFlags flags, 
+            Renderer renderer)
         {            
             GL.Disable(EnableCap.Texture2D);
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
@@ -102,7 +103,12 @@ namespace open3mod
             GL.LightModel(LightModelParameter.LightModelAmbient, new[] { 0.3f, 0.3f, 0.3f, 1 });
             GL.Enable(EnableCap.Lighting);
             GL.Enable(EnableCap.Light0);
-            GL.Light(LightName.Light0, LightParameter.Position, new float[] { 1, 1, 0, 0 });
+
+            var dir = new Vector3(1,1,0);
+            var mat = renderer.LightRotation;
+            Vector3.TransformNormal(ref dir, ref mat, out dir);
+
+            GL.Light(LightName.Light0, LightParameter.Position, new float[] { dir.X, dir.Y, dir.Z, 0 });
             GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { 1, 1, 1, 1 });
             GL.Light(LightName.Light0, LightParameter.Specular, new float[] { 1, 1, 1, 1 });
 

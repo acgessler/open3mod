@@ -406,7 +406,7 @@ namespace open3mod
         /// <summary>
         /// Call once per frame to render the scene to the current viewport.
         /// </summary>
-        public void Render(UiState state, ICameraController cam)
+        public void Render(UiState state, ICameraController cam, Renderer target)
         {
             RenderFlags flags = 0;
           
@@ -438,7 +438,7 @@ namespace open3mod
             flags |= RenderFlags.ShowGhosts;
 
             _wantSetTexturesChanged = false;
-            _renderer.Render(cam, _meshesToShow, _nodesToShowChanged, _texturesChanged, flags);
+            _renderer.Render(cam, _meshesToShow, _nodesToShowChanged, _texturesChanged, flags, target);
 
             lock (_texChangeLock)
             {

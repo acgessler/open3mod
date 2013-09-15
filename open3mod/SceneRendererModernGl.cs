@@ -59,7 +59,8 @@ namespace open3mod
         public void Render(ICameraController cam, Dictionary<Node, List<Mesh>> visibleMeshesByNode,
             bool visibleSetChanged,
             bool texturesChanged,
-            RenderFlags flags)
+            RenderFlags flags, 
+            Renderer renderer)
         {
             GL.Disable(EnableCap.Texture2D);
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);

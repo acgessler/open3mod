@@ -45,7 +45,7 @@ namespace open3mod
         private int _previousMousePosX = -1;
         private int _previousMousePosY = -1;
         private bool _mouseDown;
-
+        private bool _mouseRightDown;
 
 
         private void ProcessKeys()
@@ -176,11 +176,18 @@ namespace open3mod
         partial void OnMouseDown(object sender, MouseEventArgs e)
         {
             UpdateActiveViewIfNeeded(e);
+
+            _previousMousePosX = e.X;
+            _previousMousePosY = e.Y;
+
             if(e.Button == MouseButtons.Middle)
             {
                 _mouseWheelDown = true;
-                _previousMousePosX = e.X;
-                _previousMousePosY = e.Y;
+                return;
+            }
+            if(e.Button == MouseButtons.Right)
+            {
+                _mouseRightDown = true;
                 return;
             }
 
@@ -190,8 +197,6 @@ namespace open3mod
             }
 
             _mouseDown = true;
-            _previousMousePosX = e.X;
-            _previousMousePosY = e.Y;
 
             var sep = MousePosToViewportSeparator(e.X, e.Y);
             if (sep != Tab.ViewSeparator._Max)
@@ -219,8 +224,18 @@ namespace open3mod
 
         partial void OnMouseUp(object sender, MouseEventArgs e)
         {
-            _mouseDown = false;
-            _mouseWheelDown = false;
+            if (e.Button == MouseButtons.Left)
+            {
+                _mouseDown = false;
+            }
+            if (e.Button == MouseButtons.Middle)
+            {
+                _mouseWheelDown = false;
+            }
+            if (e.Button == MouseButtons.Right)
+            {
+                _mouseRightDown = false;
+            }
             if (!IsDraggingViewportSeparator)
             {
                 return;
@@ -296,14 +311,23 @@ namespace open3mod
             Debug.Assert(view != null);
             _renderer.OnMouseMove(e, view.Bounds, index);
 
-            if (!_mouseDown)
+            if (!_mouseDown && !_mouseRightDown)
             {
                 return;
             }
 
             if (UiState.ActiveTab.ActiveCameraController != null)
             {
-                UiState.ActiveTab.ActiveCameraController.MouseMove(e.X - _previousMousePosX, e.Y - _previousMousePosY);
+                var vx = e.X - _previousMousePosX;
+                var vy = e.Y - _previousMousePosY;
+                if(_mouseRightDown)
+                {
+                    Renderer.HandleLightRotationOnMouseMove(vx, vy);
+                }
+                else
+                {
+                    UiState.ActiveTab.ActiveCameraController.MouseMove(vx, vy);
+                }
             }
             _previousMousePosX = e.X;
             _previousMousePosY = e.Y;
