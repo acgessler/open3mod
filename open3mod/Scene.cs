@@ -630,7 +630,7 @@ namespace open3mod
             Matrix4 prev = trafo;
             var mat = AssimpToOpenTk.FromMatrix(node.Transform);
             mat.Transpose();
-            trafo = Matrix4.Mult(mat, prev);
+            prev = Matrix4.Mult(mat, prev);
 
             if (node.HasMeshes)
             {
@@ -640,7 +640,7 @@ namespace open3mod
                     for (int i = 0; i < mesh.VertexCount; i++)
                     {
                         Vector3 tmp = AssimpToOpenTk.FromVector(mesh.Vertices[i]);
-                        Vector3.Transform(ref tmp, ref trafo, out tmp);
+                        Vector3.Transform(ref tmp, ref prev, out tmp);
 
                         min.X = Math.Min(min.X, tmp.X);
                         min.Y = Math.Min(min.Y, tmp.Y);
@@ -655,9 +655,9 @@ namespace open3mod
 
             for (int i = 0; i < node.ChildCount; i++)
             {
-                ComputeBoundingBox(node.Children[i], ref min, ref max, ref trafo);
+                ComputeBoundingBox(node.Children[i], ref min, ref max, ref prev);
             }
-            trafo = prev;
+            //trafo = prev;
         }
 
 
