@@ -189,6 +189,7 @@
     </Compile>
     <Compile Include="OpenTkToAssimp.cs" />
     <Compile Include="OrbitCameraController.cs" />
+    <Compile Include="OverlayLightSource.cs" />
     <Compile Include="OverlayNormals.cs" />
     <Compile Include="OverlaySkeleton.cs" />
     <Compile Include="PickingCameraController.cs" />
@@ -200,6 +201,7 @@
     <Compile Include="Renderer.cs" />
     <Compile Include="RenderMesh.cs" />
     <Compile Include="RoundedRectangle.cs" />
+    <Compile Include="RunOnceGuard.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="SceneAnimator.cs" />
     <Compile Include="SceneRendererClassicGl.cs" />

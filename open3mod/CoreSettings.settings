@@ -48,7 +48,7 @@
       <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="InspectorSplitterPos" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">258</Value>
+      <Value Profile="(Default)">266</Value>
     </Setting>
     <Setting Name="ShowTipsOnStartup" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -88,6 +88,9 @@
     </Setting>
     <Setting Name="InspectorRecordedWidth" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="ExitOnTabClosing" GenerateDefaultValueInCode="false" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="Leap_SmoothingWindowSize" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">30</Value>

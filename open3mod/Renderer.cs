@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 // Open 3D Model Viewer (open3mod) (v0.1)
 // [Renderer.cs]
-// (c) 2012-2013, Alexander C. Gessler
+// (c) 2012-2013, Open3Mod Contributors
 //
 // Licensed under the terms and conditions of the 3-clause BSD license. See
 // the LICENSE file in the root folder of the repository for the details.
@@ -52,6 +52,8 @@ namespace open3mod
         private bool _processHudClick;
         private Tab.ViewIndex _hoverViewIndex;
         private float _hoverFadeInTime;
+
+        private Matrix4 _lightRotation = Matrix4.Identity;
 
         public delegate void GlExtraDrawJobDelegate(object sender);
 
@@ -145,6 +147,11 @@ namespace open3mod
         public Size RenderResolution
         {
             get { return GlControl.ClientSize; }
+        }
+
+        public Matrix4 LightRotation
+        {
+            get { return _lightRotation; }
         }
 
 
@@ -262,7 +269,7 @@ namespace open3mod
             _textOverlay.Draw();
 
             // draw viewport finishing (i.e. contours)
-            if (ui.ActiveScene != null)
+            if (ui.ActiveScene != null && ui.ActiveViewMode != Tab.ViewMode.Single)
             {
                 var index = Tab.ViewIndex.Index0;
                 foreach (var viewport in ui.ActiveViews)
@@ -353,8 +360,16 @@ namespace open3mod
                 return;
             }
 
-            var xPoint = (int) (x2*(double) RenderResolution.Width);
-            var yPoint = 3 + (int) ((1.0f - y2)*(double) RenderResolution.Height); // note: y is flipped
+            var xPoint = 3 + (int) (x2*(double) RenderResolution.Width);
+            var yPoint = (int) ((1.0f - y2)*(double) RenderResolution.Height); // note: y is flipped
+
+            //padding if bounds are drawn
+            if (ui.ActiveViewMode != Tab.ViewMode.Single)
+            {
+                xPoint -= 3;
+                yPoint += 3;
+            }
+
             const int xSpacing = 4;
 
             var imageWidth = _hudImages[0, 0].Width;
@@ -674,7 +689,7 @@ namespace open3mod
         private void DrawScene(Scene scene, ICameraController view)
         {
             Debug.Assert(scene != null);
-            scene.Render(Window.UiState, view);
+            scene.Render(Window.UiState, view, this);
         }
 
 
@@ -767,6 +782,13 @@ namespace open3mod
             }
             graphics.DrawString("FPS: " + _displayFps.ToString("0.0"), Window.UiState.DefaultFont12,
                                 new SolidBrush(Color.Red), 5, 5);
+        }
+
+
+        public void HandleLightRotationOnMouseMove(int mouseDeltaX, int mouseDeltaY, ref Matrix4 view)
+        {
+            _lightRotation = _lightRotation * Matrix4.CreateFromAxisAngle(view.Column1.Xyz, mouseDeltaX * 0.005f);
+            _lightRotation = _lightRotation * Matrix4.CreateFromAxisAngle(view.Column0.Xyz, mouseDeltaY * 0.005f);
         }
     }
 }

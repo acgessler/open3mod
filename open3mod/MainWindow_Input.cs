@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 // Open 3D Model Viewer (open3mod) (v0.1)
 // [MainWindow_Input.cs]
-// (c) 2012-2013, Alexander C. Gessler
+// (c) 2012-2013, Open3Mod Contributors
 //
 // Licensed under the terms and conditions of the 3-clause BSD license. See
 // the LICENSE file in the root folder of the repository for the details.
@@ -26,6 +26,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using OpenTK;
 
 namespace open3mod
 {
@@ -45,7 +46,7 @@ namespace open3mod
         private int _previousMousePosX = -1;
         private int _previousMousePosY = -1;
         private bool _mouseDown;
-
+        private bool _mouseRightDown;
 
 
         private void ProcessKeys()
@@ -176,11 +177,18 @@ namespace open3mod
         partial void OnMouseDown(object sender, MouseEventArgs e)
         {
             UpdateActiveViewIfNeeded(e);
+
+            _previousMousePosX = e.X;
+            _previousMousePosY = e.Y;
+
             if(e.Button == MouseButtons.Middle)
             {
                 _mouseWheelDown = true;
-                _previousMousePosX = e.X;
-                _previousMousePosY = e.Y;
+                return;
+            }
+            if(e.Button == MouseButtons.Right)
+            {
+                _mouseRightDown = true;
                 return;
             }
 
@@ -190,8 +198,6 @@ namespace open3mod
             }
 
             _mouseDown = true;
-            _previousMousePosX = e.X;
-            _previousMousePosY = e.Y;
 
             var sep = MousePosToViewportSeparator(e.X, e.Y);
             if (sep != Tab.ViewSeparator._Max)
@@ -219,8 +225,18 @@ namespace open3mod
 
         partial void OnMouseUp(object sender, MouseEventArgs e)
         {
-            _mouseDown = false;
-            _mouseWheelDown = false;
+            if (e.Button == MouseButtons.Left)
+            {
+                _mouseDown = false;
+            }
+            if (e.Button == MouseButtons.Middle)
+            {
+                _mouseWheelDown = false;
+            }
+            if (e.Button == MouseButtons.Right)
+            {
+                _mouseRightDown = false;
+            }
             if (!IsDraggingViewportSeparator)
             {
                 return;
@@ -296,14 +312,25 @@ namespace open3mod
             Debug.Assert(view != null);
             _renderer.OnMouseMove(e, view.Bounds, index);
 
-            if (!_mouseDown)
+            if (!_mouseDown && !_mouseRightDown)
             {
                 return;
             }
 
             if (UiState.ActiveTab.ActiveCameraController != null)
             {
-                UiState.ActiveTab.ActiveCameraController.MouseMove(e.X - _previousMousePosX, e.Y - _previousMousePosY);
+                var vx = e.X - _previousMousePosX;
+                var vy = e.Y - _previousMousePosY;
+                if(_mouseRightDown)
+                {
+                    var viewMatrix = UiState.ActiveTab.ActiveCameraController == null ? Matrix4.Identity :
+                     UiState.ActiveTab.ActiveCameraController.GetView();
+                    Renderer.HandleLightRotationOnMouseMove(vx, vy, ref viewMatrix);
+                }
+                else
+                {
+                    UiState.ActiveTab.ActiveCameraController.MouseMove(vx, vy);
+                }
             }
             _previousMousePosX = e.X;
             _previousMousePosY = e.Y;

@@ -44,7 +44,7 @@
             this.splitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.splitContainer.Location = new System.Drawing.Point(0, 0);
             this.splitContainer.Name = "splitContainer";
-            this.splitContainer.Panel1MinSize = 0;
+            this.splitContainer.Panel1MinSize = 10;
             // 
             // splitContainer.Panel2
             // 
@@ -63,7 +63,7 @@
             this.inspectionView1.Location = new System.Drawing.Point(0, 0);
             this.inspectionView1.Margin = new System.Windows.Forms.Padding(0);
             this.inspectionView1.Name = "inspectionView1";
-            this.inspectionView1.Size = new System.Drawing.Size(711, 650);
+            this.inspectionView1.Size = new System.Drawing.Size(710, 650);
             this.inspectionView1.TabIndex = 0;
             // 
             // TabUiSkeleton

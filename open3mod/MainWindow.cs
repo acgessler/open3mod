@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 // Open 3D Model Viewer (open3mod) (v0.1)
 // [MainWindow.cs]
-// (c) 2012-2013, Alexander C. Gessler
+// (c) 2012-2013, Open3Mod Contributors
 //
 // Licensed under the terms and conditions of the 3-clause BSD license. See
 // the LICENSE file in the root folder of the repository for the details.
@@ -136,10 +136,6 @@ namespace open3mod
         /// </summary>
         private void AddEmptyTab()
         {
-            if (_emptyTab != null)
-            {
-                return;
-            }
             // create default tab
             tabControl1.TabPages.Add("empty");
             _emptyTab = tabControl1.TabPages[tabControl1.TabPages.Count-1];
@@ -406,7 +402,15 @@ namespace open3mod
             // If this is the last tab, we need to add an empty tab before we remove it
             if (tabControl1.TabCount == 1)
             {
-                AddEmptyTab();
+                if (CoreSettings.CoreSettings.Default.ExitOnTabClosing)
+                {
+                    Application.Exit();
+                    return;
+                }
+                else
+                {
+                    AddEmptyTab();
+                }
             }
 
             if (tab == tabControl1.SelectedTab)

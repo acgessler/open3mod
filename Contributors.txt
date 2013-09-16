@@ -1,0 +1,11 @@
+Contributors to Open3Mod 
+=================================================
+In chronological order (Github username in parentheses)
+
+
+Alexander Gessler (acgessler)
+	Project Founder, Core Development
+
+Tobias Rittig (diiigle)
+	Leap Motion Support, Bugfixes, Usability Tweaks
+

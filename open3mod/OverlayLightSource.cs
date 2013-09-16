@@ -1,6 +1,6 @@
 ﻿///////////////////////////////////////////////////////////////////////////////////
 // Open 3D Model Viewer (open3mod) (v0.1)
-// [UberFragmentShader.glsl]
+// [OverlayLightSource.cs]
 // (c) 2012-2013, Open3Mod Contributors
 //
 // Licensed under the terms and conditions of the 3-clause BSD license. See
@@ -18,52 +18,41 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///////////////////////////////////////////////////////////////////////////////////
 
-// note: all lighting calculations done in modelview space
-uniform sampler2D Texture0;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Assimp;
+using OpenTK;
+using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
 
-uniform vec3 LightDiffuse_SceneBrightness;
-uniform vec3 LightSpecular;
-uniform vec3 LightDirection; // modelview space, norm.
-
-uniform vec4 MaterialDiffuse_Alpha;
-uniform vec4 MaterialSpecular_Shininess;
-uniform vec3 MaterialAmbient;
-uniform vec3 MaterialEmissive;
-
-varying vec3 position;
-varying vec3 normal; 
-
-#ifdef HAS_COLOR_MAP
-varying vec2 texCoord; 
-#endif
- 
-#ifdef HAS_VERTEX_COLOR
-varying vec3 vertexColor; 
-#endif
-
-
-void main(void) 
+namespace open3mod
 {
-  vec3 diffuse = MaterialDiffuse_Alpha.xyz;
+    public static class OverlayLightSource
+    {
+        public static void DrawLightSource(Vector3 dir)
+        {
+            
 
-#ifdef HAS_COLOR_MAP
-  diffuse *= texture2D(Texture0, texCoord.xy);
-#endif
+            GL.Disable(EnableCap.Lighting);
+            GL.Disable(EnableCap.Texture2D);
+            GL.Enable(EnableCap.ColorMaterial);
+            GL.Disable(EnableCap.CullFace);
+            GL.ColorMaterial(MaterialFace.FrontAndBack, ColorMaterialParameter.AmbientAndDiffuse);
 
-#ifdef HAS_VERTEX_COLOR
-  diffuse *= vertexColor;
-#endif
+            GL.Begin(BeginMode.Lines);
 
-  diffuse = (dot(normal, LightDirection) * diffuse + MaterialAmbient) * LightDiffuse_SceneBrightness.xyz;
+            GL.Color4(new Color4(1.0f, 0.0f, 0.0f, 1.0f));
+            GL.Vertex3(dir * 2.0f);
 
-  vec3 specular = vec3(0,0,0);
+            GL.Color4(new Color4(1.0f, 0.0f, 0.0f, 1.0f));
+            GL.Vertex3(dir * 2.1f);
 
-#ifdef HAS_PHONG_SPECULAR_SHADING
-  vec3 eyeDir = normalize(-position);
-  vec3 r = normalize(reflect(-LightDirection, normal));
-  specular = LightSpecular * pow(max(dot(r, eyeDir), 0.0), MaterialSpecular_Shininess.w);	
-#endif
-
-  gl_FragColor = (diffuse + specular + MaterialEmissive) * LightDiffuse_SceneBrightness.w;
+            GL.End();
+        }
+    }
 }
 
+/* vi: set shiftwidth=4 tabstop=4: */

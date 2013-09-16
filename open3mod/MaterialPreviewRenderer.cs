@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 // Open 3D Model Viewer (open3mod) (v0.1)
 // [MaterialPreviewRenderer.cs]
-// (c) 2012-2013, Alexander C. Gessler
+// (c) 2012-2013, Open3Mod Contributors
 //
 // Licensed under the terms and conditions of the 3-clause BSD license. See
 // the LICENSE file in the root folder of the repository for the details.
@@ -27,6 +27,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Assimp;
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 using TextureWrapMode = Assimp.TextureWrapMode;
@@ -286,6 +287,16 @@ namespace open3mod
             GL.Disable(EnableCap.Blend);
 
             _scene.MaterialMapper.ApplyMaterial(null, _material, true, true);
+
+            GL.MatrixMode(MatrixMode.Modelview);
+            var lookat = Matrix4.LookAt(0, 0, -2.5f, 0, 0, 0, 0, 1, 0);
+            GL.LoadMatrix(ref lookat);
+
+            Matrix4 perspective = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, 1.0f, 0.01f, 100.0f);
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadMatrix(ref perspective);
+
+            GL.Enable(EnableCap.DepthTest);
 
             // set fixed-function lighting parameters
             GL.ShadeModel(ShadingModel.Smooth);

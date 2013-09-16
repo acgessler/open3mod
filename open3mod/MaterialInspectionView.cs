@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 // Open 3D Model Viewer (open3mod) (v0.1)
 // [MaterialInspectionView.cs]
-// (c) 2012-2013, Alexander C. Gessler
+// (c) 2012-2013, Open3Mod Contributors
 //
 // Licensed under the terms and conditions of the 3-clause BSD license. See
 // the LICENSE file in the root folder of the repository for the details.
@@ -117,23 +117,21 @@ namespace open3mod
             Debug.Assert(false);
         }
 
-
         /// <summary>
-        /// Ensure the entry pertaining to a given material is visible.
+        /// Searches for the corresponding control of a material
         /// </summary>
-        /// <param name="thumb">Material to scroll to. This material *must*
-        ///    have a corresponding entry.</param>
-        public void EnsureVisible(Material thumb)
+        /// <param name="mat">the material to search for</param>
+        /// <returns>the MaterialThumbnailControl, if the material exists in this view or else null</returns>
+        public MaterialThumbnailControl GetMaterialControl(Material mat)
         {
             foreach (var v in Entries)
             {
-                if (v.Material == thumb)
+                if (v.Material == mat)
                 {
-                    EnsureVisible(v);
-                    return;
+                    return v;
                 }
             }
-            Debug.Assert(false);
+            return null;
         }
     }
 }

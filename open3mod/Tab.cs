@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 // Open 3D Model Viewer (open3mod) (v0.1)
 // [Tab.cs]
-// (c) 2012-2013, Alexander C. Gessler
+// (c) 2012-2013, Open3Mod Contributors
 //
 // Licensed under the terms and conditions of the 3-clause BSD license. See
 // the LICENSE file in the root folder of the repository for the details.
@@ -381,12 +381,16 @@ namespace open3mod
         /// viewport separator. If not, the separator that was hit.</returns>
         public ViewSeparator GetViewportSeparatorHit(float x, float y)
         {
+            if (_activeViewMode == ViewMode.Single)
+            {
+                return ViewSeparator._Max;
+            }
             var vp = ActiveViews[0];
             Debug.Assert(vp != null);
 
             const float threshold = 0.01f;
 
-            if (Math.Abs(x - vp.Bounds.Z) < threshold)
+            if (Math.Abs(x - vp.Bounds.Z) < threshold && _activeViewMode != ViewMode.Two)
             {
                 if (Math.Abs(y - vp.Bounds.W) < threshold)
                 {

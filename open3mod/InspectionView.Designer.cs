@@ -69,7 +69,7 @@
             // 
             // tabPageTextures
             // 
-            this.tabPageTextures.AutoScrollMinSize = new System.Drawing.Size(0, 1000);
+            this.tabPageTextures.AutoScroll = true;
             this.tabPageTextures.Controls.Add(this.textureFlowPanel);
             this.tabPageTextures.Location = new System.Drawing.Point(4, 22);
             this.tabPageTextures.Name = "tabPageTextures";
@@ -78,20 +78,25 @@
             this.tabPageTextures.TabIndex = 1;
             this.tabPageTextures.Text = "Textures";
             this.tabPageTextures.UseVisualStyleBackColor = true;
+            this.tabPageTextures.MouseEnter += new System.EventHandler(this.tabPageTextures_MouseEnter);
             // 
             // textureFlowPanel
             // 
             this.textureFlowPanel.AllowDrop = true;
             this.textureFlowPanel.AutoScroll = true;
+            this.textureFlowPanel.AutoSize = true;
+            this.textureFlowPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.textureFlowPanel.BackColor = System.Drawing.Color.Transparent;
-            this.textureFlowPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textureFlowPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.textureFlowPanel.Location = new System.Drawing.Point(3, 3);
             this.textureFlowPanel.Name = "textureFlowPanel";
-            this.textureFlowPanel.Size = new System.Drawing.Size(343, 662);
+            this.textureFlowPanel.Size = new System.Drawing.Size(343, 0);
             this.textureFlowPanel.TabIndex = 0;
+            this.textureFlowPanel.TabStop = true;
             // 
             // tabPageMaterials
             // 
+            this.tabPageMaterials.AutoScroll = true;
             this.tabPageMaterials.Controls.Add(this.materialFlowPanel);
             this.tabPageMaterials.Location = new System.Drawing.Point(4, 22);
             this.tabPageMaterials.Name = "tabPageMaterials";
@@ -100,19 +105,18 @@
             this.tabPageMaterials.TabIndex = 3;
             this.tabPageMaterials.Text = "Materials";
             this.tabPageMaterials.UseVisualStyleBackColor = true;
+            this.tabPageMaterials.MouseEnter += new System.EventHandler(this.tabPageMaterials_MouseEnter);
             // 
             // materialFlowPanel
             // 
-            this.materialFlowPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.materialFlowPanel.AutoScroll = true;
-            this.materialFlowPanel.AutoScrollMinSize = new System.Drawing.Size(0, 1000);
             this.materialFlowPanel.AutoSize = true;
+            this.materialFlowPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.materialFlowPanel.BackColor = System.Drawing.Color.Transparent;
+            this.materialFlowPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.materialFlowPanel.Location = new System.Drawing.Point(3, 3);
             this.materialFlowPanel.Name = "materialFlowPanel";
-            this.materialFlowPanel.Size = new System.Drawing.Size(343, 662);
+            this.materialFlowPanel.Size = new System.Drawing.Size(343, 0);
             this.materialFlowPanel.TabIndex = 1;
             // 
             // tabPageAnimations
@@ -139,6 +143,7 @@
             this.Size = new System.Drawing.Size(357, 694);
             this.tabControlInfoViewPicker.ResumeLayout(false);
             this.tabPageTextures.ResumeLayout(false);
+            this.tabPageTextures.PerformLayout();
             this.tabPageMaterials.ResumeLayout(false);
             this.tabPageMaterials.PerformLayout();
             this.ResumeLayout(false);

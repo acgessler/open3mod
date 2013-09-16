@@ -30,6 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             this.tabControl = new System.Windows.Forms.TabControl();
+            this.tabPageGeneral = new System.Windows.Forms.TabPage();
+            this.TabClosingBehaviourLabel = new System.Windows.Forms.Label();
+            this.ExitAppCheckbox = new System.Windows.Forms.CheckBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -53,6 +56,7 @@
             this.label8 = new System.Windows.Forms.Label();
             this.tabPageTextures = new System.Windows.Forms.TabPage();
             this.label7 = new System.Windows.Forms.Label();
+            this.folderSetDisplaySearchPaths = new open3mod.FolderSetDisplay();
             this.button1 = new System.Windows.Forms.Button();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.labelPleaseRestart = new System.Windows.Forms.Label();
@@ -75,6 +79,7 @@
             this.ResponsiveLabel = new System.Windows.Forms.Label();
             this.SmoothLabel = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
+            this.tabPageGeneral.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -93,6 +98,7 @@
             this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl.Controls.Add(this.tabPageGeneral);
             this.tabControl.Controls.Add(this.tabPage1);
             this.tabControl.Controls.Add(this.tabPage2);
             this.tabControl.Controls.Add(this.tabPage3);
@@ -103,6 +109,39 @@
             this.tabControl.SelectedIndex = 0;
             this.tabControl.Size = new System.Drawing.Size(540, 407);
             this.tabControl.TabIndex = 0;
+            // 
+            // tabPageGeneral
+            // 
+            this.tabPageGeneral.Controls.Add(this.TabClosingBehaviourLabel);
+            this.tabPageGeneral.Controls.Add(this.ExitAppCheckbox);
+            this.tabPageGeneral.Location = new System.Drawing.Point(4, 22);
+            this.tabPageGeneral.Name = "tabPageGeneral";
+            this.tabPageGeneral.Size = new System.Drawing.Size(532, 381);
+            this.tabPageGeneral.TabIndex = 4;
+            this.tabPageGeneral.Text = "General";
+            this.tabPageGeneral.UseVisualStyleBackColor = true;
+            // 
+            // TabClosingBehaviourLabel
+            // 
+            this.TabClosingBehaviourLabel.AutoSize = true;
+            this.TabClosingBehaviourLabel.Location = new System.Drawing.Point(7, 18);
+            this.TabClosingBehaviourLabel.Name = "TabClosingBehaviourLabel";
+            this.TabClosingBehaviourLabel.Size = new System.Drawing.Size(140, 13);
+            this.TabClosingBehaviourLabel.TabIndex = 1;
+            this.TabClosingBehaviourLabel.Text = "Last Tab Closing Behaviour:";
+            // 
+            // ExitAppCheckbox
+            // 
+            this.ExitAppCheckbox.AutoSize = true;
+            this.ExitAppCheckbox.Checked = global::CoreSettings.CoreSettings.Default.ExitOnTabClosing;
+            this.ExitAppCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ExitAppCheckbox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::CoreSettings.CoreSettings.Default, "ExitOnTabClosing", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.ExitAppCheckbox.Location = new System.Drawing.Point(152, 17);
+            this.ExitAppCheckbox.Name = "ExitAppCheckbox";
+            this.ExitAppCheckbox.Size = new System.Drawing.Size(98, 17);
+            this.ExitAppCheckbox.TabIndex = 0;
+            this.ExitAppCheckbox.Text = "Exit Application";
+            this.ExitAppCheckbox.UseVisualStyleBackColor = true;
             // 
             // tabPage1
             // 
@@ -574,6 +613,15 @@
             this.trackBar1.TickFrequency = 10;
             this.trackBar1.Value = global::CoreSettings.CoreSettings.Default.Leap_SmoothingWindowSize;
             // 
+            // folderSetDisplaySearchPaths
+            // 
+            this.folderSetDisplaySearchPaths.Folders = new string[0];
+            this.folderSetDisplaySearchPaths.Location = new System.Drawing.Point(17, 122);
+            this.folderSetDisplaySearchPaths.Name = "folderSetDisplaySearchPaths";
+            this.folderSetDisplaySearchPaths.Size = new System.Drawing.Size(499, 152);
+            this.folderSetDisplaySearchPaths.TabIndex = 6;
+            // 
+            // button1
             // TranslationSmoothing
             // 
             this.TranslationSmoothing.AutoSize = true;
@@ -599,14 +647,6 @@
             this.RotationSmoothing.TabIndex = 2;
             this.RotationSmoothing.Text = "Smooth Hands Rotation";
             this.RotationSmoothing.UseVisualStyleBackColor = true;
-            // 
-            // folderSetDisplaySearchPaths
-            // 
-            this.folderSetDisplaySearchPaths.Folders = new string[0];
-            this.folderSetDisplaySearchPaths.Location = new System.Drawing.Point(17, 122);
-            this.folderSetDisplaySearchPaths.Name = "folderSetDisplaySearchPaths";
-            this.folderSetDisplaySearchPaths.Size = new System.Drawing.Size(499, 152);
-            this.folderSetDisplaySearchPaths.TabIndex = 6;
             // 
             // ResponsiveLabel
             // 
@@ -640,6 +680,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "open3mod Settings";
             this.tabControl.ResumeLayout(false);
+            this.tabPageGeneral.ResumeLayout(false);
+            this.tabPageGeneral.PerformLayout();
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -704,6 +746,9 @@
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.CheckBox checkBoxmergeDuplicateVertices;
         private System.Windows.Forms.CheckBox checkBoxLoadTextures;
+        private System.Windows.Forms.TabPage tabPageGeneral;
+        private System.Windows.Forms.CheckBox ExitAppCheckbox;
+        private System.Windows.Forms.Label TabClosingBehaviourLabel;
         private System.Windows.Forms.TabPage tabPageLeapMotion;
         private System.Windows.Forms.CheckBox TranslationSmoothing;
         private System.Windows.Forms.GroupBox SmoothingGroup;

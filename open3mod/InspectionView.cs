@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 // Open 3D Model Viewer (open3mod) (v0.1)
 // [InspectionView.cs]
-// (c) 2012-2013, Alexander C. Gessler
+// (c) 2012-2013, Open3Mod Contributors
 //
 // Licensed under the terms and conditions of the 3-clause BSD license. See
 // the LICENSE file in the root folder of the repository for the details.
@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,9 +47,12 @@ namespace open3mod
         }
 
 
-        public void OpenMaterialsTab()
+        public void OpenMaterialsTabAndScrollTo(MaterialThumbnailControl thumb)
         {
+            Debug.Assert(tabPageMaterials.Contains(thumb));
+            tabPageMaterials.ScrollControlIntoView(thumb);
             tabControlInfoViewPicker.SelectedTab = tabPageMaterials;
+            tabPageMaterials.Focus();
         }
 
 
@@ -102,6 +106,19 @@ namespace open3mod
         private void Clear()
         {
             //treeViewNodeGraph.Nodes.Clear();
+        }
+
+        /// <summary>
+        /// Focus the pages, to be able to scroll with the mousewheel
+        /// </summary>
+        private void tabPageMaterials_MouseEnter(object sender, EventArgs e)
+        {
+            tabPageMaterials.Focus();
+        }
+
+        private void tabPageTextures_MouseEnter(object sender, EventArgs e)
+        {
+            tabPageTextures.Focus();
         }
     }
 }

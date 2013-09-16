@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 // Open 3D Model Viewer (open3mod) (v0.1)
 // [Program.cs]
-// (c) 2012-2013, Alexander C. Gessler
+// (c) 2012-2013, Open3Mod Contributors
 //
 // Licensed under the terms and conditions of the 3-clause BSD license. See
 // the LICENSE file in the root folder of the repository for the details.
@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -34,21 +35,49 @@ namespace open3mod
         [STAThread]
         static void Main(string[] args)
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+            MainWindow mainWindow = null;
+            RunOnceGuard.Guard("open3mod_global_app",
 
-            var mainWindow = new MainWindow();
-            if(args.Length > 0)
-            {
-                mainWindow.AddTab(args[0]);
-            }
-            else
-            {
-                mainWindow.AddTab("../../../testdata/scenes/spider.obj");
-            }
-            Application.Run(mainWindow);
+                    // what to do if this is the first instance of the application
+                    () =>
+                    {
+                        Application.EnableVisualStyles();
+                        Application.SetCompatibleTextRenderingDefault(false);
 
-            TextureQueue.Terminate();
+                        mainWindow = new MainWindow();
+                        mainWindow.AddTab(args.Length > 0 ? args[0] : "../../../testdata/scenes/spider.obj");
+
+                        Application.Run(mainWindow);
+                        mainWindow = null;
+
+                        TextureQueue.Terminate();
+                    },
+
+                    // what do invoke if this is the first instance of the application,
+                    // and another (temporary) instance messages it to open a new tab
+                    (String absPath) =>
+                    {
+                        if (mainWindow != null)
+                        {
+                            mainWindow.BeginInvoke(new MethodInvoker(() => mainWindow.AddTab(absPath)));                        
+                        }
+                    },
+
+                    // what to send to the first instance of the application if the
+                    // current instance is only temporary.
+                    () =>
+                    {
+                        if(args.Length == 0)
+                        {
+                            return null;
+                        }
+                        // note: have to get absolute path because the working dirs
+                        // of the instances may be different.
+                        return Path.GetFullPath(args[0]);
+                    }
+                );
+
+            
         }
     }
 }
