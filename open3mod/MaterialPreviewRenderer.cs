@@ -287,6 +287,8 @@ namespace open3mod
             GL.Disable(EnableCap.Blend);
 
             _scene.MaterialMapper.ApplyMaterial(null, _material, true, true);
+            // always enable depth writes when rendering material previews
+            GL.DepthMask(true);
 
             GL.MatrixMode(MatrixMode.Modelview);
             var lookat = Matrix4.LookAt(0, 0, -2.5f, 0, 0, 0, 0, 1, 0);
