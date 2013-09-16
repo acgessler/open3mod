@@ -628,7 +628,9 @@ namespace open3mod
         private void ComputeBoundingBox(Node node, ref Vector3 min, ref Vector3 max, ref Matrix4 trafo)
         {
             Matrix4 prev = trafo;
-            trafo = Matrix4.Mult(prev, AssimpToOpenTk.FromMatrix(node.Transform));
+            var mat = AssimpToOpenTk.FromMatrix(node.Transform);
+            mat.Transpose();
+            trafo = Matrix4.Mult(mat, prev);
 
             if (node.HasMeshes)
             {
