@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 using Leap;
 
 namespace open3mod
 {
-    class LeapListener : Listener
+    public class LeapListener : Listener
     {
         private Object thisLock = new Object();
 
@@ -18,11 +19,38 @@ namespace open3mod
         /// </summary>
         private enum SmoothedValues
         {
-            Pitch = 0,
-            X = 1,
+            X = 0,
+            Y = 1,
+            Z = 2,
+            Pitch = 3,
+            Roll = 4,
+            Yaw = 5,
 
-            _Max = 2,
+            _Max = 6,
         };
+
+        /// <summary>
+        /// Identification of the current tracking mode
+        ///  - Idle: no Hands visible
+        ///  - Locking: Hands visible, but not tracked
+        ///  - Tracking: normal tracking of hand data
+        /// </summary>
+        public enum TrackingMode
+        {
+            Idle = 0,
+            Locking = 1,
+            Tracking = 2,
+        };
+
+        /// <summary>
+        /// Stores the Tracking Mode
+        /// </summary>
+        private TrackingMode _trackingMode = TrackingMode.Idle;
+
+        /// <summary>
+        /// Populates the Tracking Mode
+        /// </summary>
+        public TrackingMode TrackingStatus{ get{ return _trackingMode;} }
 
         /// <summary>
         /// List holding the data to smooth the values,
@@ -31,14 +59,26 @@ namespace open3mod
         private List<float>[] _valueHistory = new List<float>[(int) SmoothedValues._Max];
 
         /// <summary>
-        /// How many values should be averaged
-        /// </summary>
-        int smoothingWindowSize = 20;
-
-        /// <summary>
         /// reference to the MainWindow
         /// </summary>
-        private MainWindow _mainWindow;
+        private readonly MainWindow _mainWindow;
+
+        /// <summary>
+        /// hold the ids of the hands that we are tracking
+        /// </summary>
+        private List<int> _trackingHands = new List<int>();
+
+        /// <summary>
+        /// timestamp in ms since the LeapMotion Controller connected,
+        /// when a hand was last time seen
+        /// </summary>
+        private long _lastHandSeen;
+
+        /// <summary>
+        /// Timeout to wait, before the tracked data is actually used.
+        /// Depends on time, since the tracking mode was idle.
+        /// </summary>
+        private float _lockTimeout;
 
         public LeapListener(MainWindow mainwindow)
         {
@@ -92,16 +132,84 @@ namespace open3mod
 
             if (!frame.Hands.IsEmpty)
             {
+                if (_trackingHands.Count == 0)
+                {
+                    Debug.Assert(_trackingMode == TrackingMode.Idle);
+
+                    // Track the first hand
+                    _trackingHands.Add(frame.Hands[0].Id);
+                    _trackingMode = TrackingMode.Locking;
+                    CalcLockTimeout(frame.Timestamp);
+                }
+
                 // Get the first hand
-                Hand hand = frame.Hands[0];
-                Frame oldFrame = controller.Frame(10);
+                int firstHandId = _trackingHands.First();
+                Hand hand = frame.Hands.FirstOrDefault(tmpHand => tmpHand.Id == firstHandId);
+
+                if (hand == null)
+                {
+                    ResetTrackingMode();
+                    return;
+                }
+
+                if (_trackingMode == TrackingMode.Locking && hand.TimeVisible >= _lockTimeout)
+                {
+                    _trackingMode = TrackingMode.Tracking;
+                }
+
+                Frame oldFrame = controller.Frame(5);
                 Vector translation = hand.Translation(oldFrame);
 
                 // Get the hand's normal vector and direction
                 Vector normal = hand.PalmNormal;
                 Vector direction = hand.Direction;
 
-                _mainWindow.UiState.ActiveTab.ActiveCameraController.LeapInput( GetSmoothedValue(translation.x,SmoothedValues.X), translation.y, translation.z, GetSmoothedValue(direction.Pitch,SmoothedValues.Pitch), normal.Roll, direction.Yaw);
+                float x, y, z, pitch, yaw, roll;
+                x = y = z = pitch = yaw = roll = 0.0f;
+
+                //if (hand.Fingers.Count == 5)
+                GetSmoothedValue(SmoothedValues.X, translation.x);
+                GetSmoothedValue(SmoothedValues.Y, translation.y);
+                GetSmoothedValue(SmoothedValues.Z, translation.z);
+                if (hand.TranslationProbability(oldFrame) >= 0.8)
+                {
+                    if (CoreSettings.CoreSettings.Default.Leap_TranslationSmoothing)
+                    {
+                        x = GetSmoothedValue(SmoothedValues.X);
+                        y = GetSmoothedValue(SmoothedValues.Y);
+                        z = GetSmoothedValue(SmoothedValues.Z);
+                    }
+                    else
+                    {
+                        x = translation.x;
+                        y = translation.y;
+                        z = translation.z;
+                    }
+                }
+
+                GetSmoothedValue(SmoothedValues.Pitch, direction.Pitch);
+                GetSmoothedValue(SmoothedValues.Roll, normal.Roll);
+                GetSmoothedValue(SmoothedValues.Yaw, direction.Yaw);
+                if (CoreSettings.CoreSettings.Default.Leap_RotationSmoothing)
+                {
+                    pitch = GetSmoothedValue(SmoothedValues.Pitch);
+                    roll = GetSmoothedValue(SmoothedValues.Roll);
+                    yaw = GetSmoothedValue(SmoothedValues.Yaw);
+                }
+                else
+                {
+                    pitch = direction.Pitch;
+                    roll = normal.Roll;
+                    yaw = direction.Yaw;
+                }
+
+                if (_trackingMode == TrackingMode.Tracking)
+                {
+                    _mainWindow.UiState.ActiveTab.ActiveCameraController.LeapInput(x, y, z, pitch, roll, yaw);
+                    _lastHandSeen = frame.Timestamp;
+                }
+                //test of fist recognition
+                //SafeWriteLine(hand.SphereRadius.ToString());
 
                 //// Check if the hand has any fingers
                 //FingerList fingers = hand.Fingers;
@@ -130,6 +238,10 @@ namespace open3mod
                 //SafeWriteLine("Hand pitch: " + direction.Pitch * 180.0f / (float)Math.PI + " degrees, "
                 //            + "roll: " + normal.Roll * 180.0f / (float)Math.PI + " degrees, "
                 //            + "yaw: " + direction.Yaw * 180.0f / (float)Math.PI + " degrees");
+            }
+            else if(_trackingHands.Count != 0)
+            {
+                ResetTrackingMode();
             }
 
             //// Get gestures
@@ -199,14 +311,25 @@ namespace open3mod
             //    }
             //}
 
-            if (!frame.Hands.IsEmpty || !frame.Gestures().IsEmpty)
-            {
-                SafeWriteLine("");
-            }
+            //if (!frame.Hands.IsEmpty || !frame.Gestures().IsEmpty)
+            //{
+            //    SafeWriteLine("");
+            //}
         }
 
-        private float GetSmoothedValue(float newvalue, SmoothedValues id)
+        /// <summary>
+        /// Smoothes data over multiple frames ( see Leap_SmoothingWindowSize )
+        /// The data is identified with the SmoothedValues indices
+        /// </summary>
+        /// <param name="id">Identifier for the data</param>
+        /// <param name="newvalue">some new data that should be added to the calculation</param>
+        /// <returns>the average value</returns>
+        private float GetSmoothedValue(SmoothedValues id, float newvalue)
         {
+            if (CoreSettings.CoreSettings.Default.Leap_SmoothingWindowSize == 0)
+            {
+                return newvalue;
+            }
             List<float> list;
             if (_valueHistory[(int)id] == null)
             {
@@ -218,13 +341,55 @@ namespace open3mod
                 list = _valueHistory[(int)id];
             }
 
-            if(list.Count >= smoothingWindowSize)
+            while(list.Count >= CoreSettings.CoreSettings.Default.Leap_SmoothingWindowSize)
             {
                 list.RemoveAt(0);
             }
             list.Add(newvalue);
             float average = list.Average();
             return average;
+        }
+
+        /// <summary>
+        /// Get the smoothed value for a set of data
+        /// </summary>
+        /// <param name="id">Identifier for the data</param>
+        /// <returns>the average value</returns>
+        private float GetSmoothedValue(SmoothedValues id)
+        {
+            float average = 0.0f;
+            if (_valueHistory[(int)id] != null)
+            {
+                average = _valueHistory[(int)id].Average();
+            }
+            return average;
+        }
+
+        /// <summary>
+        /// Calculate the Timeout for locking on a Hand and tracking it.
+        /// </summary>
+        /// <param name="RecentTimestamp">the time right now</param>
+        public void CalcLockTimeout(long RecentTimestamp)
+        {
+            //timedelta since we last saw a hand in seconds
+            long timedelta = (RecentTimestamp - _lastHandSeen) / (1000 * 1000);
+            if (timedelta >= 3.0f)
+            {
+                _lockTimeout = 1.0f;
+            }
+            else
+            {
+                _lockTimeout = 1/4;
+            }
+        }
+
+        /// <summary>
+        /// Reset to default mode
+        /// </summary>
+        private void ResetTrackingMode()
+        {
+            _trackingHands.Clear();
+            _trackingMode = TrackingMode.Idle;
         }
     }
 }
