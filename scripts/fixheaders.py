@@ -17,7 +17,7 @@ from abbrev import *
 
 minor = 1
 major = 0
-copyright = "(c) 2012-2013, Alexander C. Gessler"
+copyright = "(c) 2012-2013, Open3Mod Contributors"
 project_name = "Open 3D Model Viewer (open3mod)"
 
 # -----------------------------------------------------------------------------------
