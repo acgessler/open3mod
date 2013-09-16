@@ -227,11 +227,16 @@ namespace open3mod
             graphics.DrawLine(_redPen, xdraw, 15, xdraw, rect.Bottom );
 
             var widthPerSecond = rect.Width / Range;
-            var nextSecondX = 0.0;
-            for (var i = 0; i < (int)Range + 1; ++i, nextSecondX += widthPerSecond)
+            
+            //calc a stepsize that is a power of 10s
+            double log = Math.Log10(Range);
+            int roundedLog = (int) (Math.Floor(log));
+            float stepsize = (float) (Math.Pow(10, roundedLog));
+
+            for (float i = 0.0f; i < (float)Range; i += stepsize)
             {
-                xdraw = (int)nextSecondX;
-                graphics.DrawLine(_dimGrayPen, xdraw, 55, xdraw, rect.Bottom);
+                int xpos = (int)(i * widthPerSecond);
+                graphics.DrawLine(_dimGrayPen, xpos, 55, xpos, rect.Bottom);
             }
 
             if (_mouseEntered)
