@@ -26,6 +26,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using OpenTK;
 
 namespace open3mod
 {
@@ -322,7 +323,9 @@ namespace open3mod
                 var vy = e.Y - _previousMousePosY;
                 if(_mouseRightDown)
                 {
-                    Renderer.HandleLightRotationOnMouseMove(vx, vy);
+                    var viewMatrix = UiState.ActiveTab.ActiveCameraController == null ? Matrix4.Identity :
+                     UiState.ActiveTab.ActiveCameraController.GetView();
+                    Renderer.HandleLightRotationOnMouseMove(vx, vy, ref viewMatrix);
                 }
                 else
                 {

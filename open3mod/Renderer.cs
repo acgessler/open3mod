@@ -785,10 +785,10 @@ namespace open3mod
         }
 
 
-        public void HandleLightRotationOnMouseMove(int mouseDeltaX, int mouseDeltaY)
+        public void HandleLightRotationOnMouseMove(int mouseDeltaX, int mouseDeltaY, ref Matrix4 view)
         {
-            _lightRotation = LightRotation*Matrix4.CreateRotationY(mouseDeltaX * 0.005f);
-            _lightRotation = LightRotation * Matrix4.CreateRotationX(mouseDeltaY * 0.005f);
+            _lightRotation = _lightRotation * Matrix4.CreateFromAxisAngle(view.Column1.Xyz, mouseDeltaX * 0.005f);
+            _lightRotation = _lightRotation * Matrix4.CreateFromAxisAngle(view.Column0.Xyz, mouseDeltaY * 0.005f);
         }
     }
 }
