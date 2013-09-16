@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 // Open 3D Model Viewer (open3mod) (v0.1)
 // [Renderer.cs]
-// (c) 2012-2013, Alexander C. Gessler
+// (c) 2012-2013, Open3Mod Contributors
 //
 // Licensed under the terms and conditions of the 3-clause BSD license. See
 // the LICENSE file in the root folder of the repository for the details.
@@ -52,6 +52,8 @@ namespace open3mod
         private bool _processHudClick;
         private Tab.ViewIndex _hoverViewIndex;
         private float _hoverFadeInTime;
+
+        private Matrix4 _lightRotation = Matrix4.Identity;
 
         public delegate void GlExtraDrawJobDelegate(object sender);
 
@@ -145,6 +147,11 @@ namespace open3mod
         public Size RenderResolution
         {
             get { return GlControl.ClientSize; }
+        }
+
+        public Matrix4 LightRotation
+        {
+            get { return _lightRotation; }
         }
 
 
@@ -682,7 +689,7 @@ namespace open3mod
         private void DrawScene(Scene scene, ICameraController view)
         {
             Debug.Assert(scene != null);
-            scene.Render(Window.UiState, view);
+            scene.Render(Window.UiState, view, this);
         }
 
 
@@ -775,6 +782,13 @@ namespace open3mod
             }
             graphics.DrawString("FPS: " + _displayFps.ToString("0.0"), Window.UiState.DefaultFont12,
                                 new SolidBrush(Color.Red), 5, 5);
+        }
+
+
+        public void HandleLightRotationOnMouseMove(int mouseDeltaX, int mouseDeltaY)
+        {
+            _lightRotation = LightRotation*Matrix4.CreateRotationY(mouseDeltaX * 0.005f);
+            _lightRotation = LightRotation * Matrix4.CreateRotationX(mouseDeltaY * 0.005f);
         }
     }
 }

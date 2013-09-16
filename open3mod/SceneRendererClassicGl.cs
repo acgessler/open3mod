@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 // Open 3D Model Viewer (open3mod) (v0.1)
 // [SceneRendererClassicGl.cs]
-// (c) 2012-2013, Alexander C. Gessler
+// (c) 2012-2013, Open3Mod Contributors
 //
 // Licensed under the terms and conditions of the 3-clause BSD license. See
 // the LICENSE file in the root folder of the repository for the details.
@@ -91,7 +91,8 @@ namespace open3mod
         public void Render(ICameraController cam, Dictionary<Node, List<Mesh>> visibleMeshesByNode, 
             bool visibleSetChanged, 
             bool texturesChanged,
-            RenderFlags flags)
+            RenderFlags flags, 
+            Renderer renderer)
         {            
             GL.Disable(EnableCap.Texture2D);
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
@@ -99,10 +100,20 @@ namespace open3mod
 
             // set fixed-function lighting parameters
             GL.ShadeModel(ShadingModel.Smooth);
+            GL.LightModel(LightModelParameter.LightModelAmbient, new[] { 0.3f, 0.3f, 0.3f, 1 });
+            GL.Enable(EnableCap.Lighting);
             GL.Enable(EnableCap.Light0);
-            GL.Light(LightName.Light0, LightParameter.Position, new float[] { 1, 1, 0 });
-            GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { 1, 1, 1, 1 });
-            GL.Light(LightName.Light0, LightParameter.Specular, new float[] { 1, 1, 1, 1 });
+
+            var dir = new Vector3(1,1,0);
+            var mat = renderer.LightRotation;
+            Vector3.TransformNormal(ref dir, ref mat, out dir);
+
+            var col = new Vector3(1, 1, 1);
+            col *= (0.25f + 1.5f * GraphicsSettings.Default.OutputBrightness/100.0f) * 1.5f;
+
+            GL.Light(LightName.Light0, LightParameter.Position, new float[] { dir.X, dir.Y, dir.Z, 0 });
+            GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { col.X, col.Y, col.Z, 1 });
+            GL.Light(LightName.Light0, LightParameter.Specular, new float[] { col.X, col.Y, col.Z, 1 });
 
             if (flags.HasFlag(RenderFlags.Wireframe))
             {

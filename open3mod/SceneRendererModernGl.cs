@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 // Open 3D Model Viewer (open3mod) (v0.1)
 // [SceneRendererModernGl.cs]
-// (c) 2012-2013, Alexander C. Gessler
+// (c) 2012-2013, Open3Mod Contributors
 //
 // Licensed under the terms and conditions of the 3-clause BSD license. See
 // the LICENSE file in the root folder of the repository for the details.
@@ -59,7 +59,8 @@ namespace open3mod
         public void Render(ICameraController cam, Dictionary<Node, List<Mesh>> visibleMeshesByNode,
             bool visibleSetChanged,
             bool texturesChanged,
-            RenderFlags flags)
+            RenderFlags flags, 
+            Renderer renderer)
         {
             GL.Disable(EnableCap.Texture2D);
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);

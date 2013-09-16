@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 // Open 3D Model Viewer (open3mod) (v0.1)
 // [OrbitCameraController.cs]
-// (c) 2012-2013, Alexander C. Gessler
+// (c) 2012-2013, Open3Mod Contributors
 //
 // Licensed under the terms and conditions of the 3-clause BSD license. See
 // the LICENSE file in the root folder of the repository for the details.
@@ -33,8 +33,11 @@ namespace open3mod
         private Matrix4 _view;
         private Matrix4 _viewWithOffset;
         private float _cameraDistance;
+        private float _pitchAngle = 0.8f;
+        private float _rollAngle = 0.0f;
         private readonly Vector3 _right;
         private readonly Vector3 _up;
+        private readonly Vector3 _front;
         private CameraMode _mode;
 
         private Vector3 _panVector;
@@ -53,7 +56,7 @@ namespace open3mod
 
         public OrbitCameraController(CameraMode camMode)
         {
-            _view = Matrix4.CreateFromAxisAngle(new Vector3(1.0f, 1.0f, 0.0f), 0.9f);
+            _view = Matrix4.CreateFromAxisAngle(new Vector3(0.0f, 1.0f, 0.0f), 0.9f);
 
             _viewWithOffset = Matrix4.Identity;
 
@@ -61,6 +64,7 @@ namespace open3mod
 
             _right = Vector3.UnitX;
             _up = Vector3.UnitY;
+            _front = Vector3.UnitZ;
 
             SetOrbitOrConstrainedMode(camMode, true);           
         }
@@ -87,8 +91,7 @@ namespace open3mod
 
             if (y != 0)
             {
-  
-                _view *= Matrix4.CreateFromAxisAngle(_right, (float) (y*RotationSpeed*Math.PI/180.0));
+                _pitchAngle += (float)(y * RotationSpeed * Math.PI / 180.0);
             }
               
             UpdateViewMatrix();
@@ -129,7 +132,8 @@ namespace open3mod
 
         private void UpdateViewMatrix()
         {
-            _viewWithOffset = Matrix4.LookAt(_view.Column2.Xyz * _cameraDistance, Vector3.Zero, _view.Column1.Xyz);
+            Matrix4 _viewWithPitchAndRoll = _view * Matrix4.CreateFromAxisAngle(_right, _pitchAngle) * Matrix4.CreateFromAxisAngle(_front, _rollAngle);
+            _viewWithOffset = Matrix4.LookAt(_viewWithPitchAndRoll.Column2.Xyz * _cameraDistance, Vector3.Zero, _viewWithPitchAndRoll.Column1.Xyz);
             _viewWithOffset *= Matrix4.CreateTranslation(_panVector);
         }
 
@@ -182,6 +186,20 @@ namespace open3mod
             }
 
             UpdateViewMatrix(); 
+        }
+
+        public void LeapInput(float x, float y, float z, float pitch, float roll, float yaw)
+        {
+            // TODO Parameters in Settings dialog 
+            _pitchAngle = pitch * 3.0f;
+            _rollAngle = roll * 1.0f;
+            Matrix4 yawrotation = Matrix4.CreateFromAxisAngle(_up, (float)(x * 0.125 * Math.PI / 180.0));
+            _view *= yawrotation;
+            
+            UpdateViewMatrix();
+
+            // leave the X,Z,Y constrained camera modes if we were in any of them
+            SetOrbitOrConstrainedMode(CameraMode.Orbit);
         }
     }
 }

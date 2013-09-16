@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 // Open 3D Model Viewer (open3mod) (v0.1)
 // [Scene.cs]
-// (c) 2012-2013, Alexander C. Gessler
+// (c) 2012-2013, Open3Mod Contributors
 //
 // Licensed under the terms and conditions of the 3-clause BSD license. See
 // the LICENSE file in the root folder of the repository for the details.
@@ -406,7 +406,7 @@ namespace open3mod
         /// <summary>
         /// Call once per frame to render the scene to the current viewport.
         /// </summary>
-        public void Render(UiState state, ICameraController cam)
+        public void Render(UiState state, ICameraController cam, Renderer target)
         {
             RenderFlags flags = 0;
           
@@ -438,7 +438,7 @@ namespace open3mod
             flags |= RenderFlags.ShowGhosts;
 
             _wantSetTexturesChanged = false;
-            _renderer.Render(cam, _meshesToShow, _nodesToShowChanged, _texturesChanged, flags);
+            _renderer.Render(cam, _meshesToShow, _nodesToShowChanged, _texturesChanged, flags, target);
 
             lock (_texChangeLock)
             {
