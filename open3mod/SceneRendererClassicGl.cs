@@ -104,14 +104,21 @@ namespace open3mod
             GL.Enable(EnableCap.Lighting);
             GL.Enable(EnableCap.Light0);
 
+            var view = cam == null ? Matrix4.LookAt(0, 10, 5, 0, 0, 0, 0, 1, 0) : cam.GetView();
+
+            // light direction
             var dir = new Vector3(1,1,0);
             var mat = renderer.LightRotation;
             Vector3.TransformNormal(ref dir, ref mat, out dir);
 
+            Vector3 world_dir;
+            Vector3.TransformNormal(ref dir, ref view, out world_dir);
+            GL.Light(LightName.Light0, LightParameter.Position, new float[] { world_dir.X, world_dir.Y, world_dir.Z, 0 });
+
+            // light color
             var col = new Vector3(1, 1, 1);
             col *= (0.25f + 1.5f * GraphicsSettings.Default.OutputBrightness/100.0f) * 1.5f;
 
-            GL.Light(LightName.Light0, LightParameter.Position, new float[] { dir.X, dir.Y, dir.Z, 0 });
             GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { col.X, col.Y, col.Z, 1 });
             GL.Light(LightName.Light0, LightParameter.Specular, new float[] { col.X, col.Y, col.Z, 1 });
 
@@ -121,10 +128,14 @@ namespace open3mod
             }
 
             GL.MatrixMode(MatrixMode.Modelview);
-            var lookat = cam == null ? Matrix4.LookAt(0, 10, 5, 0, 0, 0, 0, 1, 0) : cam.GetView();
-            GL.LoadMatrix(ref lookat);
+            GL.LoadMatrix(ref view);
             //var tmp = 1.0f;
-            
+
+            if (flags.HasFlag(RenderFlags.Shaded))
+            {
+                OverlayLightSource.DrawLightSource(dir);
+            }
+
             var tmp = InitposeMax.X - InitposeMin.X;
             tmp = Math.Max(InitposeMax.Y - InitposeMin.Y, tmp);
             tmp = Math.Max(InitposeMax.Z - InitposeMin.Z, tmp);
@@ -141,6 +152,7 @@ namespace open3mod
                 UploadTextures();
             }
 
+            
             GL.PushMatrix();
 
             // Build and cache Gl displaylists and update only when the scene changes.

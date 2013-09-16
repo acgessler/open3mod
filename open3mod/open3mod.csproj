@@ -189,6 +189,7 @@
     </Compile>
     <Compile Include="OpenTkToAssimp.cs" />
     <Compile Include="OrbitCameraController.cs" />
+    <Compile Include="OverlayLightSource.cs" />
     <Compile Include="OverlayNormals.cs" />
     <Compile Include="OverlaySkeleton.cs" />
     <Compile Include="PickingCameraController.cs" />
