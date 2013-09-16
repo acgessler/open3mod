@@ -101,7 +101,7 @@ namespace open3mod
         }
 
 
-        public void Scroll(int z)
+        public void Scroll(float z)
         {
             _translation -= _orientation.Column2.Xyz *z*BaseZoomSpeed;
             _dirty = true;
