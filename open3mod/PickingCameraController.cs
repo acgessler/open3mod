@@ -75,7 +75,7 @@ namespace open3mod
         }
 
 
-        public void Scroll(int z)
+        public void Scroll(float z)
         {
 
         }

@@ -101,7 +101,7 @@ namespace open3mod
         }
 
 
-        public void Scroll(int z)
+        public void Scroll(float z)
         {
             _cameraDistance *= (float)Math.Pow(ZoomSpeed, -z);
             _cameraDistance = Math.Max(_cameraDistance, MinimumCameraDistance);
@@ -185,6 +185,13 @@ namespace open3mod
                     break;
             }
 
+            //reset rotionangles if we switched to one of the constrained views
+            if (_mode != CameraMode.Orbit)
+            {
+                _pitchAngle = 0.0f;
+                _rollAngle = 0.0f;
+            }
+
             UpdateViewMatrix(); 
         }
 
@@ -195,6 +202,9 @@ namespace open3mod
             _rollAngle = roll * 1.0f;
             Matrix4 yawrotation = Matrix4.CreateFromAxisAngle(_up, (float)(x * 0.125 * Math.PI / 180.0));
             _view *= yawrotation;
+
+            //Zoom with hands movement in a forward direction ( Z axis )
+            Scroll(z * 3.0f);
             
             UpdateViewMatrix();
 
