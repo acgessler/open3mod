@@ -87,7 +87,7 @@ namespace open3mod
         {
             if (y != 0)
             {
-                _orientation *= Matrix4.CreateFromAxisAngle(_orientation.Column0.Xyz,
+                _orientation *= Matrix4.CreateFromAxisAngle(_orientation.Row0.Xyz,
                     (float)(-y * RotationSpeed * Math.PI / 180.0));
             }
 
