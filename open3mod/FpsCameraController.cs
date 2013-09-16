@@ -71,8 +71,11 @@ namespace open3mod
         public void MovementKey(float x, float y, float z)
         {
             var v = new Vector3(x, y, z) * MovementBaseSpeed;
-            Vector3.TransformVector(ref v, ref _orientation, out v);
-            _translation += v;
+            var o = _orientation;
+
+            // TODO: somehow, the matrix is transposed so the normal TransformVector() API does not work.
+            // It seems we messed up with OpenTK's matrix conventions.
+            _translation += v.X * _orientation.Row0.Xyz + v.Y * _orientation.Row1.Xyz + v.Z * _orientation.Row2.Xyz;
             _dirty = true;
         }
 
@@ -103,7 +106,7 @@ namespace open3mod
 
         public void Scroll(int z)
         {
-            _translation -= _orientation.Column2.Xyz *z*BaseZoomSpeed;
+            _translation -= _orientation.Row2.Xyz *z*BaseZoomSpeed;
             _dirty = true;
         }
 
