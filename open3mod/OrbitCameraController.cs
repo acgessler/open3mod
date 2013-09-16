@@ -185,6 +185,13 @@ namespace open3mod
                     break;
             }
 
+            //reset rotionangles if we switched to one of the constrained views
+            if (_mode != CameraMode.Orbit)
+            {
+                _pitchAngle = 0.0f;
+                _rollAngle = 0.0f;
+            }
+
             UpdateViewMatrix(); 
         }
 
