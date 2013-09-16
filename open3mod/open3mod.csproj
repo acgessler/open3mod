@@ -201,6 +201,7 @@
     <Compile Include="Renderer.cs" />
     <Compile Include="RenderMesh.cs" />
     <Compile Include="RoundedRectangle.cs" />
+    <Compile Include="RunOnceGuard.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="SceneAnimator.cs" />
     <Compile Include="SceneRendererClassicGl.cs" />
