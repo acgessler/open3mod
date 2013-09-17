@@ -259,8 +259,8 @@ namespace open3mod
         /// Position of the horizontal and vertical splits 
         /// in [MinimumViewportSplit,1-MinimumViewportSplit]
         /// </summary>
-        private float _verticalSplitPos = 0.1f;
-        private float _horizontalSplitPos = 0.1f;
+        private float _verticalSplitPos = 0.5f;
+        private float _horizontalSplitPos = 0.5f;
 
         /// <summary>
         /// dirty flag for the recalculation of viewport bounds
