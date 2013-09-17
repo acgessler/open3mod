@@ -146,7 +146,7 @@ namespace open3mod
 
         private void UpdateViewMatrix()
         {
-            Matrix4 viewWithPitchAndRoll = _view * Matrix4.CreateFromAxisAngle(_right, _pitchAngle) * Matrix4.CreateFromAxisAngle(_front, _rollAngle);
+            var viewWithPitchAndRoll = _view * Matrix4.CreateFromAxisAngle(_right, _pitchAngle) * Matrix4.CreateFromAxisAngle(_front, _rollAngle);
             _viewWithOffset = Matrix4.LookAt(viewWithPitchAndRoll.Column2.Xyz * _cameraDistance + _pivot, _pivot, viewWithPitchAndRoll.Column1.Xyz);
             _viewWithOffset *= Matrix4.CreateTranslation(_panVector);
 

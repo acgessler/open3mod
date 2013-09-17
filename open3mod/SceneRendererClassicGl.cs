@@ -225,9 +225,11 @@ namespace open3mod
 
             // always switch back to FILL
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-
-            GL.Enable(EnableCap.ColorMaterial);
             GL.Disable(EnableCap.DepthTest);
+
+#if TEST
+            GL.Enable(EnableCap.ColorMaterial);
+            
 
             // TEST CODE to visualize mid point (pivot) and origin
             GL.LoadMatrix(ref view);
@@ -243,6 +245,7 @@ namespace open3mod
             GL.Vertex3(10, 10, 10);
             GL.Color3(0.0f, 1.0f, 0.0f);
             GL.End();
+#endif
 
             GL.Disable(EnableCap.Texture2D);
             GL.Disable(EnableCap.Lighting);
