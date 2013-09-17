@@ -254,7 +254,7 @@ namespace Assimp {
             nativeValue.Meshes = IntPtr.Zero;
             
             if(nativeValue.NumMeshes > 0)
-                MemoryHelper.ToNativeArray<int>(m_meshes.ToArray());
+                nativeValue.Meshes = MemoryHelper.ToNativeArray<int>(m_meshes.ToArray());
 
             //Now descend through the children
             nativeValue.NumChildren = (uint) m_children.Count;

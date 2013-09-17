@@ -938,7 +938,7 @@ namespace open3mod
                             if (attr.HasFlag(FileAttributes.Directory))
                             {
                                 string[] formats;
-                                using (var tempImporter = new Assimp.AssimpImporter())
+                                using (var tempImporter = new Assimp.AssimpContext())
                                 {
                                     formats = tempImporter.GetSupportedImportFormats();
                                 }
@@ -1064,7 +1064,7 @@ namespace open3mod
 
         private void OnSetFileAssociations(object sender, EventArgs e)
         {
-            using (var imp = new Assimp.AssimpImporter())
+            using (var imp = new Assimp.AssimpContext())
             {
                 var list = imp.GetSupportedImportFormats();
 

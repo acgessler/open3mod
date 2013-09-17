@@ -21,6 +21,8 @@
 */
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Assimp.Unmanaged;
 
@@ -35,12 +37,29 @@ namespace Assimp {
     /// <summary>
     /// Represents a log stream, which receives all log messages and streams them somewhere.
     /// </summary>
+    [DebuggerDisplay("IsAttached = {IsAttached}")]
     public class LogStream : IDisposable {
+        private static Object s_sync = new Object();
+        private static List<LogStream> s_activeLogstreams = new List<LogStream>();
+
         private LoggingCallback m_logCallback;
         private AiLogStreamCallback m_assimpCallback;
         private IntPtr m_logstreamPtr;
         private String m_userData;
         private bool m_isDisposed;
+        private bool m_isAttached;
+
+        /// <summary>
+        /// Gets or sets, if verbose logging is enabled globally.
+        /// </summary>
+        public static bool IsVerboseLoggingEnabled {
+            get {
+                return AssimpLibrary.Instance.GetVerboseLoggingEnabled();
+            }
+            set {
+                AssimpLibrary.Instance.EnableVerboseLogging(value);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the user data to be passed to the callback.
@@ -61,6 +80,22 @@ namespace Assimp {
             get {
                 return m_isDisposed;
             }
+        }
+
+        /// <summary>
+        /// Gets whether or not the logstream is currently attached to the library.
+        /// </summary>
+        public bool IsAttached {
+            get {
+                return m_isAttached;
+            }
+        }
+
+        /// <summary>
+        /// Static constructor.
+        /// </summary>
+        static LogStream() {
+            AssimpLibrary.Instance.LibraryFreed += AssimpLibraryFreed;
         }
 
         /// <summary>
@@ -98,6 +133,66 @@ namespace Assimp {
         /// </summary>
         ~LogStream() {
             Dispose(false);
+        }
+
+        /// <summary>
+        /// Detaches all active logstreams from the library.
+        /// </summary>
+        public static void DetachAllLogstreams() {
+            lock(s_sync) {
+                foreach(LogStream logstream in s_activeLogstreams) {
+                    logstream.m_isAttached = false;
+                    AssimpLibrary.Instance.DetachLogStream(logstream.m_logstreamPtr);
+                    logstream.OnDetach();
+                }
+
+                s_activeLogstreams.Clear();
+            }
+        }
+
+        /// <summary>
+        /// Gets all active logstreams that are currently attached to the library.
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<LogStream> GetAttachedLogStreams() {
+            lock(s_sync) {
+                return s_activeLogstreams.ToArray();
+            }
+        }
+
+        //Ensure we cleanup our logstreams if any are around when the unmanaged library is freed.
+        private static void AssimpLibraryFreed(object sender, EventArgs e) {
+            DetachAllLogstreams();
+        }
+
+        /// <summary>
+        /// Attaches the logstream to the library.
+        /// </summary>
+        public void Attach() {
+            if(m_isAttached)
+                return;
+
+            lock(s_sync) {
+                s_activeLogstreams.Add(this);
+                m_isAttached = true;
+                AssimpLibrary.Instance.AttachLogStream(m_logstreamPtr);
+                OnAttach();
+            }
+        }
+
+        /// <summary>
+        /// Detatches the logstream from the library.
+        /// </summary>
+        public void Detach() {
+            if(!m_isAttached)
+                return;
+
+            lock(s_sync) {
+                s_activeLogstreams.Remove(this);
+                m_isAttached = false;
+                AssimpLibrary.Instance.DetachLogStream(m_logstreamPtr);
+                OnDetach();
+            }
         }
 
         /// <summary>
@@ -146,22 +241,12 @@ namespace Assimp {
         /// </summary>
         protected virtual void OnDetach() { }
 
-        internal void OnAiLogStreamCallback(String msg, IntPtr userData) {
+        private void OnAiLogStreamCallback(String msg, IntPtr userData) {
             if(m_logCallback != null) {
                 m_logCallback(msg, m_userData);
             } else {
                 LogMessage(msg, m_userData);
             }
-        }
-
-        internal void Attach() {
-            AssimpLibrary.Instance.AttachLogStream(m_logstreamPtr);
-            OnAttach();
-        }
-
-        internal void Detach() {
-            AssimpLibrary.Instance.DetachLogStream(m_logstreamPtr);
-            OnDetach();
         }
 
         private void Initialize(LoggingCallback callback, String userData) {

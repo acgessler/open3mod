@@ -322,6 +322,12 @@ namespace Assimp {
         /// <summary>
         /// Constructs a new instance of the <see cref="Mesh"/> class.
         /// </summary>
+        /// <param name="primType">Primitive types contained in the mesh.</param>
+        public Mesh(PrimitiveType primType) : this(String.Empty, primType) { }
+
+        /// <summary>
+        /// Constructs a new instance of the <see cref="Mesh"/> class.
+        /// </summary>
         /// <param name="name">Name of the mesh</param>
         /// <param name="primType">Primitive types contained in the mesh.</param>
         public Mesh(String name, PrimitiveType primType) {

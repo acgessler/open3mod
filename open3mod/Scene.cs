@@ -211,30 +211,32 @@ namespace open3mod
 
             try
             {
-                using (var imp = new AssimpImporter {VerboseLoggingEnabled = true})
+                using (var imp = new AssimpContext())
                 {
-                    imp.AttachLogStream((new LogPipe(_logStore)).GetStream());
-
-                    // Assimp configuration:
-
-                    //  - if no normals are present, generate them using a threshold
-                    //    angle of 66 degrees.
-                    imp.SetConfig(new NormalSmoothingAngleConfig(66.0f));
-
-                    // start with TargetRealTimeMaximumQuality and add/remove flags
-                    // according to the import configuration
-                    var postprocess = GetPostProcessStepsFlags();
-
-                    //  - request lots of post processing steps, the details of which
-                    //    can be found in the TargetRealTimeMaximumQuality docs.
-                    _raw = imp.ImportFile(file, postprocess);
-                    if (_raw == null)
+                    LogStream.IsVerboseLoggingEnabled = true;
+                    using(var pipe = new LogPipe(_logStore))
                     {
-                        Dispose();
-                        throw new Exception("failed to read file: " + file);
-                    }
+                        // Assimp configuration:
 
-                    _incomplete = _raw.SceneFlags.HasFlag(SceneFlags.Incomplete);
+                        //  - if no normals are present, generate them using a threshold
+                        //    angle of 66 degrees.
+                        imp.SetConfig(new NormalSmoothingAngleConfig(66.0f));
+
+                        // start with TargetRealTimeMaximumQuality and add/remove flags
+                        // according to the import configuration
+                        var postprocess = GetPostProcessStepsFlags();
+
+                        //  - request lots of post processing steps, the details of which
+                        //    can be found in the TargetRealTimeMaximumQuality docs.
+                        _raw = imp.ImportFile(file, postprocess);
+                        if (_raw == null)
+                        {
+                            Dispose();
+                            throw new Exception("failed to read file: " + file);
+                        }
+
+                        _incomplete = _raw.SceneFlags.HasFlag(SceneFlags.Incomplete);
+                    }
                 }
             }
             catch(AssimpException ex)

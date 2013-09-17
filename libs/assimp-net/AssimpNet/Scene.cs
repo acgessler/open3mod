@@ -273,7 +273,7 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Marshals an unmanaged scene to managed memory.
+        /// Marshals an unmanaged scene to managed memory. This does not free the unmanaged memory.
         /// </summary>
         /// <param name="scenePtr">The unmanaged scene data</param>
         /// <returns>The managed scene, or null if the pointer is NULL</returns>
@@ -285,7 +285,8 @@ namespace Assimp {
         }
 
         /// <summary>
-        /// Frees unmanaged memory allocated in <see cref="ToUnmanagedScene"/>.
+        /// Frees unmanaged memory allocated -ONLY- in <see cref="ToUnmanagedScene"/>. To free an unmanaged scene allocated by the unmanaged Assimp library,
+        /// call the appropiate <see cref="AssimpLibrary.ReleaseImport"/> function.
         /// </summary>
         /// <param name="scenePtr">Pointer to unmanaged scene data.</param>
         public static void FreeUnmanagedScene(IntPtr scenePtr) {

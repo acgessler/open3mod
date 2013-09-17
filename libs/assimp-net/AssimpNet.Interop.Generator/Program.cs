@@ -29,7 +29,7 @@ using Mono.Cecil.Cil;
 using Mono.Cecil.Pdb;
 using Mono.Collections.Generic;
 
-namespace Tesla.Interop.Generator {
+namespace AssimpNet.Interop.Generator {
     /// <summary>
     /// Console program that patches AssimpNet.dll, by iterating over all types and finding stubs to replace with IL code. Original idea (and some of the IL code) credit goes to SharpDX, 
     /// the generator below is ported from the Tesla 3D engine project.

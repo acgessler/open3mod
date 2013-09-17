@@ -34,20 +34,32 @@ namespace open3mod
     /// <summary>
     /// Utility class to generate an assimp logstream to capture the logging into a LogStore
     /// </summary>
-    public class LogPipe
+    public class LogPipe : IDisposable
     {
         private readonly LogStore _logStore;
         private Stopwatch _timer;
+        private LogStream _stream;
 
         public LogPipe(LogStore logStore)
         {
             _logStore = logStore;
+            _stream = new LogStream(LogStreamCallback);
+            _stream.Attach();
 
         }
 
         public LogStream GetStream()
         {
-            return new LogStream(LogStreamCallback);
+            return _stream;
+        }
+
+
+        public void Dispose()
+        {
+            _stream.Detach();
+            _stream.Dispose();
+
+            GC.SuppressFinalize(this);
         }
 
 

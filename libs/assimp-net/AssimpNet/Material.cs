@@ -1250,6 +1250,8 @@ namespace Assimp {
 
             if(m_properties.Count > 0) {
                 MaterialProperty[] matProps = new MaterialProperty[m_properties.Values.Count];
+                m_properties.Values.CopyTo(matProps, 0);
+
                 nativeValue.Properties = MemoryHelper.ToNativeArray<MaterialProperty, AiMaterialProperty>(matProps, true);
             }
         }

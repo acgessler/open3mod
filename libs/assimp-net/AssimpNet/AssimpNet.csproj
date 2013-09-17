@@ -67,7 +67,7 @@
   <ItemGroup>
     <Compile Include="Animation.cs" />
     <Compile Include="AssimpException.cs" />
-    <Compile Include="AssimpImporter.cs" />
+    <Compile Include="AssimpContext.cs" />
     <Compile Include="Bone.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Color3D.cs" />
