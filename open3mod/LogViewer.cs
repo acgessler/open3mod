@@ -39,7 +39,7 @@ namespace open3mod
         private LogStore _currentLogStore;
 
         private const string RtfHeader =
-	    @"{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}}" +
+	    @"{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Consolas;}}" +
         @"{\colortbl;" +
             // color palette:
             @"\red255\green0\blue0;" + 
