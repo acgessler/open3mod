@@ -80,7 +80,7 @@ namespace open3mod
         /// </summary>
         /// <param name="z">Signed scroll delta (knocks * DELTA_.. constants
         ///   from WinFors)</param>
-        void Scroll(int z);
+        void Scroll(float z);
 
         /// <summary>
         /// Processes pan events (i.e. mousewheel pressed)

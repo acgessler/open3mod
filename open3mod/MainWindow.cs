@@ -49,8 +49,8 @@ namespace open3mod
         private delegate void DelegatePopulateInspector(Tab tab);
         private readonly DelegatePopulateInspector _delegatePopulateInspector;
 
-        private Controller _leapController;
-        private LeapListener _leapListener;
+        private readonly Controller _leapController;
+        private readonly LeapListener _leapListener;
 
         private readonly bool _initialized;
 

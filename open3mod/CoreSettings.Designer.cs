@@ -379,5 +379,41 @@ namespace CoreSettings {
                 this["ExitOnTabClosing"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public int Leap_SmoothingWindowSize {
+            get {
+                return ((int)(this["Leap_SmoothingWindowSize"]));
+            }
+            set {
+                this["Leap_SmoothingWindowSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Leap_TranslationSmoothing {
+            get {
+                return ((bool)(this["Leap_TranslationSmoothing"]));
+            }
+            set {
+                this["Leap_TranslationSmoothing"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Leap_RotationSmoothing {
+            get {
+                return ((bool)(this["Leap_RotationSmoothing"]));
+            }
+            set {
+                this["Leap_RotationSmoothing"] = value;
+            }
+        }
     }
 }

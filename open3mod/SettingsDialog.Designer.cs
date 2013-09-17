@@ -35,14 +35,12 @@
             this.ExitAppCheckbox = new System.Windows.Forms.CheckBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.checkBoxBFCulling = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
             this.comboBoxSetLightingMode = new System.Windows.Forms.ComboBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.label5 = new System.Windows.Forms.Label();
             this.comboBoxSetBackend = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.checkBoxLinearMIP = new System.Windows.Forms.CheckBox();
             this.comboBoxTexResolution = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -52,24 +50,34 @@
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.checkBoxmergeDuplicateVertices = new System.Windows.Forms.CheckBox();
-            this.checkBoxOptimize = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.checkBoxRemoveDegenerates = new System.Windows.Forms.CheckBox();
-            this.checkBoxFixWinding = new System.Windows.Forms.CheckBox();
-            this.checkBoxSortByPrimitiveType = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.checkBoxGenerateTangentSpace = new System.Windows.Forms.CheckBox();
-            this.checkBoxComputeNormals = new System.Windows.Forms.CheckBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.label8 = new System.Windows.Forms.Label();
             this.tabPageTextures = new System.Windows.Forms.TabPage();
-            this.checkBoxLoadTextures = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
             this.folderSetDisplaySearchPaths = new open3mod.FolderSetDisplay();
             this.button1 = new System.Windows.Forms.Button();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.labelPleaseRestart = new System.Windows.Forms.Label();
+            this.tabPageLeapMotion = new System.Windows.Forms.TabPage();
+            this.SmoothingGroup = new System.Windows.Forms.GroupBox();
+            this.checkBoxBFCulling = new System.Windows.Forms.CheckBox();
+            this.checkBoxLinearMIP = new System.Windows.Forms.CheckBox();
+            this.checkBoxmergeDuplicateVertices = new System.Windows.Forms.CheckBox();
+            this.checkBoxOptimize = new System.Windows.Forms.CheckBox();
+            this.checkBoxRemoveDegenerates = new System.Windows.Forms.CheckBox();
+            this.checkBoxFixWinding = new System.Windows.Forms.CheckBox();
+            this.checkBoxSortByPrimitiveType = new System.Windows.Forms.CheckBox();
+            this.checkBoxGenerateTangentSpace = new System.Windows.Forms.CheckBox();
+            this.checkBoxComputeNormals = new System.Windows.Forms.CheckBox();
+            this.checkBoxLoadTextures = new System.Windows.Forms.CheckBox();
+            this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.TranslationSmoothing = new System.Windows.Forms.CheckBox();
+            this.RotationSmoothing = new System.Windows.Forms.CheckBox();
+            this.folderSetDisplaySearchPaths = new open3mod.FolderSetDisplay();
+            this.ResponsiveLabel = new System.Windows.Forms.Label();
+            this.SmoothLabel = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -80,6 +88,9 @@
             this.groupBox2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPageTextures.SuspendLayout();
+            this.tabPageLeapMotion.SuspendLayout();
+            this.SmoothingGroup.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl
@@ -92,6 +103,7 @@
             this.tabControl.Controls.Add(this.tabPage2);
             this.tabControl.Controls.Add(this.tabPage3);
             this.tabControl.Controls.Add(this.tabPageTextures);
+            this.tabControl.Controls.Add(this.tabPageLeapMotion);
             this.tabControl.Location = new System.Drawing.Point(1, 4);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
@@ -166,19 +178,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Custom Settings";
             // 
-            // checkBoxBFCulling
-            // 
-            this.checkBoxBFCulling.AutoSize = true;
-            this.checkBoxBFCulling.Checked = global::open3mod.GraphicsSettings.Default.BackFaceCulling;
-            this.checkBoxBFCulling.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.GraphicsSettings.Default, "BackFaceCulling", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxBFCulling.Location = new System.Drawing.Point(188, 253);
-            this.checkBoxBFCulling.Name = "checkBoxBFCulling";
-            this.checkBoxBFCulling.Size = new System.Drawing.Size(112, 17);
-            this.checkBoxBFCulling.TabIndex = 13;
-            this.checkBoxBFCulling.Text = "Back-Face Culling";
-            this.checkBoxBFCulling.UseVisualStyleBackColor = true;
-            this.checkBoxBFCulling.CheckedChanged += new System.EventHandler(this.checkBoxBFCulling_CheckedChanged);
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -243,20 +242,6 @@
             this.label4.Size = new System.Drawing.Size(102, 13);
             this.label4.TabIndex = 7;
             this.label4.Text = "Rendering Backend";
-            // 
-            // checkBoxLinearMIP
-            // 
-            this.checkBoxLinearMIP.AutoSize = true;
-            this.checkBoxLinearMIP.Checked = global::open3mod.GraphicsSettings.Default.UseMips;
-            this.checkBoxLinearMIP.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxLinearMIP.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.GraphicsSettings.Default, "UseMips", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxLinearMIP.Location = new System.Drawing.Point(362, 178);
-            this.checkBoxLinearMIP.Name = "checkBoxLinearMIP";
-            this.checkBoxLinearMIP.Size = new System.Drawing.Size(72, 17);
-            this.checkBoxLinearMIP.TabIndex = 6;
-            this.checkBoxLinearMIP.Text = "Use MIPs";
-            this.checkBoxLinearMIP.UseVisualStyleBackColor = true;
-            this.checkBoxLinearMIP.CheckedChanged += new System.EventHandler(this.OnChangeMipSettings);
             // 
             // comboBoxTexResolution
             // 
@@ -364,6 +349,153 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Optimization";
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.checkBoxRemoveDegenerates);
+            this.groupBox3.Controls.Add(this.checkBoxFixWinding);
+            this.groupBox3.Controls.Add(this.checkBoxSortByPrimitiveType);
+            this.groupBox3.Location = new System.Drawing.Point(21, 126);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(477, 96);
+            this.groupBox3.TabIndex = 12;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Cleanup";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.checkBoxGenerateTangentSpace);
+            this.groupBox2.Controls.Add(this.checkBoxComputeNormals);
+            this.groupBox2.Location = new System.Drawing.Point(21, 23);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(477, 88);
+            this.groupBox2.TabIndex = 11;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Derived data";
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.label8);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(532, 381);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Animation";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.ForeColor = System.Drawing.Color.Red;
+            this.label8.Location = new System.Drawing.Point(232, 163);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(38, 13);
+            this.label8.TabIndex = 1;
+            this.label8.Text = "TODO";
+            // 
+            // tabPageTextures
+            // 
+            this.tabPageTextures.Controls.Add(this.checkBoxLoadTextures);
+            this.tabPageTextures.Controls.Add(this.label7);
+            this.tabPageTextures.Controls.Add(this.folderSetDisplaySearchPaths);
+            this.tabPageTextures.Location = new System.Drawing.Point(4, 22);
+            this.tabPageTextures.Name = "tabPageTextures";
+            this.tabPageTextures.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageTextures.Size = new System.Drawing.Size(532, 381);
+            this.tabPageTextures.TabIndex = 3;
+            this.tabPageTextures.Text = "Textures";
+            this.tabPageTextures.UseVisualStyleBackColor = true;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(28, 106);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(177, 13);
+            this.label7.TabIndex = 5;
+            this.label7.Text = "Additional search folders for textures";
+            // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.button1.Location = new System.Drawing.Point(430, 434);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(97, 23);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "OK";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.OnOk);
+            // 
+            // imageList1
+            // 
+            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            // 
+            // labelPleaseRestart
+            // 
+            this.labelPleaseRestart.AutoSize = true;
+            this.labelPleaseRestart.ForeColor = System.Drawing.Color.Red;
+            this.labelPleaseRestart.Location = new System.Drawing.Point(23, 434);
+            this.labelPleaseRestart.Name = "labelPleaseRestart";
+            this.labelPleaseRestart.Size = new System.Drawing.Size(232, 13);
+            this.labelPleaseRestart.TabIndex = 2;
+            this.labelPleaseRestart.Text = "Please restart the application to see all changes";
+            this.labelPleaseRestart.Visible = false;
+            // 
+            // tabPageLeapMotion
+            // 
+            this.tabPageLeapMotion.Controls.Add(this.SmoothingGroup);
+            this.tabPageLeapMotion.Location = new System.Drawing.Point(4, 22);
+            this.tabPageLeapMotion.Name = "tabPageLeapMotion";
+            this.tabPageLeapMotion.Size = new System.Drawing.Size(532, 381);
+            this.tabPageLeapMotion.TabIndex = 4;
+            this.tabPageLeapMotion.Text = "Leap Motion";
+            this.tabPageLeapMotion.UseVisualStyleBackColor = true;
+            // 
+            // SmoothingGroup
+            // 
+            this.SmoothingGroup.Controls.Add(this.SmoothLabel);
+            this.SmoothingGroup.Controls.Add(this.ResponsiveLabel);
+            this.SmoothingGroup.Controls.Add(this.RotationSmoothing);
+            this.SmoothingGroup.Controls.Add(this.trackBar1);
+            this.SmoothingGroup.Controls.Add(this.TranslationSmoothing);
+            this.SmoothingGroup.Location = new System.Drawing.Point(10, 10);
+            this.SmoothingGroup.Margin = new System.Windows.Forms.Padding(10);
+            this.SmoothingGroup.Name = "SmoothingGroup";
+            this.SmoothingGroup.Size = new System.Drawing.Size(505, 130);
+            this.SmoothingGroup.TabIndex = 1;
+            this.SmoothingGroup.TabStop = false;
+            this.SmoothingGroup.Text = "Smoothing";
+            // 
+            // checkBoxBFCulling
+            // 
+            this.checkBoxBFCulling.AutoSize = true;
+            this.checkBoxBFCulling.Checked = global::open3mod.GraphicsSettings.Default.BackFaceCulling;
+            this.checkBoxBFCulling.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.GraphicsSettings.Default, "BackFaceCulling", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxBFCulling.Location = new System.Drawing.Point(188, 253);
+            this.checkBoxBFCulling.Name = "checkBoxBFCulling";
+            this.checkBoxBFCulling.Size = new System.Drawing.Size(112, 17);
+            this.checkBoxBFCulling.TabIndex = 13;
+            this.checkBoxBFCulling.Text = "Back-Face Culling";
+            this.checkBoxBFCulling.UseVisualStyleBackColor = true;
+            this.checkBoxBFCulling.CheckedChanged += new System.EventHandler(this.checkBoxBFCulling_CheckedChanged);
+            // 
+            // checkBoxLinearMIP
+            // 
+            this.checkBoxLinearMIP.AutoSize = true;
+            this.checkBoxLinearMIP.Checked = global::open3mod.GraphicsSettings.Default.UseMips;
+            this.checkBoxLinearMIP.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxLinearMIP.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.GraphicsSettings.Default, "UseMips", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxLinearMIP.Location = new System.Drawing.Point(362, 178);
+            this.checkBoxLinearMIP.Name = "checkBoxLinearMIP";
+            this.checkBoxLinearMIP.Size = new System.Drawing.Size(72, 17);
+            this.checkBoxLinearMIP.TabIndex = 6;
+            this.checkBoxLinearMIP.Text = "Use MIPs";
+            this.checkBoxLinearMIP.UseVisualStyleBackColor = true;
+            this.checkBoxLinearMIP.CheckedChanged += new System.EventHandler(this.OnChangeMipSettings);
+            // 
             // checkBoxmergeDuplicateVertices
             // 
             this.checkBoxmergeDuplicateVertices.AutoSize = true;
@@ -389,18 +521,6 @@
             this.checkBoxOptimize.TabIndex = 8;
             this.checkBoxOptimize.Text = "Optimize geometry for vertex cache throughput";
             this.checkBoxOptimize.UseVisualStyleBackColor = true;
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.checkBoxRemoveDegenerates);
-            this.groupBox3.Controls.Add(this.checkBoxFixWinding);
-            this.groupBox3.Controls.Add(this.checkBoxSortByPrimitiveType);
-            this.groupBox3.Location = new System.Drawing.Point(21, 126);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(477, 96);
-            this.groupBox3.TabIndex = 12;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Cleanup";
             // 
             // checkBoxRemoveDegenerates
             // 
@@ -440,17 +560,6 @@
             this.checkBoxSortByPrimitiveType.Text = "Sort meshes by primitive types (i.e. line, points, triangles)";
             this.checkBoxSortByPrimitiveType.UseVisualStyleBackColor = true;
             // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.checkBoxGenerateTangentSpace);
-            this.groupBox2.Controls.Add(this.checkBoxComputeNormals);
-            this.groupBox2.Location = new System.Drawing.Point(21, 23);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(477, 88);
-            this.groupBox2.TabIndex = 11;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Derived data";
-            // 
             // checkBoxGenerateTangentSpace
             // 
             this.checkBoxGenerateTangentSpace.AutoSize = true;
@@ -479,40 +588,6 @@
             this.checkBoxComputeNormals.UseVisualStyleBackColor = true;
             this.checkBoxComputeNormals.CheckedChanged += new System.EventHandler(this.checkBoxComputeNormals_CheckedChanged);
             // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add(this.label8);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(532, 381);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Animation";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.ForeColor = System.Drawing.Color.Red;
-            this.label8.Location = new System.Drawing.Point(232, 163);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(38, 13);
-            this.label8.TabIndex = 1;
-            this.label8.Text = "TODO";
-            // 
-            // tabPageTextures
-            // 
-            this.tabPageTextures.Controls.Add(this.checkBoxLoadTextures);
-            this.tabPageTextures.Controls.Add(this.label7);
-            this.tabPageTextures.Controls.Add(this.folderSetDisplaySearchPaths);
-            this.tabPageTextures.Location = new System.Drawing.Point(4, 22);
-            this.tabPageTextures.Name = "tabPageTextures";
-            this.tabPageTextures.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageTextures.Size = new System.Drawing.Size(532, 381);
-            this.tabPageTextures.TabIndex = 3;
-            this.tabPageTextures.Text = "Textures";
-            this.tabPageTextures.UseVisualStyleBackColor = true;
-            // 
             // checkBoxLoadTextures
             // 
             this.checkBoxLoadTextures.AutoSize = true;
@@ -526,14 +601,17 @@
             this.checkBoxLoadTextures.Text = "Load Textures";
             this.checkBoxLoadTextures.UseVisualStyleBackColor = true;
             // 
-            // label7
+            // trackBar1
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(28, 106);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(177, 13);
-            this.label7.TabIndex = 5;
-            this.label7.Text = "Additional search folders for textures";
+            this.trackBar1.BackColor = System.Drawing.Color.White;
+            this.trackBar1.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::CoreSettings.CoreSettings.Default, "Leap_SmoothingWindowSize", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.trackBar1.Location = new System.Drawing.Point(6, 79);
+            this.trackBar1.Maximum = 120;
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.Size = new System.Drawing.Size(493, 45);
+            this.trackBar1.TabIndex = 1;
+            this.trackBar1.TickFrequency = 10;
+            this.trackBar1.Value = global::CoreSettings.CoreSettings.Default.Leap_SmoothingWindowSize;
             // 
             // folderSetDisplaySearchPaths
             // 
@@ -544,33 +622,49 @@
             this.folderSetDisplaySearchPaths.TabIndex = 6;
             // 
             // button1
+            // TranslationSmoothing
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button1.Location = new System.Drawing.Point(430, 434);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(97, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "OK";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.OnOk);
+            this.TranslationSmoothing.AutoSize = true;
+            this.TranslationSmoothing.Checked = global::CoreSettings.CoreSettings.Default.Leap_TranslationSmoothing;
+            this.TranslationSmoothing.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.TranslationSmoothing.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::CoreSettings.CoreSettings.Default, "Leap_TranslationSmoothing", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.TranslationSmoothing.Location = new System.Drawing.Point(6, 19);
+            this.TranslationSmoothing.Name = "TranslationSmoothing";
+            this.TranslationSmoothing.Size = new System.Drawing.Size(154, 17);
+            this.TranslationSmoothing.TabIndex = 0;
+            this.TranslationSmoothing.Text = "Smooth Hands Movements";
+            this.TranslationSmoothing.UseVisualStyleBackColor = true;
             // 
-            // imageList1
+            // RotationSmoothing
             // 
-            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.RotationSmoothing.AutoSize = true;
+            this.RotationSmoothing.Checked = global::CoreSettings.CoreSettings.Default.Leap_RotationSmoothing;
+            this.RotationSmoothing.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.RotationSmoothing.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::CoreSettings.CoreSettings.Default, "Leap_RotationSmoothing", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.RotationSmoothing.Location = new System.Drawing.Point(6, 43);
+            this.RotationSmoothing.Name = "RotationSmoothing";
+            this.RotationSmoothing.Size = new System.Drawing.Size(139, 17);
+            this.RotationSmoothing.TabIndex = 2;
+            this.RotationSmoothing.Text = "Smooth Hands Rotation";
+            this.RotationSmoothing.UseVisualStyleBackColor = true;
             // 
-            // labelPleaseRestart
+            // ResponsiveLabel
             // 
-            this.labelPleaseRestart.AutoSize = true;
-            this.labelPleaseRestart.ForeColor = System.Drawing.Color.Red;
-            this.labelPleaseRestart.Location = new System.Drawing.Point(23, 434);
-            this.labelPleaseRestart.Name = "labelPleaseRestart";
-            this.labelPleaseRestart.Size = new System.Drawing.Size(232, 13);
-            this.labelPleaseRestart.TabIndex = 2;
-            this.labelPleaseRestart.Text = "Please restart the application to see all changes";
-            this.labelPleaseRestart.Visible = false;
+            this.ResponsiveLabel.AutoSize = true;
+            this.ResponsiveLabel.Location = new System.Drawing.Point(6, 110);
+            this.ResponsiveLabel.Name = "ResponsiveLabel";
+            this.ResponsiveLabel.Size = new System.Drawing.Size(63, 13);
+            this.ResponsiveLabel.TabIndex = 3;
+            this.ResponsiveLabel.Text = "Responsive";
+            // 
+            // SmoothLabel
+            // 
+            this.SmoothLabel.AutoSize = true;
+            this.SmoothLabel.Location = new System.Drawing.Point(456, 110);
+            this.SmoothLabel.Name = "SmoothLabel";
+            this.SmoothLabel.Size = new System.Drawing.Size(43, 13);
+            this.SmoothLabel.TabIndex = 4;
+            this.SmoothLabel.Text = "Smooth";
             // 
             // SettingsDialog
             // 
@@ -603,6 +697,10 @@
             this.tabPage3.PerformLayout();
             this.tabPageTextures.ResumeLayout(false);
             this.tabPageTextures.PerformLayout();
+            this.tabPageLeapMotion.ResumeLayout(false);
+            this.SmoothingGroup.ResumeLayout(false);
+            this.SmoothingGroup.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -651,5 +749,12 @@
         private System.Windows.Forms.TabPage tabPageGeneral;
         private System.Windows.Forms.CheckBox ExitAppCheckbox;
         private System.Windows.Forms.Label TabClosingBehaviourLabel;
+        private System.Windows.Forms.TabPage tabPageLeapMotion;
+        private System.Windows.Forms.CheckBox TranslationSmoothing;
+        private System.Windows.Forms.GroupBox SmoothingGroup;
+        private System.Windows.Forms.TrackBar trackBar1;
+        private System.Windows.Forms.CheckBox RotationSmoothing;
+        private System.Windows.Forms.Label SmoothLabel;
+        private System.Windows.Forms.Label ResponsiveLabel;
     }
 }

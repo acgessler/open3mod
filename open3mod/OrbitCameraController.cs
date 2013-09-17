@@ -42,6 +42,7 @@ namespace open3mod
 
         private Vector3 _panVector;
 
+        private bool _dirty = true;
 
         private const float ZoomSpeed = 1.00105f;
         private const float MinimumCameraDistance = 0.1f;
@@ -82,6 +83,10 @@ namespace open3mod
 
         public Matrix4 GetView()
         {
+            if (_dirty)
+            {
+                UpdateViewMatrix();
+            }
             return _viewWithOffset;
         }
 
@@ -102,19 +107,19 @@ namespace open3mod
             {
                 _pitchAngle += (float)(y * RotationSpeed * Math.PI / 180.0);
             }
-              
-            UpdateViewMatrix();
+
+            _dirty = true;
 
             // leave the X,Z,Y constrained camera modes if we were in any of them
             SetOrbitOrConstrainedMode(CameraMode.Orbit);
         }
 
 
-        public void Scroll(int z)
+        public void Scroll(float z)
         {
             _cameraDistance *= (float)Math.Pow(ZoomSpeed, -z);
             _cameraDistance = Math.Max(_cameraDistance, MinimumCameraDistance);
-            UpdateViewMatrix();
+            _dirty = true;
         }
 
 
@@ -123,7 +128,7 @@ namespace open3mod
             _panVector.X += x * PanSpeed;
             _panVector.Y += -y * PanSpeed;
 
-            UpdateViewMatrix();
+            _dirty = true;
         }
 
 
@@ -144,6 +149,8 @@ namespace open3mod
             Matrix4 _viewWithPitchAndRoll = _view * Matrix4.CreateFromAxisAngle(_right, _pitchAngle) * Matrix4.CreateFromAxisAngle(_front, _rollAngle);
             _viewWithOffset = Matrix4.LookAt(_viewWithPitchAndRoll.Column2.Xyz * _cameraDistance + _pivot, _pivot, _viewWithPitchAndRoll.Column1.Xyz);
             _viewWithOffset *= Matrix4.CreateTranslation(_panVector);
+
+            _dirty = false;
         }
 
 
@@ -194,7 +201,14 @@ namespace open3mod
                     break;
             }
 
-            UpdateViewMatrix(); 
+            //reset rotionangles if we switched to one of the constrained views
+            if (_mode != CameraMode.Orbit)
+            {
+                _pitchAngle = 0.0f;
+                _rollAngle = 0.0f;
+            }
+
+            _dirty = true;
         }
 
         public void LeapInput(float x, float y, float z, float pitch, float roll, float yaw)
@@ -204,8 +218,11 @@ namespace open3mod
             _rollAngle = roll * 1.0f;
             Matrix4 yawrotation = Matrix4.CreateFromAxisAngle(_up, (float)(x * 0.125 * Math.PI / 180.0));
             _view *= yawrotation;
-            
-            UpdateViewMatrix();
+
+            //Zoom with hands movement in a forward direction ( Z axis )
+            Scroll(z * 3.0f);
+
+            _dirty = true;
 
             // leave the X,Z,Y constrained camera modes if we were in any of them
             SetOrbitOrConstrainedMode(CameraMode.Orbit);
