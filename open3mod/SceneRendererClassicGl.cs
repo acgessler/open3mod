@@ -110,6 +110,15 @@ namespace open3mod
                 GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
             }
 
+            var tmp = InitposeMax.X - InitposeMin.X;
+            tmp = Math.Max(InitposeMax.Y - InitposeMin.Y, tmp);
+            tmp = Math.Max(InitposeMax.Z - InitposeMin.Z, tmp);
+            var scale = 2.0 / tmp;     
+
+            if (cam != null)
+            {
+                cam.SetPivot((InitposeMax + InitposeMin) * 0.5f * (float)scale);
+            }
             var view = cam == null ? Matrix4.LookAt(0, 10, 5, 0, 0, 0, 0, 1, 0) : cam.GetView();
 
             GL.MatrixMode(MatrixMode.Modelview);
@@ -133,14 +142,10 @@ namespace open3mod
                 OverlayLightSource.DrawLightSource(dir);
             }
 
-            var tmp = InitposeMax.X - InitposeMin.X;
-            tmp = Math.Max(InitposeMax.Y - InitposeMin.Y, tmp);
-            tmp = Math.Max(InitposeMax.Z - InitposeMin.Z, tmp);
-            tmp = 2.0f / tmp;
-            GL.Scale(tmp,tmp,tmp);
+           
+            GL.Scale(scale, scale, scale);
 
-            GL.Translate(-(InitposeMin + InitposeMax) * 0.5f);
-            
+
             // If textures changed, we may need to upload some of them to VRAM.
             // it is important this happens here and not accidentially while
             // compiling a displist.
@@ -149,7 +154,6 @@ namespace open3mod
                 UploadTextures();
             }
 
-            
             GL.PushMatrix();
 
             // Build and cache Gl displaylists and update only when the scene changes.
@@ -167,6 +171,7 @@ namespace open3mod
                     {
                         _displayList = GL.GenLists(1);
                     }
+                    
                     GL.NewList(_displayList, ListMode.Compile);
                 }
                 
@@ -221,7 +226,24 @@ namespace open3mod
             // always switch back to FILL
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 
+            GL.Enable(EnableCap.ColorMaterial);
             GL.Disable(EnableCap.DepthTest);
+
+            // TEST CODE to visualize mid point (pivot) and origin
+            GL.LoadMatrix(ref view);
+            GL.Begin(BeginMode.Lines);
+
+            GL.Vertex3((InitposeMin + InitposeMax) * 0.5f * (float)scale);
+            GL.Color3(0.0f, 1.0f, 0.0f);
+            GL.Vertex3(0,0,0);
+            GL.Color3(0.0f, 1.0f, 0.0f);
+            GL.Vertex3((InitposeMin + InitposeMax) * 0.5f * (float)scale);
+            GL.Color3(0.0f, 1.0f, 0.0f);
+
+            GL.Vertex3(10, 10, 10);
+            GL.Color3(0.0f, 1.0f, 0.0f);
+            GL.End();
+
             GL.Disable(EnableCap.Texture2D);
             GL.Disable(EnableCap.Lighting);
         }

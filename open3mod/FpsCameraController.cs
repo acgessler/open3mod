@@ -50,6 +50,8 @@ namespace open3mod
             UpdateViewMatrix();
         }
 
+        public void SetPivot(Vector3 pivot)
+        { }
 
         public Matrix4 GetView()
         {

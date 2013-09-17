@@ -54,6 +54,13 @@ namespace open3mod
     /// </summary>
     public interface ICameraController
     {
+        /// <summary>
+        /// Set the pivot point, which is supposed to be the rotation origin.
+        /// The implementation may ignore the pivot point if such concept
+        /// does not make sense for the kind of camera it represents.
+        /// </summary>
+        /// <param name="pivot"></param>
+        void SetPivot(Vector3 pivot);
 
         /// <summary>
         /// Obtains the current view transformation matrix for the camera

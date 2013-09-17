@@ -42,6 +42,9 @@ namespace open3mod
         }
 
 
+        public void SetPivot(Vector3 pivot)
+        {}
+
         public void SetView(Matrix4 view)
         {
             _view = view;
