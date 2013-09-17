@@ -114,8 +114,22 @@ namespace open3mod
         /// Which viewport setup is currently active in the GUI is specified by the 
         /// ActiveViewMode property.
         /// </summary>
-        public Viewport[] ActiveViews = new Viewport[(int) ViewIndex._Max];
+        public Viewport[] ActiveViews
+        {
+            get
+            {
+                if (_dirtySplit)
+                {
+                    ValidateViewportBounds();
+                }
+                return _activeViews;
+            }
+            set{
+                _activeViews = value;
+            }
+        }
 
+        private Viewport[] _activeViews = new Viewport[(int)ViewIndex._Max];
 
         /// <summary>
         /// Current view mode
@@ -240,6 +254,18 @@ namespace open3mod
         private Scene _activeScene;
         private string _errorMessage;
         private ViewMode _activeViewMode = ViewMode.Four;
+
+        /// <summary>
+        /// Position of the horizontal and vertical splits 
+        /// in [MinimumViewportSplit,1-MinimumViewportSplit]
+        /// </summary>
+        private float _verticalSplitPos = 0.1f;
+        private float _horizontalSplitPos = 0.1f;
+
+        /// <summary>
+        /// dirty flag for the recalculation of viewport bounds
+        /// </summary>
+        private bool _dirtySplit = true;
 
 
         /// <summary>
@@ -430,20 +456,9 @@ namespace open3mod
             {
                 f = 1.0f-MinimumViewportSplit;
             }
-            foreach (var viewport in ActiveViews.Where(viewport => viewport != null))
-            {
-                var b = viewport.Bounds;
-                if (Math.Abs(b.X - f) < Math.Abs(b.Z - f) && b.X >= MinimumViewportSplit * 0.99999f)
-                {                
-                    b.X = f;
-                    viewport.Bounds = b;
-                }
-                else if (b.Z <= 1.0f - MinimumViewportSplit * 0.99999f)
-                {
-                    b.Z = f;
-                    viewport.Bounds = b;
-                }
-            }
+
+            _horizontalSplitPos = f;
+            _dirtySplit = true;
         }
 
 
@@ -468,20 +483,44 @@ namespace open3mod
             {
                 f = 1.0f - MinimumViewportSplit;
             }
-            foreach (var viewport in ActiveViews.Where(viewport => viewport != null))
+
+            _verticalSplitPos = f;
+            _dirtySplit = true;
+        }
+
+
+        /// <summary>
+        /// Ensure every viewport bounds do not overlap the splitter in both directions
+        /// </summary>
+        private void ValidateViewportBounds()
+        {
+            Debug.Assert(_dirtySplit);
+            foreach (var viewport in _activeViews.Where(viewport => viewport != null))
             {
                 var b = viewport.Bounds;
-                if (Math.Abs(b.Y - f) < Math.Abs(b.W - f) && b.Y >= MinimumViewportSplit * 0.99999f)
+
+                //set vertical split
+                if (Math.Abs(b.Y - _verticalSplitPos) > 0.0f && b.Y >= MinimumViewportSplit * 0.99999f)
                 {
-                    b.Y = f;
-                    viewport.Bounds = b;
+                    b.Y = _verticalSplitPos;
                 }
                 else if (b.W <= 1.0f - MinimumViewportSplit * 0.99999f)
                 {
-                    b.W = f;
-                    viewport.Bounds = b;
+                    b.W = _verticalSplitPos;
                 }
+
+                //set horizontal split
+                if (Math.Abs(b.X - _horizontalSplitPos) > 0.0f && b.X >= MinimumViewportSplit * 0.99999f)
+                {
+                    b.X = _horizontalSplitPos;
+                }
+                else if (b.Z <= 1.0f - MinimumViewportSplit * 0.99999f)
+                {
+                    b.Z = _horizontalSplitPos;
+                }
+                viewport.Bounds = b;
             }
+            _dirtySplit = false;
         }
     }
 }
