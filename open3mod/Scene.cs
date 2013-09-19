@@ -48,9 +48,9 @@ namespace open3mod
         private readonly string _baseDir;
        
         private readonly Assimp.Scene _raw;
-        private Vector3 _sceneCenter;
-        private Vector3 _sceneMin;
-        private Vector3 _sceneMax;       
+        private readonly Vector3 _sceneCenter;
+        private readonly Vector3 _sceneMin;
+        private readonly Vector3 _sceneMax;       
         private readonly LogStore _logStore;
 
         private readonly TextureSet _textureSet;
@@ -176,6 +176,11 @@ namespace open3mod
             get { return _loadingTime; }
         }
 
+        public Vector3 Pivot
+        {
+            get { return _pivot; }
+        }
+
 
         private volatile bool _texturesChanged;
         private volatile bool _wantSetTexturesChanged;
@@ -194,6 +199,7 @@ namespace open3mod
         private readonly int _totalLineCount;
         private readonly int _totalPointCount;
         private readonly long _loadingTime;
+        private Vector3 _pivot;
 
         /// <summary>
         /// Construct a scene given a file name, throw if loading fails
@@ -253,7 +259,8 @@ namespace open3mod
             LoadTextures();
 
             // compute a bounding box (AABB) for the scene we just loaded
-            ComputeBoundingBox(out _sceneMin, out _sceneMax);
+            ComputeBoundingBox(out _sceneMin, out _sceneMax, out _sceneCenter);
+            _pivot = _sceneCenter;
 
             CountVertsAndFaces(out _totalVertexCount, out _totalTriangleCount, out _totalLineCount, out _totalPointCount);
 
@@ -609,14 +616,15 @@ namespace open3mod
         /// </summary>
         /// <param name="sceneMin"></param>
         /// <param name="sceneMax"></param>
-        private void ComputeBoundingBox(out Vector3 sceneMin, out Vector3 sceneMax)
+        /// <param name="sceneCenter"> </param>
+        private void ComputeBoundingBox(out Vector3 sceneMin, out Vector3 sceneMax, out Vector3 sceneCenter)
         {
             sceneMin = new Vector3(1e10f, 1e10f, 1e10f);
             sceneMax = new Vector3(-1e10f, -1e10f, -1e10f);
             Matrix4 identity = Matrix4.Identity;
 
             ComputeBoundingBox(_raw.RootNode, ref sceneMin, ref sceneMax, ref identity);
-            _sceneCenter = (_sceneMin + _sceneMax) / 2.0f;
+            sceneCenter = (_sceneMin + _sceneMax) / 2.0f;
         }
 
 
@@ -703,6 +711,31 @@ namespace open3mod
         public void SetSkeletonVisibleOverride(bool overrideSkeleton)
         {
             _overrideSkeleton = overrideSkeleton;
+        }
+
+
+        /// <summary>
+        /// Set the pivot point for the scene to be at the world position 
+        /// of a given node.
+        /// </summary>
+        /// <param name="node">Node to place the pivot at. Pass null to reset the
+        /// pivot to be the (natural) center of the scene</param>
+        public void SetPivot(Node node)
+        {
+            if(node == null)
+            {
+                _pivot = _sceneCenter;
+                return;
+            }
+
+            var v = Vector3.Zero;
+            do
+            {
+                var trafo = AssimpToOpenTk.FromMatrix(node.Transform);
+                trafo.Transpose();
+                Vector3.TransformPosition(ref v, ref trafo, out v);
+            } while ((node = node.Parent) != null);
+            _pivot = v;
         }
     }
 }

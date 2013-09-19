@@ -115,9 +115,10 @@ namespace open3mod
             tmp = Math.Max(InitposeMax.Z - InitposeMin.Z, tmp);
             var scale = 2.0 / tmp;     
 
+            // TODO: migrate general scale and this snippet to camcontroller code
             if (cam != null)
             {
-                cam.SetPivot((InitposeMax + InitposeMin) * 0.5f * (float)scale);
+                cam.SetPivot(Owner.Pivot * (float)scale);
             }
             var view = cam == null ? Matrix4.LookAt(0, 10, 5, 0, 0, 0, 0, 1, 0) : cam.GetView();
 

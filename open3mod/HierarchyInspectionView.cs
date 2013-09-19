@@ -848,6 +848,15 @@ namespace open3mod
         }
 
 
+        private void OnContextMenuPivotNode(object sender, EventArgs e)
+        {
+            var node = GetTreeNodeForContextMenuEvent(sender);
+            var assimpNode = (Node) node.Tag;
+
+            _scene.SetPivot(assimpNode);
+        }  
+
+
         private bool HasPermanentlyHiddenNodes
         {
             get { return _hidden.Count != 0; }
@@ -970,7 +979,7 @@ namespace open3mod
             cm.Items[1].Enabled = GetNodePurpose(node) != NodePurpose.Joint;
 
             cm.Items[1].Text = IsNodePermanentlyHidden(node) ? "Unhide" : "Hide";
-        }  
+        }
     }
 }
 
