@@ -617,13 +617,18 @@ namespace open3mod
         /// <param name="sceneMin"></param>
         /// <param name="sceneMax"></param>
         /// <param name="sceneCenter"> </param>
-        private void ComputeBoundingBox(out Vector3 sceneMin, out Vector3 sceneMax, out Vector3 sceneCenter)
+        /// <param name="node"> </param>
+        /// <param name="omitNodeTrafo"> </param>
+        private void ComputeBoundingBox(out Vector3 sceneMin, out Vector3 sceneMax, out Vector3 sceneCenter, 
+            Node node = null, 
+            bool omitNodeTrafo = false)
         {
             sceneMin = new Vector3(1e10f, 1e10f, 1e10f);
             sceneMax = new Vector3(-1e10f, -1e10f, -1e10f);
-            Matrix4 identity = Matrix4.Identity;
+            var trafo = omitNodeTrafo ? Matrix4.Identity : AssimpToOpenTk.FromMatrix((node ?? _raw.RootNode).Transform);
+            trafo.Transpose();
 
-            ComputeBoundingBox(_raw.RootNode, ref sceneMin, ref sceneMax, ref identity);
+            ComputeBoundingBox(node ?? _raw.RootNode, ref sceneMin, ref sceneMax, ref trafo);
             sceneCenter = (_sceneMin + _sceneMax) / 2.0f;
         }
 
@@ -637,20 +642,14 @@ namespace open3mod
         /// <param name="trafo"></param>
         private void ComputeBoundingBox(Node node, ref Vector3 min, ref Vector3 max, ref Matrix4 trafo)
         {
-            Matrix4 prev = trafo;
-            var mat = AssimpToOpenTk.FromMatrix(node.Transform);
-            mat.Transpose();
-            prev = Matrix4.Mult(mat, prev);
-
             if (node.HasMeshes)
             {
-                foreach (int index in node.MeshIndices)
+                foreach (var mesh in node.MeshIndices.Select(index => _raw.Meshes[index]))
                 {
-                    Mesh mesh = _raw.Meshes[index];
-                    for (int i = 0; i < mesh.VertexCount; i++)
+                    for (var i = 0; i < mesh.VertexCount; i++)
                     {
-                        Vector3 tmp = AssimpToOpenTk.FromVector(mesh.Vertices[i]);
-                        Vector3.Transform(ref tmp, ref prev, out tmp);
+                        var tmp = AssimpToOpenTk.FromVector(mesh.Vertices[i]);
+                        Vector3.Transform(ref tmp, ref trafo, out tmp);
 
                         min.X = Math.Min(min.X, tmp.X);
                         min.Y = Math.Min(min.Y, tmp.Y);
@@ -665,9 +664,13 @@ namespace open3mod
 
             for (int i = 0; i < node.ChildCount; i++)
             {
+                var prev = trafo;
+                var mat = AssimpToOpenTk.FromMatrix(node.Children[i].Transform);
+                mat.Transpose();
+                Matrix4.Mult(ref mat, ref prev, out prev);
+
                 ComputeBoundingBox(node.Children[i], ref min, ref max, ref prev);
             }
-            //trafo = prev;
         }
 
 
@@ -720,15 +723,24 @@ namespace open3mod
         /// </summary>
         /// <param name="node">Node to place the pivot at. Pass null to reset the
         /// pivot to be the (natural) center of the scene</param>
-        public void SetPivot(Node node)
+        /// <param name="realCenter">Whether to compute the real center of the node (by getting
+        /// the mid point of the geometric bounds or whether the origin of the local coordinate
+        /// space is used.</param>
+        public void SetPivot(Node node, bool realCenter = true)
         {
             if(node == null)
             {
-                _pivot = _sceneCenter;
+                _pivot = realCenter ? _sceneCenter : Vector3.Zero;
                 return;
             }
 
             var v = Vector3.Zero;
+            if(realCenter)
+            {
+                Vector3 t1, t2;
+                ComputeBoundingBox(out t1, out t2, out v, node, true);
+            }
+
             do
             {
                 var trafo = AssimpToOpenTk.FromMatrix(node.Transform);
