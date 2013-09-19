@@ -89,6 +89,8 @@ namespace open3mod
         private Timer _popupAnimTimer;
         private int _oldLocY;
 
+        private TreeNode _pivotNode = null;
+
         public HierarchyInspectionView(Scene scene, TabPage tabPageHierarchy)
         {
             _filterByMesh = new Dictionary<Node, List<Mesh>>();
@@ -264,6 +266,8 @@ namespace open3mod
             if (uiNode == null)
             {
                 _tree.Nodes.Add(root);
+                Debug.Assert(level == 0);
+                SetPivotNode(root);
             }
             else
             {
@@ -864,10 +868,38 @@ namespace open3mod
                 return;
             }
 
-            var assimpNode = (Node) node.Tag;
-
-            _scene.SetPivot(assimpNode);
+            SetPivotNode(node);
         }  
+
+
+        private void SetPivotNode(TreeNode node)
+        {
+            if (node == _pivotNode)
+            {
+                return;
+            }
+
+            const string pivotPostfix = " (pivot)";
+
+            // this can be null at the very beginning
+            if (_pivotNode != null)
+            {
+                Debug.Assert(_pivotNode.Text.EndsWith(pivotPostfix));
+                _pivotNode.Text = _pivotNode.Text.Substring(0, _pivotNode.Text.Length - pivotPostfix.Length);
+                _pivotNode.ForeColor = Color.Black;
+                _pivotNode.NodeFont = node.TreeView.Font;
+            }
+
+            _pivotNode = node;
+
+            Debug.Assert(!node.Text.EndsWith(pivotPostfix));
+            node.Text += pivotPostfix;
+            node.ForeColor = Color.DarkSlateGray;
+            node.NodeFont = new Font(node.TreeView.Font, FontStyle.Italic);
+
+            var assimpNode = (Node)node.Tag;
+            _scene.SetPivot(assimpNode);
+        }
 
 
         private bool HasPermanentlyHiddenNodes
