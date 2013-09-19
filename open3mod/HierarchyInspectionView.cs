@@ -822,7 +822,7 @@ namespace open3mod
             var treeView = (TreeView)cms.SourceControl;
 
             var node = _tree.GetNodeAt(treeView.PointToClient(cms.Location));
-            Debug.Assert(node != null);
+            // Debug.Assert(node != null); // for whatever reason, this can happen
             return node;
         }
 
@@ -830,6 +830,10 @@ namespace open3mod
         private void OnContextMenuShowDetails(object sender, EventArgs e)
         {
             var node = GetTreeNodeForContextMenuEvent(sender);
+            if (node == null) // for whatever reason, this can happen
+            {
+                return;
+            }
             ShowDetailsForTreeNode(node);
         }
 
@@ -837,6 +841,10 @@ namespace open3mod
         private void OnContextMenuHideNode(object sender, EventArgs e)
         {
             var node = GetTreeNodeForContextMenuEvent(sender);
+            if (node == null) // for whatever reason, this can happen
+            {
+                return;
+            }
             if (IsNodePermanentlyHidden((Node)node.Tag))
             {
                 UnhideSubhierarchy(node);
@@ -851,6 +859,11 @@ namespace open3mod
         private void OnContextMenuPivotNode(object sender, EventArgs e)
         {
             var node = GetTreeNodeForContextMenuEvent(sender);
+            if (node == null) // for whatever reason, this can happen
+            {
+                return;
+            }
+
             var assimpNode = (Node) node.Tag;
 
             _scene.SetPivot(assimpNode);
@@ -969,6 +982,10 @@ namespace open3mod
         {
             var cm = (ContextMenuStrip) sender;
             var root = GetTreeNodeForContextMenuEvent(sender);
+            if(root == null) // for whatever reason, this can happen
+            {
+                return;
+            }
             var node = root.Tag as Node;
             Debug.Assert(node != null);
 
