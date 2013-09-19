@@ -87,10 +87,13 @@ namespace open3mod
 
             // note: keep semantics of hasAlpha consistent with IsAlphaMaterial()
             var hasAlpha = false;
+            var hasTexture = false;
 
             // note: keep this up-to-date with the code in UploadTextures()
             if (textured && mat.GetMaterialTextureCount(TextureType.Diffuse) > 0)
             {
+                hasTexture = true;
+
                 TextureSlot tex;
                 mat.GetMaterialTexture(TextureType.Diffuse, 0, out tex);
                 var gtex = _scene.TextureSet.GetOriginalOrReplacement(tex.FilePath);
@@ -140,7 +143,17 @@ namespace open3mod
 
             if (shaded)
             {
-                GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, color);
+                // if the material has a texture but the diffuse color texture is all black,
+                // then heuristically assume that this is an import/export flaw and substitute
+                // white.
+                if (hasTexture && color.R < 1e-3f && color.G < 1e-3f && color.B < 1e-3f)
+                {
+                    GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, Color4.White);
+                }
+                else
+                {
+                    GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, color);
+                }
 
                 color = new Color4(0, 0, 0, 1.0f);
                 if (mat.HasColorSpecular)
