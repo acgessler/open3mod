@@ -621,15 +621,15 @@ namespace open3mod
         /// <param name="omitNodeTrafo"> </param>
         private void ComputeBoundingBox(out Vector3 sceneMin, out Vector3 sceneMax, out Vector3 sceneCenter, 
             Node node = null, 
-            bool omitNodeTrafo = false)
+            bool omitRootNodeTrafo = false)
         {
             sceneMin = new Vector3(1e10f, 1e10f, 1e10f);
             sceneMax = new Vector3(-1e10f, -1e10f, -1e10f);
-            var trafo = omitNodeTrafo ? Matrix4.Identity : AssimpToOpenTk.FromMatrix((node ?? _raw.RootNode).Transform);
+            var trafo = omitRootNodeTrafo ? Matrix4.Identity : AssimpToOpenTk.FromMatrix((node ?? _raw.RootNode).Transform);
             trafo.Transpose();
 
             ComputeBoundingBox(node ?? _raw.RootNode, ref sceneMin, ref sceneMax, ref trafo);
-            sceneCenter = (_sceneMin + _sceneMax) / 2.0f;
+            sceneCenter = (sceneMin + sceneMax) / 2.0f;
         }
 
 
@@ -662,7 +662,7 @@ namespace open3mod
                 }
             }
 
-            for (int i = 0; i < node.ChildCount; i++)
+            for (var i = 0; i < node.ChildCount; i++)
             {
                 var prev = trafo;
                 var mat = AssimpToOpenTk.FromMatrix(node.Children[i].Transform);
@@ -745,7 +745,7 @@ namespace open3mod
             {
                 var trafo = AssimpToOpenTk.FromMatrix(node.Transform);
                 trafo.Transpose();
-                Vector3.TransformPosition(ref v, ref trafo, out v);
+                Vector3.Transform(ref v, ref trafo, out v);
             } while ((node = node.Parent) != null);
             _pivot = v;
         }
