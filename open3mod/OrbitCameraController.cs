@@ -105,8 +105,9 @@ namespace open3mod
 
             if (y != 0)
             {
-                _pitchAngle += (float)(y * RotationSpeed * Math.PI / 180.0);
+                _view *= Matrix4.CreateFromAxisAngle(_right, (float)(y * RotationSpeed * Math.PI / 180.0));
             }
+
 
             _dirty = true;
 
