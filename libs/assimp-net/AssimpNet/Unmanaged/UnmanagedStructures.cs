@@ -269,7 +269,12 @@ namespace Assimp.Unmanaged {
         /// </summary>
         //[MarshalAs(UnmanagedType.ByValTStr, SizeConst=4)]
         //public String FormatHint;
-        public fixed char FormatHint[4];
+
+        // Note: As per http://msdn.microsoft.com/en-us/library/zycewsya.aspx,
+        // fixed size char buffers always use two bytes per character,
+        // regardless of the encoding. Assmp's aiTexture uss char, which 
+        // maps to one byte.
+        public fixed sbyte FormatHint[4];
 
         /// <summary>
         /// aiTexel*, array of texel data.
@@ -285,11 +290,11 @@ namespace Assimp.Unmanaged {
 
             int count = hintChars.Length;
 
-            fixed(char* charPtr = FormatHint) {
-                charPtr[0] = (count > 0) ? hintChars[0] : '\0';
-                charPtr[1] = (count > 1) ? hintChars[1] : '\0';
-                charPtr[2] = (count > 2) ? hintChars[2] : '\0';
-                charPtr[3] = '\0';
+            fixed(sbyte* charPtr = FormatHint) {
+                charPtr[0] = (sbyte)((count > 0) ? hintChars[0] : '\0');
+                charPtr[1] = (sbyte)((count > 1) ? hintChars[1] : '\0');
+                charPtr[2] = (sbyte)((count > 2) ? hintChars[2] : '\0');
+                charPtr[3] = (sbyte)'\0';
             }
         }
 
@@ -298,7 +303,7 @@ namespace Assimp.Unmanaged {
         /// </summary>
         /// <returns>The format hint</returns>
         public String GetFormatHint() {
-            fixed(char* charPtr = FormatHint) {
+            fixed(sbyte* charPtr = FormatHint) {
                 return new String(charPtr);
             }
         }
