@@ -35,6 +35,14 @@ namespace open3mod
         public ExportDialog()
         {
             InitializeComponent();
+
+            using (var v = new Assimp.AssimpContext())
+            {
+                var formats = v.GetSupportedExportFormats();
+                foreach(var format in formats) {
+                    comboBoxExportFormats.Items.Add(format.Description + "  (" + format.FileExtension + ")");
+                }
+            }
         }
     }
 }
