@@ -28,54 +28,38 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.buttonSelectFolder = new System.Windows.Forms.Button();
             this.comboBoxExportFormats = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.label3 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.textBoxFileName = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.checkBox5 = new System.Windows.Forms.CheckBox();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.button2 = new System.Windows.Forms.Button();
+            this.checkBoxIncludeSceneHierarchy = new System.Windows.Forms.CheckBox();
+            this.checkBoxIncludeAnimations = new System.Windows.Forms.CheckBox();
+            this.checkBoxUseRelativeTexturePaths = new System.Windows.Forms.CheckBox();
+            this.textBoxCopyTexturesToFolder = new System.Windows.Forms.TextBox();
+            this.checkBoxCopyTexturesToSubfolder = new System.Windows.Forms.CheckBox();
+            this.textBoxPath = new System.Windows.Forms.TextBox();
+            this.checkBoxOpenExportedFile = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
-            // checkBox1
+            // buttonSelectFolder
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(443, 396);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(157, 17);
-            this.checkBox1.TabIndex = 0;
-            this.checkBox1.Text = "Open exported file in viewer";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(505, 25);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(40, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "...";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(77, 27);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(421, 20);
-            this.textBox1.TabIndex = 2;
+            this.buttonSelectFolder.Location = new System.Drawing.Point(505, 25);
+            this.buttonSelectFolder.Name = "buttonSelectFolder";
+            this.buttonSelectFolder.Size = new System.Drawing.Size(40, 23);
+            this.buttonSelectFolder.TabIndex = 1;
+            this.buttonSelectFolder.Text = "...";
+            this.buttonSelectFolder.UseVisualStyleBackColor = true;
+            this.buttonSelectFolder.Click += new System.EventHandler(this.buttonSelectFolder_Click);
             // 
             // comboBoxExportFormats
             // 
@@ -111,6 +95,10 @@
             this.progressBar1.Size = new System.Drawing.Size(464, 23);
             this.progressBar1.TabIndex = 7;
             // 
+            // folderBrowserDialog
+            // 
+            this.folderBrowserDialog.Description = "Select output folder";
+            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -120,37 +108,29 @@
             this.label3.TabIndex = 8;
             this.label3.Text = "File name";
             // 
-            // textBox3
+            // textBoxFileName
             // 
-            this.textBox3.Location = new System.Drawing.Point(77, 58);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(421, 20);
-            this.textBox3.TabIndex = 9;
+            this.textBoxFileName.Location = new System.Drawing.Point(77, 58);
+            this.textBoxFileName.Name = "textBoxFileName";
+            this.textBoxFileName.Size = new System.Drawing.Size(421, 20);
+            this.textBoxFileName.TabIndex = 9;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.textBox4);
+            this.groupBox1.Controls.Add(this.textBoxCopyTexturesToFolder);
             this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.checkBox2);
+            this.groupBox1.Controls.Add(this.checkBoxCopyTexturesToSubfolder);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.textBox3);
-            this.groupBox1.Controls.Add(this.button1);
+            this.groupBox1.Controls.Add(this.textBoxFileName);
+            this.groupBox1.Controls.Add(this.buttonSelectFolder);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.textBox1);
+            this.groupBox1.Controls.Add(this.textBoxPath);
             this.groupBox1.Location = new System.Drawing.Point(31, 162);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(569, 178);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Output";
-            // 
-            // textBox4
-            // 
-            this.textBox4.Location = new System.Drawing.Point(184, 132);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(314, 20);
-            this.textBox4.TabIndex = 11;
-            this.textBox4.Text = "textures/";
             // 
             // label4
             // 
@@ -163,21 +143,11 @@
             this.label4.Text = "Note: some file formats (such as Obj) use multiple files for one scene. In such a" +
     " case,\r\nthe name given here is the name of the primary file.";
             // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(11, 135);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(151, 17);
-            this.checkBox2.TabIndex = 7;
-            this.checkBox2.Text = "Copy textures to sub-folder";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.checkBox5);
-            this.groupBox2.Controls.Add(this.checkBox4);
-            this.groupBox2.Controls.Add(this.checkBox3);
+            this.groupBox2.Controls.Add(this.checkBoxIncludeSceneHierarchy);
+            this.groupBox2.Controls.Add(this.checkBoxIncludeAnimations);
+            this.groupBox2.Controls.Add(this.checkBoxUseRelativeTexturePaths);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.comboBoxExportFormats);
             this.groupBox2.Location = new System.Drawing.Point(31, 12);
@@ -187,36 +157,6 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Export ";
             // 
-            // checkBox5
-            // 
-            this.checkBox5.AutoSize = true;
-            this.checkBox5.Location = new System.Drawing.Point(148, 94);
-            this.checkBox5.Name = "checkBox5";
-            this.checkBox5.Size = new System.Drawing.Size(139, 17);
-            this.checkBox5.TabIndex = 10;
-            this.checkBox5.Text = "Include scene hierarchy";
-            this.checkBox5.UseVisualStyleBackColor = true;
-            // 
-            // checkBox4
-            // 
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.Location = new System.Drawing.Point(21, 94);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(114, 17);
-            this.checkBox4.TabIndex = 9;
-            this.checkBox4.Text = "Include animations";
-            this.checkBox4.UseVisualStyleBackColor = true;
-            // 
-            // checkBox3
-            // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(21, 71);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(146, 17);
-            this.checkBox3.TabIndex = 8;
-            this.checkBox3.Text = "Use relative texture paths";
-            this.checkBox3.UseVisualStyleBackColor = true;
-            // 
             // button2
             // 
             this.button2.Location = new System.Drawing.Point(35, 367);
@@ -225,6 +165,89 @@
             this.button2.TabIndex = 12;
             this.button2.Text = "Export";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // checkBoxIncludeSceneHierarchy
+            // 
+            this.checkBoxIncludeSceneHierarchy.AutoSize = true;
+            this.checkBoxIncludeSceneHierarchy.Checked = global::open3mod.ExportSettings.Default.IncludeSceneHierarchy;
+            this.checkBoxIncludeSceneHierarchy.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxIncludeSceneHierarchy.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.ExportSettings.Default, "IncludeSceneHierarchy", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxIncludeSceneHierarchy.Location = new System.Drawing.Point(148, 94);
+            this.checkBoxIncludeSceneHierarchy.Name = "checkBoxIncludeSceneHierarchy";
+            this.checkBoxIncludeSceneHierarchy.Size = new System.Drawing.Size(139, 17);
+            this.checkBoxIncludeSceneHierarchy.TabIndex = 10;
+            this.checkBoxIncludeSceneHierarchy.Text = "Include scene hierarchy";
+            this.checkBoxIncludeSceneHierarchy.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxIncludeAnimations
+            // 
+            this.checkBoxIncludeAnimations.AutoSize = true;
+            this.checkBoxIncludeAnimations.Checked = global::open3mod.ExportSettings.Default.IncludeAnimations;
+            this.checkBoxIncludeAnimations.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxIncludeAnimations.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.ExportSettings.Default, "IncludeAnimations", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxIncludeAnimations.Location = new System.Drawing.Point(21, 94);
+            this.checkBoxIncludeAnimations.Name = "checkBoxIncludeAnimations";
+            this.checkBoxIncludeAnimations.Size = new System.Drawing.Size(114, 17);
+            this.checkBoxIncludeAnimations.TabIndex = 9;
+            this.checkBoxIncludeAnimations.Text = "Include animations";
+            this.checkBoxIncludeAnimations.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxUseRelativeTexturePaths
+            // 
+            this.checkBoxUseRelativeTexturePaths.AutoSize = true;
+            this.checkBoxUseRelativeTexturePaths.Checked = global::open3mod.ExportSettings.Default.UseRelativeTexturePaths;
+            this.checkBoxUseRelativeTexturePaths.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxUseRelativeTexturePaths.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.ExportSettings.Default, "blorb", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxUseRelativeTexturePaths.Location = new System.Drawing.Point(21, 71);
+            this.checkBoxUseRelativeTexturePaths.Name = "checkBoxUseRelativeTexturePaths";
+            this.checkBoxUseRelativeTexturePaths.Size = new System.Drawing.Size(146, 17);
+            this.checkBoxUseRelativeTexturePaths.TabIndex = 8;
+            this.checkBoxUseRelativeTexturePaths.Text = "Use relative texture paths";
+            this.checkBoxUseRelativeTexturePaths.UseVisualStyleBackColor = true;
+            // 
+            // textBoxCopyTexturesToFolder
+            // 
+            this.textBoxCopyTexturesToFolder.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::open3mod.ExportSettings.Default, "CopyTexturesToFolder_Target", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textBoxCopyTexturesToFolder.Location = new System.Drawing.Point(184, 132);
+            this.textBoxCopyTexturesToFolder.Name = "textBoxCopyTexturesToFolder";
+            this.textBoxCopyTexturesToFolder.Size = new System.Drawing.Size(314, 20);
+            this.textBoxCopyTexturesToFolder.TabIndex = 11;
+            this.textBoxCopyTexturesToFolder.Text = global::open3mod.ExportSettings.Default.CopyTexturesToFolder_Target;
+            // 
+            // checkBoxCopyTexturesToSubfolder
+            // 
+            this.checkBoxCopyTexturesToSubfolder.AutoSize = true;
+            this.checkBoxCopyTexturesToSubfolder.Checked = global::open3mod.ExportSettings.Default.CopyTexturesToFolder;
+            this.checkBoxCopyTexturesToSubfolder.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxCopyTexturesToSubfolder.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.ExportSettings.Default, "CopyTexturesToFolder", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxCopyTexturesToSubfolder.Location = new System.Drawing.Point(11, 135);
+            this.checkBoxCopyTexturesToSubfolder.Name = "checkBoxCopyTexturesToSubfolder";
+            this.checkBoxCopyTexturesToSubfolder.Size = new System.Drawing.Size(151, 17);
+            this.checkBoxCopyTexturesToSubfolder.TabIndex = 7;
+            this.checkBoxCopyTexturesToSubfolder.Text = "Copy textures to sub-folder";
+            this.checkBoxCopyTexturesToSubfolder.UseVisualStyleBackColor = true;
+            // 
+            // textBoxPath
+            // 
+            this.textBoxPath.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::open3mod.ExportSettings.Default, "OutputPath", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textBoxPath.Location = new System.Drawing.Point(77, 27);
+            this.textBoxPath.Name = "textBoxPath";
+            this.textBoxPath.Size = new System.Drawing.Size(421, 20);
+            this.textBoxPath.TabIndex = 2;
+            this.textBoxPath.Text = global::open3mod.ExportSettings.Default.OutputPath;
+            // 
+            // checkBoxOpenExportedFile
+            // 
+            this.checkBoxOpenExportedFile.AutoSize = true;
+            this.checkBoxOpenExportedFile.Checked = global::open3mod.ExportSettings.Default.OpenExportedFileInViewer;
+            this.checkBoxOpenExportedFile.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.ExportSettings.Default, "OpenExportedFileInViewer", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxOpenExportedFile.Location = new System.Drawing.Point(443, 396);
+            this.checkBoxOpenExportedFile.Name = "checkBoxOpenExportedFile";
+            this.checkBoxOpenExportedFile.Size = new System.Drawing.Size(157, 17);
+            this.checkBoxOpenExportedFile.TabIndex = 0;
+            this.checkBoxOpenExportedFile.Text = "Open exported file in viewer";
+            this.checkBoxOpenExportedFile.UseVisualStyleBackColor = true;
             // 
             // ExportDialog
             // 
@@ -235,7 +258,7 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.progressBar1);
-            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.checkBoxOpenExportedFile);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.Name = "ExportDialog";
@@ -252,24 +275,24 @@
 
         #endregion
 
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.CheckBox checkBoxOpenExportedFile;
+        private System.Windows.Forms.Button buttonSelectFolder;
+        private System.Windows.Forms.TextBox textBoxPath;
         private System.Windows.Forms.ComboBox comboBoxExportFormats;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox textBoxFileName;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox textBoxCopyTexturesToFolder;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.CheckBox checkBoxCopyTexturesToSubfolder;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.CheckBox checkBox3;
-        private System.Windows.Forms.CheckBox checkBox5;
-        private System.Windows.Forms.CheckBox checkBox4;
+        private System.Windows.Forms.CheckBox checkBoxUseRelativeTexturePaths;
+        private System.Windows.Forms.CheckBox checkBoxIncludeSceneHierarchy;
+        private System.Windows.Forms.CheckBox checkBoxIncludeAnimations;
         private System.Windows.Forms.Button button2;
     }
 }

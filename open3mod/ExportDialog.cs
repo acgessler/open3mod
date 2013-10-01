@@ -44,6 +44,17 @@ namespace open3mod
                 }
             }
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonSelectFolder_Click(object sender, EventArgs e)
+        {
+            folderBrowserDialog.ShowDialog(this);
+            textBoxPath.Text = folderBrowserDialog.SelectedPath;
+        }
     }
 }
 

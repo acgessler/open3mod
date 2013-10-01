@@ -100,6 +100,11 @@
     <Compile Include="DonationDialog.Designer.cs">
       <DependentUpon>DonationDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="ExportSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>ExportSettings.settings</DependentUpon>
+    </Compile>
     <Compile Include="FileAssociations.cs" />
     <Compile Include="FolderSetDisplay.cs">
       <SubType>UserControl</SubType>
@@ -340,19 +345,14 @@
       <LastGenOutput>CoreSettings.Designer.cs</LastGenOutput>
       <CustomToolNamespace>CoreSettings</CustomToolNamespace>
     </None>
+    <None Include="ExportSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>ExportSettings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="GraphicsSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>GraphicsSettings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
     <EmbeddedResource Include="Shader\UberFragmentShader.glsl" />
     <EmbeddedResource Include="Shader\UberVertexShader.glsl" />
   </ItemGroup>
