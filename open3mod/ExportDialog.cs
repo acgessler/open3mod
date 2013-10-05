@@ -42,6 +42,11 @@ namespace open3mod
                 foreach(var format in formats) {
                     comboBoxExportFormats.Items.Add(format.Description + "  (" + format.FileExtension + ")");
                 }
+                comboBoxExportFormats.SelectedIndex = ExportSettings.Default.ExportFormatIndex;
+                comboBoxExportFormats.SelectedIndexChanged += (object s, EventArgs e) =>
+                {
+                    ExportSettings.Default.ExportFormatIndex = comboBoxExportFormats.SelectedIndex;
+                };
             }
         }
 
