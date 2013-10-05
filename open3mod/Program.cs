@@ -59,7 +59,11 @@ namespace open3mod
                     {
                         if (mainWindow != null)
                         {
-                            mainWindow.BeginInvoke(new MethodInvoker(() => mainWindow.AddTab(absPath)));                        
+                            mainWindow.BeginInvoke(new MethodInvoker(() =>
+                            {
+                                mainWindow.Activate();
+                                mainWindow.AddTab(absPath);
+                            }));                        
                         }
                     },
 
