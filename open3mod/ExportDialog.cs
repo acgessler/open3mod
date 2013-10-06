@@ -84,9 +84,30 @@ namespace open3mod
             _main.SelectedTabChanged += (Tab tab) =>
             {
                 UpdateFileName();
+                UpdateCaption();
             };
 
             UpdateFileName();
+            UpdateCaption();
+        }
+
+
+        private void UpdateCaption()
+        {
+            string str = "Export ";
+            var scene = _main.UiState.ActiveTab.ActiveScene;
+            if (scene != null)
+            {
+                str += Path.GetFileName(scene.File);
+                buttonExportRun.Enabled = true;
+            }
+            else
+            {
+                buttonExportRun.Enabled = false;
+                str += "<no scene currently selected>";
+            }
+
+            Text = str;
         }
 
 
