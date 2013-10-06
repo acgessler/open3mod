@@ -93,6 +93,7 @@
             this.progressBarExport.Location = new System.Drawing.Point(136, 367);
             this.progressBarExport.Name = "progressBarExport";
             this.progressBarExport.Size = new System.Drawing.Size(464, 23);
+            this.progressBarExport.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.progressBarExport.TabIndex = 7;
             // 
             // folderBrowserDialog

@@ -142,22 +142,33 @@ namespace open3mod
                 MessageBox.Show("No exportable scene selected");
                 return;
             }
-            using (var v = new Assimp.AssimpContext())
-            {
-                var id = SelectedFormatId;
-
-                DoExport(scene, id);              
-            }
+            
+                DoExport(scene, SelectedFormatId);
         }
 
         private void DoExport(Scene scene, string id) 
         {
+            progressBarExport.Style = ProgressBarStyle.Marquee;
+            progressBarExport.MarqueeAnimationSpeed = 5;
+
+            var path = textBoxPath.Text.Trim();
+            var name = textBoxFileName.Text.Trim();
+            var fullPath = (path.Length > 0 ? path + "\\" : "") + name;
             var t = new Thread(() => {
                 using (var v = new Assimp.AssimpContext())
                 {
-                    if (!v.ExportFile(scene.Raw, textBoxPath.Text + "\\" + textBoxFileName.Text, id))
+                    bool result = v.ExportFile(scene.Raw, fullPath, id);
+
+                    _main.BeginInvoke(new MethodInvoker(() =>
                     {
-                    }
+                        progressBarExport.Style = ProgressBarStyle.Continuous;
+                        progressBarExport.MarqueeAnimationSpeed = 0;
+
+                        if (!result) {
+                            // TODO: get native error message
+                            MessageBox.Show("Failed to export to " + path, "Export error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }));
                 }
             });
 
