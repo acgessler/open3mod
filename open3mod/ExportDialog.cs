@@ -164,9 +164,16 @@ namespace open3mod
                         progressBarExport.Style = ProgressBarStyle.Continuous;
                         progressBarExport.MarqueeAnimationSpeed = 0;
 
-                        if (!result) {
+                        if (!result)
+                        {
                             // TODO: get native error message
-                            MessageBox.Show("Failed to export to " + path, "Export error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Failed to export to " + fullPath, "Export error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        else
+                        {
+                            if (checkBoxOpenExportedFile.Checked) {
+                                _main.AddTab(fullPath);
+                            }
                         }
                     }));
                 }
