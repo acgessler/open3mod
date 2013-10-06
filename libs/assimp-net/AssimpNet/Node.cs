@@ -199,6 +199,9 @@ namespace Assimp {
 
             nativeValue.NumMeshes = (uint) node.m_meshes.Count;
             nativeValue.Meshes = MemoryHelper.ToNativeArray<int>(node.m_meshes.ToArray());
+#if WITH_NODE_METADATA
+            nativeValue.MetaData = IntPtr.Zero;
+#endif
 
             //Now descend through the children
             nativeValue.NumChildren = (uint) node.m_children.Count;
@@ -237,7 +240,7 @@ namespace Assimp {
         #region IMarshalable Implemention
 
         bool IMarshalable<Node, AiNode>.IsNativeBlittable {
-            get { return true; }
+            get { return false; }
         }
 
         /// <summary>
@@ -252,7 +255,10 @@ namespace Assimp {
 
             nativeValue.NumMeshes = (uint) m_meshes.Count;
             nativeValue.Meshes = IntPtr.Zero;
-            
+#if WITH_NODE_METADATA
+            nativeValue.MetaData = IntPtr.Zero;
+#endif
+
             if(nativeValue.NumMeshes > 0)
                 nativeValue.Meshes = MemoryHelper.ToNativeArray<int>(m_meshes.ToArray());
 

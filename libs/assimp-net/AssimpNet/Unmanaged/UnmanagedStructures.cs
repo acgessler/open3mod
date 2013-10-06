@@ -147,6 +147,14 @@ namespace Assimp.Unmanaged {
         /// unsigned int*, array of mesh indices.
         /// </summary>
         public IntPtr Meshes;
+
+#if WITH_NODE_METADATA
+        /// <summary>
+        /// aiMetadata* mMetaData; -- not supported for now, but
+        /// present in assimp trunk.
+        /// </summary>
+        public IntPtr MetaData;
+#endif
     }
 
     /// <summary>
