@@ -83,6 +83,10 @@ namespace open3mod
         public void Resize()
         {
             var cs = _renderer.RenderResolution;
+            if (cs.Width == 0 || cs.Height == 0) 
+            {
+                return;
+            }
 
             _textBmp.Dispose();
             _textBmp = new Bitmap(cs.Width, cs.Height);
