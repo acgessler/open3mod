@@ -416,6 +416,11 @@ namespace open3mod
                 case Keys.PageDown:
                     _downPressed = true;
                     break;
+
+                case Keys.R:
+                    // reset camera immediately
+                    UiState.ActiveTab.ResetActiveCameraController();
+                    break;
             }
         }
 

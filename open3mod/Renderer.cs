@@ -333,6 +333,8 @@ namespace open3mod
             }
         }
 
+        private bool _hoverViewWasActive = false;
+
 
         /// <summary>
         /// Draw HUD (camera panel) at the viewport that the mouse is currently hovering over
@@ -367,6 +369,13 @@ namespace open3mod
             {
                 _hudDirty = true;
             }
+
+            bool hoverViewIsActive = _hoverViewIndex == ui.ActiveViewIndex;
+            if (hoverViewIsActive != _hoverViewWasActive)
+            {
+                _hudDirty = true;
+            }
+            _hoverViewWasActive = hoverViewIsActive;
 
             _lastHoverViewCameraMode = newMode;
 
@@ -435,6 +444,20 @@ namespace open3mod
                 graphics.DrawImage(_hudBar, _hoverRegion);
             }
 
+            // draw reset info stringin the upper left corner
+            if (_hoverViewIndex == ui.ActiveViewIndex)
+            {
+                var format = new StringFormat { LineAlignment = StringAlignment.Near, Alignment = StringAlignment.Near };
+                var rect = new RectangleF(x1 * RenderResolution.Width + 10,
+                    (1 - y2) * RenderResolution.Height + 10,
+                    (x2 - x1) * RenderResolution.Width,
+                    (y2 - y1) * RenderResolution.Height);
+
+                DrawShadowedString(graphics, "Press [R] to reset the view", Window.UiState.DefaultFont10,
+                    rect, Color.Black, Color.FromArgb(50, Color.White), format);         
+            }
+
+            // draw all the buttons on the HUD
             xPoint += _hudImages.GetLength(0) / 2;
             for (var i = 0; i < _hudImages.GetLength(0); ++i)
             {

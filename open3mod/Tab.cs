@@ -364,6 +364,19 @@ namespace open3mod
 
 
         /// <summary>
+        /// Resets the camera in the currently active view
+        /// </summary>
+        /// <param name="cameraMode">New camera mode</param>
+        public void ResetActiveCameraController()
+        {
+            Debug.Assert(ActiveViews[(int)ActiveViewIndex] != null);
+            var view = ActiveViews[(int)ActiveViewIndex];
+
+            view.ResetCameraController();
+        }
+
+
+        /// <summary>
         /// Converts a (mouse) hit position to a viewport index - in other words,
         /// it calculates the index of the viewport that is hit by a click
         /// on a given mouse position.

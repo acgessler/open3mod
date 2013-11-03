@@ -114,6 +114,13 @@ namespace open3mod
         }
 
 
+        public void ResetCameraController() 
+        {
+            _cameraImpls[(int)_camMode] = null;
+            ActiveCameraControllerForView();
+        }
+
+
         public void ChangeCameraModeForView(CameraMode cameraMode)
         {
             if(_camMode == cameraMode)
