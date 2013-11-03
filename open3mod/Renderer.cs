@@ -300,6 +300,41 @@ namespace open3mod
 
 
         /// <summary>
+        /// Draw a string with four shifted copies of itself (shadow)
+        /// </summary>
+        /// <param name="graphics">graphics context</param>
+        /// <param name="s">string to be drawn</param>
+        /// <param name="font"></param>
+        /// <param name="rect">graphics.DrawString() draw rectangle</param>
+        /// <param name="main">text color</param>
+        /// <param name="shadow">color of the text's shadow (make partially transparent at your leisure)</param>
+        /// <param name="format">graphics.DrawString() formatting info</param>
+        private void DrawShadowedString(Graphics graphics, String s, Font font, RectangleF rect, Color main, Color shadow,
+            StringFormat format)
+        {
+            using (var sb = new SolidBrush(main))
+            {
+                using (var sb2 = new SolidBrush(shadow))
+                {
+                    for (int xd = -1; xd <= 1; xd += 2)
+                    {
+                        for (int yd = -1; yd <= 1; yd += 2)
+                        {
+                            var rect2 = new RectangleF(rect.Left + xd,
+                               rect.Top + yd,
+                               rect.Width,
+                               rect.Height);
+
+                            graphics.DrawString(s, font, sb2, rect2, format);
+                        }
+                    }
+                    graphics.DrawString(s, font, sb, rect, format);
+                }
+            }
+        }
+
+
+        /// <summary>
         /// Draw HUD (camera panel) at the viewport that the mouse is currently hovering over
         /// </summary>
         private void DrawHud()
@@ -433,16 +468,16 @@ namespace open3mod
 
                     // draw tooltip
                     Debug.Assert(i < DescTable.Length);
-                    using(var sb = new SolidBrush(BorderColor))
-                    {
-                        var format = new StringFormat {LineAlignment = StringAlignment.Far, Alignment = StringAlignment.Far};
-                        var rect = new RectangleF(x1 * RenderResolution.Width, 
-                            (1-y2) * RenderResolution.Height, 
-                            (x2 - x1) * RenderResolution.Width - 4, 
-                            (y2 - y1) * RenderResolution.Height - 2);
+                    
+                    var format = new StringFormat { LineAlignment = StringAlignment.Near, Alignment = StringAlignment.Far };
+                    var rect = new RectangleF(x1 * RenderResolution.Width,
+                        (1 - y2) * RenderResolution.Height + 35,
+                        (x2 - x1) * RenderResolution.Width - 10,
+                        (y2 - y1) * RenderResolution.Height - 2);
 
-                        graphics.DrawString(DescTable[i], Window.UiState.DefaultFont10, sb, rect, format);
-                    }
+                    DrawShadowedString(graphics, DescTable[i], Window.UiState.DefaultFont10,
+                        rect, Color.Black, Color.FromArgb(50, Color.White), format);                        
+    
                 }
 
                 var img = _hudImages[i, imageIndex];
