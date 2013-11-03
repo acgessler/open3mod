@@ -115,13 +115,14 @@ namespace open3mod
 
             // intercept all key events sent to children
             KeyPreview = true;
-            _initialized = true;
 
             InitRecentList();
 
             //LeapMotion Support
             _leapListener = new LeapListener(this as MainWindow);
             _leapController = new Controller(_leapListener);
+
+            _initialized = true;
         }
 
         public override sealed string Text
