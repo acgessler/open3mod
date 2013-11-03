@@ -23,8 +23,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -32,28 +34,152 @@ namespace open3mod
 {
     public partial class ExportDialog : Form
     {
-        public ExportDialog()
+        private readonly MainWindow _main;
+        private readonly Assimp.ExportFormatDescription[] _formats;
+
+        private bool _changedText = false;
+
+
+        public string SelectedFormatId {
+            get {
+                return _formats[comboBoxExportFormats.SelectedIndex].FormatId;
+            }
+        }
+
+        public Assimp.ExportFormatDescription SelectedFormat
         {
+            get
+            {
+                return _formats[comboBoxExportFormats.SelectedIndex];
+            }
+        }
+
+        public ExportDialog(MainWindow main)
+        {
+            _main = main;
             InitializeComponent();
 
             using (var v = new Assimp.AssimpContext())
             {
-                var formats = v.GetSupportedExportFormats();
-                foreach(var format in formats) {
+                _formats = v.GetSupportedExportFormats();
+                foreach(var format in _formats) {
                     comboBoxExportFormats.Items.Add(format.Description + "  (" + format.FileExtension + ")");
                 }
+                comboBoxExportFormats.SelectedIndex = ExportSettings.Default.ExportFormatIndex;
+                comboBoxExportFormats.SelectedIndexChanged += (object s, EventArgs e) =>
+                {
+                    ExportSettings.Default.ExportFormatIndex = comboBoxExportFormats.SelectedIndex;
+                    UpdateFileName(true);
+                };
             }
+
+            textBoxFileName.KeyPress += (object s, KeyPressEventArgs e) =>
+            {
+                _changedText = true;
+            };
+
+            // Respond to updates in the main window - the export dialog is non-modal and
+            // always takes the currently selected file at the time the export button
+            // is pressed.
+            _main.SelectedTabChanged += (Tab tab) =>
+            {
+                UpdateFileName();
+                UpdateCaption();
+            };
+
+            UpdateFileName();
+            UpdateCaption();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+
+        private void UpdateCaption()
         {
+            string str = "Export ";
+            var scene = _main.UiState.ActiveTab.ActiveScene;
+            if (scene != null)
+            {
+                str += Path.GetFileName(scene.File);
+                buttonExportRun.Enabled = true;
+            }
+            else
+            {
+                buttonExportRun.Enabled = false;
+                str += "<no scene currently selected>";
+            }
 
+            Text = str;
         }
+
+
+        private void UpdateFileName(bool extensionOnly = false) 
+        {
+            string str = textBoxFileName.Text;
+
+            if (!extensionOnly && !_changedText)
+            {
+                var scene = _main.UiState.ActiveTab.ActiveScene;
+                if (scene != null)
+                {
+                    str = Path.GetFileName(scene.File);
+                }
+            }
+            textBoxFileName.Text = Path.ChangeExtension(str, SelectedFormat.FileExtension);
+        }
+
 
         private void buttonSelectFolder_Click(object sender, EventArgs e)
         {
             folderBrowserDialog.ShowDialog(this);
             textBoxPath.Text = folderBrowserDialog.SelectedPath;
+        }
+
+
+        private void buttonExport(object sender, EventArgs e)
+        {
+            var scene = _main.UiState.ActiveTab.ActiveScene;
+            if (scene == null)
+            {
+                MessageBox.Show("No exportable scene selected");
+                return;
+            }
+            
+                DoExport(scene, SelectedFormatId);
+        }
+
+        private void DoExport(Scene scene, string id) 
+        {
+            progressBarExport.Style = ProgressBarStyle.Marquee;
+            progressBarExport.MarqueeAnimationSpeed = 5;
+
+            var path = textBoxPath.Text.Trim();
+            var name = textBoxFileName.Text.Trim();
+            var fullPath = (path.Length > 0 ? path + "\\" : "") + name;
+            var t = new Thread(() => {
+                using (var v = new Assimp.AssimpContext())
+                {
+                    bool result = v.ExportFile(scene.Raw, fullPath, id);
+
+                    _main.BeginInvoke(new MethodInvoker(() =>
+                    {
+                        progressBarExport.Style = ProgressBarStyle.Continuous;
+                        progressBarExport.MarqueeAnimationSpeed = 0;
+
+                        if (!result)
+                        {
+                            // TODO: get native error message
+                            MessageBox.Show("Failed to export to " + fullPath, "Export error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        else
+                        {
+                            if (checkBoxOpenExportedFile.Checked) {
+                                _main.AddTab(fullPath);
+                            }
+                        }
+                    }));
+                }
+            });
+
+            t.Start();
         }
     }
 }

@@ -62,6 +62,10 @@ namespace open3mod
         public delegate void TabAddRemoveHandler (Tab tab, bool add);
         public event TabAddRemoveHandler TabChanged;
 
+        public delegate void TabSelectionChangeHandler(Tab tab);
+        public event TabSelectionChangeHandler SelectedTabChanged;
+
+
         public GLControl GlControl
         {
             get { return glControl1; }
@@ -121,6 +125,14 @@ namespace open3mod
             //LeapMotion Support
             _leapListener = new LeapListener(this as MainWindow);
             _leapController = new Controller(_leapListener);
+
+            // register listener for tab changs
+           tabControl1.SelectedIndexChanged += (object o, EventArgs e) => {
+               if (SelectedTabChanged != null)
+               {
+                   SelectedTabChanged(UiState.TabForId(tabControl1.SelectedTab));
+               }
+           };
 
             _initialized = true;
         }
@@ -910,8 +922,8 @@ namespace open3mod
 
         private void OnExport(object sender, EventArgs e)
         {
-            var exp = new ExportDialog();
-            exp.Show();
+            var exp = new ExportDialog(this);
+            exp.Show(this);
         }
 
 
