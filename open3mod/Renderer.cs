@@ -455,20 +455,23 @@ namespace open3mod
 
                 // normal image
                 var imageIndex = 0;
+                bool inside = _mousePos.X > x && _mousePos.X <= x + w && _mousePos.Y > y && _mousePos.Y <= y + h;
 
                 if (ui.ActiveCameraControllerForView(_hoverViewIndex).GetCameraMode() == (CameraMode)i)
                 {
                     // selected image
                     imageIndex = 2;
                 }
-                else if (_mousePos.X > x && _mousePos.X <= x + w && _mousePos.Y > y && _mousePos.Y <= y + h)
+                else if (inside)
                 {
                     // hover image
                     imageIndex = 1;
-
+                }
+                if (inside)
+                {
                     // draw tooltip
                     Debug.Assert(i < DescTable.Length);
-                    
+
                     var format = new StringFormat { LineAlignment = StringAlignment.Near, Alignment = StringAlignment.Far };
                     var rect = new RectangleF(x1 * RenderResolution.Width,
                         (1 - y2) * RenderResolution.Height + 35,
@@ -476,8 +479,7 @@ namespace open3mod
                         (y2 - y1) * RenderResolution.Height - 2);
 
                     DrawShadowedString(graphics, DescTable[i], Window.UiState.DefaultFont10,
-                        rect, Color.Black, Color.FromArgb(50, Color.White), format);                        
-    
+                        rect, Color.Black, Color.FromArgb(50, Color.White), format);         
                 }
 
                 var img = _hudImages[i, imageIndex];
