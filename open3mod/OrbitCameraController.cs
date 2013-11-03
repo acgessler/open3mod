@@ -209,6 +209,8 @@ namespace open3mod
                 _rollAngle = 0.0f;
             }
 
+            _panVector = Vector3.Zero;
+
             _dirty = true;
         }
 
