@@ -230,6 +230,11 @@ namespace open3mod
         {
 
         }
+
+        private void OnLMWebsite(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://www.leapmotion.com"); 
+        }
     }
 }
 

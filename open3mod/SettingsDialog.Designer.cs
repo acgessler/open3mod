@@ -65,8 +65,9 @@
             this.tabPageTextures = new System.Windows.Forms.TabPage();
             this.checkBoxLoadTextures = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.folderSetDisplaySearchPaths = new open3mod.FolderSetDisplay();
             this.tabPageLeapMotion = new System.Windows.Forms.TabPage();
+            this.linkLabelLM = new System.Windows.Forms.LinkLabel();
+            this.label9 = new System.Windows.Forms.Label();
             this.SmoothingGroup = new System.Windows.Forms.GroupBox();
             this.SmoothLabel = new System.Windows.Forms.Label();
             this.ResponsiveLabel = new System.Windows.Forms.Label();
@@ -76,6 +77,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.labelPleaseRestart = new System.Windows.Forms.Label();
+            this.folderSetDisplaySearchPaths = new open3mod.FolderSetDisplay();
             this.tabControl.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -519,7 +521,7 @@
             this.checkBoxLoadTextures.Checked = global::CoreSettings.CoreSettings.Default.LoadTextures;
             this.checkBoxLoadTextures.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxLoadTextures.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::CoreSettings.CoreSettings.Default, "LoadTextures", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxLoadTextures.Location = new System.Drawing.Point(31, 49);
+            this.checkBoxLoadTextures.Location = new System.Drawing.Point(31, 34);
             this.checkBoxLoadTextures.Name = "checkBoxLoadTextures";
             this.checkBoxLoadTextures.Size = new System.Drawing.Size(94, 17);
             this.checkBoxLoadTextures.TabIndex = 7;
@@ -529,22 +531,16 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(28, 106);
+            this.label7.Location = new System.Drawing.Point(28, 77);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(177, 13);
             this.label7.TabIndex = 5;
             this.label7.Text = "Additional search folders for textures";
             // 
-            // folderSetDisplaySearchPaths
-            // 
-            this.folderSetDisplaySearchPaths.Folders = new string[0];
-            this.folderSetDisplaySearchPaths.Location = new System.Drawing.Point(17, 122);
-            this.folderSetDisplaySearchPaths.Name = "folderSetDisplaySearchPaths";
-            this.folderSetDisplaySearchPaths.Size = new System.Drawing.Size(499, 152);
-            this.folderSetDisplaySearchPaths.TabIndex = 6;
-            // 
             // tabPageLeapMotion
             // 
+            this.tabPageLeapMotion.Controls.Add(this.linkLabelLM);
+            this.tabPageLeapMotion.Controls.Add(this.label9);
             this.tabPageLeapMotion.Controls.Add(this.SmoothingGroup);
             this.tabPageLeapMotion.Location = new System.Drawing.Point(4, 22);
             this.tabPageLeapMotion.Name = "tabPageLeapMotion";
@@ -553,6 +549,27 @@
             this.tabPageLeapMotion.Text = "Leap Motion";
             this.tabPageLeapMotion.UseVisualStyleBackColor = true;
             // 
+            // linkLabelLM
+            // 
+            this.linkLabelLM.AutoSize = true;
+            this.linkLabelLM.Location = new System.Drawing.Point(157, 35);
+            this.linkLabelLM.Name = "linkLabelLM";
+            this.linkLabelLM.Size = new System.Drawing.Size(108, 13);
+            this.linkLabelLM.TabIndex = 3;
+            this.linkLabelLM.TabStop = true;
+            this.linkLabelLM.Text = "www.leapmotion.com";
+            this.linkLabelLM.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OnLMWebsite);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(27, 22);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(432, 26);
+            this.label9.TabIndex = 2;
+            this.label9.Text = "open3mod supports using the LeapMotion (tm) tracking device to control the 3D vie" +
+    "wport. \r\nFor more information, go to ";
+            // 
             // SmoothingGroup
             // 
             this.SmoothingGroup.Controls.Add(this.SmoothLabel);
@@ -560,10 +577,10 @@
             this.SmoothingGroup.Controls.Add(this.RotationSmoothing);
             this.SmoothingGroup.Controls.Add(this.trackBar1);
             this.SmoothingGroup.Controls.Add(this.TranslationSmoothing);
-            this.SmoothingGroup.Location = new System.Drawing.Point(21, 22);
+            this.SmoothingGroup.Location = new System.Drawing.Point(21, 85);
             this.SmoothingGroup.Margin = new System.Windows.Forms.Padding(10);
             this.SmoothingGroup.Name = "SmoothingGroup";
-            this.SmoothingGroup.Size = new System.Drawing.Size(494, 193);
+            this.SmoothingGroup.Size = new System.Drawing.Size(494, 182);
             this.SmoothingGroup.TabIndex = 1;
             this.SmoothingGroup.TabStop = false;
             this.SmoothingGroup.Text = "Smoothing";
@@ -592,7 +609,7 @@
             this.RotationSmoothing.Checked = global::CoreSettings.CoreSettings.Default.Leap_RotationSmoothing;
             this.RotationSmoothing.CheckState = System.Windows.Forms.CheckState.Checked;
             this.RotationSmoothing.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::CoreSettings.CoreSettings.Default, "Leap_RotationSmoothing", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.RotationSmoothing.Location = new System.Drawing.Point(9, 55);
+            this.RotationSmoothing.Location = new System.Drawing.Point(19, 55);
             this.RotationSmoothing.Name = "RotationSmoothing";
             this.RotationSmoothing.Size = new System.Drawing.Size(139, 17);
             this.RotationSmoothing.TabIndex = 2;
@@ -617,7 +634,7 @@
             this.TranslationSmoothing.Checked = global::CoreSettings.CoreSettings.Default.Leap_TranslationSmoothing;
             this.TranslationSmoothing.CheckState = System.Windows.Forms.CheckState.Checked;
             this.TranslationSmoothing.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::CoreSettings.CoreSettings.Default, "Leap_TranslationSmoothing", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.TranslationSmoothing.Location = new System.Drawing.Point(9, 32);
+            this.TranslationSmoothing.Location = new System.Drawing.Point(19, 32);
             this.TranslationSmoothing.Name = "TranslationSmoothing";
             this.TranslationSmoothing.Size = new System.Drawing.Size(154, 17);
             this.TranslationSmoothing.TabIndex = 0;
@@ -653,6 +670,14 @@
             this.labelPleaseRestart.Text = "Please restart the application to see all changes";
             this.labelPleaseRestart.Visible = false;
             // 
+            // folderSetDisplaySearchPaths
+            // 
+            this.folderSetDisplaySearchPaths.Folders = new string[0];
+            this.folderSetDisplaySearchPaths.Location = new System.Drawing.Point(17, 93);
+            this.folderSetDisplaySearchPaths.Name = "folderSetDisplaySearchPaths";
+            this.folderSetDisplaySearchPaths.Size = new System.Drawing.Size(499, 152);
+            this.folderSetDisplaySearchPaths.TabIndex = 6;
+            // 
             // SettingsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -685,6 +710,7 @@
             this.tabPageTextures.ResumeLayout(false);
             this.tabPageTextures.PerformLayout();
             this.tabPageLeapMotion.ResumeLayout(false);
+            this.tabPageLeapMotion.PerformLayout();
             this.SmoothingGroup.ResumeLayout(false);
             this.SmoothingGroup.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
@@ -742,5 +768,7 @@
         private System.Windows.Forms.CheckBox RotationSmoothing;
         private System.Windows.Forms.Label SmoothLabel;
         private System.Windows.Forms.Label ResponsiveLabel;
+        private System.Windows.Forms.LinkLabel linkLabelLM;
+        private System.Windows.Forms.Label label9;
     }
 }
