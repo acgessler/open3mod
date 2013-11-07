@@ -62,12 +62,11 @@ namespace open3mod
         {
             try
             {
-                // note: we need to keep the stream open during the lifetime
-                // of the Image (see docs for Image.FromStream). Therefore,
-                // no Dispose().
-                var stream = ObtainStream(name, basedir);
-                Debug.Assert(stream != null);
-                SetFromStream(stream);                  
+                using (var stream = ObtainStream(name, basedir))
+                {
+                    Debug.Assert(stream != null);
+                    SetFromStream(stream);
+                }
             }
             catch(Exception) 
             {
@@ -81,15 +80,28 @@ namespace open3mod
             // try loading using standard .net first
             try
             {
-                _image = Image.FromStream(stream);
-                if (_image != null)
+                // We need to copy the stream over to a new, in-memory bitmap to
+                // avoid keeping the input stream open.
+                // See http://support.microsoft.com/kb/814675/en-us
+                using(var img = Image.FromStream(stream))
                 {
-                    _result = LoadResult.Good;
-                }
-                else
-                {
-                    throw new Exception();
-                }
+                    if (img != null)
+                    {
+                        _image = new Bitmap(img.Width, img.Height, PixelFormat.Format32bppArgb);
+
+                        using (var gfx = Graphics.FromImage(_image))
+                        {
+                            gfx.DrawImage(img, 0, 0, img.Width, img.Height
+                                );
+                        }
+
+                        _result = LoadResult.Good;
+                    }
+                    else
+                    {
+                        throw new Exception();
+                    }
+                }         
             }
             catch (Exception)
             {
