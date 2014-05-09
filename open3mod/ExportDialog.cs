@@ -320,7 +320,7 @@ namespace open3mod
                             }
                             if (checkBoxOpenExportedFile.Checked)
                             {
-                                _main.AddTab(fullPath);
+                                _main.AddTab(fullPath, true, false);
                             }
                             PushLog("Export completed");
                         }
