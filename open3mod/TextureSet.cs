@@ -170,7 +170,7 @@ namespace open3mod
                         Debug.Assert(_dict.ContainsKey(path));
                         _loaded.Add(path);
 
-                        // if this texture is being used as replacement for another texture,
+                        // If this texture is being used as replacement for another texture,
                         // we need to invoke callbacks for its ID too
                         // TODO obviously, all the replacement code needs a re-design.
                         foreach (var kv in _replacements)
@@ -217,6 +217,16 @@ namespace open3mod
         public bool Exists(string path)
         {
             return _dict.ContainsKey(path);
+        }
+
+
+        /// <summary>
+        /// Get a list of all texture ids Add()ed to the texture set.
+        /// </summary>
+        /// <returns></returns>
+        public string[] GetTextureIds()
+        {
+            return _dict.Keys.ToArray();
         }
 
 
@@ -298,7 +308,6 @@ namespace open3mod
 
             var tex = GetOriginalOrReplacement(path);
             _replacements[path] = new KeyValuePair<string, string>(newId, newPath);
-
             
             if (_replaceCallbacks.Count > 0)
             {           

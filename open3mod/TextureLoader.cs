@@ -20,15 +20,10 @@
 
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Security.AccessControl;
-using System.Text;
-using System.Threading.Tasks;
 using DevIL;
 using Image = System.Drawing.Image;
 
@@ -50,6 +45,7 @@ namespace open3mod
 
         protected LoadResult _result;
         protected Image _image;
+        protected string _actualLocation;
 
 
         protected TextureLoader()
@@ -62,7 +58,7 @@ namespace open3mod
         {
             try
             {
-                using (var stream = ObtainStream(name, basedir))
+                using (var stream = ObtainStream(name, basedir, out _actualLocation))
                 {
                     Debug.Assert(stream != null);
                     SetFromStream(stream);
@@ -85,22 +81,14 @@ namespace open3mod
                 // See http://support.microsoft.com/kb/814675/en-us
                 using(var img = Image.FromStream(stream))
                 {
-                    if (img != null)
-                    {
-                        _image = new Bitmap(img.Width, img.Height, PixelFormat.Format32bppArgb);
+                    _image = new Bitmap(img.Width, img.Height, PixelFormat.Format32bppArgb);
 
-                        using (var gfx = Graphics.FromImage(_image))
-                        {
-                            gfx.DrawImage(img, 0, 0, img.Width, img.Height
-                                );
-                        }
-
-                        _result = LoadResult.Good;
-                    }
-                    else
+                    using (var gfx = Graphics.FromImage(_image))
                     {
-                        throw new Exception();
+                        gfx.DrawImage(img, 0, 0, img.Width, img.Height);
                     }
+
+                    _result = LoadResult.Good;
                 }         
             }
             catch (Exception)
@@ -143,16 +131,19 @@ namespace open3mod
         /// </summary>
         /// <param name="name"></param>
         /// <param name="basedir"></param>
+        /// <param name="actualLocation"></param>
         /// <returns>A valid stream</returns>
-        private static Stream ObtainStream(string name, string basedir)
+        public static Stream ObtainStream(string name, string basedir, out string actualLocation)
         {
             Debug.Assert(name != null);
             Debug.Assert(basedir != null);
 
             Stream s = null;
+            string path = null;
             try
             {
-                s = new FileStream(Path.Combine(basedir, name), FileMode.Open, FileAccess.Read);
+                path = Path.Combine(basedir, name);
+                s = new FileStream(path, FileMode.Open, FileAccess.Read);
             }
             catch (IOException)
             {
@@ -163,12 +154,14 @@ namespace open3mod
                 }
                 try
                 {
-                    s = new FileStream(Path.Combine(basedir, fileName), FileMode.Open, FileAccess.Read);
+                    path = Path.Combine(basedir, fileName);
+                    s = new FileStream(path, FileMode.Open, FileAccess.Read);
                 }
                 catch (IOException)
                 {
                     try
                     {
+                        path = name;
                         s = new FileStream(name, FileMode.Open, FileAccess.Read);
                     }
                     catch (IOException)
@@ -177,7 +170,8 @@ namespace open3mod
                         {
                             try
                             {
-                                s = new FileStream(Path.Combine(folder, fileName), FileMode.Open, FileAccess.Read);
+                                path = Path.Combine(folder, fileName);
+                                s = new FileStream(path, FileMode.Open, FileAccess.Read);
                                 break;
                             }
                             catch(IOException)
@@ -194,6 +188,8 @@ namespace open3mod
             }
 
             Debug.Assert(s != null);
+            Debug.Assert(path != null);
+            actualLocation = path;
             return s;
         }
 
@@ -205,6 +201,11 @@ namespace open3mod
         public LoadResult Result
         {
             get { return _result; }
+        }
+
+        public string ActualLocation
+        {
+            get { return _actualLocation; }
         }
     }
 }

@@ -22,13 +22,17 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Assimp;
 
 namespace open3mod
 {
@@ -40,8 +44,10 @@ namespace open3mod
         private bool _changedText = false;
 
 
-        public string SelectedFormatId {
-            get {
+        public string SelectedFormatId
+        {
+            get
+            {
                 return _formats[comboBoxExportFormats.SelectedIndex].FormatId;
             }
         }
@@ -62,7 +68,8 @@ namespace open3mod
             using (var v = new Assimp.AssimpContext())
             {
                 _formats = v.GetSupportedExportFormats();
-                foreach(var format in _formats) {
+                foreach (var format in _formats)
+                {
                     comboBoxExportFormats.Items.Add(format.Description + "  (" + format.FileExtension + ")");
                 }
                 comboBoxExportFormats.SelectedIndex = ExportSettings.Default.ExportFormatIndex;
@@ -111,7 +118,7 @@ namespace open3mod
         }
 
 
-        private void UpdateFileName(bool extensionOnly = false) 
+        private void UpdateFileName(bool extensionOnly = false)
         {
             string str = textBoxFileName.Text;
 
@@ -142,23 +149,130 @@ namespace open3mod
                 MessageBox.Show("No exportable scene selected");
                 return;
             }
-            
-                DoExport(scene, SelectedFormatId);
+            DoExport(scene, SelectedFormatId);
         }
 
         private void DoExport(Scene scene, string id) 
-        {
+        {          
+            var overwriteWithoutConfirmation = checkBoxNoOverwriteConfirm.Checked;
+
+            var path = textBoxPath.Text.Trim();
+            path = (path.Length > 0 ? path : scene.BaseDir);
+            var name = textBoxFileName.Text.Trim();
+            var fullPath = Path.Combine(path, name);
+            if (!overwriteWithoutConfirmation && Path.GetFullPath(fullPath) == Path.GetFullPath(scene.File))
+            {
+                if (MessageBox.Show("This will overwrite the current scene's source file. Continue?", "Warning", 
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                {
+                    PushLog("Canceled");
+                    return;
+                }
+            }
+
+            var copyTextures = checkBoxCopyTexturesToSubfolder.Checked;
+            var relativeTexturePaths = checkBoxUseRelativeTexturePaths.Checked;
+            var includeAnimations = checkBoxIncludeAnimations.Checked;
+            var includeSceneHierarchy = checkBoxIncludeSceneHierarchy.Checked;
+
+            var textureCopyJobs = new Dictionary<string, string>();
+            var textureDestinationFolder = textBoxCopyTexturesToFolder.Text;
+
+            PushLog("*** Export: " + scene.File);
             progressBarExport.Style = ProgressBarStyle.Marquee;
             progressBarExport.MarqueeAnimationSpeed = 5;
 
-            var path = textBoxPath.Text.Trim();
-            var name = textBoxFileName.Text.Trim();
-            var fullPath = (path.Length > 0 ? path + "\\" : "") + name;
-            var t = new Thread(() => {
-                using (var v = new Assimp.AssimpContext())
-                {
-                    bool result = v.ExportFile(scene.Raw, fullPath, id);
+            if(copyTextures)
+            {
+                Directory.CreateDirectory(Path.Combine(path, textureDestinationFolder));
+            }
 
+            // Create a shallow copy of the original scene that replaces
+            // all the texture paths with their corresponding output paths,
+            // and omits animations if requested.
+            var sourceScene = new Assimp.Scene();
+            sourceScene.Textures = scene.Raw.Textures;
+            sourceScene.SceneFlags = scene.Raw.SceneFlags;
+            sourceScene.RootNode = scene.Raw.RootNode;
+            sourceScene.Meshes = scene.Raw.Meshes;
+            sourceScene.Lights = scene.Raw.Lights;
+            sourceScene.Cameras = scene.Raw.Cameras;
+
+            if (includeAnimations)
+            {
+                sourceScene.Animations = scene.Raw.Animations;
+            }
+
+            var uniques = new HashSet<string>();
+            var textureMapping = new Dictionary<string, string>();
+
+            PushLog("Locating all textures");
+            foreach (var texId in scene.TextureSet.GetTextureIds())
+            {
+                var destName = texId;
+
+                // Broadly skip over embedded (in-memory) textures
+                if (destName.StartsWith("*"))
+                {
+                    PushLog("Ignoring embedded texture: " + destName);
+                    continue;
+                }
+
+                // Locate the texture on-disk
+                string diskLocation;
+                try
+                {
+                    TextureLoader.ObtainStream(texId, scene.BaseDir, out diskLocation).Close();
+                } catch(IOException)
+                {
+                    PushLog("Failed to locate texture " + texId);
+                    continue;
+                }
+
+                if (copyTextures)
+                {
+                    var count = 1;
+                    // Enforce unique output names
+                    do
+                    {
+                        destName = Path.Combine(path, textureDestinationFolder,
+                                                Path.GetFileNameWithoutExtension(diskLocation) +
+                                                (count == 1
+                                                     ? ""
+                                                     : (count.ToString(CultureInfo.InvariantCulture) + "_")) +
+                                                Path.GetExtension(diskLocation)
+                            );
+                        ++count;
+                    } while (uniques.Contains(destName));
+                    uniques.Add(destName);
+                }
+
+                if (relativeTexturePaths)
+                {
+                    textureMapping[id] = GetRelativePath(path, destName);
+                }
+                else
+                {
+                    textureMapping[id] = destName;
+                }
+                textureCopyJobs[diskLocation] = destName;
+
+                PushLog("Texture " + id + " maps to " + textureMapping[id]);              
+            }
+
+            foreach (var mat in scene.Raw.Materials)
+            {
+                sourceScene.Materials.Add(CloneMaterial(mat, textureMapping));
+            }
+
+            var t = new Thread(() =>
+            {
+                using (var v = new AssimpContext())
+                {
+                    PushLog("Exporting using Assimp to " + fullPath);
+                    var result = v.ExportFile(sourceScene, fullPath, id, includeSceneHierarchy 
+                        ? PostProcessSteps.None 
+                        : PostProcessSteps.PreTransformVertices);
                     _main.BeginInvoke(new MethodInvoker(() =>
                     {
                         progressBarExport.Style = ProgressBarStyle.Continuous;
@@ -167,13 +281,48 @@ namespace open3mod
                         if (!result)
                         {
                             // TODO: get native error message
-                            MessageBox.Show("Failed to export to " + fullPath, "Export error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            PushLog("Export failure");
+                            MessageBox.Show("Failed to export to " + fullPath, "Export error",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         else
                         {
-                            if (checkBoxOpenExportedFile.Checked) {
+                            if (copyTextures)
+                            {
+                                PushLog("Copying textures");
+                                foreach (var kv in textureCopyJobs)
+                                {
+                                    PushLog(" ... " + kv.Key + " -> " + kv.Value);
+                                    try
+                                    {
+                                        File.Copy(kv.Key, kv.Value, false);
+                                    }
+                                    catch (IOException)
+                                    {
+                                        if (!File.Exists(kv.Value))
+                                        {
+                                            throw;
+                                        }
+                                        if (MessageBox.Show("Texture " + kv.Value + " already exists. Overwrite?", "Overwrite Warning",
+                                                MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                                        {
+                                            PushLog("Exists already, skipping");
+                                            continue;
+                                        }
+                                        PushLog("Exists already, overwriting");
+                                        File.Copy(kv.Key, kv.Value, true);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        PushLog(ex.Message);
+                                    }
+                                }
+                            }
+                            if (checkBoxOpenExportedFile.Checked)
+                            {
                                 _main.AddTab(fullPath);
                             }
+                            PushLog("Export completed");
                         }
                     }));
                 }
@@ -181,7 +330,51 @@ namespace open3mod
 
             t.Start();
         }
+
+        private void PushLog(string message)
+        {
+            _main.BeginInvoke(new MethodInvoker(() =>
+            {
+                textBoxExportLog.Text += message + Environment.NewLine;
+                textBoxExportLog.SelectionStart = textBoxExportLog.TextLength;
+                textBoxExportLog.ScrollToCaret();
+            }));
+        }
+
+        /// <summary>
+        /// Clone a given material subject to a texture path remapping
+        /// </summary>
+        /// <param name="mat"></param>
+        /// <param name="textureMapping"></param>
+        /// <returns></returns>
+        private static Material CloneMaterial(Material mat, IReadOnlyDictionary<string, string> textureMapping)
+        {
+            Debug.Assert(mat != null);
+            Debug.Assert(textureMapping != null);
+            var matOut = new Material();
+            foreach (var prop in mat.GetAllProperties())
+            {
+                var propOut = prop;
+                if (prop.PropertyType == PropertyType.String && textureMapping.ContainsKey(prop.GetStringValue()))
+                {
+                    propOut = new MaterialProperty {PropertyType = PropertyType.String, Name = prop.Name};
+                    propOut.SetStringValue(textureMapping[prop.GetStringValue()]);
+                    continue;
+                }
+                matOut.AddProperty(propOut);
+            }
+            return matOut;
+        }
+
+
+        // From http://stackoverflow.com/questions/9042861/how-to-make-an-absolute-path-relative-to-a-particular-folder
+        public static string GetRelativePath(string fromPath, string toPath)
+        {
+            var fromUri = new Uri(Path.GetFullPath(fromPath), UriKind.Absolute);
+            var toUri = new Uri(Path.GetFullPath(toPath), UriKind.Absolute);
+            return fromUri.MakeRelativeUri(toUri).ToString();
+        }
     }
 }
 
-/* vi: set shiftwidth=4 tabstop=4: */ 
+/* vi: set shiftwidth=4 tabstop=4: */

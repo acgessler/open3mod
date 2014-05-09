@@ -54,6 +54,8 @@ namespace open3mod
         private Image _image;
         private int _gl;
 
+        private string _actualLocation;
+
         private readonly object _lock = new object();
         private readonly string _baseDir;
         private readonly Assimp.EmbeddedTexture _dataSource;
@@ -101,7 +103,7 @@ namespace open3mod
         {
             _file = file;
             _baseDir = baseDir;
-            _callback = (s, image, status) => callback(this);
+            _callback = (s, image, actualLocation, status) => callback(this);
 
             if (CoreSettings.CoreSettings.Default.LoadTextures)
             {
@@ -127,7 +129,7 @@ namespace open3mod
         {
             _file = refName;
             _dataSource = dataSource;
-            _callback = (s, image, status) => callback(this);
+            _callback = (s, image, actualLocation, status) => callback(this);
 
             if (CoreSettings.CoreSettings.Default.LoadTextures)
             {
@@ -147,10 +149,28 @@ namespace open3mod
         /// during loading.
         /// </summary>
         public Image Image { get
+            {
+                Debug.Assert(_image == null || State == TextureState.WinFormsImageCreated || State == TextureState.GlTextureCreated);
+                return _image;
+            }
+        }
+
+
+        /// <summary>
+        /// The actual location on-disk that the texture was loaded from,
+        /// or an empty string if the texture is from memory or any other
+        /// source that does not map to a file.
+        /// 
+        /// Only available iff loading completed successfully.
+        /// </summary>
+        public string ActualLocation
         {
-            Debug.Assert(_image == null || State == TextureState.WinFormsImageCreated || State == TextureState.GlTextureCreated);
-            return _image;
-        }}
+            get
+            {
+                Debug.Assert(_image != null && (State == TextureState.WinFormsImageCreated || State == TextureState.GlTextureCreated));
+                return _actualLocation;
+            }
+        }
 
 
         /// <summary>
@@ -557,14 +577,16 @@ namespace open3mod
         /// </summary>
         private void LoadAsync()
         {
-            TextureQueue.CompletionCallback callback = (file, image, result) =>
+            TextureQueue.CompletionCallback callback = (file, image, actualLocation, result) =>
             {
                 Debug.Assert(_file == file);
                 SetImage(image, result);
 
+                _actualLocation = actualLocation;
+
                 if (_callback != null)
                 {
-                    _callback(_file, _image, result);
+                    _callback(_file, _image, actualLocation, result);
                 }
             };
 

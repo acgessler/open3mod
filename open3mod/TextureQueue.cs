@@ -39,7 +39,7 @@ namespace open3mod
     /// </summary>
     public static class TextureQueue
     {
-        public delegate void CompletionCallback(string file, Image image, TextureLoader.LoadResult result);
+        public delegate void CompletionCallback(string file, Image image, string actualLocation, TextureLoader.LoadResult result);
 
         private abstract class Task
         {
@@ -70,7 +70,7 @@ namespace open3mod
             public override void Load()
             {
                 var loader = new TextureLoader(_file, _baseDir);
-                Callback(_file, loader.Image, loader.Result);
+                Callback(_file, loader.Image, loader.ActualLocation, loader.Result);
             }
         }
 
@@ -90,7 +90,7 @@ namespace open3mod
             public override void Load()
             {
                 var loader = new EmbeddedTextureLoader(_dataSource);
-                Callback(_refName, loader.Image, loader.Result);
+                Callback(_refName, loader.Image, "", loader.Result);
             }
         }
 

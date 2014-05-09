@@ -93,6 +93,10 @@ namespace Assimp {
             get {
                 return m_meshes;
             }
+            set
+            {
+                m_meshes = value;
+            }
         }
 
 
@@ -121,6 +125,10 @@ namespace Assimp {
             get {
                 return m_lights;
             }
+            set
+            {
+                m_lights = value;
+            }
         }
 
         /// <summary>
@@ -146,6 +154,10 @@ namespace Assimp {
         public List<Camera> Cameras {
             get {
                 return m_cameras;
+            }
+            set
+            {
+                m_cameras = value;
             }
         }
 
@@ -174,6 +186,10 @@ namespace Assimp {
             get {
                 return m_textures;
             }
+            set
+            {
+                m_textures = value;
+            }
         }
 
         /// <summary>
@@ -200,6 +216,10 @@ namespace Assimp {
         public List<Animation> Animations {
             get {
                 return m_animations;
+            }
+            set
+            {
+                m_animations = value;
             }
         }
 
@@ -229,6 +249,9 @@ namespace Assimp {
         public List<Material> Materials {
             get {
                 return m_materials;
+            }
+            set {
+                m_materials = value;
             }
         }
 

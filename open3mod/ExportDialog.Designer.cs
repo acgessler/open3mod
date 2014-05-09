@@ -42,11 +42,14 @@
             this.checkBoxCopyTexturesToSubfolder = new System.Windows.Forms.CheckBox();
             this.textBoxPath = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.checkBoxNoOverwriteConfirm = new System.Windows.Forms.CheckBox();
+            this.checkBoxOpenExportedFile = new System.Windows.Forms.CheckBox();
             this.checkBoxIncludeSceneHierarchy = new System.Windows.Forms.CheckBox();
             this.checkBoxIncludeAnimations = new System.Windows.Forms.CheckBox();
             this.checkBoxUseRelativeTexturePaths = new System.Windows.Forms.CheckBox();
             this.buttonExportRun = new System.Windows.Forms.Button();
-            this.checkBoxOpenExportedFile = new System.Windows.Forms.CheckBox();
+            this.labelExportStatus = new System.Windows.Forms.Label();
+            this.textBoxExportLog = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -90,7 +93,7 @@
             // 
             // progressBarExport
             // 
-            this.progressBarExport.Location = new System.Drawing.Point(136, 367);
+            this.progressBarExport.Location = new System.Drawing.Point(136, 490);
             this.progressBarExport.Name = "progressBarExport";
             this.progressBarExport.Size = new System.Drawing.Size(464, 23);
             this.progressBarExport.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
@@ -126,9 +129,9 @@
             this.groupBox1.Controls.Add(this.buttonSelectFolder);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.textBoxPath);
-            this.groupBox1.Location = new System.Drawing.Point(31, 162);
+            this.groupBox1.Location = new System.Drawing.Point(31, 210);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(569, 178);
+            this.groupBox1.Size = new System.Drawing.Size(569, 166);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Output";
@@ -177,6 +180,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.checkBoxNoOverwriteConfirm);
+            this.groupBox2.Controls.Add(this.checkBoxOpenExportedFile);
             this.groupBox2.Controls.Add(this.checkBoxIncludeSceneHierarchy);
             this.groupBox2.Controls.Add(this.checkBoxIncludeAnimations);
             this.groupBox2.Controls.Add(this.checkBoxUseRelativeTexturePaths);
@@ -184,10 +189,32 @@
             this.groupBox2.Controls.Add(this.comboBoxExportFormats);
             this.groupBox2.Location = new System.Drawing.Point(31, 12);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(569, 135);
+            this.groupBox2.Size = new System.Drawing.Size(569, 180);
             this.groupBox2.TabIndex = 11;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Export ";
+            // 
+            // checkBoxNoOverwriteConfirm
+            // 
+            this.checkBoxNoOverwriteConfirm.AutoSize = true;
+            this.checkBoxNoOverwriteConfirm.Location = new System.Drawing.Point(21, 151);
+            this.checkBoxNoOverwriteConfirm.Name = "checkBoxNoOverwriteConfirm";
+            this.checkBoxNoOverwriteConfirm.Size = new System.Drawing.Size(189, 17);
+            this.checkBoxNoOverwriteConfirm.TabIndex = 17;
+            this.checkBoxNoOverwriteConfirm.Text = "Overwrite files without confirmation";
+            this.checkBoxNoOverwriteConfirm.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxOpenExportedFile
+            // 
+            this.checkBoxOpenExportedFile.AutoSize = true;
+            this.checkBoxOpenExportedFile.Checked = global::open3mod.ExportSettings.Default.OpenExportedFileInViewer;
+            this.checkBoxOpenExportedFile.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.ExportSettings.Default, "OpenExportedFileInViewer", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxOpenExportedFile.Location = new System.Drawing.Point(21, 128);
+            this.checkBoxOpenExportedFile.Name = "checkBoxOpenExportedFile";
+            this.checkBoxOpenExportedFile.Size = new System.Drawing.Size(157, 17);
+            this.checkBoxOpenExportedFile.TabIndex = 16;
+            this.checkBoxOpenExportedFile.Text = "Open exported file in viewer";
+            this.checkBoxOpenExportedFile.UseVisualStyleBackColor = true;
             // 
             // checkBoxIncludeSceneHierarchy
             // 
@@ -195,7 +222,7 @@
             this.checkBoxIncludeSceneHierarchy.Checked = global::open3mod.ExportSettings.Default.IncludeSceneHierarchy;
             this.checkBoxIncludeSceneHierarchy.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxIncludeSceneHierarchy.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.ExportSettings.Default, "IncludeSceneHierarchy", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxIncludeSceneHierarchy.Location = new System.Drawing.Point(148, 94);
+            this.checkBoxIncludeSceneHierarchy.Location = new System.Drawing.Point(237, 71);
             this.checkBoxIncludeSceneHierarchy.Name = "checkBoxIncludeSceneHierarchy";
             this.checkBoxIncludeSceneHierarchy.Size = new System.Drawing.Size(139, 17);
             this.checkBoxIncludeSceneHierarchy.TabIndex = 10;
@@ -208,7 +235,7 @@
             this.checkBoxIncludeAnimations.Checked = global::open3mod.ExportSettings.Default.IncludeAnimations;
             this.checkBoxIncludeAnimations.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxIncludeAnimations.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.ExportSettings.Default, "IncludeAnimations", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxIncludeAnimations.Location = new System.Drawing.Point(21, 94);
+            this.checkBoxIncludeAnimations.Location = new System.Drawing.Point(237, 94);
             this.checkBoxIncludeAnimations.Name = "checkBoxIncludeAnimations";
             this.checkBoxIncludeAnimations.Size = new System.Drawing.Size(114, 17);
             this.checkBoxIncludeAnimations.TabIndex = 9;
@@ -230,7 +257,7 @@
             // 
             // buttonExportRun
             // 
-            this.buttonExportRun.Location = new System.Drawing.Point(35, 367);
+            this.buttonExportRun.Location = new System.Drawing.Point(35, 490);
             this.buttonExportRun.Name = "buttonExportRun";
             this.buttonExportRun.Size = new System.Drawing.Size(95, 23);
             this.buttonExportRun.TabIndex = 12;
@@ -238,28 +265,35 @@
             this.buttonExportRun.UseVisualStyleBackColor = true;
             this.buttonExportRun.Click += new System.EventHandler(this.buttonExport);
             // 
-            // checkBoxOpenExportedFile
+            // labelExportStatus
             // 
-            this.checkBoxOpenExportedFile.AutoSize = true;
-            this.checkBoxOpenExportedFile.Checked = global::open3mod.ExportSettings.Default.OpenExportedFileInViewer;
-            this.checkBoxOpenExportedFile.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.ExportSettings.Default, "OpenExportedFileInViewer", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxOpenExportedFile.Location = new System.Drawing.Point(443, 396);
-            this.checkBoxOpenExportedFile.Name = "checkBoxOpenExportedFile";
-            this.checkBoxOpenExportedFile.Size = new System.Drawing.Size(157, 17);
-            this.checkBoxOpenExportedFile.TabIndex = 0;
-            this.checkBoxOpenExportedFile.Text = "Open exported file in viewer";
-            this.checkBoxOpenExportedFile.UseVisualStyleBackColor = true;
+            this.labelExportStatus.AutoSize = true;
+            this.labelExportStatus.Location = new System.Drawing.Point(139, 426);
+            this.labelExportStatus.Name = "labelExportStatus";
+            this.labelExportStatus.Size = new System.Drawing.Size(0, 13);
+            this.labelExportStatus.TabIndex = 13;
+            // 
+            // textBoxExportLog
+            // 
+            this.textBoxExportLog.Location = new System.Drawing.Point(31, 382);
+            this.textBoxExportLog.Multiline = true;
+            this.textBoxExportLog.Name = "textBoxExportLog";
+            this.textBoxExportLog.ReadOnly = true;
+            this.textBoxExportLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxExportLog.Size = new System.Drawing.Size(569, 91);
+            this.textBoxExportLog.TabIndex = 14;
             // 
             // ExportDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(631, 427);
+            this.ClientSize = new System.Drawing.Size(631, 528);
+            this.Controls.Add(this.textBoxExportLog);
+            this.Controls.Add(this.labelExportStatus);
             this.Controls.Add(this.buttonExportRun);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.progressBarExport);
-            this.Controls.Add(this.checkBoxOpenExportedFile);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.Name = "ExportDialog";
@@ -276,7 +310,6 @@
 
         #endregion
 
-        private System.Windows.Forms.CheckBox checkBoxOpenExportedFile;
         private System.Windows.Forms.Button buttonSelectFolder;
         private System.Windows.Forms.TextBox textBoxPath;
         private System.Windows.Forms.ComboBox comboBoxExportFormats;
@@ -295,5 +328,9 @@
         private System.Windows.Forms.CheckBox checkBoxIncludeSceneHierarchy;
         private System.Windows.Forms.CheckBox checkBoxIncludeAnimations;
         private System.Windows.Forms.Button buttonExportRun;
+        private System.Windows.Forms.Label labelExportStatus;
+        private System.Windows.Forms.TextBox textBoxExportLog;
+        private System.Windows.Forms.CheckBox checkBoxNoOverwriteConfirm;
+        private System.Windows.Forms.CheckBox checkBoxOpenExportedFile;
     }
 }
