@@ -303,7 +303,8 @@ namespace open3mod
                                         {
                                             throw;
                                         }
-                                        if (MessageBox.Show("Texture " + kv.Value + " already exists. Overwrite?", "Overwrite Warning",
+                                        if (!overwriteWithoutConfirmation && MessageBox.Show("Texture " + kv.Value +
+                                                " already exists. Overwrite?", "Overwrite Warning",
                                                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
                                         {
                                             PushLog("Exists already, skipping");

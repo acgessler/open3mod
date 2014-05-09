@@ -532,11 +532,6 @@ namespace open3mod
                 tab.SetFailed(ex.Message);
             }
 
-            if (!setActive)
-            {
-                return;
-            }
-
             var updateTitle = new MethodInvoker(() =>
             {
                 var t = (TabPage)tab.Id;
@@ -552,20 +547,26 @@ namespace open3mod
                 }
             });
 
-            // must use BeginInvoke() here to make sure it gets executed
+            // Must use BeginInvoke() here to make sure it gets executed
             // on the thread hosting the GUI message pump. An exception
             // are potential calls coming from our own c'tor: at this
             // time the window handle is not ready yet and BeginInvoke()
             // is thus not available.
             if (!_initialized)
             {
-                SelectTab((TabPage)tab.Id);
+                if (setActive)
+                {
+                    SelectTab((TabPage) tab.Id);
+                }
                 PopulateInspector(tab);
                 updateTitle();
             }
             else
             {
-                BeginInvoke(_delegateSelectTab, new[] { tab.Id });
+                if (setActive)
+                {
+                    BeginInvoke(_delegateSelectTab, new[] {tab.Id});
+                }
                 BeginInvoke(_delegatePopulateInspector, new object[] { tab });
                 BeginInvoke(updateTitle);
             }
