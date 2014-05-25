@@ -1101,6 +1101,11 @@ namespace open3mod
                 }
             }
         }
+
+        private void linkLabelWebsite_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("http://www.open3mod.com/");
+        }
     }
 }
 

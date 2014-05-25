@@ -565,7 +565,8 @@ namespace open3mod
             "Lock on Z axis", 
             "Orbit view", 
             "First-person view - use WASD or arrows to move",
-            "Info picker"
+      // Picking view is not implemented yet
+      //      "Info picker"
         };
 
 
@@ -576,7 +577,8 @@ namespace open3mod
             "open3mod.Images.HUD_Z",
             "open3mod.Images.HUD_Orbit",
             "open3mod.Images.HUD_FPS",
-            "open3mod.Images.HUD_Picking"
+      // Picking view is not implemented yet
+      //      "open3mod.Images.HUD_Picking"
         };
 
 

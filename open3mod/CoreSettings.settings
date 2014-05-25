@@ -48,7 +48,7 @@
       <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="InspectorSplitterPos" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">271</Value>
+      <Value Profile="(Default)">273</Value>
     </Setting>
     <Setting Name="ShowTipsOnStartup" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
