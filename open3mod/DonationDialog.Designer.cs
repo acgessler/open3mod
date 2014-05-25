@@ -36,22 +36,24 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.labelCount = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // button1
             // 
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button1.Location = new System.Drawing.Point(24, 159);
+            this.button1.ForeColor = System.Drawing.SystemColors.Desktop;
+            this.button1.Location = new System.Drawing.Point(24, 225);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(102, 23);
+            this.button1.Size = new System.Drawing.Size(118, 23);
             this.button1.TabIndex = 1;
-            this.button1.Text = "Don\'t show again";
+            this.button1.Text = "Never show again :-(";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.DontAskAgain);
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(333, 159);
+            this.button2.Location = new System.Drawing.Point(148, 225);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(116, 23);
             this.button2.TabIndex = 2;
@@ -61,9 +63,11 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(455, 159);
+            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button3.ForeColor = System.Drawing.Color.DarkGreen;
+            this.button3.Location = new System.Drawing.Point(428, 214);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(116, 23);
+            this.button3.Size = new System.Drawing.Size(143, 34);
             this.button3.TabIndex = 0;
             this.button3.Text = "Donate";
             this.button3.UseVisualStyleBackColor = true;
@@ -72,21 +76,22 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(21, 9);
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(12, 47);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(401, 39);
+            this.label1.Size = new System.Drawing.Size(530, 48);
             this.label1.TabIndex = 3;
-            this.label1.Text = "This is free software. If you find it useful, consider donating money to the deve" +
-    "lopers\r\nto say \"thank you\", to encourage them and to fund further development. \r" +
-    "\n\r\n";
+            this.label1.Text = "open3mod is free software. If you find it useful, consider donating money to the " +
+    "developer\r\nto say \"thank you\" and to fund further development. Donations are acc" +
+    "epted via PayPal.\r\n\r\n";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(21, 48);
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(12, 95);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(165, 13);
+            this.label2.Size = new System.Drawing.Size(196, 16);
             this.label2.TabIndex = 4;
             this.label2.Text = "How much should I donate?";
             // 
@@ -94,38 +99,52 @@
             // 
             this.label3.AutoSize = true;
             this.label3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label3.Location = new System.Drawing.Point(51, 71);
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(42, 118);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(520, 13);
+            this.label3.Size = new System.Drawing.Size(489, 32);
             this.label3.TabIndex = 5;
-            this.label3.Text = "What about 25$? If you are a company and you use open3mod for commercial purposes" +
-    ", 200$ sounds great.";
+            this.label3.Text = "What about 25 USD? If you are a company or business owner and use open3mod\r\nas pa" +
+    "rt of your work, 100 USD sounds great.";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label4.Location = new System.Drawing.Point(51, 125);
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(42, 182);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(184, 13);
+            this.label4.Size = new System.Drawing.Size(231, 16);
             this.label4.TabIndex = 7;
             this.label4.Text = "Don\'t worry! Just ignore this message.";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(21, 102);
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(12, 159);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(305, 13);
+            this.label5.Size = new System.Drawing.Size(359, 16);
             this.label5.TabIndex = 6;
             this.label5.Text = "I would like to, but I don\'t have the means to donate";
+            // 
+            // labelCount
+            // 
+            this.labelCount.AutoSize = true;
+            this.labelCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelCount.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.labelCount.Location = new System.Drawing.Point(12, 22);
+            this.labelCount.Name = "labelCount";
+            this.labelCount.Size = new System.Drawing.Size(262, 16);
+            this.labelCount.TabIndex = 8;
+            this.labelCount.Text = "In total, you\'ve opened N 3D models.";
             // 
             // DonationDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(592, 194);
+            this.ClientSize = new System.Drawing.Size(584, 262);
+            this.Controls.Add(this.labelCount);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label3);
@@ -153,6 +172,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label labelCount;
 
     }
 }

@@ -35,6 +35,7 @@ namespace open3mod
         public DonationDialog()
         {
             InitializeComponent();
+            labelCount.Text = "In total, you have opened " + CoreSettings.CoreSettings.Default.CountFilesOpened + " 3D models";
         }
 
         private void NotNowAskAgain(object sender, EventArgs e)
@@ -50,7 +51,7 @@ namespace open3mod
 
         private void Donate(object sender, EventArgs e)
         {
-            // TODO
+            System.Diagnostics.Process.Start("http://www.open3mod.com/donate");
             Close();
         }
     }

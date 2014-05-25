@@ -186,7 +186,7 @@ namespace open3mod
         /// Initial value for the donation countdown - every time the application is launched,
         /// a counter is decremented. Upon reaching 0, the user is asked to donate.
         /// </summary>
-        private const int DonationCounterStart = 4;
+        private const int DonationCounterStart = 10;
 
 
         private static void MaybeShowDonationDialog()
@@ -525,7 +525,7 @@ namespace open3mod
             try
             {
                 tab.ActiveScene = new Scene(tab.File);
-
+                CoreSettings.CoreSettings.Default.CountFilesOpened++;
             }
             catch(Exception ex)
             {

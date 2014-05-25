@@ -48,7 +48,7 @@
       <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="InspectorSplitterPos" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">266</Value>
+      <Value Profile="(Default)">271</Value>
     </Setting>
     <Setting Name="ShowTipsOnStartup" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -100,6 +100,9 @@
     </Setting>
     <Setting Name="Leap_RotationSmoothing" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="CountFilesOpened" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>
 </SettingsFile>
