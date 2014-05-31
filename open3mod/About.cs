@@ -152,7 +152,7 @@ namespace open3mod
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("http://acgessler.github.io/open3mod");
+            Process.Start("http://www.open3mod.com");
         }
 
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
