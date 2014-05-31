@@ -348,9 +348,12 @@
 		<row><td>DevILNet.dll</td><td>{8BA028D2-D878-4BA8-A390-746C51EE793F}</td><td>INSTALLDIR</td><td>2</td><td/><td>devilnet.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ILU.dll</td><td>{73067AF3-EE47-4EC2-8F4C-48B1E0281BFA}</td><td>INSTALLDIR</td><td>2</td><td/><td>ilu.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ISX_DEFAULTCOMPONENT</td><td>{256BE597-0A13-4F7A-AE09-11654320199C}</td><td>INSTALLDIR</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>Leap.dll</td><td>{1FBFC130-D947-43AF-BB51-564543EDE764}</td><td>INSTALLDIR</td><td>2</td><td/><td>leap.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>LeapCSharp.NET4.0.dll</td><td>{6BFB3D14-4087-4F1F-BE05-9FDE8389BE67}</td><td>INSTALLDIR</td><td>2</td><td/><td>leapcsharp.net4.0.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>LeapCSharp.dll</td><td>{4E2B9436-ADC5-442D-8FAC-CC6368D83210}</td><td>INSTALLDIR</td><td>2</td><td/><td>leapcsharp.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ISX_DEFAULTCOMPONENT1</td><td>{6D66E751-4F56-4870-B991-0E1D258BD38C}</td><td>TESTSCENES</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ISX_DEFAULTCOMPONENT2</td><td>{D801AB77-4763-41C9-9601-7B8D71722083}</td><td>DUCK</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ISX_DEFAULTCOMPONENT3</td><td>{B43849B5-91BB-4DBC-B229-8309B4FD5921}</td><td>JEEP</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ISX_DEFAULTCOMPONENT4</td><td>{F8DFC662-D132-4CC1-8442-5AF9502BD3DF}</td><td>LOST_EMPIRE</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ISX_DEFAULTCOMPONENT5</td><td>{9B513BB5-5A7C-4C55-9D58-8A52CF9F8A41}</td><td>SPIDER</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ISX_DEFAULTCOMPONENT6</td><td>{43F6AE39-94B4-4E68-A9C2-7D1CB0F10C65}</td><td>WUSON</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>OpenTK.GLControl.dll</td><td>{4A898EB8-18D0-4706-899F-18CDC5CD8EAD}</td><td>INSTALLDIR</td><td>2</td><td/><td>opentk.glcontrol.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>OpenTK.dll</td><td>{969FB68A-1C41-43B4-B900-F958FCDDF8E2}</td><td>INSTALLDIR</td><td>2</td><td/><td>opentk.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>open3mod.exe</td><td>{8B75A266-9033-4E59-897F-D7417D144882}</td><td>INSTALLDIR</td><td>2</td><td/><td>open3mod.exe</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -1063,6 +1066,7 @@
 	<table name="CreateFolder">
 		<col key="yes" def="s72">Directory_</col>
 		<col key="yes" def="s72">Component_</col>
+		<row><td>TESTSCENES</td><td>ISX_DEFAULTCOMPONENT1</td></row>
 	</table>
 
 	<table name="CustomAction">
@@ -1148,6 +1152,7 @@
 		<row><td>CommonAppDataFolder</td><td>TARGETDIR</td><td>.:Common~1|CommonAppData</td><td/><td>0</td><td/></row>
 		<row><td>CommonFilesFolder</td><td>TARGETDIR</td><td>.:Common</td><td/><td>0</td><td/></row>
 		<row><td>DATABASEDIR</td><td>ISYourDataBaseDir</td><td>.</td><td/><td>0</td><td/></row>
+		<row><td>DUCK</td><td>TESTSCENES</td><td>duck</td><td/><td>0</td><td/></row>
 		<row><td>DesktopFolder</td><td>TARGETDIR</td><td>.:Desktop</td><td/><td>3</td><td/></row>
 		<row><td>FavoritesFolder</td><td>TARGETDIR</td><td>.:FAVORI~1|Favorites</td><td/><td>0</td><td/></row>
 		<row><td>FontsFolder</td><td>TARGETDIR</td><td>.:Fonts</td><td/><td>0</td><td/></row>
@@ -1157,6 +1162,8 @@
 		<row><td>ISMyCompanyDir</td><td>ProgramFilesFolder</td><td>MYCOMP~1|My Company Name</td><td/><td>0</td><td/></row>
 		<row><td>ISMyProductDir</td><td>ISMyCompanyDir</td><td>MYPROD~1|My Product Name</td><td/><td>0</td><td/></row>
 		<row><td>ISYourDataBaseDir</td><td>INSTALLDIR</td><td>Database</td><td/><td>0</td><td/></row>
+		<row><td>JEEP</td><td>TESTSCENES</td><td>jeep</td><td/><td>0</td><td/></row>
+		<row><td>LOST_EMPIRE</td><td>TESTSCENES</td><td>LOST-E~1|lost-empire</td><td/><td>0</td><td/></row>
 		<row><td>LocalAppDataFolder</td><td>TARGETDIR</td><td>.:LocalA~1|LocalAppData</td><td/><td>0</td><td/></row>
 		<row><td>MY_PRODUCT_NAME</td><td>PRIVATE</td><td>MYPROD~1|My Product Name</td><td/><td>0</td><td/></row>
 		<row><td>MY_PRODUCT_NAME1</td><td>OPEN3MOD_CONTRIBUTORS</td><td>MYPROD~1|My Product Name</td><td/><td>0</td><td/></row>
@@ -1173,15 +1180,18 @@
 		<row><td>ProgramFilesFolder</td><td>TARGETDIR</td><td>.:PROGRA~1|program files</td><td/><td>0</td><td/></row>
 		<row><td>ProgramMenuFolder</td><td>TARGETDIR</td><td>.:Programs</td><td/><td>3</td><td/></row>
 		<row><td>RecentFolder</td><td>TARGETDIR</td><td>.:Recent</td><td/><td>0</td><td/></row>
+		<row><td>SPIDER</td><td>TESTSCENES</td><td>spider</td><td/><td>0</td><td/></row>
 		<row><td>SendToFolder</td><td>TARGETDIR</td><td>.:SendTo</td><td/><td>3</td><td/></row>
 		<row><td>StartMenuFolder</td><td>TARGETDIR</td><td>.:STARTM~1|Start Menu</td><td/><td>3</td><td/></row>
 		<row><td>StartupFolder</td><td>TARGETDIR</td><td>.:StartUp</td><td/><td>3</td><td/></row>
 		<row><td>System16Folder</td><td>TARGETDIR</td><td>.:System</td><td/><td>0</td><td/></row>
 		<row><td>SystemFolder</td><td>TARGETDIR</td><td>.:System32</td><td/><td>0</td><td/></row>
 		<row><td>TARGETDIR</td><td/><td>SourceDir</td><td/><td>0</td><td/></row>
+		<row><td>TESTSCENES</td><td>INSTALLDIR</td><td>TESTSC~1|testscenes</td><td/><td>0</td><td/></row>
 		<row><td>TempFolder</td><td>TARGETDIR</td><td>.:Temp</td><td/><td>0</td><td/></row>
 		<row><td>TemplateFolder</td><td>TARGETDIR</td><td>.:ShellNew</td><td/><td>0</td><td/></row>
 		<row><td>USERPROFILE</td><td>TARGETDIR</td><td>.:USERPR~1|UserProfile</td><td/><td>0</td><td/></row>
+		<row><td>WUSON</td><td>TESTSCENES</td><td>wuson</td><td/><td>0</td><td/></row>
 		<row><td>WindowsFolder</td><td>TARGETDIR</td><td>.:Windows</td><td/><td>0</td><td/></row>
 		<row><td>WindowsVolume</td><td>TARGETDIR</td><td>.:WinRoot</td><td/><td>0</td><td/></row>
 		<row><td>open3mod_</td><td>ProgramMenuFolder</td><td>open3mod </td><td/><td>1</td><td/></row>
@@ -1884,9 +1894,12 @@
 		<row><td>AlwaysInstall</td><td>DevILNet.dll</td></row>
 		<row><td>AlwaysInstall</td><td>ILU.dll</td></row>
 		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT</td></row>
-		<row><td>AlwaysInstall</td><td>Leap.dll</td></row>
-		<row><td>AlwaysInstall</td><td>LeapCSharp.NET4.0.dll</td></row>
-		<row><td>AlwaysInstall</td><td>LeapCSharp.dll</td></row>
+		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT1</td></row>
+		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT2</td></row>
+		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT3</td></row>
+		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT4</td></row>
+		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT5</td></row>
+		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT6</td></row>
 		<row><td>AlwaysInstall</td><td>OpenTK.GLControl.dll</td></row>
 		<row><td>AlwaysInstall</td><td>OpenTK.dll</td></row>
 		<row><td>AlwaysInstall</td><td>open3mod.exe</td></row>
@@ -1908,16 +1921,37 @@
 		<row><td>assimp64.dll</td><td>Assimp64.dll</td><td>Assimp64.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\Assimp64.dll</td><td>1</td><td/></row>
 		<row><td>assimplicense.txt</td><td>ISX_DEFAULTCOMPONENT</td><td>ASSIMP~1.TXT|AssimpLicense.txt</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\AssimpLicense.txt</td><td>1</td><td/></row>
 		<row><td>assimpnet.dll</td><td>AssimpNet.dll</td><td>ASSIMP~1.DLL|AssimpNet.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\AssimpNet.dll</td><td>1</td><td/></row>
+		<row><td>copyright.txt</td><td>ISX_DEFAULTCOMPONENT4</td><td>COPYRI~1.TXT|copyright.txt</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\testdata\redist\lost-empire\copyright.txt</td><td>1</td><td/></row>
 		<row><td>devil.dll</td><td>DevIL.dll</td><td>DevIL.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\DevIL.dll</td><td>1</td><td/></row>
 		<row><td>devilnet.dll</td><td>DevILNet.dll</td><td>DevILNet.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\DevILNet.dll</td><td>1</td><td/></row>
+		<row><td>drkwood2.jpg</td><td>ISX_DEFAULTCOMPONENT5</td><td>drkwood2.jpg</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\testdata\scenes\drkwood2.jpg</td><td>1</td><td/></row>
+		<row><td>duck.dae</td><td>ISX_DEFAULTCOMPONENT2</td><td>duck.dae</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\testdata\redist\duck\duck.dae</td><td>1</td><td/></row>
+		<row><td>duckcm.tga</td><td>ISX_DEFAULTCOMPONENT2</td><td>duckCM.tga</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\testdata\redist\duck\duckCM.tga</td><td>1</td><td/></row>
+		<row><td>engineflare1.jpg</td><td>ISX_DEFAULTCOMPONENT5</td><td>ENGINE~1.JPG|engineflare1.jpg</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\testdata\scenes\engineflare1.jpg</td><td>1</td><td/></row>
 		<row><td>ilu.dll</td><td>ILU.dll</td><td>ILU.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\ILU.dll</td><td>1</td><td/></row>
-		<row><td>leap.dll</td><td>Leap.dll</td><td>Leap.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\Leap.dll</td><td>1</td><td/></row>
-		<row><td>leapcsharp.dll</td><td>LeapCSharp.dll</td><td>LEAPCS~1.DLL|LeapCSharp.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\LeapCSharp.dll</td><td>1</td><td/></row>
-		<row><td>leapcsharp.net4.0.dll</td><td>LeapCSharp.NET4.0.dll</td><td>LEAPCS~1.DLL|LeapCSharp.NET4.0.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\LeapCSharp.NET4.0.dll</td><td>1</td><td/></row>
+		<row><td>jeep1.jpg</td><td>ISX_DEFAULTCOMPONENT3</td><td>jeep1.jpg</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\testdata\redist\jeep\jeep1.jpg</td><td>1</td><td/></row>
+		<row><td>jeep1.ms3d</td><td>ISX_DEFAULTCOMPONENT3</td><td>JEEP1~1.MS3|jeep1.ms3d</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\testdata\redist\jeep\jeep1.ms3d</td><td>1</td><td/></row>
+		<row><td>jeep1.readme.txt</td><td>ISX_DEFAULTCOMPONENT3</td><td>JEEP1R~1.TXT|jeep1.readme.txt</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\testdata\redist\jeep\jeep1.readme.txt</td><td>1</td><td/></row>
+		<row><td>license</td><td>ISX_DEFAULTCOMPONENT</td><td>LICENSE</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\LICENSE</td><td>1</td><td/></row>
+		<row><td>license_assimp</td><td>ISX_DEFAULTCOMPONENT</td><td>LICENS~1|LICENSE_Assimp</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\LICENSE_Assimp</td><td>1</td><td/></row>
+		<row><td>license_assimpnet</td><td>ISX_DEFAULTCOMPONENT</td><td>LICENS~1|LICENSE_AssimpNet</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\LICENSE_AssimpNet</td><td>1</td><td/></row>
+		<row><td>license_devilnet</td><td>ISX_DEFAULTCOMPONENT</td><td>LICENS~1|LICENSE_DevilNet</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\LICENSE_DevilNet</td><td>1</td><td/></row>
+		<row><td>license_opentk</td><td>ISX_DEFAULTCOMPONENT</td><td>LICENS~1|LICENSE_OpenTK</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\LICENSE_OpenTK</td><td>1</td><td/></row>
+		<row><td>lost_empire.mtl</td><td>ISX_DEFAULTCOMPONENT4</td><td>LOST_E~1.MTL|lost_empire.mtl</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\testdata\redist\lost-empire\lost_empire.mtl</td><td>1</td><td/></row>
+		<row><td>lost_empire.obj</td><td>ISX_DEFAULTCOMPONENT4</td><td>LOST_E~1.OBJ|lost_empire.obj</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\testdata\redist\lost-empire\lost_empire.obj</td><td>1</td><td/></row>
+		<row><td>lost_empire_alpha.png</td><td>ISX_DEFAULTCOMPONENT4</td><td>LOST_E~1.PNG|lost_empire-Alpha.png</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\testdata\redist\lost-empire\lost_empire-Alpha.png</td><td>1</td><td/></row>
+		<row><td>lost_empire_rgb.png</td><td>ISX_DEFAULTCOMPONENT4</td><td>LOST_E~1.PNG|lost_empire-RGB.png</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\testdata\redist\lost-empire\lost_empire-RGB.png</td><td>1</td><td/></row>
+		<row><td>lost_empire_rgba.png</td><td>ISX_DEFAULTCOMPONENT4</td><td>LOST_E~1.PNG|lost_empire-RGBA.png</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\testdata\redist\lost-empire\lost_empire-RGBA.png</td><td>1</td><td/></row>
 		<row><td>open3mod.exe</td><td>open3mod.exe</td><td>open3mod.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\open3mod.exe</td><td>1</td><td/></row>
 		<row><td>open3mod.vshost.exe.config</td><td>ISX_DEFAULTCOMPONENT</td><td>OPEN3M~1.CON|open3mod.vshost.exe.config</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\open3mod.vshost.exe.config</td><td>1</td><td/></row>
 		<row><td>opentk.dll</td><td>OpenTK.dll</td><td>OpenTK.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\OpenTK.dll</td><td>1</td><td/></row>
 		<row><td>opentk.glcontrol.dll</td><td>OpenTK.GLControl.dll</td><td>OPENTK~1.DLL|OpenTK.GLControl.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\open3mod\bin\Release\OpenTK.GLControl.dll</td><td>1</td><td/></row>
+		<row><td>spider.mtl</td><td>ISX_DEFAULTCOMPONENT5</td><td>spider.mtl</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\testdata\scenes\spider.mtl</td><td>1</td><td/></row>
+		<row><td>spider.obj</td><td>ISX_DEFAULTCOMPONENT5</td><td>spider.obj</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\testdata\scenes\spider.obj</td><td>1</td><td/></row>
+		<row><td>spidertex.jpg</td><td>ISX_DEFAULTCOMPONENT5</td><td>SPIDER~1.JPG|SpiderTex.jpg</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\testdata\scenes\SpiderTex.jpg</td><td>1</td><td/></row>
+		<row><td>testwuson.x</td><td>ISX_DEFAULTCOMPONENT6</td><td>TESTWU~1.X|Testwuson.X</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\testdata\scenes\Testwuson.X</td><td>1</td><td/></row>
+		<row><td>wal67ar_small.jpg</td><td>ISX_DEFAULTCOMPONENT5</td><td>WAL67A~1.JPG|wal67ar_small.jpg</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\testdata\scenes\wal67ar_small.jpg</td><td>1</td><td/></row>
+		<row><td>wal69ar_small.jpg</td><td>ISX_DEFAULTCOMPONENT5</td><td>WAL69A~1.JPG|wal69ar_small.jpg</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\..\testdata\scenes\wal69ar_small.jpg</td><td>1</td><td/></row>
 	</table>
 
 	<table name="FileSFPCatalog">
@@ -2181,9 +2215,12 @@
 		<row><td>DevILNet.dll</td><td/><td/><td>_4C139E8A_757A_454A_8184_E16B6DF6A28B_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ILU.dll</td><td/><td/><td>_25A71F61_02E4_49A6_8072_033582A97B1A_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ISX_DEFAULTCOMPONENT</td><td/><td/><td>_2F0FF3D6_709D_48DB_821B_9E4164C25237_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>Leap.dll</td><td/><td/><td>_75F652A7_4EC3_4619_AD29_D71CAC8197AE_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>LeapCSharp.NET4.0.dll</td><td/><td/><td>_874DD794_52B0_4C79_8695_1B9524B8F51A_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>LeapCSharp.dll</td><td/><td/><td>_FEA853B5_DC37_4142_B1AB_35507D6BBC12_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>ISX_DEFAULTCOMPONENT1</td><td/><td/><td>_5AE99F3D_1F80_4718_8B26_24FD116B858F_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>ISX_DEFAULTCOMPONENT2</td><td/><td/><td>_8AFF8079_F1B5_4029_933D_D3D2B157C472_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>ISX_DEFAULTCOMPONENT3</td><td/><td/><td>_0B47E2C9_6B34_47FE_89DA_EE58F3BF8D86_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>ISX_DEFAULTCOMPONENT4</td><td/><td/><td>_B203792C_94CA_407D_954F_C0E91F399920_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>ISX_DEFAULTCOMPONENT5</td><td/><td/><td>_A454655A_B067_43F9_9302_893833534551_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>ISX_DEFAULTCOMPONENT6</td><td/><td/><td>_3A3C267D_B424_4B37_9C42_D1B760E219A9_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>OpenTK.GLControl.dll</td><td/><td/><td>_52C5DC0B_D19D_4225_A6E9_947005AA0A80_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>OpenTK.dll</td><td/><td/><td>_ED83E844_FE09_4EB6_9C75_F6AC3CE76D6C_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>open3mod.exe</td><td/><td/><td>_BF8E31D6_3B97_4207_BC2D_35CB1C59B88B_FILTER</td><td/><td/><td/><td/></row>
@@ -2785,6 +2822,9 @@
 		<col def="I2">Order</col>
 		<col def="I2">ISSetupLocation</col>
 		<col def="S255">ISReleaseFlags</col>
+		<row><td>_6C7C320D_6848_4EDA_8FFE_2849C83D39E1_</td><td>Microsoft Visual C++ 2012 Redistributable Package (x86).prq</td><td/><td/><td/></row>
+		<row><td>_9156764B_E641_4E86_B8B1_A104A7AE58D2_</td><td>Microsoft .NET Framework 4.5 Web.prq</td><td/><td/><td/></row>
+		<row><td>_E5BA2EB2_DC8F_4E33_93AC_CBF077601FB5_</td><td>Microsoft Visual C++ 2012 Redistributable Package (x64).prq</td><td/><td/><td/></row>
 	</table>
 
 	<table name="ISSetupType">
@@ -2818,7 +2858,7 @@
 		<col def="I2">Encoded</col>
 		<col def="S0">Comment</col>
 		<col def="I4">TimeStamp</col>
-		<row><td>COMPANY_NAME</td><td>1033</td><td>open3mod </td><td>0</td><td/><td>2090948980</td></row>
+		<row><td>COMPANY_NAME</td><td>1033</td><td>Alexander Gessler</td><td>0</td><td/><td>-89989513</td></row>
 		<row><td>DN_AlwaysInstall</td><td>1033</td><td>Always Install</td><td>0</td><td/><td>2090936340</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_COLOR</td><td>1033</td><td>The color settings of your system are not adequate for running [ProductName].</td><td>0</td><td/><td>2090936340</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_DOTNETVERSION45FULL</td><td>1033</td><td>Microsoft .NET Framework 4.5 Full package or greater needs to be installed for this installation to continue.</td><td>0</td><td/><td>2090985812</td></row>
@@ -3921,8 +3961,9 @@
 		<row><td>IDS__TargetReq_DESC_RAM</td><td>1033</td><td>The amount of RAM is not adequate for running [ProductName].</td><td>0</td><td/><td>2090936340</td></row>
 		<row><td>IDS__TargetReq_DESC_RESOLUTION</td><td>1033</td><td>The screen resolution is not adequate for running [ProductName].</td><td>0</td><td/><td>2090936340</td></row>
 		<row><td>ID_STRING1</td><td>1033</td><td/><td>0</td><td/><td>2090936340</td></row>
-		<row><td>ID_STRING2</td><td>1033</td><td>http://acgessler.github.io/open3mod</td><td>0</td><td/><td>2090965364</td></row>
+		<row><td>ID_STRING2</td><td>1033</td><td>http://www.open3mod.com</td><td>0</td><td/><td>-90040681</td></row>
 		<row><td>ID_STRING3</td><td>1033</td><td>open3mod </td><td>0</td><td/><td>2090948980</td></row>
+		<row><td>ID_STRING4</td><td>1033</td><td>http://www.open3mod.com</td><td>0</td><td/><td>-90016105</td></row>
 		<row><td>IIDS_UITEXT_FeatureUninstalled</td><td>1033</td><td>This feature will remain uninstalled.</td><td>0</td><td/><td>2090936340</td></row>
 	</table>
 
@@ -4165,7 +4206,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>ISTheme</td><td>InstallShield Blue.theme</td></row>
 		<row><td>ISUSLock</td><td>{E6970669-4D97-4C8E-BEE7-2BFC3150C3CF}</td></row>
 		<row><td>ISUSSignature</td><td>{5755DD3E-91BD-446A-8BC5-27004F90EEF3}</td></row>
-		<row><td>ISVisitedViews</td><td>viewAssistant,viewRelease</td></row>
+		<row><td>ISVisitedViews</td><td>viewAssistant,viewRelease,viewDependencies,viewObjects,viewAppFiles,viewProject</td></row>
 		<row><td>Limited</td><td>1</td></row>
 		<row><td>LockPermissionMode</td><td>1</td></row>
 		<row><td>MsiExecCmdLineOptions</td><td/></row>
@@ -4475,6 +4516,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>ARPPRODUCTICON</td><td>ARPPRODUCTICON.exe</td><td/></row>
 		<row><td>ARPSIZE</td><td/><td/></row>
 		<row><td>ARPURLINFOABOUT</td><td>##ID_STRING2##</td><td/></row>
+		<row><td>ARPURLUPDATEINFO</td><td>##ID_STRING4##</td><td/></row>
 		<row><td>AgreeToLicense</td><td>No</td><td/></row>
 		<row><td>ApplicationUsers</td><td>AllUsers</td><td/></row>
 		<row><td>DWUSINTERVAL</td><td>30</td><td/></row>
@@ -4541,7 +4583,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
 		<row><td>PROGRAMFILETOLAUNCHATEND</td><td>[INSTALLDIR]open3mod.exe</td><td/></row>
-		<row><td>ProductCode</td><td>{3F984DBF-B568-405C-B29F-F9D6D207AE62}</td><td/></row>
+		<row><td>ProductCode</td><td>{2881DB80-EB93-4E22-A49F-0B407691935E}</td><td/></row>
 		<row><td>ProductName</td><td>Open 3D Model Viewer</td><td/></row>
 		<row><td>ProductVersion</td><td>1.00.0000</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
@@ -4559,7 +4601,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>SecureCustomProperties</td><td>ISFOUNDNEWERPRODUCTVERSION;USERNAME;COMPANYNAME;ISX_SERIALNUM;SUPPORTDIR;DOTNETVERSION45FULL</td><td/></row>
 		<row><td>SelectedSetupType</td><td>##IDS__DisplayName_Typical##</td><td/></row>
 		<row><td>SetupType</td><td>Typical</td><td/></row>
-		<row><td>UpgradeCode</td><td>{896281DE-C261-4956-80EA-B7A05E09DA5C}</td><td/></row>
+		<row><td>UpgradeCode</td><td>{0C38F714-4B46-4606-8E9D-0E1F67E94DF8}</td><td/></row>
 		<row><td>_IsMaintenance</td><td>Change</td><td/></row>
 		<row><td>_IsSetupTypeMin</td><td>Typical</td><td/></row>
 	</table>
