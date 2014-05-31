@@ -45,6 +45,12 @@ namespace open3mod
             this.closeAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.recentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.wusonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.jeepToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.duckToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.wustonAnimatedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lostEmpireToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemView = new System.Windows.Forms.ToolStripMenuItem();
@@ -98,12 +104,13 @@ namespace open3mod
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.toolStripStatistics = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.linkLabelDonate = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
-            this.trackBarBrightness = new System.Windows.Forms.TrackBar();
             this.linkLabelWebsite = new System.Windows.Forms.LinkLabel();
+            this.trackBarBrightness = new System.Windows.Forms.TrackBar();
             this.glControl1 = new open3mod.RenderControl();
             this.menuStrip1.SuspendLayout();
             this.toolStripSelectRenderer.SuspendLayout();
@@ -133,6 +140,7 @@ namespace open3mod
             this.closeAllToolStripMenuItem,
             this.toolStripSeparator2,
             this.recentToolStripMenuItem,
+            this.toolStripMenuItem4,
             this.toolStripSeparator3,
             this.quitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -142,38 +150,85 @@ namespace open3mod
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.OnFileMenuOpen);
             // 
             // closeAllToolStripMenuItem
             // 
             this.closeAllToolStripMenuItem.Name = "closeAllToolStripMenuItem";
-            this.closeAllToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
+            this.closeAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.closeAllToolStripMenuItem.Text = "Close all";
             this.closeAllToolStripMenuItem.Click += new System.EventHandler(this.OnFileMenuCloseAll);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(115, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
             // 
             // recentToolStripMenuItem
             // 
             this.recentToolStripMenuItem.Name = "recentToolStripMenuItem";
-            this.recentToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
+            this.recentToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.recentToolStripMenuItem.Text = "Recent";
             this.recentToolStripMenuItem.Click += new System.EventHandler(this.OnFileMenuRecent);
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.wusonToolStripMenuItem,
+            this.jeepToolStripMenuItem,
+            this.duckToolStripMenuItem,
+            this.wustonAnimatedToolStripMenuItem,
+            this.lostEmpireToolStripMenuItem});
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem4.Text = "Sample scenes";
+            // 
+            // wusonToolStripMenuItem
+            // 
+            this.wusonToolStripMenuItem.Name = "wusonToolStripMenuItem";
+            this.wusonToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.wusonToolStripMenuItem.Text = "Spider";
+            this.wusonToolStripMenuItem.Click += new System.EventHandler(this.wusonToolStripMenuItem_Click);
+            // 
+            // jeepToolStripMenuItem
+            // 
+            this.jeepToolStripMenuItem.Name = "jeepToolStripMenuItem";
+            this.jeepToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.jeepToolStripMenuItem.Text = "Jeep";
+            this.jeepToolStripMenuItem.Click += new System.EventHandler(this.jeepToolStripMenuItem_Click);
+            // 
+            // duckToolStripMenuItem
+            // 
+            this.duckToolStripMenuItem.Name = "duckToolStripMenuItem";
+            this.duckToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.duckToolStripMenuItem.Text = "Duck";
+            this.duckToolStripMenuItem.Click += new System.EventHandler(this.duckToolStripMenuItem_Click);
+            // 
+            // wustonAnimatedToolStripMenuItem
+            // 
+            this.wustonAnimatedToolStripMenuItem.Name = "wustonAnimatedToolStripMenuItem";
+            this.wustonAnimatedToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.wustonAnimatedToolStripMenuItem.Text = "Wuson (Animated)";
+            this.wustonAnimatedToolStripMenuItem.Click += new System.EventHandler(this.wustonAnimatedToolStripMenuItem_Click);
+            // 
+            // lostEmpireToolStripMenuItem
+            // 
+            this.lostEmpireToolStripMenuItem.Name = "lostEmpireToolStripMenuItem";
+            this.lostEmpireToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.lostEmpireToolStripMenuItem.Text = "Lost Empire";
+            this.lostEmpireToolStripMenuItem.Click += new System.EventHandler(this.lostEmpireToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(115, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(149, 6);
             // 
             // quitToolStripMenuItem
             // 
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            this.quitToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.quitToolStripMenuItem.Text = "Quit";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.OnFileMenuQuit);
             // 
@@ -620,12 +675,20 @@ namespace open3mod
             // statusStrip
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatistics});
+            this.toolStripStatistics,
+            this.toolStripStatusLabel1});
             this.statusStrip.Location = new System.Drawing.Point(0, 712);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(1051, 22);
             this.statusStrip.TabIndex = 1;
             this.statusStrip.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.BackColor = System.Drawing.Color.Transparent;
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(300, 17);
+            this.toolStripStatusLabel1.Text = "| Keep right mouse button pressed to move light source";
             // 
             // directorySearcher1
             // 
@@ -657,6 +720,18 @@ namespace open3mod
             this.label1.Text = "Brightness";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // linkLabelWebsite
+            // 
+            this.linkLabelWebsite.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabelWebsite.AutoSize = true;
+            this.linkLabelWebsite.Location = new System.Drawing.Point(895, 11);
+            this.linkLabelWebsite.Name = "linkLabelWebsite";
+            this.linkLabelWebsite.Size = new System.Drawing.Size(144, 13);
+            this.linkLabelWebsite.TabIndex = 8;
+            this.linkLabelWebsite.TabStop = true;
+            this.linkLabelWebsite.Text = "Website - Check for Updates";
+            this.linkLabelWebsite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelWebsite_LinkClicked);
+            // 
             // trackBarBrightness
             // 
             this.trackBarBrightness.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -669,18 +744,6 @@ namespace open3mod
             this.trackBarBrightness.Size = new System.Drawing.Size(188, 45);
             this.trackBarBrightness.TabIndex = 6;
             this.trackBarBrightness.Value = global::open3mod.GraphicsSettings.Default.OutputBrightness;
-            // 
-            // linkLabelWebsite
-            // 
-            this.linkLabelWebsite.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkLabelWebsite.AutoSize = true;
-            this.linkLabelWebsite.Location = new System.Drawing.Point(895, 11);
-            this.linkLabelWebsite.Name = "linkLabelWebsite";
-            this.linkLabelWebsite.Size = new System.Drawing.Size(144, 13);
-            this.linkLabelWebsite.TabIndex = 8;
-            this.linkLabelWebsite.TabStop = true;
-            this.linkLabelWebsite.Text = "Website - Check for Updates";
-            this.linkLabelWebsite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelWebsite_LinkClicked);
             // 
             // glControl1
             // 
@@ -728,8 +791,9 @@ namespace open3mod
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
-            this.MinimumSize = new System.Drawing.Size(600, 500);
+            this.MinimumSize = new System.Drawing.Size(800, 600);
             this.Name = "MainWindow";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Open 3D Model Viewer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OnCloseForm);
@@ -815,6 +879,13 @@ namespace open3mod
         private TrackBar trackBarBrightness;
         private Label label1;
         private LinkLabel linkLabelWebsite;
+        private ToolStripStatusLabel toolStripStatusLabel1;
+        private ToolStripMenuItem toolStripMenuItem4;
+        private ToolStripMenuItem wusonToolStripMenuItem;
+        private ToolStripMenuItem wustonAnimatedToolStripMenuItem;
+        private ToolStripMenuItem lostEmpireToolStripMenuItem;
+        private ToolStripMenuItem jeepToolStripMenuItem;
+        private ToolStripMenuItem duckToolStripMenuItem;
     }
 }
 

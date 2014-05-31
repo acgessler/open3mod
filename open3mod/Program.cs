@@ -45,8 +45,10 @@ namespace open3mod
                         Application.SetCompatibleTextRenderingDefault(false);
 
                         mainWindow = new MainWindow();
-                        mainWindow.AddTab(args.Length > 0 ? args[0] : "../../../testdata/scenes/spider.obj");
-
+                        if (args.Length > 0)
+                        {
+                            mainWindow.AddTab(args[0]);
+                        }
                         Application.Run(mainWindow);
                         mainWindow = null;
 

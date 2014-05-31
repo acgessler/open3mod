@@ -32,7 +32,9 @@ using System.Threading;
 
 using OpenTK;
 
+#if LEAP
 using Leap;
+#endif
 
 namespace open3mod
 {
@@ -49,8 +51,10 @@ namespace open3mod
         private delegate void DelegatePopulateInspector(Tab tab);
         private readonly DelegatePopulateInspector _delegatePopulateInspector;
 
+#if LEAP
         private readonly Controller _leapController;
         private readonly LeapListener _leapListener;
+#endif
 
         private readonly bool _initialized;
 
@@ -122,9 +126,11 @@ namespace open3mod
 
             InitRecentList();
 
+#if LEAP
             //LeapMotion Support
             _leapListener = new LeapListener(this as MainWindow);
             _leapController = new Controller(_leapListener);
+#endif
 
             // register listener for tab changs
            tabControl1.SelectedIndexChanged += (object o, EventArgs e) => {
@@ -1042,9 +1048,11 @@ namespace open3mod
             }
             CoreSettings.CoreSettings.Default.Save();
 
+#if LEAP
             //Cleanup LeapMotion Controller
             _leapController.RemoveListener(_leapListener);
             _leapController.Dispose();
+#endif
         }
 
 
@@ -1105,6 +1113,45 @@ namespace open3mod
         private void linkLabelWebsite_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("http://www.open3mod.com/");
+        }
+
+        // Hardcoded sample files with paths adjusted for running from
+        // the repository (or standalone version), or from the installed
+        // version.
+
+        private void wusonToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            const string repos = "../../../testdata/scenes/spider.obj";
+            const string installed = "testscenes/spider/spider.obj";
+            AddTab(File.Exists(repos) ? repos : installed);
+        }
+
+        private void jeepToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            const string repos = "../../../testdata/redist/jeep/jeep1.ms3d";
+            const string installed = "testscenes/jeep/jeep1.ms3d";
+            AddTab(File.Exists(repos) ? repos : installed);
+        }
+
+        private void duckToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            const string repos = "../../../testdata/redist/duck/duck.dae";
+            const string installed = "testscenes/duck/duck.dae";
+            AddTab(File.Exists(repos) ? repos : installed);
+        }
+
+        private void wustonAnimatedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            const string repos = "../../../testdata/scenes/Testwuson.X";
+            const string installed = "testscenes/wuson/Testwuson.X";
+            AddTab(File.Exists(repos) ? repos : installed);
+        }
+
+        private void lostEmpireToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            const string repos = "../../../testdata/redist/lost-empire/lost_empire.obj";
+            const string installed = "testscenes/lost-empire/lost_empire.obj";
+            AddTab(File.Exists(repos) ? repos : installed);
         }
     }
 }

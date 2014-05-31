@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 
+#if LEAP
+
 using Leap;
 
 namespace open3mod
@@ -393,3 +395,5 @@ namespace open3mod
         }
     }
 }
+
+#endif
