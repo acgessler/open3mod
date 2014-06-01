@@ -19,7 +19,20 @@
       <script src="../../assets/js/html5shiv.js"></script>
       <script src="../../assets/js/respond.min.js"></script>
     <![endif]-->
-  <style type="text/css"></style></head>
+  <style type="text/css"></style>
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-50855123-4', 'open3mod.com');
+  ga('send', 'pageview');
+
+</script>
+
+
+  </head>
 
   <body style="zoom: 1;">
 
@@ -30,6 +43,7 @@
       <div class="header">
         <ul class="nav nav-pills pull-right">
           <li class="active"><a href="index.htm">Home</a></li>
+           <li><a href="donate.htm">Donate</a></li>
           <li><a href="about.htm">About</a></li>
         
         </ul>
@@ -40,40 +54,77 @@
       <div class="jumbotron">
       
         <p class="lead"> 
-          View and convert all your 3D models. A free, Open-Source tool designed to make it all easier.
+          View and export all your 3D models. A free, Open-Source tool designed to make it all easier.
         </p>
         <p>
-          <a class="btn btn-lg btn-success" href="./view-source getbootstrap.com examples jumbotron-narrow _files/view-source getbootstrap.com examples jumbotron-narrow .htm">
-        Download <font size="-1">(Windows, 32 or 64 Bit)</font></a>
+          <a class="btn btn-lg btn-success" href="http://www.open3mod.com/download/open3mod_1_0_setup.exe" onclick="_gaq.push(['_trackEvent','Download',this.href]);">
+        Download 1.0 <font size="-1">(Windows, 32 or 64 Bit)</font></a>
         </p>
+         <font size="-1">
+         <a href="http://www.open3mod.com/download/open3mod_1_0_standalone.zip" onclick="_gaq.push(['_trackEvent','Download',this.href]);">Installer-less version (ZIP, Windows 32 or 64 Bit)</a>
+        </font>
+       
+        
       </div>
+
 
       <div class="row marketing">
         <div class="col-lg-6">
+
+
+       <g:plusone href="http://www.open3mod.com"></g:plusone>
+          <script type="text/javascript">
+            (function() {
+              setTimeout(function() {
+              var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+              po.src = 'https://apis.google.com/js/plusone.js';
+              var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+              }, 2000);
+            })();
+          </script>
+
+          <div class="fb-like" data-href="http://www.open3mod.com" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div>
+         
+          <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.open3mod.com" data-hashtags="onlineconv">Tweet</a>
+          <script>setTimeout(function() { !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');}, 2000);</script>
+
+          <br/><br/>
+
           <h4>Massive 3D Format support</h4>
-          <p>Based on and tightly integrated with <a hreg="http://assimp.sf.net">Open Asset Import Library</a>, open3mod is able to read more formats reliably than most other viewers. Supported formats include <b> OBJ, 3DS, BLEND, STL, X, FBX, IFC and Collada</b>, the total number of formats is 40+.</p>
+          <p>Based on and tightly integrated with <a hreg="http://assimp.sf.net">Open Asset Import Library</a>, open3mod is able to read more formats than 
+          most other viewers. Supported formats include <b> OBJ, 3DS, BLEND, STL, FBX, DXF, LWO, LWS, MD5, MD3, MD2, NDO, X, IFC and Collada</b>, the total number of formats is 40+.</p>
 
           <h4>Flexible User Interface</h4>
          <p> A tabbed User Experience allows opening multiple scenes at once. 3D views can be split in up to four independent viewports. Different camera modi - orbit, 
           first-person-shooter or axis-aligned - are available for each viewport. New scenes are loaded in the background.</p>
         
-        <img src="img/shot1_small.png" width="100%"> </img>    
+          <br/><a href="img/shot1.png"><img src="img/shot1_small.png" width="100%"> </img> </a> <br/> <br/> 
        
-
-          <h4>Skeletal Animation / Skinning support</h4>
-          <p>Playback skeletal animations in your 3D files. Lock individual frames, adjust playback speed and inspect computed transformations.</p>
         </div>
         
         <div class="col-lg-6">
+
+
+          <h4>Skeletal Animation / Skinning support</h4>
+          <p>Playback skeletal animations in your 3D files. Lock individual frames, adjust playback speed and inspect computed transformations.</p>
+
+          <br/><a href="img/shot2.png"><img src="img/shot2_small.png" width="100%"> </img> </a> <br/> <br/> 
+
+
           <h4>Export </h4>
-          <p>Export single textures and whole scenes to a multitude of formats. Mesh export formats include OBJ, 3DS, Collada and STL. 
+          <p>Export single textures and whole scenes to a multitude of formats. Mesh export formats include <b>OBJ, PLY, 3DS, Collada and STL</b>. 
           Texture export formats include PNG, JPEG, DDS, TGA, BMP</p>
 
           <h4>Hierarchy Inspection</h4>
-          <p>Look at the scenegraph hierarchy of your files in great detail. This is useful for developers wishing to get a better picture of their scenes.</p>
+          <p>Look at the scenegraph hierarchy in great detail. This is useful for developers who would like to get a better picture of how scenes are organized.</p>
 
          
         </div></div>
+
+        <div class="jumbotron">
+
+         
+        </div>
       
 
       <div class="footer">
@@ -87,5 +138,13 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
   
-
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
+  js.async = true;
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 </body></html>
