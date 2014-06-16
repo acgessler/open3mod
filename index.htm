@@ -29,6 +29,13 @@
   ga('create', 'UA-50855123-4', 'open3mod.com');
   ga('send', 'pageview');
 
+
+function godonate() {
+	window.setTimeout(function() {
+		window.location.href = 'donate.htm';
+	}, 3000);
+}
+
 </script>
 
 
@@ -57,11 +64,11 @@
           View and export all your 3D models. A free, Open-Source tool designed to make it all easier.
         </p>
         <p>
-          <a class="btn btn-lg btn-success" href="http://www.open3mod.com/download/open3mod_1_0_setup.exe" onclick="_gaq.push(['_trackEvent','Download',this.href]);">
+          <a class="btn btn-lg btn-success" target="_blank" href="http://www.open3mod.com/download/open3mod_1_0_setup.exe" onclick="godonate();_gaq.push(['_trackEvent','Download',this.href]);">
         Download 1.0 <font size="-1">(Windows, 32 or 64 Bit)</font></a>
         </p>
          <font size="-1">
-         <a href="http://www.open3mod.com/download/open3mod_1_0_standalone.zip" onclick="_gaq.push(['_trackEvent','Download',this.href]);">Installer-less version (ZIP, Windows 32 or 64 Bit)</a>
+         <a target="blank" href="http://www.open3mod.com/download/open3mod_1_0_standalone.zip" onclick="godonate();_gaq.push(['_trackEvent','Download',this.href]);">Installer-less version (ZIP, Windows 32 or 64 Bit)</a>
         </font>
        
         
