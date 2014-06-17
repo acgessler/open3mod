@@ -184,7 +184,15 @@ namespace open3mod
 
             if(copyTextures)
             {
-                Directory.CreateDirectory(Path.Combine(path, textureDestinationFolder));
+                try
+                {
+                    Directory.CreateDirectory(Path.Combine(path, textureDestinationFolder));
+                }
+                catch (Exception)
+                {
+                    PushLog("Failed to create texture destination directory " + Path.Combine(path, textureDestinationFolder));
+                    return;
+                }
             }
 
             // Create a shallow copy of the original scene that replaces
@@ -249,15 +257,15 @@ namespace open3mod
 
                 if (relativeTexturePaths)
                 {
-                    textureMapping[id] = GetRelativePath(path, destName);
+                    textureMapping[texId] = GetRelativePath(path, destName);
                 }
                 else
                 {
-                    textureMapping[id] = destName;
+                    textureMapping[texId] = destName;
                 }
                 textureCopyJobs[diskLocation] = destName;
 
-                PushLog("Texture " + id + " maps to " + textureMapping[id]);              
+                PushLog("Texture " + texId + " maps to " + textureMapping[texId]);              
             }
 
             foreach (var mat in scene.Raw.Materials)
@@ -269,7 +277,7 @@ namespace open3mod
             {
                 using (var v = new AssimpContext())
                 {
-                    PushLog("Exporting using Assimp to " + fullPath);
+                    PushLog("Exporting using Assimp to " + fullPath + ", using format id: " + id);
                     var result = v.ExportFile(sourceScene, fullPath, id, includeSceneHierarchy 
                         ? PostProcessSteps.None 
                         : PostProcessSteps.PreTransformVertices);
@@ -359,8 +367,9 @@ namespace open3mod
                 if (prop.PropertyType == PropertyType.String && textureMapping.ContainsKey(prop.GetStringValue()))
                 {
                     propOut = new MaterialProperty {PropertyType = PropertyType.String, Name = prop.Name};
+                    propOut.TextureIndex = prop.TextureIndex;
+                    propOut.TextureType = prop.TextureType;
                     propOut.SetStringValue(textureMapping[prop.GetStringValue()]);
-                    continue;
                 }
                 matOut.AddProperty(propOut);
             }
