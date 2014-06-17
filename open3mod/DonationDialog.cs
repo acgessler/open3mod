@@ -51,7 +51,7 @@ namespace open3mod
 
         private void Donate(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("http://www.open3mod.com/donate");
+            System.Diagnostics.Process.Start("http://www.open3mod.com/donate.htm?ref=inapp");
             Close();
         }
     }
