@@ -124,7 +124,6 @@
             // 
             this.ExitAppCheckbox.AutoSize = true;
             this.ExitAppCheckbox.Checked = global::CoreSettings.CoreSettings.Default.ExitOnTabClosing;
-            this.ExitAppCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ExitAppCheckbox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::CoreSettings.CoreSettings.Default, "ExitOnTabClosing", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.ExitAppCheckbox.Location = new System.Drawing.Point(21, 33);
             this.ExitAppCheckbox.Name = "ExitAppCheckbox";
