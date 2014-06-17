@@ -339,6 +339,7 @@
     <EmbeddedResource Include="TrafoMatrixViewControl.resx">
       <DependentUpon>TrafoMatrixViewControl.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="App.config" />
     <None Include="CoreSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>CoreSettings.Designer.cs</LastGenOutput>
@@ -354,9 +355,6 @@
     </None>
     <EmbeddedResource Include="Shader\UberFragmentShader.glsl" />
     <EmbeddedResource Include="Shader\UberVertexShader.glsl" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\libs\assimp-net\AssimpNet\AssimpNet.csproj">
