@@ -146,7 +146,7 @@ namespace open3mod
 
             int fboHandle = -1;
             int colorTexture = -1;
-            int depthRenderbuffer = 01;
+            int depthRenderbuffer = -1;
 
             // clear error flags
             GL.GetError();
@@ -259,7 +259,7 @@ namespace open3mod
             }
             if (depthRenderbuffer != -1)
             {
-                GL.DeleteRenderbuffers(1, ref depthRenderbuffer);
+                GL.Ext.DeleteRenderbuffers(1, ref depthRenderbuffer);
             } 
             if (fboHandle != -1)
             {
