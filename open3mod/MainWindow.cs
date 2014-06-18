@@ -173,8 +173,11 @@ namespace open3mod
         {
             base.OnCreateControl();
 
-            MaybeShowDonationDialog();
-            MaybeShowTipOfTheDay();
+            DelayExecution(TimeSpan.FromSeconds(2),
+                MaybeShowTipOfTheDay);
+
+            DelayExecution(TimeSpan.FromSeconds(20),
+                MaybeShowDonationDialog);
         }
 
 
@@ -185,6 +188,21 @@ namespace open3mod
                 var tip = new TipOfTheDayDialog();
                 tip.ShowDialog();
             }
+        }
+
+        // http://stackoverflow.com/questions/2565166
+        public static void DelayExecution(TimeSpan delay, Action action)
+        {
+            System.Threading.Timer timer = null;
+            SynchronizationContext context = SynchronizationContext.Current;
+
+            timer = new System.Threading.Timer(
+                (ignore) =>
+                {
+                    timer.Dispose();
+
+                    context.Post(ignore2 => action(), null);
+                }, null, delay, TimeSpan.FromMilliseconds(-1));
         }
 
 
