@@ -38,9 +38,9 @@ namespace open3mod
             {
                 return;
             }
-            // scale by scene size because the scene will be resized to fit
+            // Scale by scene size because the scene will be resized to fit
             // the unit box but the normals should have a fixed length
-            var scale = invGlobalScale * 0.03f;
+            var scale = invGlobalScale * 0.05f;
 
             GL.Begin(BeginMode.Lines);
 

@@ -113,7 +113,7 @@ namespace open3mod
             var tmp = InitposeMax.X - InitposeMin.X;
             tmp = Math.Max(InitposeMax.Y - InitposeMin.Y, tmp);
             tmp = Math.Max(InitposeMax.Z - InitposeMin.Z, tmp);
-            var scale = 2.0 / tmp;     
+            var scale = 2.0f / tmp;     
 
             // TODO: migrate general scale and this snippet to camcontroller code
             if (cam != null)
@@ -180,7 +180,7 @@ namespace open3mod
 
                 if (flags.HasFlag(RenderFlags.ShowSkeleton) || flags.HasFlag(RenderFlags.ShowNormals))
                 {
-                    RecursiveRenderNoScale(Owner.Raw.RootNode, visibleMeshesByNode, flags, 1.0f / tmp, animated);
+                    RecursiveRenderNoScale(Owner.Raw.RootNode, visibleMeshesByNode, flags, 1.0f / scale, animated);
                 }
 
                 if (!animated)
