@@ -253,17 +253,25 @@ namespace open3mod
 
         private static void EnsureTemporaryResourcesReleased(int colorTexture, int depthRenderbuffer, int fboHandle)
         {
-            if (colorTexture != -1)
+            try
             {
-                GL.DeleteTexture(colorTexture);
+                if (colorTexture != -1)
+                {
+                    GL.DeleteTexture(colorTexture);
+                }
+                if (depthRenderbuffer != -1)
+                {
+                    GL.Ext.DeleteRenderbuffers(1, ref depthRenderbuffer);
+                }
+                if (fboHandle != -1)
+                {
+                    GL.DeleteFramebuffers(1, ref fboHandle);
+                }
             }
-            if (depthRenderbuffer != -1)
+            catch(Exception)
             {
-                GL.Ext.DeleteRenderbuffers(1, ref depthRenderbuffer);
-            } 
-            if (fboHandle != -1)
-            {
-                GL.DeleteFramebuffers(1, ref fboHandle);
+                // On some older hardware I found that glDeleteRenderbuffers and glDeleteFramebuffers
+                // are not found even though the other APIs (i.e. creating fbs) are.
             }
         }
 
