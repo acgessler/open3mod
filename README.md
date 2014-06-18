@@ -1,4 +1,4 @@
-_Release Date: Late 2013 (est)_
+1.0 Released! Download at http://www.open3mod.com
 
 Open 3D Model Viewer 
 ========
