@@ -179,8 +179,6 @@ namespace open3mod
             var textureDestinationFolder = textBoxCopyTexturesToFolder.Text;
 
             PushLog("*** Export: " + scene.File);
-            progressBarExport.Style = ProgressBarStyle.Marquee;
-            progressBarExport.MarqueeAnimationSpeed = 5;
 
             if(copyTextures)
             {
@@ -194,6 +192,9 @@ namespace open3mod
                     return;
                 }
             }
+
+            progressBarExport.Style = ProgressBarStyle.Marquee;
+            progressBarExport.MarqueeAnimationSpeed = 5;
 
             // Create a shallow copy of the original scene that replaces
             // all the texture paths with their corresponding output paths,
@@ -257,7 +258,7 @@ namespace open3mod
 
                 if (relativeTexturePaths)
                 {
-                    textureMapping[texId] = GetRelativePath(path, destName);
+                    textureMapping[texId] = GetRelativePath(path + "\\", destName);
                 }
                 else
                 {
@@ -304,7 +305,7 @@ namespace open3mod
                                     try
                                     {
                                         File.Copy(kv.Key, kv.Value, false);
-                                    }
+                                    }                               
                                     catch (IOException)
                                     {
                                         if (!File.Exists(kv.Value))
