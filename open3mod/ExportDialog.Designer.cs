@@ -247,7 +247,7 @@
             this.checkBoxUseRelativeTexturePaths.AutoSize = true;
             this.checkBoxUseRelativeTexturePaths.Checked = global::open3mod.ExportSettings.Default.UseRelativeTexturePaths;
             this.checkBoxUseRelativeTexturePaths.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxUseRelativeTexturePaths.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.ExportSettings.Default, "blorb", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxUseRelativeTexturePaths.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::open3mod.ExportSettings.Default, "UseRelativeTexturePaths", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.checkBoxUseRelativeTexturePaths.Location = new System.Drawing.Point(21, 71);
             this.checkBoxUseRelativeTexturePaths.Name = "checkBoxUseRelativeTexturePaths";
             this.checkBoxUseRelativeTexturePaths.Size = new System.Drawing.Size(146, 17);
