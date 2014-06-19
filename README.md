@@ -1,5 +1,6 @@
 1.0 Released! Download at http://www.open3mod.com
-Skim down for info on how to contribute.
+
+_Skim down for info on how to contribute._
 
 Open 3D Model Viewer 
 ========
@@ -30,8 +31,13 @@ __Some key features:__
    (as of now).
 
 
+License
+----------------------
+
+3-clause BSD license. Read `LICENSE` for the details, but it boils down to "use as you like but reproduce the copyright notice".
+
 Contribute
-========
+----------------------
 
 Contributions to the projects are highly appreciated. Simply fork the project on Github, hack, and send me a PR.
 
