@@ -1,4 +1,5 @@
 1.0 Released! Download at http://www.open3mod.com
+Skim down for info on how to contribute.
 
 Open 3D Model Viewer 
 ========
@@ -29,3 +30,9 @@ __Some key features:__
    (as of now).
 
 
+Contribute
+========
+
+Contributions to the projects are highly appreciated. Simply fork the project on Github, hack, and send me a PR.
+
+As a starter, lots of open3mod features (such as high-quality rendering) have been started and are present in the codebase, but are currently disabled. Contact me if you'd like to help out, but don't know where to start.
