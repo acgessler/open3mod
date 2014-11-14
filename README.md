@@ -1,4 +1,6 @@
-_Release Date: Late 2013 (est)_
+1.0 Released! Download at http://www.open3mod.com
+
+_Skim down for info on how to contribute._
 
 Open 3D Model Viewer 
 ========
@@ -10,9 +12,6 @@ and  __IFC__ ([full list] (http://assimp.sourceforge.net/main_features_formats.h
 
 ![Screenshot of open3mod (09-05-2013)](http://s1.directupload.net/images/130509/44lqi4p9.png)
 
-Currently it is  _work in progress_ and there is no downloadable release yet, but the latest source
-versions are good for productive use. At the time being only Windows is supported even though the 
-long-term goal is to be platform-independent (through Mono).
 
 __Some key features:__
 
@@ -29,3 +28,14 @@ __Some key features:__
    (as of now).
 
 
+License
+----------------------
+
+3-clause BSD license. Read `LICENSE` for the details, but it boils down to "use as you like but reproduce the copyright notice".
+
+Contribute
+----------------------
+
+Contributions to the projects are highly appreciated. Simply fork the project on Github, hack, and send me a PR.
+
+As a starter, lots of open3mod features (such as high-quality rendering) have been started and are present in the codebase, but are currently disabled. Contact me if you'd like to help out, but don't know where to start.
