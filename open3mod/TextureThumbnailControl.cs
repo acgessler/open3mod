@@ -62,15 +62,33 @@ namespace open3mod
 
             ContextMenuStrip = new ContextMenuStrip();
 
-            var s = new ToolStripMenuItem("Show Transparency", null, OnContextMenuToggleAlpha);
+            
+            var s = new ToolStripMenuItem("Zoom", null, OnContextMenuZoom);
+            ContextMenuStrip.Items.Add(s);
+            s.CheckOnClick = true;
+            s.Checked = false;
+
+            s = new ToolStripMenuItem("Show Transparency", null, OnContextMenuToggleAlpha);
             ContextMenuStrip.Items.Add(s);
             s.CheckOnClick = true;
             s.Checked = true;
 
-            s = new ToolStripMenuItem("Zoom", null, OnContextMenuZoom);
+          
+            ContextMenuStrip.Items.Add(new ToolStripSeparator());
+         
+            s = new ToolStripMenuItem("Mirror along X (U) axis", null, OnContextMenuMirrorX);
             ContextMenuStrip.Items.Add(s);
             s.CheckOnClick = true;
             s.Checked = false;
+            s.Enabled = true;
+
+            s = new ToolStripMenuItem("Mirror along Y (V) axis", null, OnContextMenuMirrorY);
+            ContextMenuStrip.Items.Add(s);
+            s.CheckOnClick = true;
+            s.Checked = false;
+            s.Enabled = true;
+
+            ContextMenuStrip.Items.Add(new ToolStripSeparator());
 
             s = new ToolStripMenuItem("Details", null, OnContextMenuDetails);
             ContextMenuStrip.Items.Add(s);
@@ -79,7 +97,7 @@ namespace open3mod
             s = new ToolStripMenuItem("Export", null, OnContextMenuExport);
             ContextMenuStrip.Items.Add(s);
             s.Enabled = false;
-
+          
             ContextMenuStrip.Opened += OnContextMenuOpen;
             DoubleClick += OnContextMenuDetails;
         }
@@ -98,6 +116,30 @@ namespace open3mod
             {
                 _owner.ShowDetails(this);
             }
+        }
+
+
+        private void OnContextMenuMirrorX(object sender, EventArgs eventArgs)
+        {
+            if (GetState() != State.Good)
+            {
+                return;
+            }
+            _texture.Image.RotateFlip(RotateFlipType.RotateNoneFlipX);
+            _texture.ReleaseUpload();
+            _texture.Upload();
+        }
+
+
+        private void OnContextMenuMirrorY(object sender, EventArgs eventArgs)
+        {
+            if (GetState() != State.Good)
+            {
+                return;
+            }
+            _texture.Image.RotateFlip(RotateFlipType.RotateNoneFlipY);
+            _texture.ReleaseUpload();
+            _texture.Upload();
         }
 
 
@@ -169,23 +211,21 @@ namespace open3mod
                     SetPictureBoxImage();
                     SetZoom();
 
-                    // enable "Details" menu
-                    var item = ((ToolStripMenuItem)ContextMenuStrip.Items[2]);
-                    item.Enabled = true;
-
-                    // enable "Export" menu
-                    item = ((ToolStripMenuItem)ContextMenuStrip.Items[3]);
-                    item.Enabled = true;
+                    // Enable the remainder menu items
+                    for (var i = 2; i < ContextMenuStrip.Items.Count; ++i)
+                    {
+                        ContextMenuStrip.Items[i].Enabled = true;
+                    }
                 }
                 else
                 {
                     pictureBox.Image = _imageWithAlpha;
                     pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
 
-                    // disable all menu items
+                    // Disable all menu items
                     foreach (var item in ContextMenuStrip.Items)
                     {
-                        ((ToolStripMenuItem) item).Enabled = false;
+                        ((ToolStripItem)item).Enabled = false;
                     }
                 }
 
