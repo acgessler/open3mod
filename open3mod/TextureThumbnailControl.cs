@@ -26,7 +26,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 using System.Windows.Forms;
 
 namespace open3mod
@@ -118,7 +118,7 @@ namespace open3mod
                 saver.FileName = Path.GetFileName(_texture.FileName);
             }
 
-            var extensions = string.Join(";", exporter.GetExtensionList().Select(s => "*." + s));
+            var extensions = string.Join(";", exporter.GetExtensionList().Select(s => "*." + s).ToArray());
             saver.Filter = "Image Files ("+extensions+")|"+extensions+"|All files (*.*)|*.*";
             if(saver.ShowDialog(FindForm()) == DialogResult.OK)
             {

@@ -30,7 +30,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+
 using System.Windows.Forms;
 using Assimp;
 
@@ -244,13 +244,13 @@ namespace open3mod
                     // Enforce unique output names
                     do
                     {
-                        destName = Path.Combine(path, textureDestinationFolder,
+                        destName = Path.Combine(path, Path.Combine(textureDestinationFolder,
                                                 Path.GetFileNameWithoutExtension(diskLocation) +
                                                 (count == 1
                                                      ? ""
                                                      : (count.ToString(CultureInfo.InvariantCulture) + "_")) +
                                                 Path.GetExtension(diskLocation)
-                            );
+                            ));
                         ++count;
                     } while (uniques.Contains(destName));
                     uniques.Add(destName);
@@ -357,7 +357,7 @@ namespace open3mod
         /// <param name="mat"></param>
         /// <param name="textureMapping"></param>
         /// <returns></returns>
-        private static Material CloneMaterial(Material mat, IReadOnlyDictionary<string, string> textureMapping)
+        private static Material CloneMaterial(Material mat, Dictionary<string, string> textureMapping)
         {
             Debug.Assert(mat != null);
             Debug.Assert(textureMapping != null);

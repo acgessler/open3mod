@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>open3mod</RootNamespace>
     <AssemblyName>open3mod</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -26,6 +26,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -62,7 +63,6 @@
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
@@ -97,6 +97,7 @@
     <Compile Include="DonationDialog.Designer.cs">
       <DependentUpon>DonationDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="EnumExtensionsNet4Backport.cs" />
     <Compile Include="ExportSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -108,6 +109,11 @@
     </Compile>
     <Compile Include="FolderSetDisplay.Designer.cs">
       <DependentUpon>FolderSetDisplay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GraphicsSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>GraphicsSettings.settings</DependentUpon>
     </Compile>
     <Compile Include="LeapListener.cs">
       <SubType>Code</SubType>
@@ -137,11 +143,6 @@
     </Compile>
     <Compile Include="FpsCameraController.cs" />
     <Compile Include="FpsTracker.cs" />
-    <Compile Include="GraphicsSettings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>GraphicsSettings.settings</DependentUpon>
-    </Compile>
     <Compile Include="HierarchyInspectionView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -349,12 +350,12 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>ExportSettings.Designer.cs</LastGenOutput>
     </None>
+    <EmbeddedResource Include="Shader\UberFragmentShader.glsl" />
+    <EmbeddedResource Include="Shader\UberVertexShader.glsl" />
     <None Include="GraphicsSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>GraphicsSettings.Designer.cs</LastGenOutput>
     </None>
-    <EmbeddedResource Include="Shader\UberFragmentShader.glsl" />
-    <EmbeddedResource Include="Shader\UberVertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\libs\assimp-net\AssimpNet\AssimpNet.csproj">

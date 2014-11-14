@@ -30,7 +30,7 @@
         {
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.inspectionView1 = new open3mod.InspectionView();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
+            //((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel2.SuspendLayout();
             this.splitContainer.SuspendLayout();
             this.SuspendLayout();
@@ -49,9 +49,9 @@
             // splitContainer.Panel2
             // 
             this.splitContainer.Panel2.Controls.Add(this.inspectionView1);
-            this.splitContainer.Panel2MinSize = 265;
-            this.splitContainer.Size = new System.Drawing.Size(971, 650);
-            this.splitContainer.SplitterDistance = global::CoreSettings.CoreSettings.Default.InspectorSplitterPos;
+            this.splitContainer.Panel2MinSize = 10;
+            this.splitContainer.SplitterDistance = 20; 
+            this.splitContainer.Size = new System.Drawing.Size(971, 650);          
             this.splitContainer.SplitterWidth = 3;
             this.splitContainer.TabIndex = 0;
             this.splitContainer.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.OnSplitterMove);
@@ -76,7 +76,7 @@
             this.Name = "TabUiSkeleton";
             this.Size = new System.Drawing.Size(971, 650);
             this.splitContainer.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).EndInit();
+            //((System.ComponentModel.ISupportInitialize)(this.splitContainer)).EndInit();
             this.splitContainer.ResumeLayout(false);
             this.ResumeLayout(false);
 

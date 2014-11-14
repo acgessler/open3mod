@@ -19,14 +19,11 @@
 ///////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+using System.Collections;
 
 namespace open3mod
 {
@@ -96,8 +93,8 @@ namespace open3mod
 
 
         private static Thread _thread;
-        private static readonly BlockingCollection<Task> Queue = new BlockingCollection<Task>();
-
+        // Back ported from a .net 4.5 BlockingCollection
+        private static readonly Queue<Task> Queue = new Queue<Task>();
 
         /// <summary>
         /// Enqueues an from-file texture loading job to the queue.
@@ -117,7 +114,11 @@ namespace open3mod
                 StartThread();
             }
 
-            Queue.Add(new TextureFromFileTask(file, baseDir, callback));
+            lock(Queue)
+            {
+                Queue.Enqueue(new TextureFromFileTask(file, baseDir, callback));
+                Monitor.Pulse(Queue);
+            }
         }
 
 
@@ -138,7 +139,11 @@ namespace open3mod
                 StartThread();
             }
 
-            Queue.Add(new TextureFromMemoryTask(dataSource, refName, callback));
+            lock (Queue)
+            {
+                Queue.Enqueue(new TextureFromMemoryTask(dataSource, refName, callback));
+                Monitor.Pulse(Queue);
+            }
         }
 
 
@@ -149,7 +154,13 @@ namespace open3mod
                 return;
             }
 
-            Queue.CompleteAdding();
+            lock (Queue)
+            {
+                while (Queue.Count != 0)
+                {
+                    Monitor.Wait(Queue);    
+                }
+            }
         }
 
 
@@ -167,7 +178,15 @@ namespace open3mod
             {
                 while (true)
                 {
-                    Queue.Take().Load();
+                    lock (Queue)
+                    {
+                        while (Queue.Count > 0)
+                        {
+                            var t = Queue.Dequeue();
+                            t.Load();
+                        }
+                        Monitor.Wait(Queue);
+                    }
                 }
             }
             catch(ThreadInterruptedException)

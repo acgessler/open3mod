@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 using Assimp;
 
 
@@ -39,8 +39,21 @@ namespace open3mod
     {
         private readonly Mesh _mesh;
 
+        // Back ported from a .net 4.5 Tuple<int, float>
+        public struct IndexWeightTuple
+        {
+            public IndexWeightTuple(int index, float weight)
+            {
+                Item1 = index;
+                Item2 = weight;
+            }
+
+            public int Item1;
+            public float Item2;
+        }
+
         private readonly uint[] _countBones;
-        private readonly Tuple<int, float>[] _bonesByVertex;
+        private readonly IndexWeightTuple[] _bonesByVertex;
         private readonly uint[] _offsets;
 
 
@@ -48,7 +61,7 @@ namespace open3mod
         /// Array of per-vertex bone assignments. Use GetOffsetAndCountForVertex to 
         /// access the entries for a single vertex.
         /// </summary>
-        public Tuple<int, float>[] BonesByVertex
+        public IndexWeightTuple[] BonesByVertex
         {
             get { return _bonesByVertex; }
         }
@@ -78,7 +91,7 @@ namespace open3mod
 
             if (_mesh.BoneCount == 0)
             {
-                _bonesByVertex = new Tuple<int, float>[0];           
+                _bonesByVertex = new IndexWeightTuple[0];           
                 return;
             }
 
@@ -95,7 +108,7 @@ namespace open3mod
                 }
             }
 
-            _bonesByVertex = new Tuple<int, float>[countWeights];
+            _bonesByVertex = new IndexWeightTuple[countWeights];
 
             // generate offset table
             uint sum = 0;
@@ -115,7 +128,7 @@ namespace open3mod
                 for (int j = 0; j < bone.VertexWeightCount; ++j)
                 {
                     var weight = bone.VertexWeights[j];
-                    BonesByVertex[_offsets[weight.VertexID]++] = new Tuple<int, float>(i, weight.Weight);
+                    BonesByVertex[_offsets[weight.VertexID]++] = new IndexWeightTuple(i, weight.Weight);
                 }
             }
 

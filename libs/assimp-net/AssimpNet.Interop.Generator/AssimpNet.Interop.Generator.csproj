@@ -11,6 +11,8 @@
     <AssemblyName>AssimpNet.Interop.Generator</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Net20-Release|AnyCPU'">
     <OutputPath>bin\Net20-Release\</OutputPath>
@@ -42,7 +44,7 @@
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <DocumentationFile>
     </DocumentationFile>
   </PropertyGroup>
@@ -71,10 +73,10 @@
   </Choose>
   <ItemGroup>
     <Reference Include="Mono.Cecil">
-      <HintPath>..\..\Mono.Cecil\Net40\Mono.Cecil.dll</HintPath>
+      <HintPath>..\..\Mono.Cecil\Net20\Mono.Cecil.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil.Pdb">
-      <HintPath>..\..\Mono.Cecil\Net40\Mono.Cecil.Pdb.dll</HintPath>
+      <HintPath>..\..\Mono.Cecil\Net20\Mono.Cecil.Pdb.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>

@@ -1109,7 +1109,7 @@ namespace open3mod
                 var list = imp.GetSupportedImportFormats();
 
                 // do not associate .xml - it is too generic 
-                var filteredList = list.Where(s => s != ".xml");           
+                var filteredList = list.Where(s => s != ".xml").ToArray();           
 
                 var listString = string.Join(", ", filteredList);
                 if(DialogResult.OK == MessageBox.Show(this, "The following file extensions will be associated with open3mod: " + listString,
