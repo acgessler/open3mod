@@ -178,9 +178,13 @@ namespace open3mod
                 
                 var needAlpha = RecursiveRender(Owner.Raw.RootNode, visibleMeshesByNode, flags, animated);
 
-                if (flags.HasFlag(RenderFlags.ShowSkeleton) || flags.HasFlag(RenderFlags.ShowNormals))
+                if (flags.HasFlag(RenderFlags.ShowSkeleton))
                 {
                     RecursiveRenderNoScale(Owner.Raw.RootNode, visibleMeshesByNode, flags, 1.0f / scale, animated);
+                }
+                if (flags.HasFlag(RenderFlags.ShowNormals))
+                {
+                    RecursiveRenderNormals(Owner.Raw.RootNode, visibleMeshesByNode, flags, 1.0f / scale, animated, Matrix4.Identity);
                 }
 
                 if (!animated)
@@ -461,7 +465,7 @@ namespace open3mod
         /// <summary>
         /// Recursive render function for drawing opaque geometry with no scaling 
         /// in the transformation chain. This is used for overlays, such as drawing
-        /// normal vectors or the skeleton.
+        /// the skeleton.
         /// </summary>
         /// <param name="node"></param>
         /// <param name="visibleMeshesByNode"></param>
@@ -526,6 +530,43 @@ namespace open3mod
 
             GL.PushMatrix();
             GL.MultMatrix(ref mConv);
+            for (int i = 0; i < node.ChildCount; i++)
+            {
+                RecursiveRenderNoScale(node.Children[i], visibleMeshesByNode, flags, invGlobalScale, animated);
+            }
+            GL.PopMatrix();
+        }
+
+        /// <summary>
+        /// Recursive render function for drawing normals with a constant size.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="visibleMeshesByNode"></param>
+        /// <param name="flags"></param>
+        /// <param name="invGlobalScale"></param>
+        /// <param name="animated"></param>
+        /// <param name="transform"></param>
+        private void RecursiveRenderNormals(Node node, Dictionary<Node, List<Mesh>> visibleMeshesByNode, RenderFlags flags,
+            float invGlobalScale,
+            bool animated,
+            Matrix4 transform)
+        {
+            // TODO unify our use of OpenTK and Assimp matrices
+            Matrix4 mConv;
+            if (animated)
+            {
+                Owner.SceneAnimator.GetLocalTransform(node, out mConv);
+            }
+            else
+            {
+                Matrix4x4 m = node.Transform;
+                mConv = AssimpToOpenTk.FromMatrix(ref m);
+            }
+
+            mConv.Transpose();
+
+            // The normal's position and direction are transformed differently, so we manually track the transform.
+            transform = mConv * transform;
 
             if (flags.HasFlag(RenderFlags.ShowNormals))
             {
@@ -536,22 +577,21 @@ namespace open3mod
                     foreach (var index in node.MeshIndices)
                     {
                         var mesh = Owner.Raw.Meshes[index];
-                        if(meshList != null && !meshList.Contains(mesh))
+                        if (meshList != null && !meshList.Contains(mesh))
                         {
                             continue;
                         }
 
-                        OverlayNormals.DrawNormals(node, index, mesh, mesh.HasBones && animated ? Skinner : null, invGlobalScale);
+                        OverlayNormals.DrawNormals(node, index, mesh, mesh.HasBones && animated ? Skinner : null, invGlobalScale, transform);
                     }
                 }
             }
 
             for (int i = 0; i < node.ChildCount; i++)
             {
-                RecursiveRenderNoScale(node.Children[i], visibleMeshesByNode, flags, invGlobalScale, animated);
+                RecursiveRenderNormals(node.Children[i], visibleMeshesByNode, flags, invGlobalScale, animated, transform);
             }
-            GL.PopMatrix();
-        }       
+        }
     }
 }
 

@@ -32,14 +32,21 @@ namespace open3mod
 {
     public static class OverlayNormals
     {
-        public static void DrawNormals(Node node, int meshIndex, Mesh mesh, CpuSkinningEvaluator skinner, float invGlobalScale)
+        public static void DrawNormals(Node node, int meshIndex, Mesh mesh, CpuSkinningEvaluator skinner, float invGlobalScale, Matrix4 transform)
         {
             if (!mesh.HasNormals)
             {
                 return;
             }
+
+            // The normal directions are transformed using the transpose(inverse(transform)).
+            // This ensures correct direction is used when non-uniform scaling is present.
+            Matrix4 normalMatrix = transform;
+            normalMatrix.Invert();
+            normalMatrix.Transpose();
+
             // Scale by scene size because the scene will be resized to fit
-            // the unit box but the normals should have a fixed length
+            // the unit box, but the normals should have a fixed length.
             var scale = invGlobalScale * 0.05f;
 
             GL.Begin(BeginMode.Lines);
@@ -61,6 +68,7 @@ namespace open3mod
                 {
                     v = AssimpToOpenTk.FromVector(mesh.Vertices[(int)i]);
                 }
+                v = Vector4.Transform(new Vector4(v, 1.0f), transform).Xyz; // Skip dividing by W component. It should always be 1, here.
 
                 Vector3 n;
                 if (skinner != null)
@@ -71,6 +79,8 @@ namespace open3mod
                 {
                     n = AssimpToOpenTk.FromVector(mesh.Normals[(int)i]);
                 }
+                n = Vector4.Transform(new Vector4(n, 0.0f), normalMatrix).Xyz; // Toss the W component. It is non-sensical for normals.
+                n.Normalize();
 
                 GL.Vertex3(v);
                 GL.Vertex3(v + n * scale);
