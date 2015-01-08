@@ -653,10 +653,12 @@ namespace open3mod
             // buttonTabClose
             // 
             this.buttonTabClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonTabClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightGray;
+            this.buttonTabClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonTabClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonTabClose.Location = new System.Drawing.Point(1023, 38);
+            this.buttonTabClose.Location = new System.Drawing.Point(1011, 35);
             this.buttonTabClose.Name = "buttonTabClose";
-            this.buttonTabClose.Size = new System.Drawing.Size(22, 25);
+            this.buttonTabClose.Size = new System.Drawing.Size(28, 24);
             this.buttonTabClose.TabIndex = 4;
             this.buttonTabClose.Text = "X";
             this.buttonTabClose.UseVisualStyleBackColor = true;
