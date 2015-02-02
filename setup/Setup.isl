@@ -2824,7 +2824,7 @@
 		<col def="I2">ISSetupLocation</col>
 		<col def="S255">ISReleaseFlags</col>
 		<row><td>_6C7C320D_6848_4EDA_8FFE_2849C83D39E1_</td><td>Microsoft Visual C++ 2012 Redistributable Package (x86).prq</td><td/><td/><td/></row>
-		<row><td>_9156764B_E641_4E86_B8B1_A104A7AE58D2_</td><td>Microsoft .NET Framework 4.5 Web.prq</td><td/><td/><td/></row>
+		<row><td>_D227B082_6FCD_434F_B9C7_4828ACCF1371_</td><td>Microsoft .NET Framework 3.5 (Web Download).prq</td><td/><td/><td/></row>
 		<row><td>_E5BA2EB2_DC8F_4E33_93AC_CBF077601FB5_</td><td>Microsoft Visual C++ 2012 Redistributable Package (x64).prq</td><td/><td/><td/></row>
 	</table>
 
@@ -4586,7 +4586,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>PROGRAMFILETOLAUNCHATEND</td><td>[INSTALLDIR]open3mod.exe</td><td/></row>
 		<row><td>ProductCode</td><td>{2881DB80-EB93-4E22-A49F-0B407691935E}</td><td/></row>
 		<row><td>ProductName</td><td>Open 3D Model Viewer</td><td/></row>
-		<row><td>ProductVersion</td><td>1.00.0000</td><td/></row>
+		<row><td>ProductVersion</td><td>1.10.0000</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
 		<row><td>ProgressType2</td><td>installed</td><td/></row>

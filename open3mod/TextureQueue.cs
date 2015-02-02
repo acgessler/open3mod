@@ -161,6 +161,7 @@ namespace open3mod
                     Monitor.Wait(Queue);    
                 }
             }
+            _thread.Interrupt();
         }
 
 

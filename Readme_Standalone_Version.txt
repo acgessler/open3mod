@@ -7,8 +7,8 @@ installing the following components  from Microsoft:
 - Visual C++ Redistributable für Visual Studio 2012 Update 4
   http://www.microsoft.com/de-de/download/details.aspx?id=30679
 
-- .NET 4.5 Framework
-  http://www.microsoft.com/de-de/download/details.aspx?id=30653
+- .NET 3.5 Framework
+  http://www.microsoft.com/en-us/download/details.aspx?id=21
 
 Also try updating your graphics drivers (from NVIDIA, AMD, ..). Consider 
 this in particular if one of the following occurs:
@@ -20,9 +20,7 @@ this in particular if one of the following occurs:
 If your troubles persist, post an issue on Github:
 https://github.com/acgessler/open3mod/issues/new
 
-(you may have to create an account for that). Alternatively, mail me. You
-can find my mail address here:
-http://www.greentoken.de/contact.html
+(you may have to create an account for that). Alternatively, mail me.
 
 
 Donations

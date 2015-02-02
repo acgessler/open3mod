@@ -49,9 +49,9 @@
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(25, 20);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(233, 17);
+            this.label1.Size = new System.Drawing.Size(153, 17);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Open 3D Model Viewer - open3mod";
+            this.label1.Text = "Open 3D Model Viewer";
             // 
             // label3
             // 
@@ -71,7 +71,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(71, 13);
             this.label4.TabIndex = 4;
-            this.label4.Text = "Version 1.0";
+            this.label4.Text = "Version 1.1";
             // 
             // linkLabel1
             // 
