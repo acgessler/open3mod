@@ -115,10 +115,7 @@ namespace open3mod
             nodeInfoPopup.Owner = this;
             meshInfoPopup.Owner = this;
 
-            HidePopups();
-            AddNodes();
-            CountMeshes();
-            UpdateStatistics();
+            Build();
         }
 
 
@@ -206,6 +203,23 @@ namespace open3mod
                     ++counters[m];
                 }
             }
+        }
+
+
+        private void Build()
+        {
+            HidePopups();
+            AddNodes();
+            CountMeshes();
+            UpdateStatistics();
+        }
+
+
+        private void Rebuild()
+        {
+            _tree.Nodes.Clear();
+            _nodePurposes.Clear();
+            Build();
         }
 
 
@@ -1032,7 +1046,7 @@ namespace open3mod
         private void OnDeleteNodePermanently(object sender, EventArgs e)
         {
             var node = GetTreeNodeForContextMenuEvent(sender);
-            if (node == null) // for whatever reason, this can happen
+            if (node == null)
             {
                 return;
             }
@@ -1049,6 +1063,28 @@ namespace open3mod
             sceneNode.Remove();
             node.Remove();
             _scene.RequestRenderRefresh();
+            CountMeshes();
+            UpdateStatistics();
+        }
+
+        private void DeleteAllButThisNode(object sender, EventArgs e)
+        {
+            var node = GetTreeNodeForContextMenuEvent(sender);
+            if (node == null)
+            {
+                return;
+            }
+            var sceneNode = node.Tag as Node;
+            if (sceneNode == null)
+            {
+                return;
+            }
+            _scene.Raw.RootNode = sceneNode;
+            sceneNode.Parent = null;
+            _scene.RequestRenderRefresh();
+
+            // Re-build the tree from scratch
+            Rebuild();   
         }
     }
 }

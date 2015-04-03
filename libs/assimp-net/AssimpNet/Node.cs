@@ -62,10 +62,12 @@ namespace Assimp {
         /// <summary>
         /// Gets the node's parent, if it exists. 
         /// </summary>
-        public Node Parent {
+        public Node Parent
+        {
             get {
                 return m_parent;
             }
+            set { m_parent = value; }
         }
 
         /// <summary>
