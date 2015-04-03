@@ -89,7 +89,8 @@ namespace Assimp {
         /// <summary>
         /// Gets the node's children.
         /// </summary>
-        public NodeCollection Children {
+        public NodeCollection Children
+        {
             get {
                 return m_children;
             }
@@ -153,6 +154,18 @@ namespace Assimp {
             : this() {
                 m_name = name;
             m_parent = parent;
+        }
+
+        /// <summary>
+        /// Removes this node from its parent.
+        /// </summary>
+        public void Remove()
+        {
+            if (m_parent == null)
+            {
+                return;
+            }
+            m_parent.Children.Remove(this);
         }
 
         //Internal use - sets the node parent in NodeCollection
