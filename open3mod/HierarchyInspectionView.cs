@@ -79,7 +79,7 @@ namespace open3mod
         private readonly Dictionary<Node, TreeNode> _hidden;
         private readonly Dictionary<Node, NodePurpose> _nodePurposes;
 
-        // static because all tabs share them - it is just annoying to have multiple
+        // Static because all tabs share them - it is just annoying to have multiple
         // info dialogs open because it is impossible to keep track which belongs
         // to which tab.
         private static MeshDetailsDialog _meshDiag;
@@ -348,7 +348,7 @@ namespace open3mod
 
             var overrideSkeleton = false;
 
-            if (item == _scene.Raw.RootNode && !HasPermanentlyHiddenNodes)
+            if (item == _scene.Raw.RootNode && !HasHiddenNodes)
             {
                 _scene.SetVisibleNodes(null);
 
@@ -364,7 +364,7 @@ namespace open3mod
             // if the selected item is a mesh, we render only the corresponding
             // parent node plus this mesh. Otherwise we include all child nodes.
             var itemAsNode = item as Node;
-            if (itemAsNode != null && !IsNodePermanentlyHidden(itemAsNode))
+            if (itemAsNode != null && !IsNodeHidden(itemAsNode))
             {
                 var counters = new List<int>(_scene.Raw.MeshCount);
                 for (int i = 0; i < _scene.Raw.MeshCount; ++i)
@@ -677,7 +677,7 @@ namespace open3mod
 
         private void AddNodeToSet(Dictionary<Node, List<Mesh>> filter, Node itemAsNode)
         {
-            if (!IsNodePermanentlyHidden(itemAsNode))
+            if (!IsNodeHidden(itemAsNode))
             {
                 filter.Add(itemAsNode, null);
             }
@@ -849,13 +849,13 @@ namespace open3mod
             {
                 return;
             }
-            if (IsNodePermanentlyHidden((Node)node.Tag))
+            if (IsNodeHidden((Node)node.Tag))
             {
                 UnhideSubhierarchy(node);
             }
             else
             {
-                HideSubhierarchyPermanently(node);
+                HideSubhierarchy(node);
             }
         }
 
@@ -901,20 +901,19 @@ namespace open3mod
             _scene.SetPivot(assimpNode);
         }
 
-
-        private bool HasPermanentlyHiddenNodes
+        private bool HasHiddenNodes
         {
             get { return _hidden.Count != 0; }
         }
 
 
-        private bool IsNodePermanentlyHidden(Node node)
+        private bool IsNodeHidden(Node node)
         {
             return _hidden.ContainsKey(node);
         }
 
 
-        private void HideSubhierarchyPermanently(TreeNode root)
+        private void HideSubhierarchy(TreeNode root)
         {
             Debug.Assert(root.Tag is Node);
             var node = (Node) root.Tag;
@@ -937,7 +936,7 @@ namespace open3mod
             }
             panelHiddenInfo.Visible = true;
             labelHiddenCount.Text = _hidden.Count.ToString(CultureInfo.InvariantCulture) +
-                (_hidden.Count > 1 ? " items are permanently hidden" : " item is permanently hidden");
+                (_hidden.Count > 1 ? " items are hidden" : " item is hidden");
         }
 
 
@@ -1027,7 +1026,29 @@ namespace open3mod
             // they don't carry meshes anyway.
             cm.Items[1].Enabled = GetNodePurpose(node) != NodePurpose.Joint;
 
-            cm.Items[1].Text = IsNodePermanentlyHidden(node) ? "Unhide" : "Hide";
+            cm.Items[1].Text = IsNodeHidden(node) ? "Unhide" : "Hide from View";
+        }
+
+        private void OnDeleteNodePermanently(object sender, EventArgs e)
+        {
+            var node = GetTreeNodeForContextMenuEvent(sender);
+            if (node == null) // for whatever reason, this can happen
+            {
+                return;
+            }
+            var sceneNode = node.Tag as Node;
+            if (sceneNode == null)
+            {
+                return;
+            }
+            if (sceneNode.Parent == null)
+            {
+                MessageBox.Show("The scene root node cannot be deleted", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            sceneNode.Remove();
+            node.Remove();
+            _scene.RequestRenderRefresh();
         }
     }
 }

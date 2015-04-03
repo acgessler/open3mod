@@ -42,12 +42,15 @@
             this.contextMenuStripTreeNode = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.detailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.centerPivotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripMesh = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.detailsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.meshInfoPopup = new open3mod.MeshInfoPopup();
             this.nodeInfoPopup = new open3mod.NodeInfoPopup();
-            this.centerPivotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.panelHiddenInfo.SuspendLayout();
             this.panel1.SuspendLayout();
             this.contextMenuStripTreeNode.SuspendLayout();
@@ -176,26 +179,37 @@
             // contextMenuStripTreeNode
             // 
             this.contextMenuStripTreeNode.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.detailsToolStripMenuItem,
+            this.centerPivotToolStripMenuItem,
             this.hideToolStripMenuItem,
-            this.centerPivotToolStripMenuItem});
+            this.toolStripSeparator1,
+            this.toolStripMenuItem1,
+            this.toolStripSeparator2,
+            this.detailsToolStripMenuItem});
             this.contextMenuStripTreeNode.Name = "contextMenuStripTreeNode";
-            this.contextMenuStripTreeNode.Size = new System.Drawing.Size(153, 92);
+            this.contextMenuStripTreeNode.Size = new System.Drawing.Size(176, 126);
             this.contextMenuStripTreeNode.Opening += new System.ComponentModel.CancelEventHandler(this.OpOpenNodeContextMenu);
             // 
             // detailsToolStripMenuItem
             // 
+            this.detailsToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.detailsToolStripMenuItem.Name = "detailsToolStripMenuItem";
-            this.detailsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.detailsToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.detailsToolStripMenuItem.Text = "Details";
             this.detailsToolStripMenuItem.Click += new System.EventHandler(this.OnContextMenuShowDetails);
             // 
             // hideToolStripMenuItem
             // 
             this.hideToolStripMenuItem.Name = "hideToolStripMenuItem";
-            this.hideToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.hideToolStripMenuItem.Text = "Hide";
+            this.hideToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.hideToolStripMenuItem.Text = "Hide from View";
             this.hideToolStripMenuItem.Click += new System.EventHandler(this.OnContextMenuHideNode);
+            // 
+            // centerPivotToolStripMenuItem
+            // 
+            this.centerPivotToolStripMenuItem.Name = "centerPivotToolStripMenuItem";
+            this.centerPivotToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.centerPivotToolStripMenuItem.Text = "Center View (Pivot)";
+            this.centerPivotToolStripMenuItem.Click += new System.EventHandler(this.OnContextMenuPivotNode);
             // 
             // contextMenuStripMesh
             // 
@@ -228,12 +242,23 @@
             this.nodeInfoPopup.Size = new System.Drawing.Size(88, 90);
             this.nodeInfoPopup.TabIndex = 11;
             // 
-            // centerPivotToolStripMenuItem
+            // toolStripSeparator1
             // 
-            this.centerPivotToolStripMenuItem.Name = "centerPivotToolStripMenuItem";
-            this.centerPivotToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.centerPivotToolStripMenuItem.Text = "Center/Pivot";
-            this.centerPivotToolStripMenuItem.Click += new System.EventHandler(this.OnContextMenuPivotNode);
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem1.Image")));
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(175, 22);
+            this.toolStripMenuItem1.Text = "Delete";
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.OnDeleteNodePermanently);
             // 
             // HierarchyInspectionView
             // 
@@ -281,5 +306,8 @@
         private System.Windows.Forms.ToolStripMenuItem detailsToolStripMenuItem1;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.ToolStripMenuItem centerPivotToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     }
 }
