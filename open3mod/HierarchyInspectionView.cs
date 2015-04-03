@@ -79,6 +79,9 @@ namespace open3mod
         private readonly Dictionary<Node, TreeNode> _hidden;
         private readonly Dictionary<Node, NodePurpose> _nodePurposes;
 
+        private readonly Dictionary<Node, TreeNode> _treeNodesBySceneNode;
+        private readonly Dictionary<KeyValuePair<Node, Mesh>, TreeNode> _treeNodesBySceneNodeMeshPair; 
+
         // Static because all tabs share them - it is just annoying to have multiple
         // info dialogs open because it is impossible to keep track which belongs
         // to which tab.
@@ -107,6 +110,8 @@ namespace open3mod
 
             _hidden = new Dictionary<Node, TreeNode>();
             _nodePurposes = new Dictionary<Node, NodePurpose>();
+            _treeNodesBySceneNode = new Dictionary<Node, TreeNode>();
+            _treeNodesBySceneNodeMeshPair = new Dictionary<KeyValuePair<Node, Mesh>, TreeNode>();
 
             Debug.Assert(_scene != null);
 
@@ -223,6 +228,8 @@ namespace open3mod
         {
             _tree.Nodes.Clear();
             _nodePurposes.Clear();
+            _treeNodesBySceneNode.Clear();
+            _treeNodesBySceneNodeMeshPair.Clear();
             _nodeCount = 0;
             _visibleInstancedMeshes = 0;
             _visibleMeshes = 0;
@@ -296,17 +303,19 @@ namespace open3mod
                 }
             }
 
-            var root = new TreeNode(node.Name) {Tag = node, ContextMenuStrip = contextMenuStripTreeNode};
+            var newUiNode = new TreeNode(node.Name) {Tag = node, ContextMenuStrip = contextMenuStripTreeNode};
             if (uiNode == null)
             {
-                _tree.Nodes.Add(root);
+                _tree.Nodes.Add(newUiNode);
                 Debug.Assert(level == 0);
-                SetPivotNode(root);
+                SetPivotNode(newUiNode);
             }
             else
             {
-                uiNode.Nodes.Add(root);
+                uiNode.Nodes.Add(newUiNode);
             }
+
+            _treeNodesBySceneNode[node] = newUiNode;
             ++_nodeCount;
 
             // Add child nodes.
@@ -314,7 +323,7 @@ namespace open3mod
             {
                 foreach (var c in node.Children)
                 {
-                    isSkeletonNode = AddNodes(c, root, level + 1) && isSkeletonNode;
+                    isSkeletonNode = AddNodes(c, newUiNode, level + 1) && isSkeletonNode;
                 }
             }
 
@@ -323,7 +332,7 @@ namespace open3mod
             {
                 foreach (var m in node.MeshIndices)
                 {
-                    AddMeshNode(node, _scene.Raw.Meshes[m], m, root);
+                    AddMeshNode(node, _scene.Raw.Meshes[m], m, newUiNode);
                 }
             }
 
@@ -339,11 +348,11 @@ namespace open3mod
             {
                 index = 1;
             }
-            root.ImageIndex = root.SelectedImageIndex = index;
+            newUiNode.ImageIndex = newUiNode.SelectedImageIndex = index;
 
             if (level < AutoExpandLevels)
             {
-                root.Expand();
+                newUiNode.Expand();
             }
 
             return isSkeletonNode;
@@ -360,15 +369,17 @@ namespace open3mod
                 ? ("\"" + mesh.Name + "\"")
                 : id.ToString(CultureInfo.InvariantCulture));
 
-            var nod = new TreeNode(desc)
+            var key = new KeyValuePair<Node, Mesh>(owner, mesh);
+            var newUiNode = new TreeNode(desc)
             {
-                Tag = new KeyValuePair<Node, Mesh>(owner, mesh),
+                Tag = key,
                 ImageIndex = 3,
                 SelectedImageIndex = 3,
                 ContextMenuStrip = contextMenuStripMesh
             };
 
-            uiNode.Nodes.Add(nod);
+            uiNode.Nodes.Add(newUiNode);
+            _treeNodesBySceneNodeMeshPair[key] = newUiNode;
         }
 
 
@@ -1061,6 +1072,7 @@ namespace open3mod
             cm.Items[1].Text = IsNodeHidden(node) ? "Unhide" : "Hide from View";
         }
 
+      
         private void OnDeleteNodePermanently(object sender, EventArgs e)
         {
             var node = GetTreeNodeForContextMenuEvent(sender);
@@ -1087,11 +1099,11 @@ namespace open3mod
             var parentChildIndex = node.Index;
             _scene.UndoStack.PushAndDo("Delete Node",
                 () =>
-                {
-                    // TODO(acgessler)
+                {                  
                     // Refresh node and parent. If we went back in history and rebuild the tree,
                     // it is possible that they no longer are valid TreeNodes. The assimp node
-                    // however always stays the same.
+                    // however always stays a valid reference.
+                    node = _treeNodesBySceneNode[sceneNode];
                     parent = node.Parent;
                     parentChildIndex = node.Index;
 
@@ -1101,6 +1113,7 @@ namespace open3mod
                 },
                 () =>
                 {
+                    node = _treeNodesBySceneNode[sceneNode];
                     oldSceneParent.Children.Insert(oldSceneParentChildPosition, sceneNode);
                     sceneNode.Parent = oldSceneParent;
                     parent.Nodes.Insert(parentChildIndex, node);
@@ -1142,36 +1155,40 @@ namespace open3mod
         private void OnDeleteMesh(object sender, EventArgs e)
         {
             var node = GetTreeNodeForContextMenuEvent(sender);
-            if (node == null)
+            if (node == null || !(node.Tag as KeyValuePair<Node, Mesh>?).HasValue)
             {
                 return;
             }
-            var nodeMeshPair = node.Tag as KeyValuePair<Node, Mesh>?;
-            if (nodeMeshPair == null)
-            {
-                return;
-            }
-            var mesh = nodeMeshPair.Value.Value;
+            var nodeMeshPair = (KeyValuePair<Node, Mesh>)node.Tag;
+            var mesh = nodeMeshPair.Value;
             var i = _scene.Raw.Meshes.TakeWhile(m => m != mesh).Count();
 
             // Remove the mesh from the scene node. Do not remove it from the scene list of
             // meshes (we have to keep it alive anyway for undo and doing this would add lots
             // of extra cases such as meshes used by multiple nodes).
-            var oldList = new List<int>(nodeMeshPair.Value.Key.MeshIndices);
-            var newList = new List<int>(nodeMeshPair.Value.Key.MeshIndices);
+            var oldList = new List<int>(nodeMeshPair.Key.MeshIndices);
+            var newList = new List<int>(nodeMeshPair.Key.MeshIndices);
             newList.Remove(i);
             var parent = node.Parent;
             var parentChildIndex = node.Index;
             _scene.UndoStack.PushAndDo("Delete Mesh",
                 () =>
                 {
-                    nodeMeshPair.Value.Key.MeshIndices = newList;
+                    // Refresh node and parent. If we went back in history and rebuild the tree,
+                    // it is possible that they no longer are valid TreeNodes. The assimp node
+                    // however always stays a valid reference.
+                    node = _treeNodesBySceneNodeMeshPair[nodeMeshPair];
+                    parent = node.Parent;
+                    parentChildIndex = node.Index;
+
+                    nodeMeshPair.Key.MeshIndices = newList;
                     node.Remove();
                     FinishUpdatingTree();
                 },
                 () =>
                 {
-                    nodeMeshPair.Value.Key.MeshIndices = oldList;
+                    node = _treeNodesBySceneNodeMeshPair[nodeMeshPair];
+                    nodeMeshPair.Key.MeshIndices = oldList;
                     parent.Nodes.Insert(parentChildIndex, node);
                     FinishUpdatingTree();
                 });
