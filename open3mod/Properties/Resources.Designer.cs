@@ -61,6 +61,16 @@ namespace open3mod.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap FailedToLoad {
+            get {
+                object obj = ResourceManager.GetObject("FailedToLoad", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No scene loaded.
         /// </summary>
         internal static string LogViewer_FetchLogEntriesFromScene_No_scene_loaded {

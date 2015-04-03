@@ -115,7 +115,7 @@ namespace open3mod
             nodeInfoPopup.Owner = this;
             meshInfoPopup.Owner = this;
 
-            Build();
+            BuildTree();
         }
 
 
@@ -205,21 +205,41 @@ namespace open3mod
             }
         }
 
-
-        private void Build()
+        /// <summary>
+        /// Construct tree from scratch.
+        /// </summary>
+        private void BuildTree()
         {
             HidePopups();
             AddNodes();
-            CountMeshes();
-            UpdateStatistics();
+            FinishUpdatingTree();
         }
 
 
-        private void Rebuild()
+        /// <summary>
+        /// Clears out the entire tree, followed by Build().
+        /// </summary>
+        private void RebuildTree()
         {
             _tree.Nodes.Clear();
             _nodePurposes.Clear();
-            Build();
+            _nodeCount = 0;
+            _visibleInstancedMeshes = 0;
+            _visibleMeshes = 0;
+            _visibleNodes = 0;
+            BuildTree();
+        }
+
+        /// <summary>
+        /// Update 3D scene visibility and footer statistics after in-place changes to the
+        /// tree (i.e. removal of node).
+        /// </summary>
+        private void FinishUpdatingTree()
+        {
+            CountMeshes();
+            UpdateSceneVisibilityFilter();
+            UpdateStatistics();
+            _scene.RequestRenderRefresh();
         }
 
 
@@ -240,14 +260,14 @@ namespace open3mod
             var purpose = NodePurpose.GenericMeshHolder;
             var isSkeletonNode = false;
 
-            // mark nodes introduced by assimp (i.e. nodes not present in the source file)
+            // Mark nodes introduced by assimp (i.e. nodes not present in the source file)
             if (node.Name.StartsWith("<") && node.Name.EndsWith(">") || level == 0)
             {
                 purpose = NodePurpose.ImporterGenerated;
             }
             else
             {
-                // first check if this node has assimp lights or cameras assigned.
+                // First check if this node has assimp lights or cameras assigned.
                 for (var i = 0; i < _scene.Raw.CameraCount; ++i )
                 {
                     if (_scene.Raw.Cameras[i].Name == node.Name)
@@ -269,7 +289,7 @@ namespace open3mod
                 }
                 if (purpose == NodePurpose.GenericMeshHolder)
                 {
-                    // mark skeleton nodes (joints) with a special icon. The algorithm to
+                    // Mark skeleton nodes (joints) with a special icon. The algorithm to
                     // detect them is easy: check whether if this node or any children 
                     // carry meshes. if not, assume this is a joint.
                     isSkeletonNode = node.MeshCount == 0;
@@ -287,10 +307,9 @@ namespace open3mod
             {
                 uiNode.Nodes.Add(root);
             }
-
             ++_nodeCount;
 
-            // add children
+            // Add child nodes.
             if (node.Children != null)
             {
                 foreach (var c in node.Children)
@@ -299,7 +318,7 @@ namespace open3mod
                 }
             }
 
-            // add mesh nodes
+            // Add mesh nodes.
             if (node.MeshCount != 0)
             {
                 foreach (var m in node.MeshIndices)
@@ -314,7 +333,7 @@ namespace open3mod
             }
 
             _nodePurposes.Add(node, purpose);
-            // todo: proper icons for lights and cameras
+            // TODO(acgessler): Proper icons for lights and cameras.
             var index = (int) purpose;
             if(purpose == NodePurpose.Light || purpose == NodePurpose.Camera)
             {
@@ -336,7 +355,7 @@ namespace open3mod
             Debug.Assert(uiNode != null);
             Debug.Assert(mesh != null);
 
-            // meshes need not be named, in this case we number them
+            // Meshes need not be named, in this case we number them
             var desc = "Mesh " + (!string.IsNullOrEmpty(mesh.Name)
                 ? ("\"" + mesh.Name + "\"")
                 : id.ToString(CultureInfo.InvariantCulture));
@@ -353,7 +372,7 @@ namespace open3mod
         }
 
 
-        private void UpdateFilters(TreeNode hoverNode = null)
+        private void UpdateSceneVisibilityFilter(TreeNode hoverNode = null)
         {
             var node = hoverNode ?? _tree.SelectedNode;
             var item = node == null ? _scene.Raw.RootNode : node.Tag;
@@ -366,7 +385,7 @@ namespace open3mod
             {
                 _scene.SetVisibleNodes(null);
 
-                // update statistics
+                // Update statistics
                 _visibleNodes = _nodeCount;
                 _visibleMeshes = _meshCountFullScene;
                 _visibleInstancedMeshes = _instancedMeshCountFullScene;
@@ -375,7 +394,7 @@ namespace open3mod
                 return;
             }
 
-            // if the selected item is a mesh, we render only the corresponding
+            // If the selected item is a mesh, we render only the corresponding
             // parent node plus this mesh. Otherwise we include all child nodes.
             var itemAsNode = item as Node;
             if (itemAsNode != null && !IsNodeHidden(itemAsNode))
@@ -389,7 +408,7 @@ namespace open3mod
                 AddNodeToSet(_filterByMesh, itemAsNode);
                 CountMeshes(itemAsNode, counters);
 
-                // update statistics
+                // Keep display statistics for meshes up to date.
                 _visibleInstancedMeshes = counters.Sum();
                 _visibleMeshes = counters.Count(i => i != 0);
 
@@ -422,6 +441,7 @@ namespace open3mod
                 var arr = new List<Mesh> {itemAsMesh.Value};
                 _filterByMesh.Add(itemAsMesh.Key, arr);
 
+                // Keep display statistics for meshes up to date.
                 _visibleMeshes = 1;
                 _visibleInstancedMeshes = 1;
 
@@ -709,27 +729,23 @@ namespace open3mod
 
         private void OnMouseLeave(object sender, EventArgs e)
         {
-            UpdateFilters();
-            //Capture = false;
+            UpdateSceneVisibilityFilter();
         }
 
 
         private void OnMouseEnter(object sender, EventArgs e)
         {
-            //Capture = true;
         }
 
 
         private void OnNodeHover(object sender, TreeNodeMouseHoverEventArgs e)
         {
-            UpdateFilters(e.Node);           
+            UpdateSceneVisibilityFilter(e.Node);           
         }
 
 
-
         private void AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            
+        {            
         }
 
 
@@ -793,16 +809,15 @@ namespace open3mod
                 if (_searchLocked)
                 {
                     Debug.Assert(_hitNodes != null);
-
-                    // fix the last iterated element's background color
+                    // Fix the last iterated element's background color
+                    Debug.Assert(_hitNodes != null, "_hitNodes != null");
                     _hitNodes[_hitNodeCursor > 0 ? _hitNodeCursor - 1 : _hitNodes.Count-1].BackColor = PositiveBackColor;
-
-                    // select next search item
+                    // Select next search item
                     _tree.SelectedNode = _hitNodes[_hitNodeCursor];
                     _tree.SelectedNode.EnsureVisible();
                     _tree.SelectedNode.BackColor = SearchIterateBackColor;
 
-                    UpdateFilters();
+                    UpdateSceneVisibilityFilter();
                     _hitNodeCursor = (_hitNodeCursor + 1)%_hitNodes.Count;
                 }
             }
@@ -820,14 +835,18 @@ namespace open3mod
             Debug.Assert(node != null);
             if (node.Tag is KeyValuePair<Node, Mesh>)
             {
-                var mesh = ((KeyValuePair<Node, Mesh>)node.Tag).Value;
+                var nodeMeshPair = (KeyValuePair<Node, Mesh>)node.Tag;
+                var mesh = nodeMeshPair.Value;
                 Debug.Assert(mesh != null);
-
                 SetMeshDetailDialogInfo(mesh, node.Text);
             }
-            else if (node.Tag is Node)
+            else
             {
-                SetNodeDetailDialogInfo((Node)node.Tag);
+                var tag = node.Tag as Node;
+                if (tag != null)
+                {
+                    SetNodeDetailDialogInfo(tag);
+                }
             }
         }
 
@@ -840,7 +859,7 @@ namespace open3mod
             var treeView = (TreeView)cms.SourceControl;
 
             var node = _tree.GetNodeAt(treeView.PointToClient(cms.Location));
-            // Debug.Assert(node != null); // for whatever reason, this can happen
+            // Debug.Assert(node != null); // This happens for mysterious reasons.
             return node;
         }
 
@@ -848,7 +867,7 @@ namespace open3mod
         private void OnContextMenuShowDetails(object sender, EventArgs e)
         {
             var node = GetTreeNodeForContextMenuEvent(sender);
-            if (node == null) // for whatever reason, this can happen
+            if (node == null)
             {
                 return;
             }
@@ -859,7 +878,7 @@ namespace open3mod
         private void OnContextMenuHideNode(object sender, EventArgs e)
         {
             var node = GetTreeNodeForContextMenuEvent(sender);
-            if (node == null) // for whatever reason, this can happen
+            if (node == null) 
             {
                 return;
             }
@@ -877,7 +896,7 @@ namespace open3mod
         private void OnContextMenuPivotNode(object sender, EventArgs e)
         {
             var node = GetTreeNodeForContextMenuEvent(sender);
-            if (node == null) // for whatever reason, this can happen
+            if (node == null) 
             {
                 return;
             }
@@ -895,7 +914,7 @@ namespace open3mod
 
             const string pivotPostfix = " (pivot)";
 
-            // this can be null at the very beginning
+            // This can be null once at the very beginning
             if (_pivotNode != null)
             {
                 Debug.Assert(_pivotNode.Text.EndsWith(pivotPostfix));
@@ -936,7 +955,7 @@ namespace open3mod
             root.ImageIndex = root.SelectedImageIndex = 4;
             root.Collapse();
 
-            UpdateFilters();
+            UpdateSceneVisibilityFilter();
             UpdateHiddenNodesInfoPanel();
         }
 
@@ -962,7 +981,7 @@ namespace open3mod
             root.ImageIndex = root.SelectedImageIndex = (int) GetNodePurpose(node);
             _hidden.Remove(node);   
        
-            UpdateFilters();
+            UpdateSceneVisibilityFilter();
             UpdateHiddenNodesInfoPanel();
         }
 
@@ -985,7 +1004,7 @@ namespace open3mod
             }      
 
             // http://stackoverflow.com/questions/3166643/windows-forms-treeview-node-context-menu-problem
-            // select a node on which the user invokes the context menu - this
+            // Select a node on which the user invokes the context menu - this
             // avoids some ugly glitches with the popups and should also improve
             // user experience.
             var treeNodeAtMousePosition = _tree.GetNodeAt(_tree.PointToClient(e.Location));
@@ -996,13 +1015,13 @@ namespace open3mod
             }
 
             _tree.SelectedNode = treeNodeAtMousePosition;
-            UpdateFilters();
+            UpdateSceneVisibilityFilter();
         }
 
 
         private void BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
-            // see OnMouseClick()
+            // See OnMouseClick()
             e.Cancel = _preventExpand;
             _preventExpand = false;
         }
@@ -1018,7 +1037,7 @@ namespace open3mod
 
             _hidden.Clear();
 
-            UpdateFilters();
+            UpdateSceneVisibilityFilter();
             UpdateHiddenNodesInfoPanel();
         }
 
@@ -1027,7 +1046,7 @@ namespace open3mod
         {
             var cm = (ContextMenuStrip) sender;
             var root = GetTreeNodeForContextMenuEvent(sender);
-            if(root == null) // for whatever reason, this can happen
+            if(root == null)
             {
                 return;
             }
@@ -1036,7 +1055,7 @@ namespace open3mod
 
             Debug.Assert(cm.Items.Count >= 2);
 
-            // joints cannot be hidden - it would not make any sense because
+            // Joints cannot be hidden - it would not make any sense because
             // they don't carry meshes anyway.
             cm.Items[1].Enabled = GetNodePurpose(node) != NodePurpose.Joint;
 
@@ -1057,14 +1076,14 @@ namespace open3mod
             }
             if (sceneNode.Parent == null)
             {
-                MessageBox.Show("The scene root node cannot be deleted", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("The scene root node cannot be deleted", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             sceneNode.Remove();
             node.Remove();
-            _scene.RequestRenderRefresh();
-            CountMeshes();
-            UpdateStatistics();
+           
+            FinishUpdatingTree();
         }
 
         private void DeleteAllButThisNode(object sender, EventArgs e)
@@ -1084,7 +1103,28 @@ namespace open3mod
             _scene.RequestRenderRefresh();
 
             // Re-build the tree from scratch
-            Rebuild();   
+            RebuildTree();   
+        }
+
+        private void OnDeleteMesh(object sender, EventArgs e)
+        {
+            var node = GetTreeNodeForContextMenuEvent(sender);
+            if (node == null)
+            {
+                return;
+            }
+            var nodeMeshPair = node.Tag as KeyValuePair<Node, Mesh>?;
+            if (nodeMeshPair == null)
+            {
+                return;
+            }
+            var mesh = nodeMeshPair.Value.Value;
+            var i = _scene.Raw.Meshes.TakeWhile(m => m != mesh).Count();
+            // Remove the mesh from the scene node. Do not remove it from the scene list of meshes to simplify undo.
+            nodeMeshPair.Value.Key.MeshIndices.Remove(i);
+            node.Remove();
+
+            FinishUpdatingTree();
         }
     }
 }
