@@ -141,6 +141,7 @@ namespace open3mod
            };
 
             _initialized = true;
+            StartUndoRedoUiStatePollLoop();
         }
 
         public override sealed string Text
@@ -569,7 +570,10 @@ namespace open3mod
                 {
                     t.Text = t.Text + FailedTitlePostfix;
                 }
+
             });
+
+            
 
             // Must use BeginInvoke() here to make sure it gets executed
             // on the thread hosting the GUI message pump. An exception
@@ -1170,6 +1174,85 @@ namespace open3mod
             const string repos = "../../../testdata/redist/lost-empire/lost_empire.obj";
             const string installed = "testscenes/lost-empire/lost_empire.obj";
             AddTab(File.Exists(repos) ? repos : installed);
+        }
+
+
+        private void StartUndoRedoUiStatePollLoop()
+        {
+            // This is sub-optimal performance-wise - ideally, we should get notified from
+            // UndoStack if an item is pushed such that Undo or Redo becomes possible.
+            // This however introduces a nasty dependency from a (scene-specific) UndoStack
+            // back to MainWindow which design-wise I want to avoid.
+            DelayExecution(new TimeSpan(0, 0, 0, 0, 100), () =>
+                                                          {
+                                                              UpdateUndoRedoUiState();
+                                                              StartUndoRedoUiStatePollLoop();
+                                                          });
+        }
+
+        private void UpdateUndoRedoUiState()
+        {
+            var scene = UiState.ActiveTab.ActiveScene;
+            if (scene == null)
+            {
+                toolStripButtonUndo.Enabled = undoToolStripMenuItem.Enabled = false;
+                toolStripButtonUndo.ToolTipText = undoToolStripMenuItem.Text = "Undo";
+                toolStripButtonRedo.Enabled = redoToolStripMenuItem.Enabled = false;
+                toolStripButtonRedo.ToolTipText = redoToolStripMenuItem.Text = "Redo";
+                return;
+            }
+            var undo = scene.UndoStack;
+            if (undo.CanUndo())
+            {
+                toolStripButtonUndo.Enabled = undoToolStripMenuItem.Enabled = true;
+                toolStripButtonUndo.ToolTipText = undoToolStripMenuItem.Text = "Undo " + undo.GetUndoDescription();
+            }
+            else
+            {
+                toolStripButtonUndo.Enabled = undoToolStripMenuItem.Enabled = false;
+                toolStripButtonUndo.ToolTipText = undoToolStripMenuItem.Text = "Undo";
+            }
+
+            if (undo.CanRedo())
+            {
+                toolStripButtonRedo.Enabled = redoToolStripMenuItem.Enabled = true;
+                toolStripButtonRedo.ToolTipText = redoToolStripMenuItem.Text = "Redo " + undo.GetRedoDescription();
+            }
+            else
+            {
+                toolStripButtonRedo.Enabled = redoToolStripMenuItem.Enabled = false;
+                toolStripButtonRedo.ToolTipText = redoToolStripMenuItem.Text = "Redo";
+            }
+        }
+
+        private void OnGlobalUndo(object sender, EventArgs e)
+        {
+            var scene = UiState.ActiveTab.ActiveScene;
+            if (scene == null)
+            {
+                return;
+            }
+            var undo = scene.UndoStack;
+            if (!undo.CanUndo())
+            {
+                return;
+            }
+            undo.Undo();
+        }
+
+        private void OnGlobalRedo(object sender, EventArgs e)
+        {
+            var scene = UiState.ActiveTab.ActiveScene;
+            if (scene == null)
+            {
+                return;
+            }
+            var undo = scene.UndoStack;
+            if (!undo.CanRedo())
+            {
+                return;
+            }
+            undo.Redo();
         }
     }
 }

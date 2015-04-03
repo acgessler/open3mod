@@ -269,6 +269,7 @@
       <DependentUpon>TrafoMatrixViewControl.cs</DependentUpon>
     </Compile>
     <Compile Include="UIState.cs" />
+    <Compile Include="UndoStack.cs" />
     <Compile Include="Viewport.cs" />
     <EmbeddedResource Include="About.resx">
       <DependentUpon>About.cs</DependentUpon>

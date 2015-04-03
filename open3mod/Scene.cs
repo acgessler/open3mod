@@ -37,10 +37,9 @@ namespace open3mod
     /// <summary>
     /// Represents a 3D scene/asset loaded through assimp.
     /// 
-    /// Basically, this class contains the aiScene plus some auxiliary structures
-    /// for drawing. Since assimp is the only source for model data and this is
-    /// only a viewer, we ignore the recommendation of the assimp docs and use
-    /// its data structures (almost) directly for rendering.
+    /// This class contains the aiScene plus some auxiliary structures for drawing. Since assimp is the
+    /// only source for model data and this is only a viewer, we ignore the recommendation of the assimp
+    /// docs and use its data structures (almost) directly for rendering.
     /// </summary>
     public sealed class Scene : IDisposable
     {
@@ -57,6 +56,7 @@ namespace open3mod
 
         private MaterialMapper _mapper;
         private ISceneRenderer _renderer;
+        private readonly UndoStack _undoStack = new UndoStack();
 
 
         /// <summary>
@@ -167,7 +167,6 @@ namespace open3mod
             }
         }
 
-
         /// <summary>
         /// Loading time, in milliseconds. 
         /// </summary>
@@ -179,6 +178,14 @@ namespace open3mod
         public Vector3 Pivot
         {
             get { return _pivot; }
+        }
+
+        /// <summary>
+        /// UndoStack to use for all changes made to the scene.
+        /// </summary>
+        public UndoStack UndoStack
+        {
+            get { return _undoStack; }
         }
 
 
