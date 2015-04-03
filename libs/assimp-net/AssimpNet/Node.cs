@@ -121,10 +121,12 @@ namespace Assimp {
         /// shared between nodes, so there is a mesh collection owned by the scene
         /// that each node can reference.
         /// </summary>
-        public List<int> MeshIndices {
+        public List<int> MeshIndices
+        {
             get {
                 return m_meshes;
             }
+            set { m_meshes = value; }
         }
 
         /// <summary>
@@ -168,6 +170,7 @@ namespace Assimp {
                 return;
             }
             m_parent.Children.Remove(this);
+            m_parent = null;
         }
 
         //Internal use - sets the node parent in NodeCollection

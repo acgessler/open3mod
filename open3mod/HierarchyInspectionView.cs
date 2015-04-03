@@ -1058,13 +1058,13 @@ namespace open3mod
             // Joints cannot be hidden - it would not make any sense because
             // they don't carry meshes anyway.
             cm.Items[1].Enabled = GetNodePurpose(node) != NodePurpose.Joint;
-
             cm.Items[1].Text = IsNodeHidden(node) ? "Unhide" : "Hide from View";
         }
 
         private void OnDeleteNodePermanently(object sender, EventArgs e)
         {
             var node = GetTreeNodeForContextMenuEvent(sender);
+
             if (node == null)
             {
                 return;
@@ -1080,10 +1080,32 @@ namespace open3mod
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            sceneNode.Remove();
-            node.Remove();
-           
-            FinishUpdatingTree();
+
+            var oldSceneParent = sceneNode.Parent;
+            var oldSceneParentChildPosition = sceneNode.Parent.Children.TakeWhile(n => n != sceneNode).Count();
+            var parent = node.Parent;
+            var parentChildIndex = node.Index;
+            _scene.UndoStack.PushAndDo("Delete Node",
+                () =>
+                {
+                    // TODO(acgessler)
+                    // Refresh node and parent. If we went back in history and rebuild the tree,
+                    // it is possible that they no longer are valid TreeNodes. The assimp node
+                    // however always stays the same.
+                    parent = node.Parent;
+                    parentChildIndex = node.Index;
+
+                    sceneNode.Remove();
+                    node.Remove();
+                    FinishUpdatingTree();                  
+                },
+                () =>
+                {
+                    oldSceneParent.Children.Insert(oldSceneParentChildPosition, sceneNode);
+                    sceneNode.Parent = oldSceneParent;
+                    parent.Nodes.Insert(parentChildIndex, node);
+                    FinishUpdatingTree();
+                });
         }
 
         private void DeleteAllButThisNode(object sender, EventArgs e)
@@ -1098,12 +1120,23 @@ namespace open3mod
             {
                 return;
             }
-            _scene.Raw.RootNode = sceneNode;
-            sceneNode.Parent = null;
-            _scene.RequestRenderRefresh();
 
-            // Re-build the tree from scratch
-            RebuildTree();   
+            var oldRootNode = _scene.Raw.RootNode;
+            var oldParent = sceneNode.Parent;
+            _scene.UndoStack.PushAndDo("Delete All But This",
+                () =>
+                {
+                    _scene.Raw.RootNode = sceneNode;
+                    sceneNode.Parent = null;
+                    // Re-build the tree from scratch.
+                    RebuildTree();
+                },
+                () =>
+                {
+                    _scene.Raw.RootNode = oldRootNode;
+                    sceneNode.Parent = oldParent;
+                    RebuildTree();
+                });
         }
 
         private void OnDeleteMesh(object sender, EventArgs e)
@@ -1120,11 +1153,28 @@ namespace open3mod
             }
             var mesh = nodeMeshPair.Value.Value;
             var i = _scene.Raw.Meshes.TakeWhile(m => m != mesh).Count();
-            // Remove the mesh from the scene node. Do not remove it from the scene list of meshes to simplify undo.
-            nodeMeshPair.Value.Key.MeshIndices.Remove(i);
-            node.Remove();
 
-            FinishUpdatingTree();
+            // Remove the mesh from the scene node. Do not remove it from the scene list of
+            // meshes (we have to keep it alive anyway for undo and doing this would add lots
+            // of extra cases such as meshes used by multiple nodes).
+            var oldList = new List<int>(nodeMeshPair.Value.Key.MeshIndices);
+            var newList = new List<int>(nodeMeshPair.Value.Key.MeshIndices);
+            newList.Remove(i);
+            var parent = node.Parent;
+            var parentChildIndex = node.Index;
+            _scene.UndoStack.PushAndDo("Delete Mesh",
+                () =>
+                {
+                    nodeMeshPair.Value.Key.MeshIndices = newList;
+                    node.Remove();
+                    FinishUpdatingTree();
+                },
+                () =>
+                {
+                    nodeMeshPair.Value.Key.MeshIndices = oldList;
+                    parent.Nodes.Insert(parentChildIndex, node);
+                    FinishUpdatingTree();
+                });
         }
     }
 }
