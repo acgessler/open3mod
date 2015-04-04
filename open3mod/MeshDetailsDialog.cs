@@ -28,6 +28,7 @@ using System.Linq;
 using System.Text;
 
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using Assimp;
 
 namespace open3mod
@@ -40,6 +41,13 @@ namespace open3mod
         public MeshDetailsDialog()
         {
             InitializeComponent();
+            // TODO(acgessler): Factor out preview generation and getting the checker pattern
+            // background into a separate utility.
+            pictureBoxMaterial.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBoxMaterial.BackgroundImage = MaterialThumbnailControl.GetBackgroundImage();
+            pictureBoxMaterial.BackgroundImageLayout = ImageLayout.Zoom;
+
+            StartUpdateMaterialPreviewLoop();
         }
 
 
@@ -101,37 +109,93 @@ namespace open3mod
             checkedListBoxPerVertex.SetItemCheckState(11, mesh.HasBones
                 ? CheckState.Checked
                 : CheckState.Unchecked);
+
+            // Immediate material update to avoid poll delay.
+            UpdateMaterialPreview();
+        }
+
+
+        /// <summary>
+        /// Locate the tab within which the current mesh is.
+        /// </summary>
+        /// <returns></returns>
+        private Tab GetTabForCurrentMesh()
+        {      
+            if (_mesh == null)
+            {
+                return null;
+            }
+            Debug.Assert(_host != null);
+            foreach (var tab in _host.UiState.TabsWithActiveScenes())
+            {
+                var scene = tab.ActiveScene;
+                Debug.Assert(scene != null);
+
+                for (var i = 0; i < scene.Raw.MeshCount; ++i)
+                {
+                    var m = scene.Raw.Meshes[i];
+                    if (m == _mesh)
+                    {
+                        return tab;
+
+                    }
+                }
+            }
+            return null;
+        }
+
+        private void StartUpdateMaterialPreviewLoop()
+        {
+            // Unholy poll. This is the only case where material previews are
+            // needed other than the material panel itself.
+            MainWindow.DelayExecution(new TimeSpan(0, 0, 0, 0, 1000),
+                () =>
+                {
+                    UpdateMaterialPreview();
+                    StartUpdateMaterialPreviewLoop();
+                });
+        }
+
+        private void UpdateMaterialPreview()
+        {
+            var tab = GetTabForCurrentMesh();
+            if (tab == null)
+            {
+                pictureBoxMaterial.Image = null;
+                labelMaterialName.Text = "None";
+                return;
+            }
+
+            var scene = tab.ActiveScene;
+            var mat = scene.Raw.Materials[_mesh.MaterialIndex];
+            var ui = _host.UiForTab(tab);
+            Debug.Assert(ui != null);
+
+            var inspector = ui.GetInspector();
+            var thumb = inspector.Materials.GetMaterialControl(mat);
+            pictureBoxMaterial.Image = thumb.GetCurrentPreviewImage();
+            labelMaterialName.Text = mat.Name.Length > 0 ? mat.Name : "Unnamed Material";
         }
 
 
         private void OnJumpToMaterial(object sender, LinkLabelLinkClickedEventArgs e)
         {
             linkLabel1.LinkVisited = false;
-            Debug.Assert(_mesh != null);
-            Debug.Assert(_host != null);
-            
-            // this need not be the currently selected tab
-            foreach(var tab in _host.UiState.TabsWithActiveScenes())
+
+            var tab = GetTabForCurrentMesh();
+            if (tab == null)
             {
-                var scene = tab.ActiveScene;
-                Debug.Assert(scene != null);
-
-                for(var i = 0; i < scene.Raw.MeshCount; ++i)
-                {
-                    var m = scene.Raw.Meshes[i];
-                    if (m == _mesh)
-                    {
-                        var mat = scene.Raw.Materials[m.MaterialIndex];
-                        var ui = _host.UiForTab(tab);
-                        Debug.Assert(ui != null);
-
-                        var inspector = ui.GetInspector();
-                        inspector.Materials.SelectEntry(mat);
-                        var thumb = inspector.Materials.GetMaterialControl(mat);
-                        inspector.OpenMaterialsTabAndScrollTo(thumb);
-                    }
-                }
+                return;
             }
+            var scene = tab.ActiveScene;
+            var mat = scene.Raw.Materials[_mesh.MaterialIndex];
+            var ui = _host.UiForTab(tab);
+            Debug.Assert(ui != null);
+
+            var inspector = ui.GetInspector();
+            inspector.Materials.SelectEntry(mat);
+            var thumb = inspector.Materials.GetMaterialControl(mat);
+            inspector.OpenMaterialsTabAndScrollTo(thumb);
         }
     }
 }

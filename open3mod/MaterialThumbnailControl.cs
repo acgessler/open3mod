@@ -174,7 +174,7 @@ namespace open3mod
         }
 
 
-        private static Image GetBackgroundImage()
+        public static Image GetBackgroundImage()
         {
             if (_background != null)
             {
@@ -195,6 +195,11 @@ namespace open3mod
 
             _loadAnimImage = ImageFromResource.Get("open3mod.Images.TextureLoading.gif");
             return _loadAnimImage;
+        }
+
+        public Image GetCurrentPreviewImage()
+        {
+            return pictureBox.Image;
         }
     }
 }
