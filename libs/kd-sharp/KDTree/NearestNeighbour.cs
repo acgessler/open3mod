@@ -10,7 +10,7 @@ namespace KDTree
     /// A NearestNeighbour iterator for the KD-tree which intelligently iterates and captures relevant data in the search space.
     /// </summary>
     /// <typeparam name="T">The type of data the iterator should handle.</typeparam>
-    public class NearestNeighbour<T> : IEnumerator
+    public class NearestNeighbour<T> : IEnumerator<T>, IEnumerable<T>
     {
         /// <summary>The point from which are searching in n-dimensional space.</summary>
         private double[] tSearchPoint;
@@ -203,14 +203,6 @@ namespace KDTree
         }
 
         /// <summary>
-        /// Return the current value referenced by the iterator as an object.
-        /// </summary>
-        object IEnumerator.Current
-        {
-            get { return _Current; }
-        }
-
-        /// <summary>
         /// Return the distance of the current value to the search point.
         /// </summary>
         public double CurrentDistance
@@ -219,11 +211,33 @@ namespace KDTree
         }
 
         /// <summary>
-        /// Return the current value referenced by the iterator.
+        /// Return the current value referenced by the iterator as an object.
         /// </summary>
-        public T Current
+        object IEnumerator.Current
         {
             get { return _Current; }
+        }
+  
+        /// <summary>
+        /// Return the current value referenced by the iterator.
+        /// </summary>
+        T IEnumerator<T>.Current
+        {
+            get { return _Current; }
+        }
+
+        public void Dispose()
+        {
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return this;
         }
     }
 }

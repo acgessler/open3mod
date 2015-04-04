@@ -97,6 +97,7 @@
     <Compile Include="DonationDialog.Designer.cs">
       <DependentUpon>DonationDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="EditMesh.cs" />
     <Compile Include="EnumExtensionsNet4Backport.cs" />
     <Compile Include="ExportSettings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -133,6 +134,7 @@
     <Compile Include="NodeItemsDialog.Designer.cs">
       <DependentUpon>NodeItemsDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="NormalVectorGenerator.cs" />
     <Compile Include="OverlayBoundingBox.cs" />
     <Compile Include="EmbeddedTextureLoader.cs" />
     <Compile Include="ExportDialog.cs">
@@ -366,6 +368,10 @@
     <ProjectReference Include="..\libs\devil-net\DevILNet\DevILNet.csproj">
       <Project>{578fd0d9-41aa-4fa4-8d9b-4021978fa48d}</Project>
       <Name>DevILNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\libs\kd-sharp\KDTree\KDTree.csproj">
+      <Project>{33a00a90-c02e-474b-a8c0-3b0559873ea0}</Project>
+      <Name>KDTree</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -43,6 +43,7 @@ namespace open3mod
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemReload = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.recentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
@@ -118,7 +119,8 @@ namespace open3mod
             this.linkLabelWebsite = new System.Windows.Forms.LinkLabel();
             this.trackBarBrightness = new System.Windows.Forms.TrackBar();
             this.glControl1 = new open3mod.RenderControl();
-            this.toolStripMenuItemReload = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
+            this.scaleOffsetSceneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStripSelectRenderer.SuspendLayout();
             this.tabContextMenuStrip.SuspendLayout();
@@ -169,6 +171,13 @@ namespace open3mod
             this.closeAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.closeAllToolStripMenuItem.Text = "Close all";
             this.closeAllToolStripMenuItem.Click += new System.EventHandler(this.OnFileMenuCloseAll);
+            // 
+            // toolStripMenuItemReload
+            // 
+            this.toolStripMenuItemReload.Name = "toolStripMenuItemReload";
+            this.toolStripMenuItemReload.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemReload.Text = "Reload";
+            this.toolStripMenuItemReload.Click += new System.EventHandler(this.OnReloadCurrentTab);
             // 
             // toolStripSeparator2
             // 
@@ -245,7 +254,9 @@ namespace open3mod
             // 
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.undoToolStripMenuItem,
-            this.redoToolStripMenuItem});
+            this.redoToolStripMenuItem,
+            this.toolStripSeparator13,
+            this.scaleOffsetSceneToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "Edit";
@@ -833,12 +844,17 @@ namespace open3mod
             this.glControl1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.OnPreviewKeyDown);
             this.glControl1.Resize += new System.EventHandler(this.OnGlResize);
             // 
-            // toolStripMenuItemReload
+            // toolStripSeparator13
             // 
-            this.toolStripMenuItemReload.Name = "toolStripMenuItemReload";
-            this.toolStripMenuItemReload.Size = new System.Drawing.Size(152, 22);
-            this.toolStripMenuItemReload.Text = "Reload";
-            this.toolStripMenuItemReload.Click += new System.EventHandler(this.OnReloadCurrentTab);
+            this.toolStripSeparator13.Name = "toolStripSeparator13";
+            this.toolStripSeparator13.Size = new System.Drawing.Size(149, 6);
+            // 
+            // scaleOffsetSceneToolStripMenuItem
+            // 
+            this.scaleOffsetSceneToolStripMenuItem.Enabled = false;
+            this.scaleOffsetSceneToolStripMenuItem.Name = "scaleOffsetSceneToolStripMenuItem";
+            this.scaleOffsetSceneToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.scaleOffsetSceneToolStripMenuItem.Text = "Scale to Fit";
             // 
             // MainWindow
             // 
@@ -962,6 +978,8 @@ namespace open3mod
         private ToolStripMenuItem undoToolStripMenuItem;
         private ToolStripMenuItem redoToolStripMenuItem;
         private ToolStripMenuItem toolStripMenuItemReload;
+        private ToolStripSeparator toolStripSeparator13;
+        private ToolStripMenuItem scaleOffsetSceneToolStripMenuItem;
     }
 }
 
