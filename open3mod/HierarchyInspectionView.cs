@@ -96,8 +96,7 @@ namespace open3mod
 
         public HierarchyInspectionView(Scene scene, TabPage tabPageHierarchy)
         {
-            _filterByMesh = new Dictionary<Node, List<Mesh>>();
-            
+            _filterByMesh = new Dictionary<Node, List<Mesh>>();                     
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
             Dock = DockStyle.Fill;
 

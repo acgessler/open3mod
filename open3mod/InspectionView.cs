@@ -67,23 +67,22 @@ namespace open3mod
                 return;
             }
 
-            Clear();
             Scene = scene;
-
             if(scene == null)
             {
                 Enabled = false;
                 return;
             }
 
+            Clear();
+
             Enabled = true;
-           
             Hierarchy = new HierarchyInspectionView(Scene, tabPageTree);
             Textures = new TextureInspectionView(Scene, textureFlowPanel);
             if(Textures.Empty)
             {
-                // disable the texture tab altogether if there are no textures
-                // this would need to be changed if there was a way to add 
+                // Disable the texture tab altogether if there are no textures
+                // This would need to be changed if there was a way to add 
                 // new texture slots later on.
                 tabControlInfoViewPicker.TabPages.Remove(tabPageTextures);
             }
@@ -91,7 +90,7 @@ namespace open3mod
             Animations = new AnimationInspectionView(Scene, tabPageAnimations);
             if (Animations.Empty)
             {
-                // same for animations
+                // Same for animations.
                 tabControlInfoViewPicker.TabPages.Remove(tabPageAnimations);
             }
 
@@ -99,24 +98,23 @@ namespace open3mod
             Materials = new MaterialInspectionView(Scene, ParentForm as MainWindow, materialFlowPanel);
         }
 
-
-        /// <summary>
-        /// Clear the contents of all inspection tabs
-        /// </summary>
         private void Clear()
         {
-            //treeViewNodeGraph.Nodes.Clear();
+            tabPageTree.Controls.Clear();
+            textureFlowPanel.Controls.Clear();
+            tabPageAnimations.Controls.Clear();
+            materialFlowPanel.Controls.Clear();
         }
 
         /// <summary>
-        /// Focus the pages, to be able to scroll with the mousewheel
+        /// Focus the pages, to be able to scroll with the Mouse Wheel.
         /// </summary>
-        private void tabPageMaterials_MouseEnter(object sender, EventArgs e)
+        private void TabPageMaterialsMouseEnter(object sender, EventArgs e)
         {
             tabPageMaterials.Focus();
         }
 
-        private void tabPageTextures_MouseEnter(object sender, EventArgs e)
+        private void TabPageTexturesMouseEnter(object sender, EventArgs e)
         {
             tabPageTextures.Focus();
         }

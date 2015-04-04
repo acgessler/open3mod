@@ -194,15 +194,15 @@ namespace open3mod
         // http://stackoverflow.com/questions/2565166
         public static void DelayExecution(TimeSpan delay, Action action)
         {
-            System.Threading.Timer timer = null;
             SynchronizationContext context = SynchronizationContext.Current;
-
+            System.Threading.Timer timer = null;
             timer = new System.Threading.Timer(
-                (ignore) =>
-                {
-                    timer.Dispose();
-
-                    context.Post(ignore2 => action(), null);
+                (_) => {
+                    if (timer != null)
+                    {
+                        timer.Dispose();
+                    }
+                    context.Post(__ => action(), null);
                 }, null, delay, TimeSpan.FromMilliseconds(-1));
         }
 
@@ -573,8 +573,6 @@ namespace open3mod
 
             });
 
-            
-
             // Must use BeginInvoke() here to make sure it gets executed
             // on the thread hosting the GUI message pump. An exception
             // are potential calls coming from our own c'tor: at this
@@ -603,14 +601,13 @@ namespace open3mod
 
         /// <summary>
         /// Populate the inspector view for a given tab. This can be called
-        /// as soon as the scene to be displayed is loaded.
+        /// as soon as the scene to be displayed is loaded, i.e. tab.ActiveScene is non-null.
         /// </summary>
         /// <param name="tab"></param>
-        private void PopulateInspector(Tab tab)
+        public void PopulateInspector(Tab tab)
         {
             var ui = UiForTab(tab);
             Debug.Assert(ui != null);
-
             var inspector = ui.GetInspector();
             inspector.SetSceneSource(tab.ActiveScene);
         }
@@ -1179,15 +1176,16 @@ namespace open3mod
 
         private void StartUndoRedoUiStatePollLoop()
         {
-            // This is sub-optimal performance-wise - ideally, we should get notified from
+            // Loop to regularly update the "Undo" and "Redo" buttons.
+            // This is sub-optimal performance-wise. Ideally, we should get notified from
             // UndoStack if an item is pushed such that Undo or Redo becomes possible.
             // This however introduces a nasty dependency from a (scene-specific) UndoStack
             // back to MainWindow which design-wise I want to avoid.
-            DelayExecution(new TimeSpan(0, 0, 0, 0, 100), () =>
-                                                          {
-                                                              UpdateUndoRedoUiState();
-                                                              StartUndoRedoUiStatePollLoop();
-                                                          });
+            DelayExecution(new TimeSpan(0, 0, 0, 0, 100),
+                () => {
+                    UpdateUndoRedoUiState();
+                    StartUndoRedoUiStatePollLoop();
+                });
         }
 
         private void UpdateUndoRedoUiState()
@@ -1253,6 +1251,22 @@ namespace open3mod
                 return;
             }
             undo.Redo();
+        }
+
+        private void OnReloadCurrentTab(object sender, EventArgs e)
+        {
+            var activeTab = UiState.ActiveTab;
+            if (activeTab.ActiveScene == null)
+            {
+                return;
+            }
+      
+            activeTab.ActiveScene = null;
+            new Thread(
+                () => {
+                    activeTab.ActiveScene = new Scene(activeTab.File);
+                    BeginInvoke(new Action(() => PopulateInspector(activeTab)));
+                }).Start();
         }
     }
 }

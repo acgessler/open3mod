@@ -53,6 +53,9 @@ namespace open3mod
             this.lostEmpireToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemView = new System.Windows.Forms.ToolStripMenuItem();
             this.fullViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.twoViewsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -115,9 +118,7 @@ namespace open3mod
             this.linkLabelWebsite = new System.Windows.Forms.LinkLabel();
             this.trackBarBrightness = new System.Windows.Forms.TrackBar();
             this.glControl1 = new open3mod.RenderControl();
-            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemReload = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStripSelectRenderer.SuspendLayout();
             this.tabContextMenuStrip.SuspendLayout();
@@ -145,6 +146,7 @@ namespace open3mod
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
             this.closeAllToolStripMenuItem,
+            this.toolStripMenuItemReload,
             this.toolStripSeparator2,
             this.recentToolStripMenuItem,
             this.toolStripMenuItem4,
@@ -238,6 +240,29 @@ namespace open3mod
             this.quitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.quitToolStripMenuItem.Text = "Quit";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.OnFileMenuQuit);
+            // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.undoToolStripMenuItem,
+            this.redoToolStripMenuItem});
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.editToolStripMenuItem.Text = "Edit";
+            // 
+            // undoToolStripMenuItem
+            // 
+            this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
+            this.undoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.undoToolStripMenuItem.Text = "Undo";
+            this.undoToolStripMenuItem.Click += new System.EventHandler(this.OnGlobalUndo);
+            // 
+            // redoToolStripMenuItem
+            // 
+            this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
+            this.redoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.redoToolStripMenuItem.Text = "Redo";
+            this.redoToolStripMenuItem.Click += new System.EventHandler(this.OnGlobalRedo);
             // 
             // toolStripMenuItemView
             // 
@@ -808,28 +833,12 @@ namespace open3mod
             this.glControl1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.OnPreviewKeyDown);
             this.glControl1.Resize += new System.EventHandler(this.OnGlResize);
             // 
-            // editToolStripMenuItem
+            // toolStripMenuItemReload
             // 
-            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.undoToolStripMenuItem,
-            this.redoToolStripMenuItem});
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
-            this.editToolStripMenuItem.Text = "Edit";
-            // 
-            // undoToolStripMenuItem
-            // 
-            this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
-            this.undoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.undoToolStripMenuItem.Text = "Undo";
-            this.undoToolStripMenuItem.Click += new System.EventHandler(this.OnGlobalUndo);
-            // 
-            // redoToolStripMenuItem
-            // 
-            this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
-            this.redoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.redoToolStripMenuItem.Text = "Redo";
-            this.redoToolStripMenuItem.Click += new System.EventHandler(this.OnGlobalRedo);
+            this.toolStripMenuItemReload.Name = "toolStripMenuItemReload";
+            this.toolStripMenuItemReload.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemReload.Text = "Reload";
+            this.toolStripMenuItemReload.Click += new System.EventHandler(this.OnReloadCurrentTab);
             // 
             // MainWindow
             // 
@@ -952,6 +961,7 @@ namespace open3mod
         private ToolStripMenuItem editToolStripMenuItem;
         private ToolStripMenuItem undoToolStripMenuItem;
         private ToolStripMenuItem redoToolStripMenuItem;
+        private ToolStripMenuItem toolStripMenuItemReload;
     }
 }
 

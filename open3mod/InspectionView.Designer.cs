@@ -78,7 +78,7 @@
             this.tabPageTextures.TabIndex = 1;
             this.tabPageTextures.Text = "Textures";
             this.tabPageTextures.UseVisualStyleBackColor = true;
-            this.tabPageTextures.MouseEnter += new System.EventHandler(this.tabPageTextures_MouseEnter);
+            this.tabPageTextures.MouseEnter += new System.EventHandler(this.TabPageTexturesMouseEnter);
             // 
             // textureFlowPanel
             // 
@@ -105,7 +105,7 @@
             this.tabPageMaterials.TabIndex = 3;
             this.tabPageMaterials.Text = "Materials";
             this.tabPageMaterials.UseVisualStyleBackColor = true;
-            this.tabPageMaterials.MouseEnter += new System.EventHandler(this.tabPageMaterials_MouseEnter);
+            this.tabPageMaterials.MouseEnter += new System.EventHandler(this.TabPageMaterialsMouseEnter);
             // 
             // materialFlowPanel
             // 

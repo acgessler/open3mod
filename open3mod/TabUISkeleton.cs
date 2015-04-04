@@ -18,7 +18,6 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///////////////////////////////////////////////////////////////////////////////////
 
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -38,33 +37,18 @@ namespace open3mod
         public TabUiSkeleton()
         {
             InitializeComponent();
-
-            //var settings = CoreSettings.CoreSettings.Default;
-
-            // commented because it does not seem to avoid a slight offset every time the splitter is restored
-            /* 
-            if (settings.InspectorRecordedWidth >= 0)
-            {
-                splitContainer.SplitterDistance -= (splitContainer.Panel1.Width - settings.InspectorRecordedWidth);
-            } */
-            
-            
             splitContainer.SplitterDistance = splitContainer.Width - 440;
-            //inspectionView1.ClientSize = splitContainer.Panel2.ClientSize;
         }
-
 
         public SplitContainer GetSplitter()
         {
             return splitContainer;
         }
 
-
         public InspectionView GetInspector()
         {
             return inspectionView1;
         }
-
 
         public void InjectGlControl(GLControl gl)
         {
@@ -78,15 +62,9 @@ namespace open3mod
             gl.Height = s.Height;
         }
 
-     
-        private void OnLoad(object sender, EventArgs e)
-        {
-        }
-
-
         private void OnSplitterMove(object sender, SplitterEventArgs e)
         {
-            // commented because it does not seem to avoid a slight offset every time the splitter is restored
+            // Commented because it does not seem to avoid a slight offset every time the splitter is restored.
             /*
             var settings = CoreSettings.CoreSettings.Default;
             settings.InspectorRecordedWidth = splitContainer.Panel1.Width;
