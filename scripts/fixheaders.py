@@ -15,9 +15,9 @@
 import array
 from abbrev import *
 
-minor = 1
-major = 0
-copyright = "(c) 2012-2013, Open3Mod Contributors"
+minor = 0
+major = 2
+copyright = "(c) 2012-2015, Open3Mod Contributors"
 project_name = "Open 3D Model Viewer (open3mod)"
 
 # -----------------------------------------------------------------------------------

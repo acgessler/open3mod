@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
-// Open 3D Model Viewer (open3mod) (v0.1)
+// Open 3D Model Viewer (open3mod) (v2.0)
 // [ISceneRenderer.cs]
-// (c) 2012-2013, Open3Mod Contributors
+// (c) 2012-2015, Open3Mod Contributors
 //
 // Licensed under the terms and conditions of the 3-clause BSD license. See
 // the LICENSE file in the root folder of the repository for the details.
