@@ -119,6 +119,7 @@
     <Compile Include="LeapListener.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="LinqZipNet4Backport.cs" />
     <Compile Include="LogPipe.cs" />
     <Compile Include="MaterialMapperClassicGl.cs" />
     <Compile Include="MaterialMapperModernGl.cs" />

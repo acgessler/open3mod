@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////////////////////
 // Open 3D Model Viewer (open3mod) (v2.0)
 // [EditMesh.cs]
 // (c) 2012-2015, Open3Mod Contributors
@@ -185,9 +185,10 @@ namespace open3mod
             ComputeAdjacentVertices();
         }
 
-
         /// <summary>
         /// Apply the EditMesh to a given Mesh.
+        /// 
+        /// This can be called multiple times. The EditMesh can be re-used afterwards.
         /// 
         /// Mesh name and material index are unchanged.
         /// </summary>
@@ -293,9 +294,40 @@ namespace open3mod
                 }
                 mesh.Faces.Add(face);
             }
+
+            UpdateMeshPrimitiveTypeFlags(mesh);
         }
 
+        /// <summary>
+        /// Update |mesh.PrimitiveType|.
+        /// </summary>
+        /// <param name="mesh"></param>
+        private void UpdateMeshPrimitiveTypeFlags(Mesh mesh)
+        {
+            mesh.PrimitiveType = 0;
+            foreach (var face in mesh.Faces)
+            {
+                switch (face.IndexCount)
+                {
+                    case 1:
+                        mesh.PrimitiveType |= PrimitiveType.Point;
+                        break;
+                    case 2:
+                        mesh.PrimitiveType |= PrimitiveType.Line;
+                        break;
+                    case 3:
+                        mesh.PrimitiveType |= PrimitiveType.Triangle;
+                        break;
+                    default:
+                        mesh.PrimitiveType |= PrimitiveType.Polygon;
+                        break;
+                }
+            }
+        }
 
+        /// <summary>
+        /// Populates |EditVertex.AdjacentVertices|.
+        /// </summary>
         private void ComputeAdjacentVertices()
         {
             // Put all vertices into a KDTree.
