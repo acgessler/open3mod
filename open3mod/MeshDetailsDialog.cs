@@ -217,7 +217,7 @@ namespace open3mod
             if (!_normalsDialog.Visible)
             {
                 _normalsDialog.SetMesh(_mesh, _meshName);
-                _normalsDialog.Show(this);
+                _normalsDialog.ShowDialog(this);
             }
         }
     }

@@ -1189,6 +1189,21 @@ namespace open3mod
                     FinishUpdatingTree();
                 });
         }
+
+        private void OnGenerateMeshNormals(object sender, EventArgs e)
+        {
+            var node = GetTreeNodeForContextMenuEvent(sender);
+            if (node == null || !(node.Tag as KeyValuePair<Node, Mesh>?).HasValue)
+            {
+                return;
+            }
+            var nodeMeshPair = (KeyValuePair<Node, Mesh>)node.Tag;
+            var mesh = nodeMeshPair.Value;
+
+            var dialog = new NormalVectorGeneratorDialog(_scene);
+            dialog.SetMesh(mesh, node.Text);
+            dialog.ShowDialog(this);
+        }
     }
 }
 

@@ -173,7 +173,11 @@ namespace open3mod
         private void CheckBoxRealtimePreviewCheckedChanged(object sender, EventArgs e)
         {
             buttonApply.Enabled = !checkBoxRealtimePreview.Checked;
-            if (!RealtimeUpdateEnabled)
+            if (RealtimeUpdateEnabled)
+            {
+                ScheduleUpdateNormals();
+            }
+            else
             {
                 StopUpdateThread();
             }
@@ -212,6 +216,11 @@ namespace open3mod
             Revert();
             // See note on OnOk().
             Hide();
+        }
+
+        private void OnClose(object sender, FormClosingEventArgs e)
+        {
+            StopUpdateThread();
         } 
     }
 }
