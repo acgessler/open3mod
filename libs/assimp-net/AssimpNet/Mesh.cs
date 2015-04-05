@@ -108,10 +108,12 @@ namespace Assimp {
         /// <summary>
         /// Gets the vertex position list.
         /// </summary>
-        public List<Vector3D> Vertices {
+        public List<Vector3D> Vertices
+        {
             get {
                 return m_vertices; 
             }
+            set { m_vertices = value; }
         }
 
         /// <summary>
@@ -126,10 +128,12 @@ namespace Assimp {
         /// <summary>
         /// Gets the vertex normal list.
         /// </summary>
-        public List<Vector3D> Normals {
+        public List<Vector3D> Normals
+        {
             get {
                 return m_normals;
             }
+            set { m_normals = value; }
         }
 
         /// <summary>
@@ -145,19 +149,23 @@ namespace Assimp {
         /// <summary>
         /// Gets the vertex tangent list.
         /// </summary>
-        public List<Vector3D> Tangents {
+        public List<Vector3D> Tangents
+        {
             get {
                 return m_tangents;
             }
+            set { m_tangents = value; }
         }
 
         /// <summary>
         /// Gets the vertex bitangent list.
         /// </summary>
-        public List<Vector3D> BiTangents {
+        public List<Vector3D> BiTangents
+        {
             get {
                 return m_bitangents;
             }
+            set { m_bitangents = value; }
         }
 
         /// <summary>
@@ -183,10 +191,12 @@ namespace Assimp {
         /// Gets the mesh's faces. Each face will contain indices
         /// to the vertices.
         /// </summary>
-        public List<Face> Faces {
+        public List<Face> Faces
+        {
             get {
                 return m_faces;
             }
+            set { m_faces = value; }
         }
 
         /// <summary>
@@ -227,20 +237,24 @@ namespace Assimp {
         /// Gets the array that contains each vertex color channels, by default all are lists of zero (but can be set to null). Each index
         /// in the array corresponds to the texture coordinate channel. The length of the array corresponds to Assimp's maximum vertex color channel limit.
         /// </summary>
-        public List<Color4D>[] VertexColorChannels {
+        public List<Color4D>[] VertexColorChannels
+        {
             get {
                 return m_colors;
             }
+            set { m_colors = value; }
         }
 
         /// <summary>
         /// Gets the array that contains each texture coordinate channel, by default all are lists of zero (but can be set to null). Each index
         /// in the array corresponds to the texture coordinate channel. The length of the array corresponds to Assimp's maximum UV channel limit.
         /// </summary>
-        public List<Vector3D>[] TextureCoordinateChannels {
+        public List<Vector3D>[] TextureCoordinateChannels
+        {
             get {
                 return m_texCoords;
             }
+            set { m_texCoords = value; }
         }
 
         /// <summary>
