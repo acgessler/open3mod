@@ -587,7 +587,7 @@ namespace open3mod
         {
             if (_meshDiag == null)
             {
-                _meshDiag = new MeshDetailsDialog();
+                _meshDiag = new MeshDetailsDialog(FindForm() as MainWindow, _scene);
                 _meshDiag.FormClosed += (o, args) =>
                 {
                     _meshDiag = null;
@@ -599,7 +599,7 @@ namespace open3mod
                 _meshDiag.BringToFront();
             }
 
-            _meshDiag.SetMesh(FindForm() as MainWindow, mesh, text);
+            _meshDiag.SetMesh(mesh, text);
         }
 
 

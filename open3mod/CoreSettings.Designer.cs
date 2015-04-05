@@ -427,5 +427,17 @@ namespace CoreSettings {
                 this["CountFilesOpened"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool NormalVectorGeneratorRealtimePreview {
+            get {
+                return ((bool)(this["NormalVectorGeneratorRealtimePreview"]));
+            }
+            set {
+                this["NormalVectorGeneratorRealtimePreview"] = value;
+            }
+        }
     }
 }

@@ -34,12 +34,21 @@ using Assimp;
 namespace open3mod
 {
     public partial class MeshDetailsDialog : Form
-    {
-        private Mesh _mesh;
-        private MainWindow _host;
+    {     
+        private readonly MainWindow _host;
+        private readonly Scene _scene;
+        private readonly NormalVectorGeneratorDialog _normalsDialog;
 
-        public MeshDetailsDialog()
+        private Mesh _mesh;
+        private String _meshName;
+
+        public MeshDetailsDialog(MainWindow host, Scene scene)
         {
+            Debug.Assert(host != null);
+            _host = host;
+            _scene = scene;
+            _normalsDialog = new NormalVectorGeneratorDialog(_scene);
+
             InitializeComponent();
             // TODO(acgessler): Factor out preview generation and getting the checker pattern
             // background into a separate utility.
@@ -51,19 +60,27 @@ namespace open3mod
         }
 
 
-        public void SetMesh(MainWindow host, Mesh mesh, string meshName) 
-        {
-            Debug.Assert(mesh != null);
-            Debug.Assert(host != null);
+        /// <summary>
+        /// Set current mesh for which detail information is displayed.
+        /// </summary>
+        /// <param name="mesh"></param>
+        /// <param name="meshName"></param>
+        public void SetMesh(Mesh mesh, string meshName) 
+        {       
+            Debug.Assert(mesh != null);        
             Debug.Assert(meshName != null);
+            if (mesh == _mesh)
+            {
+                return;
+            }
 
             _mesh = mesh;
-            _host = host;
+            _meshName = meshName;
 
             labelVertexCount.Text = mesh.VertexCount.ToString();
             labelFaceCount.Text = mesh.FaceCount.ToString();
             labelBoneCount.Text = mesh.BoneCount.ToString();
-            Text = meshName + " - Details";
+            Text = string.Format("{0} - Details", meshName);
 
             checkedListBoxPerFace.CheckOnClick = false;
             checkedListBoxPerFace.SetItemCheckState(0,
@@ -105,13 +122,18 @@ namespace open3mod
                     ? CheckState.Checked
                     : CheckState.Unchecked);
             }
-
             checkedListBoxPerVertex.SetItemCheckState(11, mesh.HasBones
                 ? CheckState.Checked
                 : CheckState.Unchecked);
 
             // Immediate material update to avoid poll delay.
             UpdateMaterialPreview();
+
+            // Update the mesh in child dialogs.
+            if (_normalsDialog.Visible)
+            {
+                _normalsDialog.SetMesh(_mesh, _meshName);
+            }
         }
 
 
@@ -196,6 +218,15 @@ namespace open3mod
             inspector.Materials.SelectEntry(mat);
             var thumb = inspector.Materials.GetMaterialControl(mat);
             inspector.OpenMaterialsTabAndScrollTo(thumb);
+        }
+
+        private void OnGenerateNormals(object sender, EventArgs e)
+        {
+            if (!_normalsDialog.Visible)
+            {
+                _normalsDialog.SetMesh(_mesh, _meshName);
+                _normalsDialog.Show(this);
+            }
         }
     }
 }

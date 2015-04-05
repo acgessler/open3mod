@@ -38,7 +38,10 @@ namespace open3mod
         {
             Debug.Assert(!mesh.PrimitiveType.HasFlag(PrimitiveType.Polygon));
             _mesh = mesh;
-            _editMesh = new EditMesh(_mesh);          
+            lock (_mesh)
+            {
+                _editMesh = new EditMesh(_mesh);
+            }
         }
 
         /// <summary>
@@ -54,7 +57,10 @@ namespace open3mod
             {
                 SmoothNormals(thresholdAngleInDegrees);
             }
-            _editMesh.ApplyToMesh(_mesh);
+            lock (_mesh)
+            {
+                _editMesh.ApplyToMesh(_mesh);
+            }
         }
 
         private void CalculateFaceNormals()
@@ -87,9 +93,9 @@ namespace open3mod
             float thresholdAngleInRadians = (float)(thresholdAngleInDegrees*Math.PI/180.0);
             float cosThresholdAngle = (float)Math.Cos(thresholdAngleInRadians);
             foreach (var vert in _editMesh.Vertices)
-            {
-                vert.Normal = new Vector3D();
+            {              
                 var faceNormal = _faceNormals[vert.Face];
+                vert.Normal = faceNormal;
                 foreach (var adjacentVert in vert.AdjacentVertices)
                 {
                     if (vert == adjacentVert)
@@ -105,7 +111,9 @@ namespace open3mod
                 }    
                 if (vert.Normal.Value.LengthSquared() > 0.0f)
                 {
-                    vert.Normal.Value.Normalize();
+                    var v = vert.Normal.Value;
+                    v.Normalize();
+                    vert.Normal = v;
                 }
             }
         }

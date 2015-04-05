@@ -34,6 +34,8 @@
             this.label4 = new System.Windows.Forms.Label();
             this.checkedListBoxPerFace = new System.Windows.Forms.CheckedListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.labelMaterialName = new System.Windows.Forms.Label();
+            this.pictureBoxMaterial = new System.Windows.Forms.PictureBox();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.button1 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -50,15 +52,13 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.pictureBoxMaterial = new System.Windows.Forms.PictureBox();
-            this.labelMaterialName = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMaterial)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMaterial)).BeginInit();
             this.SuspendLayout();
             // 
             // checkedListBoxPerVertex
@@ -139,6 +139,23 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Material";
             // 
+            // labelMaterialName
+            // 
+            this.labelMaterialName.AutoSize = true;
+            this.labelMaterialName.Location = new System.Drawing.Point(15, 26);
+            this.labelMaterialName.Name = "labelMaterialName";
+            this.labelMaterialName.Size = new System.Drawing.Size(85, 13);
+            this.labelMaterialName.TabIndex = 3;
+            this.labelMaterialName.Text = "<Material name>";
+            // 
+            // pictureBoxMaterial
+            // 
+            this.pictureBoxMaterial.Location = new System.Drawing.Point(18, 42);
+            this.pictureBoxMaterial.Name = "pictureBoxMaterial";
+            this.pictureBoxMaterial.Size = new System.Drawing.Size(162, 162);
+            this.pictureBoxMaterial.TabIndex = 2;
+            this.pictureBoxMaterial.TabStop = false;
+            // 
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
@@ -206,13 +223,13 @@
             // 
             // button2
             // 
-            this.button2.Enabled = false;
             this.button2.Location = new System.Drawing.Point(16, 208);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(154, 23);
             this.button2.TabIndex = 6;
             this.button2.Text = "Calculate Normals";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.OnGenerateNormals);
             // 
             // groupBox3
             // 
@@ -306,23 +323,6 @@
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Issues";
             // 
-            // pictureBoxMaterial
-            // 
-            this.pictureBoxMaterial.Location = new System.Drawing.Point(18, 42);
-            this.pictureBoxMaterial.Name = "pictureBoxMaterial";
-            this.pictureBoxMaterial.Size = new System.Drawing.Size(162, 162);
-            this.pictureBoxMaterial.TabIndex = 2;
-            this.pictureBoxMaterial.TabStop = false;
-            // 
-            // labelMaterialName
-            // 
-            this.labelMaterialName.AutoSize = true;
-            this.labelMaterialName.Location = new System.Drawing.Point(15, 26);
-            this.labelMaterialName.Name = "labelMaterialName";
-            this.labelMaterialName.Size = new System.Drawing.Size(85, 13);
-            this.labelMaterialName.TabIndex = 3;
-            this.labelMaterialName.Text = "<Material name>";
-            // 
             // MeshDetailsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -342,6 +342,7 @@
             this.TopMost = true;
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMaterial)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
@@ -349,7 +350,6 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.groupBox5.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMaterial)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
