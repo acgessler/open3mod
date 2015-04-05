@@ -20,17 +20,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
-
 using System.Windows.Forms;
 using Assimp;
 
@@ -39,7 +32,7 @@ namespace open3mod
     public partial class ExportDialog : Form
     {
         private readonly MainWindow _main;
-        private readonly Assimp.ExportFormatDescription[] _formats;
+        private readonly ExportFormatDescription[] _formats;
 
         private bool _changedText = false;
 
@@ -52,7 +45,7 @@ namespace open3mod
             }
         }
 
-        public Assimp.ExportFormatDescription SelectedFormat
+        public ExportFormatDescription SelectedFormat
         {
             get
             {
@@ -65,7 +58,7 @@ namespace open3mod
             _main = main;
             InitializeComponent();
 
-            using (var v = new Assimp.AssimpContext())
+            using (var v = new AssimpContext())
             {
                 _formats = v.GetSupportedExportFormats();
                 foreach (var format in _formats)

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Assimp;
 using Assimp.Unmanaged;
-using OpenTK;
 
 namespace open3mod
 {

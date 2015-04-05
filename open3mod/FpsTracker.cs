@@ -18,12 +18,8 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///////////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-
+using System.Threading;
 
 namespace open3mod
 {
@@ -89,7 +85,7 @@ namespace open3mod
 
             if (_lastFps > FRAMERATE_LIMIT)
             {
-                System.Threading.Thread.Sleep(1 + (int)(1000.0 / FRAMERATE_LIMIT - _lastFrameDelta * 1000));
+                Thread.Sleep(1 + (int)(1000.0 / FRAMERATE_LIMIT - _lastFrameDelta * 1000));
             }
         }
     }

@@ -106,6 +106,7 @@
             this.Name = "DonationDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Your friendly donation reminder";
+            this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();
 

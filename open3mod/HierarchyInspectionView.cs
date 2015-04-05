@@ -20,14 +20,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Text;
-
-
 using System.Windows.Forms;
 using Assimp;
 
@@ -1052,7 +1049,7 @@ namespace open3mod
         }
 
 
-        private void OpOpenNodeContextMenu(object sender, System.ComponentModel.CancelEventArgs e)
+        private void OpOpenNodeContextMenu(object sender, CancelEventArgs e)
         {
             var cm = (ContextMenuStrip) sender;
             var root = GetTreeNodeForContextMenuEvent(sender);

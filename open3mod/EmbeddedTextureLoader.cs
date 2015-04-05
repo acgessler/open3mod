@@ -18,22 +18,18 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///////////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-
+using Assimp;
 
 namespace open3mod
 {
     public class EmbeddedTextureLoader : TextureLoader
     {
-        public EmbeddedTextureLoader(Assimp.EmbeddedTexture tex) 
+        public EmbeddedTextureLoader(EmbeddedTexture tex) 
         {
             if(tex.IsCompressed)
             {

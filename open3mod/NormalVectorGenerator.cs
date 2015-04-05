@@ -21,10 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using Assimp;
-using OpenTK;
 
 namespace open3mod
 {

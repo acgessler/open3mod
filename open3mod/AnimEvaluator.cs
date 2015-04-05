@@ -18,14 +18,10 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///////////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
 using Assimp;
 using OpenTK;
-using Quaternion = OpenTK.Quaternion;
+using Quaternion = Assimp.Quaternion;
 
 namespace open3mod
 {
@@ -110,7 +106,7 @@ namespace open3mod
                 var channel = _animation.NodeAnimationChannels[a];
 
                 var presentPosition = new Vector3D(0, 0, 0);
-                var presentRotation = new Assimp.Quaternion(1, 0, 0, 0);
+                var presentRotation = new Quaternion(1, 0, 0, 0);
                 var presentScaling = new Vector3D(1, 1, 1);
 
                 if (isInEndPosition)
@@ -197,7 +193,7 @@ namespace open3mod
                     if (diffTime > 0)
                     {
                         var factor = (float)((time - key.Time) / diffTime);
-                        presentRotation = Assimp.Quaternion.Slerp(key.Value, nextKey.Value, factor);
+                        presentRotation = Quaternion.Slerp(key.Value, nextKey.Value, factor);
                     }
                     else
                     {
@@ -240,7 +236,7 @@ namespace open3mod
         /// <param name="presentScaling"></param>
         /// <param name="presentPosition"></param>
         /// <param name="outMatrix"></param>
-        private static void BuildTransform(ref Assimp.Quaternion presentRotation, ref Vector3D presentScaling, 
+        private static void BuildTransform(ref Quaternion presentRotation, ref Vector3D presentScaling, 
             ref Vector3D presentPosition, out Matrix4 outMatrix)
         {
             // build a transformation matrix from it

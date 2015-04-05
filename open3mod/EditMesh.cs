@@ -20,15 +20,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing.Text;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security.Policy;
-using System.Text;
 using Assimp;
 using Assimp.Unmanaged;
-using OpenTK;
 using KDTree;
 
 namespace open3mod

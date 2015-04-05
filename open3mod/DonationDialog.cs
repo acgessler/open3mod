@@ -19,13 +19,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace open3mod
@@ -51,7 +45,7 @@ namespace open3mod
 
         private void Donate(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("http://www.open3mod.com/donate.htm?ref=inapp");
+            Process.Start("http://www.open3mod.com/donate.htm?ref=inapp");
             Close();
         }
     }
