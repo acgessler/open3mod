@@ -57,7 +57,7 @@ namespace open3mod
         private MaterialMapper _mapper;
         private ISceneRenderer _renderer;
         private readonly UndoStack _undoStack = new UndoStack();
-
+        private readonly Dictionary<Mesh, Mesh> _overrideMeshes = new Dictionary<Mesh, Mesh>(); 
 
         /// <summary>
         /// Source file name with full path
@@ -150,19 +150,16 @@ namespace open3mod
         public string StatsString
         {
             get {
-                var s = " Raw Loading Time: " + LoadingTime + " ms - ";
-                
-                s += TotalVertexCount + " Vertices, " + TotalTriangleCount + " Triangles";
+                var s = string.Format(" Raw Loading Time: {0} ms - ", LoadingTime);         
+                s += string.Format("{0} Vertices, {1} Triangles", TotalVertexCount, TotalTriangleCount);
                 if (TotalLineCount > 0)
                 {
-                    s += ", " + TotalLineCount + " Lines";
+                    s += string.Format(", {0} Lines", TotalLineCount);
                 }
                 if (TotalPointCount > 0)
                 {
-                    s += ", " + TotalLineCount + " Points";
-                }
-
-                
+                    s += string.Format(", {0} Points", TotalLineCount);
+                }               
                 return s;
             }
         }
@@ -625,7 +622,7 @@ namespace open3mod
         /// <param name="sceneMax"></param>
         /// <param name="sceneCenter"> </param>
         /// <param name="node"> </param>
-        /// <param name="omitNodeTrafo"> </param>
+        /// <param name="omitRootNodeTrafo"> </param>
         private void ComputeBoundingBox(out Vector3 sceneMin, out Vector3 sceneMax, out Vector3 sceneCenter, 
             Node node = null, 
             bool omitRootNodeTrafo = false)
@@ -682,38 +679,6 @@ namespace open3mod
 
 
         /// <summary>
-        /// 
-        /// </summary>
-        public void Dispose()
-        {
-            if (_textureSet != null)
-            {
-                _textureSet.Dispose();
-            }
-
-            if (_renderer != null)
-            {
-                _renderer.Dispose();
-            }
-
-            if (_mapper != null)
-            {
-                _mapper.Dispose();
-            }
-
-            GC.SuppressFinalize(this);
-        }
-
-#if DEBUG
-        ~Scene()
-        {
-            // OpenTk is unsafe from here, explicit Dispose() is required.
-            Debug.Assert(false);
-        }
-#endif
-
-
-        /// <summary>
         /// Turns skeleton visualization on even if it is off in the UI.
         /// </summary>
         /// <param name="overrideSkeleton">true to always show skeleton
@@ -756,6 +721,65 @@ namespace open3mod
             } while ((node = node.Parent) != null);
             _pivot = v;
         }
+
+
+        /// <summary>
+        /// Replace a given mesh with another when drawing. This has immediate effect.
+        /// 
+        /// Editing tools use this to temporarily replace the mesh being rendered
+        /// with a preview of the action.
+        /// 
+        /// Pass null to revert to the original mesh.
+        /// </summary>
+        /// <param name="mesh"></param>
+        /// <param name="overrideMesh"></param>
+        public void SetOverrideMesh(Mesh mesh, Mesh overrideMesh)
+        {
+            _overrideMeshes[mesh] = overrideMesh;
+            _nodesToShowChanged = true;
+        }
+
+        public Mesh GetOverrideMesh(Mesh mesh)
+        {
+            Mesh overrideMesh;
+            if (_overrideMeshes.TryGetValue(mesh, out overrideMesh))
+            {
+                return overrideMesh;
+            }
+            return null;
+        }
+
+
+        /// <summary>
+        /// Dispose
+        /// </summary>
+        public void Dispose()
+        {
+            if (_textureSet != null)
+            {
+                _textureSet.Dispose();
+            }
+
+            if (_renderer != null)
+            {
+                _renderer.Dispose();
+            }
+
+            if (_mapper != null)
+            {
+                _mapper.Dispose();
+            }
+
+            GC.SuppressFinalize(this);
+        }
+
+#if DEBUG
+        ~Scene()
+        {
+            // OpenTk is unsafe from here, explicit Dispose() is required.
+            Debug.Assert(false);
+        }
+#endif
     }
 }
 

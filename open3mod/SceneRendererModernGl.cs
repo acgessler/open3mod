@@ -206,7 +206,7 @@ namespace open3mod
         }
 
 
-        protected override bool DrawMesh(Node node, bool animated, bool showGhost, int index, Mesh mesh, RenderFlags flags)
+        protected override bool InternDrawMesh(Node node, bool animated, bool showGhost, int index, Mesh mesh, RenderFlags flags)
         {
             if (_meshes[index] == null) {
                 _meshes[index] = new RenderMesh(mesh);

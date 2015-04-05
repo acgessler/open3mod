@@ -366,7 +366,7 @@ namespace open3mod
         /// <param name="mesh">Mesh instance</param>
         /// <param name="flags"> </param>
         /// <returns></returns>
-        protected override bool DrawMesh(Node node, bool animated, bool showGhost, int index, Mesh mesh, RenderFlags flags)
+        protected override bool InternDrawMesh(Node node, bool animated, bool showGhost, int index, Mesh mesh, RenderFlags flags)
         {
             if (showGhost)
             {

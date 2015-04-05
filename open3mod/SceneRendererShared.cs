@@ -230,10 +230,12 @@ namespace open3mod
             }
         }
 
-
         /// <summary>
         /// Abstract method to draw a mesh attached to a node. This is to be implemented
         /// by whichever rendering method should be used.
+        /// 
+        /// The thread is guaranteed to own the monitor for the |mesh|, making read
+        /// access to the mesh safe.
         /// </summary>
         /// <param name="node"></param>
         /// <param name="animated"></param>
@@ -242,11 +244,35 @@ namespace open3mod
         /// <param name="mesh"></param>
         /// <param name="flags"></param>
         /// <returns></returns>
-        protected abstract bool DrawMesh(Node node, bool animated, 
+        protected abstract bool InternDrawMesh(Node node, bool animated, 
             bool showGhost, 
             int index, 
             Mesh mesh,
             RenderFlags flags);
+
+
+        /// <summary>
+        /// Obtains a lock on a mesh and draws it. Also handles mesh overrides.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="animated"></param>
+        /// <param name="showGhost"></param>
+        /// <param name="index"></param>
+        /// <param name="mesh"></param>
+        /// <param name="flags"></param>
+        /// <returns></returns>
+        protected bool DrawMesh(Node node, bool animated,
+            bool showGhost,
+            int index,
+            Mesh mesh,
+            RenderFlags flags)
+        {
+            mesh = Owner.GetOverrideMesh(mesh) ?? mesh;
+            lock (mesh)
+            {
+                return InternDrawMesh(node, animated, showGhost, index, mesh, flags);
+            }
+        }
     }
 }
 
