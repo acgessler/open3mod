@@ -160,7 +160,8 @@ namespace open3mod
 
 
         /// <summary>
-        /// Construct an EditMesh from a given Mesh.
+        /// Construct an EditMesh from a given Mesh. Call this only if you hold the monitor on
+        /// the mesh or can otherwise ensure mutual exclusion
         /// 
         /// The EditMesh is independent and retains no reference to the original
         /// data, use ApplyToMesh() to propagate changes back.
@@ -178,7 +179,7 @@ namespace open3mod
                 {
                     var vert = new EditVertex(mesh, srcFace.Indices[j]);
                     Vertices.Add(vert);
-                    destFace.Vertices.Add(vert);
+                    destFace.AddVertex(vert);
                 }
                 Faces.Add(destFace);
             }
@@ -186,7 +187,8 @@ namespace open3mod
         }
 
         /// <summary>
-        /// Apply the EditMesh to a given Mesh.
+        /// Apply the EditMesh to a given Mesh. Call this only if you hold the monitor on
+        /// the mesh or can otherwise ensure mutual exclusion.
         /// 
         /// This can be called multiple times. The EditMesh can be re-used afterwards.
         /// 
@@ -200,6 +202,7 @@ namespace open3mod
             // the vertices. Each merge-able set must be a subset of already adjacent
             // vertices.
             Dictionary<EditVertex, int> indices = new Dictionary<EditVertex, int>();
+            Dictionary<int, EditVertex> reverseIndices = new Dictionary<int, EditVertex>();
             int cursor = 0;
             foreach (EditVertex vert in Vertices)
             {
@@ -214,6 +217,7 @@ namespace open3mod
                         indices[adjacentVert] = cursor;
                     }
                 }
+                reverseIndices[cursor] = vert;
                 ++cursor;
             }
 
@@ -252,8 +256,7 @@ namespace open3mod
             }
            
             // Store unique indices.
-            var reverseIndices = indices.ToDictionary(x => x.Value, x => x.Key);
-            for (var i = 0; i < indices.Count; ++i)
+            for (var i = 0; i < reverseIndices.Count; ++i)
             {
                 var srcVert = reverseIndices[i];
                 mesh.Vertices.Add(srcVert.Position);
@@ -294,7 +297,6 @@ namespace open3mod
                 }
                 mesh.Faces.Add(face);
             }
-
             UpdateMeshPrimitiveTypeFlags(mesh);
         }
 
