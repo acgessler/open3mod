@@ -36,6 +36,7 @@ namespace open3mod
             var parallelism = Math.Min(maxHandles, Math.Max(1, count / minChunkSize));
             var effectiveChunkSize = count/parallelism;
             var resetEvents = new WaitHandle[parallelism];
+            int[] cancelled = {0};
             for (var offset = 0; offset < parallelism; offset++)
             {
                 var start = effectiveChunkSize * offset;
@@ -45,12 +46,22 @@ namespace open3mod
                 ThreadPool.QueueUserWorkItem(
                     _ =>
                     {
-                        action(chunk);
+                        if (Thread.VolatileRead(ref cancelled[0]) == 0)
+                        {
+                            action(chunk);
+                        }                    
                         resetEvent.Set();
                     });
             }
-            
-            WaitHandle.WaitAll(resetEvents);
+            try
+            {
+                WaitHandle.WaitAll(resetEvents);
+            }
+            catch (ThreadInterruptedException ex)
+            {
+                Thread.VolatileWrite(ref cancelled[0], 1);
+                throw;
+            }
         }
 
         /// <summary>
