@@ -127,6 +127,9 @@ namespace open3mod
     {
         public List<EditVertex> Vertices { set; get; }
 
+        // Used to hold per-face meshes. Currently only populated by NormalVectorGenerator.
+        public Vector3D? Normal { set; get; }
+
         public EditFace()
         {
             Vertices = new List<EditVertex>();

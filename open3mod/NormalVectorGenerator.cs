@@ -29,7 +29,6 @@ namespace open3mod
     {
         private readonly Mesh _mesh;
         private readonly EditMesh _editMesh;
-        private readonly Dictionary<EditFace, Vector3D> _faceNormals = new Dictionary<EditFace, Vector3D>(); 
 
         public NormalVectorGenerator(Mesh mesh)
         {
@@ -62,57 +61,58 @@ namespace open3mod
 
         private void CalculateFaceNormals()
         {
-            _faceNormals.Clear();
-            foreach (var face in _editMesh.Faces)
-            {
-                Vector3D faceNormal = new Vector3D();
-                if (face.Vertices.Count ==  3)
+            _editMesh.Faces.ParallelDo(
+                face =>
                 {
-                    Vector3D v0 = face.Vertices[0].Position;
-                    Vector3D v1 = face.Vertices[1].Position;
-                    Vector3D v2 = face.Vertices[2].Position;
-                    faceNormal = Vector3D.Cross(v1-v0,v2-v1);
-                }
-                if (faceNormal.LengthSquared() > 0.0f)
-                {
-                    faceNormal.Normalize();
-                }
-                foreach (var vert in face.Vertices)
-                {
-                    vert.Normal = faceNormal;
-                }
-                _faceNormals[face] = faceNormal;
-            }
+                    Vector3D faceNormal = new Vector3D();
+                    if (face.Vertices.Count == 3)
+                    {
+                        Vector3D v0 = face.Vertices[0].Position;
+                        Vector3D v1 = face.Vertices[1].Position;
+                        Vector3D v2 = face.Vertices[2].Position;
+                        faceNormal = Vector3D.Cross(v1 - v0, v2 - v1);
+                    }
+                    if (faceNormal.LengthSquared() > 0.0f)
+                    {
+                        faceNormal.Normalize();
+                    }
+                    foreach (var vert in face.Vertices)
+                    {
+                        vert.Normal = faceNormal;
+                    }
+                    face.Normal = faceNormal;
+                });
         }
 
         private void SmoothNormals(float thresholdAngleInDegrees)
         {
             float thresholdAngleInRadians = (float)(thresholdAngleInDegrees*Math.PI/180.0);
             float cosThresholdAngle = (float)Math.Cos(thresholdAngleInRadians);
-            foreach (var vert in _editMesh.Vertices)
-            {              
-                var faceNormal = _faceNormals[vert.Face];
-                vert.Normal = faceNormal;
-                foreach (var adjacentVert in vert.AdjacentVertices)
+            _editMesh.Vertices.ParallelDo(
+                vert =>
                 {
-                    if (vert == adjacentVert)
+                    var faceNormal = vert.Face.Normal.Value;
+                    vert.Normal = faceNormal;
+                    foreach (var adjacentVert in vert.AdjacentVertices)
                     {
-                        continue;
+                        if (vert == adjacentVert)
+                        {
+                            continue;
+                        }
+                        var adjacentFace = adjacentVert.Face;
+                        var adjacentFaceNormal = adjacentFace.Normal.Value;
+                        if (Vector3D.Dot(faceNormal, adjacentFaceNormal) >= cosThresholdAngle)
+                        {
+                            vert.Normal += adjacentFaceNormal;
+                        }
                     }
-                    var adjacentFace = adjacentVert.Face;
-                    var adjacentFaceNormal = _faceNormals[adjacentFace];
-                    if (Vector3D.Dot(faceNormal, adjacentFaceNormal) >= cosThresholdAngle)
+                    if (vert.Normal.Value.LengthSquared() > 0.0f)
                     {
-                        vert.Normal += adjacentFaceNormal;
+                        var v = vert.Normal.Value;
+                        v.Normalize();
+                        vert.Normal = v;
                     }
-                }    
-                if (vert.Normal.Value.LengthSquared() > 0.0f)
-                {
-                    var v = vert.Normal.Value;
-                    v.Normalize();
-                    vert.Normal = v;
-                }
-            }
+                });
         }
     }
 }

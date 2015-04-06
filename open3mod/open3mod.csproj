@@ -208,6 +208,7 @@
     <Compile Include="OverlayLightSource.cs" />
     <Compile Include="OverlayNormals.cs" />
     <Compile Include="OverlaySkeleton.cs" />
+    <Compile Include="ParallelForEach.cs" />
     <Compile Include="PickingCameraController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
