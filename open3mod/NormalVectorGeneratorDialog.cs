@@ -99,10 +99,14 @@ namespace open3mod
                         float lastThresholdAngleInDegrees = -1.0f;
                         while (true)
                         {
-                            if (Math.Abs(lastThresholdAngleInDegrees - _thresholdAngleInDegrees) > 0.1f)
+                            if (Math.Abs(lastThresholdAngleInDegrees - _thresholdAngleInDegrees) > 0.01f)
                             {
-                                UpdateNormals();
-                                lastThresholdAngleInDegrees = _thresholdAngleInDegrees;
+                                try
+                                {
+                                    UpdateNormals();
+                                    lastThresholdAngleInDegrees = _thresholdAngleInDegrees;
+                                }
+                                catch (ThreadInterruptedException) { }                            
                             }
                             else
                             {
@@ -110,10 +114,11 @@ namespace open3mod
                                 {
                                     _syncEvent.WaitOne();
                                 }
-                                catch (ThreadInterruptedException)
+                                catch (ThreadAbortException)
                                 {
                                     break;
                                 }
+                                catch (ThreadInterruptedException) { }
                             }
                         }
                     });
@@ -122,6 +127,7 @@ namespace open3mod
             else
             {
                 _syncEvent.Set();
+                _updateThread.Interrupt();
             }
         }
 
@@ -134,7 +140,7 @@ namespace open3mod
             {
                 return;
             }
-            _updateThread.Interrupt();
+            _updateThread.Abort();
             _updateThread.Join();
             _updateThread = null;
         }
