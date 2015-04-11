@@ -144,6 +144,8 @@ namespace open3mod
 
     /// <summary>
     /// Editable mesh that stores rich adjacency information for vertices and faces.
+    /// 
+    /// Construction of EditMesh is expensive and should be avoided whenever possible.
     /// </summary>
     public class EditMesh
     {
@@ -341,12 +343,11 @@ namespace open3mod
             }
             // For each vertices, retrieve adjacent/identical vertices by looking
             // up neighbors within a very small (epsilon'ish) radius.
-            foreach (var face in Faces)
-            {
+            Faces.ParallelDo(face => {
                 foreach (var vert in face.Vertices)
                 {
                     var pos = vert.Position;
-                    var neighbors = tree.NearestNeighbors(new double[] {pos.X, pos.Y, pos.Z},
+                    var neighbors = tree.NearestNeighbors(new double[] { pos.X, pos.Y, pos.Z },
                         new SquareEuclideanDistanceFunction(),
                         int.MaxValue, 1e-5f);
                     foreach (var neighbor in neighbors)
@@ -354,7 +355,7 @@ namespace open3mod
                         vert.AdjacentVertices.Add(neighbor);
                     }
                 }
-            }
+            });
             // Vertices being adjacent should be a transitive relation, yet this is
             // not guaranteed if implemented through a search radius.
             HashSet<EditVertex> seen = new HashSet<EditVertex>();
