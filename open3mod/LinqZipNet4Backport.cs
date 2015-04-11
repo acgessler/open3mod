@@ -24,7 +24,8 @@ using System.Collections.Generic;
 namespace open3mod
 {
     // Zip() was added in .NET 4.0.
-    // http://blogs.msdn.com/b/ericlippert/archive/2009/05/07/zip-me-up.aspx
+    // http://blogs.msdn.com/b/ericlippert/archive/2009/05/07/zip-me-up.aspx, 
+    // - Added overload for Action
     public static class LinqZipNet4Backport
     {
         public static IEnumerable<TResult> Zip<TFirst, TSecond, TResult> (this IEnumerable<TFirst> first,
@@ -49,6 +50,22 @@ namespace open3mod
             using (IEnumerator<TSecond> e2 = second.GetEnumerator())
                 while (e1.MoveNext() && e2.MoveNext())
                     yield return resultSelector(e1.Current, e2.Current);
+        }
+
+        public static void ZipAction<TFirst, TSecond>(this IEnumerable<TFirst> first,
+            IEnumerable<TSecond> second,
+            Action<TFirst, TSecond> action)
+        {
+            if (first == null)
+                throw new ArgumentNullException("first");
+            if (second == null)
+                throw new ArgumentNullException("second");
+            if (action == null)
+                throw new ArgumentNullException("action");
+            using (IEnumerator<TFirst> e1 = first.GetEnumerator())
+            using (IEnumerator<TSecond> e2 = second.GetEnumerator())
+                while (e1.MoveNext() && e2.MoveNext())
+                    action(e1.Current, e2.Current);
         }
     }
 }
