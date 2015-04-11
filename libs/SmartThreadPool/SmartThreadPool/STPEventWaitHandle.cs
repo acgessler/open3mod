@@ -12,6 +12,16 @@ namespace Amib.Threading.Internal
 
         internal static bool WaitAll(WaitHandle[] waitHandles, int millisecondsTimeout, bool exitContext)
         {
+            // WaitAll() does not support waiting for multiple handles on STA threads.
+            // http://stackoverflow.com/questions/4192834/
+            if (Thread.CurrentThread.GetApartmentState() == ApartmentState.STA)
+            {
+                foreach (var e in waitHandles)
+                {
+                    e.WaitOne(millisecondsTimeout);
+                }
+                return true;
+            }
             return WaitHandle.WaitAll(waitHandles, millisecondsTimeout);
         }
 
