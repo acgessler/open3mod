@@ -386,6 +386,10 @@
       <Project>{33a00a90-c02e-474b-a8c0-3b0559873ea0}</Project>
       <Name>KDTree</Name>
     </ProjectReference>
+    <ProjectReference Include="..\libs\SmartThreadPool\SmartThreadPool\SmartThreadPool.csproj">
+      <Project>{74d4c33f-7cc8-4b2a-a7df-d8b6e63b6ebd}</Project>
+      <Name>SmartThreadPool</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
