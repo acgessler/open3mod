@@ -532,6 +532,7 @@ namespace open3mod
         private SettingsDialog _settings;
         private Tab.ViewSeparator _dragSeparator = Tab.ViewSeparator._Max;
         private string _captionStub;
+        private NormalVectorGeneratorDialog _normalsDialog;
         private const string LoadingTitlePostfix = " (loading)";
         private const string FailedTitlePostfix = " (failed)";
 
@@ -613,9 +614,15 @@ namespace open3mod
         }
 
 
+        public TabPage TabPageForTab(Tab tab)
+        {
+            return (TabPage) tab.Id;
+        }
+
+
         public TabUiSkeleton UiForTab(Tab tab)
         {
-            return ((TabUiSkeleton) ((TabPage) tab.Id).Controls[0]);
+            return ((TabUiSkeleton) TabPageForTab(tab).Controls[0]);
         }
 
 
@@ -1267,6 +1274,25 @@ namespace open3mod
                     activeTab.ActiveScene = new Scene(activeTab.File);
                     BeginInvoke(new Action(() => PopulateInspector(activeTab)));
                 }).Start();
+        }
+
+        private void OnGenerateNormals(object sender, EventArgs e)
+        {
+            var activeTab = UiState.ActiveTab;
+            if (activeTab.ActiveScene == null)
+            {
+                return;
+            }
+
+            var scene = activeTab.ActiveScene;
+            if (_normalsDialog != null)
+            {
+                _normalsDialog.Close();
+                _normalsDialog.Dispose();
+                _normalsDialog = null;
+            }
+            _normalsDialog = new NormalVectorGeneratorDialog(scene, scene.Raw.Meshes, TabPageForTab(activeTab).Text + " (all meshes)");
+            _normalsDialog.Show(this);
         }
     }
 }

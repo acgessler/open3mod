@@ -4,7 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using Amib.Threading;
 using Assimp;
+using Action = System.Action;
 
 namespace open3mod
 {
@@ -73,6 +75,16 @@ namespace open3mod
         }
 
         /// <summary>
+        /// Use a separate thread pool for coarse ( = mesh level ) parallelization.
+        /// 
+        /// STP shows deadlocks on recursive use. This can be mitigated by setting priorities,
+        /// but to use a separate thread pool is far safer. The extra cost of setting up a
+        /// few threads is relatively minor given that the threads will afterwards run
+        /// large jobs.
+        /// </summary>
+        private static readonly SmartThreadPool CoarseThreadPool = new SmartThreadPool();
+
+        /// <summary>
         /// Update normals in the current mesh and refresh the 3D view.
         /// </summary>
         private void UpdateNormals()
@@ -99,7 +111,7 @@ namespace open3mod
                     {
                         _scene.SetOverrideMesh(entry.Mesh, entry.PreviewMesh);
                     }
-                }, 1 /* granularity per-mesh */);       
+                }, 1 /* granularity per-mesh */, CoarseThreadPool);       
         }
 
         /// <summary>
@@ -162,7 +174,7 @@ namespace open3mod
             var originalMeshes = _meshesToProcess.Select(entry => MeshUtil.ShallowCopy(entry.Mesh)).ToList();
             _scene.UndoStack.PushAndDo("Compute Normals",
                 () =>
-                {    
+                {
                     foreach (var entry in _meshesToProcess)
                     {
                         MeshUtil.ShallowCopy(entry.Mesh, entry.PreviewMesh);
@@ -171,13 +183,13 @@ namespace open3mod
                 },
                 () =>
                 {
-                    _meshesToProcess.ZipAction<ProcessedMesh, Mesh>(originalMeshes,
+                    _meshesToProcess.ZipAction(originalMeshes,
                         (entry, origMesh) =>
                         {
                             MeshUtil.ShallowCopy(entry.Mesh, origMesh);
                         });
                     _scene.RequestRenderRefresh();
-                });    
+                });
         }
 
         /// <summary>

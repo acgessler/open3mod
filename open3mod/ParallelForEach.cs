@@ -33,7 +33,7 @@ namespace open3mod
                 return;
             }
             // WaitAll() does not support waiting for multiple handles on STA threads.
-            if (count < minChunkSize * 2 || Thread.CurrentThread.GetApartmentState() == ApartmentState.STA)
+            if (count < minChunkSize * 2)
             {
                 action(list);
                 return;
