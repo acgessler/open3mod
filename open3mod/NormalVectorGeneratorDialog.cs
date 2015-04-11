@@ -65,8 +65,6 @@ namespace open3mod
             }
 
             _mesh = mesh;
-            _previewMesh = null;
-            _generator = null;
             Text = string.Format("{0} - {1}", meshName, _baseText);
 
             OnChangeSmoothness(null, null);
@@ -168,6 +166,9 @@ namespace open3mod
         private void Revert()
         {
             _scene.SetOverrideMesh(_mesh, null);
+            MeshUtil.ClearMesh(_previewMesh);
+            _previewMesh = null;
+            _generator = null;
         }
 
 
@@ -223,6 +224,10 @@ namespace open3mod
         private void OnClose(object sender, FormClosingEventArgs e)
         {
             StopUpdateThread();
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                Revert();
+            }
         } 
     }
 }

@@ -56,5 +56,23 @@ namespace open3mod
             ShallowCopy(mesh, src);
             return mesh;
         }
+
+        public static void ClearMesh(Mesh mesh)
+        {
+            mesh.Vertices.Clear();
+            mesh.Normals.Clear();
+            mesh.Tangents.Clear();
+            mesh.BiTangents.Clear();
+            for (int i = 0; i < AiDefines.AI_MAX_NUMBER_OF_TEXTURECOORDS; ++i)
+            {
+                mesh.TextureCoordinateChannels[i].Clear();
+            }
+            for (int i = 0; i < AiDefines.AI_MAX_NUMBER_OF_COLOR_SETS; ++i)
+            {
+                mesh.VertexColorChannels[i].Clear();
+            }
+            mesh.Faces.Clear();
+            mesh.PrimitiveType = 0;
+        }
     }
 }
