@@ -7,8 +7,7 @@ using Assimp;
 namespace open3mod
 {
     /// <summary>
-    /// A child of |MeshDetailsDialog|. Tied to a single scene, but the mesh to which
-    /// it applies can change dynamically.
+    /// Dialog to compute normals for a single mesh.
     /// </summary>
     public sealed partial class NormalVectorGeneratorDialog : Form
     {
@@ -34,40 +33,25 @@ namespace open3mod
             get { return checkBoxRealtimePreview.Checked; }
         }
 
-        public NormalVectorGeneratorDialog(Scene scene)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="scene"></param>
+        /// <param name="mesh"></param>
+        /// <param name="meshName">Display name of the mesh for UI consistency</param>
+        public NormalVectorGeneratorDialog(Scene scene, Mesh mesh, string meshName)
         {
             Debug.Assert(scene != null);
-            _scene = scene;          
+            _scene = scene;
+            _mesh = mesh;
+
             InitializeComponent();
             _baseText = Text;
             buttonApply.Enabled = !checkBoxRealtimePreview.Checked;
-            trackBarAngle.Value = (int) _thresholdAngleInDegrees;
-        }
-
-        /// <summary>
-        /// Set mesh for which normals are computed.
-        /// </summary>
-        /// <param name="mesh"></param>
-        /// <param name="meshName"></param>
-        public void SetMesh(Mesh mesh, string meshName)
-        {
-            Debug.Assert(mesh != null);
-            Debug.Assert(meshName != null);
-            if (mesh == _mesh)
-            {
-                return;
-            }
-
-            StopUpdateThread();
-            if (_mesh != null)
-            {
-                Revert();
-            }
-
-            _mesh = mesh;
+        
             Text = string.Format("{0} - {1}", meshName, _baseText);
-
-            OnChangeSmoothness(null, null);
+            // This kicks of the update thread if real time updates are enabled
+            trackBarAngle.Value = (int) _thresholdAngleInDegrees;
         }
 
         /// <summary>

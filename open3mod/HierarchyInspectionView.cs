@@ -91,6 +91,10 @@ namespace open3mod
 
         private TreeNode _pivotNode = null;
 
+        private bool _preventExpand = false;
+        private DateTime _lastMouseDown = DateTime.Now;
+        private NormalVectorGeneratorDialog _normalsDialog;
+
         public HierarchyInspectionView(Scene scene, TabPage tabPageHierarchy)
         {
             _filterByMesh = new Dictionary<Node, List<Mesh>>();                     
@@ -992,10 +996,6 @@ namespace open3mod
             UpdateHiddenNodesInfoPanel();
         }
 
-
-        private bool _preventExpand = false;
-        private DateTime _lastMouseDown = DateTime.Now;
-
         private void OnMouseClick(object sender, MouseEventArgs e)
         {            
             if(e.Button != MouseButtons.Right)
@@ -1200,9 +1200,14 @@ namespace open3mod
             var nodeMeshPair = (KeyValuePair<Node, Mesh>)node.Tag;
             var mesh = nodeMeshPair.Value;
 
-            var dialog = new NormalVectorGeneratorDialog(_scene);
-            dialog.SetMesh(mesh, node.Text);
-            dialog.ShowDialog(this);
+            if (_normalsDialog != null)
+            {
+                _normalsDialog.Close();
+                _normalsDialog.Dispose();
+                _normalsDialog = null;
+            }
+            _normalsDialog = new NormalVectorGeneratorDialog(_scene, mesh, node.Text);
+            _normalsDialog.Show(this);
         }
     }
 }

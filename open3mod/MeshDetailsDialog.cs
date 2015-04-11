@@ -29,7 +29,7 @@ namespace open3mod
     {     
         private readonly MainWindow _host;
         private readonly Scene _scene;
-        private readonly NormalVectorGeneratorDialog _normalsDialog;
+        private NormalVectorGeneratorDialog _normalsDialog;
 
         private Mesh _mesh;
         private String _meshName;
@@ -39,7 +39,6 @@ namespace open3mod
             Debug.Assert(host != null);
             _host = host;
             _scene = scene;
-            _normalsDialog = new NormalVectorGeneratorDialog(_scene);
 
             InitializeComponent();
             // TODO(acgessler): Factor out preview generation and getting the checker pattern
@@ -120,12 +119,6 @@ namespace open3mod
 
             // Immediate material update to avoid poll delay.
             UpdateMaterialPreview();
-
-            // Update the mesh in child dialogs.
-            if (_normalsDialog.Visible)
-            {
-                _normalsDialog.SetMesh(_mesh, _meshName);
-            }
         }
 
 
@@ -214,11 +207,14 @@ namespace open3mod
 
         private void OnGenerateNormals(object sender, EventArgs e)
         {
-            if (!_normalsDialog.Visible)
+            if (_normalsDialog != null)
             {
-                _normalsDialog.SetMesh(_mesh, _meshName);
-                _normalsDialog.ShowDialog(this);
+                _normalsDialog.Close();
+                _normalsDialog.Dispose();
+                _normalsDialog = null;
             }
+            _normalsDialog = new NormalVectorGeneratorDialog(_scene, _mesh, _meshName);
+            _normalsDialog.Show(this);
         }
     }
 }
