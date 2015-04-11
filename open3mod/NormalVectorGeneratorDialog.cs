@@ -65,8 +65,8 @@ namespace open3mod
             }
 
             _mesh = mesh;
-            _previewMesh = MeshUtil.DeepCopy(_mesh);
-            _generator = new NormalVectorGenerator(_previewMesh);
+            _previewMesh = null;
+            _generator = null;
             Text = string.Format("{0} - {1}", meshName, _baseText);
 
             OnChangeSmoothness(null, null);
@@ -77,6 +77,14 @@ namespace open3mod
         /// </summary>
         private void UpdateNormals()
         {
+            if (_previewMesh == null)
+            {
+                _previewMesh = MeshUtil.DeepCopy(_mesh);
+            }
+            if (_generator == null)
+            {
+                _generator = new NormalVectorGenerator(_previewMesh);
+            }
             _generator.Compute(_thresholdAngleInDegrees);
             // Use BeginInvoke() to dispatch to the GUI/Render thread.
             if (InvokeRequired)
@@ -96,30 +104,18 @@ namespace open3mod
                 _updateThread = new Thread(
                     () =>
                     {
-                        float lastThresholdAngleInDegrees = -1.0f;
                         while (true)
                         {
-                            if (Math.Abs(lastThresholdAngleInDegrees - _thresholdAngleInDegrees) > 0.01f)
+                            try
                             {
-                                try
-                                {
-                                    UpdateNormals();
-                                    lastThresholdAngleInDegrees = _thresholdAngleInDegrees;
-                                }
-                                catch (ThreadInterruptedException) { }                            
+                                UpdateNormals();
+                                _syncEvent.WaitOne();
                             }
-                            else
+                            catch (ThreadAbortException)
                             {
-                                try
-                                {
-                                    _syncEvent.WaitOne();
-                                }
-                                catch (ThreadAbortException)
-                                {
-                                    break;
-                                }
-                                catch (ThreadInterruptedException) { }
+                                break;
                             }
+                            catch (ThreadInterruptedException) { }
                         }
                     });
                 _updateThread.Start();
@@ -193,7 +189,7 @@ namespace open3mod
         {
             _thresholdAngleInDegrees = trackBarAngle.Value;
             labelAngle.Text = string.Format("{0} Degrees", trackBarAngle.Value.ToString());
-            if (RealtimeUpdateEnabled)
+            if (RealtimeUpdateEnabled && _mesh != null)
             {
                 ScheduleUpdateNormals();
             }

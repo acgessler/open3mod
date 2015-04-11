@@ -30,6 +30,10 @@ namespace open3mod
         private readonly Mesh _mesh;
         private readonly EditMesh _editMesh;
 
+        /// <summary>
+        /// This is an expensive operation due to EditMesh construction, avoid.
+        /// </summary>
+        /// <param name="mesh"></param>
         public NormalVectorGenerator(Mesh mesh)
         {
             Debug.Assert(!mesh.PrimitiveType.HasFlag(PrimitiveType.Polygon));

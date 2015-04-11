@@ -81,7 +81,7 @@
             this.trackBarAngle.TabIndex = 4;
             this.trackBarAngle.TickFrequency = 5;
             this.trackBarAngle.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-            this.trackBarAngle.Scroll += new System.EventHandler(this.OnChangeSmoothness);
+            this.trackBarAngle.ValueChanged += new System.EventHandler(this.OnChangeSmoothness);
             // 
             // label1
             // 
