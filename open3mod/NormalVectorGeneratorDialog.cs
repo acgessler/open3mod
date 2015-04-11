@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using Assimp;
@@ -7,7 +9,7 @@ using Assimp;
 namespace open3mod
 {
     /// <summary>
-    /// Dialog to compute normals for a single mesh.
+    /// Dialog to compute normals for a single or multiple meshes.
     /// </summary>
     public sealed partial class NormalVectorGeneratorDialog : Form
     {
@@ -16,9 +18,14 @@ namespace open3mod
         private readonly Scene _scene;
         private readonly String _baseText;
 
-        private Mesh _mesh;
-        private Mesh _previewMesh;
-        private NormalVectorGenerator _generator;
+        private class ProcessedMesh
+        {
+            public Mesh Mesh { get; set; }
+            public Mesh PreviewMesh { get; set; }
+            public NormalVectorGenerator Generator { get; set; }
+        };
+
+        private List<ProcessedMesh> _meshesToProcess; 
         private float _thresholdAngleInDegrees = DefaultThresholdAngle;
         private Thread _updateThread;
         private readonly AutoResetEvent _syncEvent = new AutoResetEvent(false);
@@ -34,24 +41,35 @@ namespace open3mod
         }
 
         /// <summary>
-        /// 
+        /// Construct for a single mesh.
         /// </summary>
         /// <param name="scene"></param>
         /// <param name="mesh"></param>
         /// <param name="meshName">Display name of the mesh for UI consistency</param>
         public NormalVectorGeneratorDialog(Scene scene, Mesh mesh, string meshName)
+            : this(scene,new List<Mesh> { mesh }, meshName)
+        {    }
+
+
+        /// <summary>
+        /// Construct for a set of meshes.
+        /// </summary>
+        /// <param name="scene"></param>
+        /// <param name="mesh"></param>
+        /// <param name="description">String to display in title</param>
+        public NormalVectorGeneratorDialog(Scene scene, IEnumerable<Mesh> mesh, string description)
         {
             Debug.Assert(scene != null);
             _scene = scene;
-            _mesh = mesh;
+            _meshesToProcess = mesh.Select(m => new ProcessedMesh {Mesh = m}).ToList();
 
             InitializeComponent();
             _baseText = Text;
             buttonApply.Enabled = !checkBoxRealtimePreview.Checked;
-        
-            Text = string.Format("{0} - {1}", meshName, _baseText);
+
+            Text = string.Format("{0} - {1}", description, _baseText);
             // This kicks of the update thread if real time updates are enabled
-            trackBarAngle.Value = (int) _thresholdAngleInDegrees;
+            trackBarAngle.Value = (int)_thresholdAngleInDegrees;
         }
 
         /// <summary>
@@ -59,21 +77,29 @@ namespace open3mod
         /// </summary>
         private void UpdateNormals()
         {
-            if (_previewMesh == null)
-            {
-                _previewMesh = MeshUtil.DeepCopy(_mesh);
-            }
-            if (_generator == null)
-            {
-                _generator = new NormalVectorGenerator(_previewMesh);
-            }
-            _generator.Compute(_thresholdAngleInDegrees);
-            // Use BeginInvoke() to dispatch to the GUI/Render thread.
-            if (InvokeRequired)
-            {
-                BeginInvoke(new Action(() => _scene.SetOverrideMesh(_mesh, _previewMesh)));
-            }
-            else _scene.SetOverrideMesh(_mesh, _previewMesh);
+            _meshesToProcess.ParallelDo(
+                entry =>
+                {
+                    if (entry.PreviewMesh == null)
+                    {
+                        entry.PreviewMesh = MeshUtil.DeepCopy(entry.Mesh);
+                    }
+                    if (entry.Generator == null)
+                    {
+                        entry.Generator = new NormalVectorGenerator(entry.PreviewMesh);
+                    }
+                    entry.Generator.Compute(_thresholdAngleInDegrees);
+
+                    // Use BeginInvoke() to dispatch the mesh override change to the GUI/Render thread.
+                    if (InvokeRequired)
+                    {
+                        BeginInvoke(new Action(() => _scene.SetOverrideMesh(entry.Mesh, entry.PreviewMesh)));
+                    }
+                    else
+                    {
+                        _scene.SetOverrideMesh(entry.Mesh, entry.PreviewMesh);
+                    }
+                }, 1 /* granularity per-mesh */);       
         }
 
         /// <summary>
@@ -129,17 +155,27 @@ namespace open3mod
         private void Commit()
         {
             UpdateNormals();
-            _scene.SetOverrideMesh(_mesh, null);
-            Mesh originalMesh = MeshUtil.ShallowCopy(_mesh);
+            foreach (var entry in _meshesToProcess)
+            {
+                _scene.SetOverrideMesh(entry.Mesh, null);
+            }
+            var originalMeshes = _meshesToProcess.Select(entry => MeshUtil.ShallowCopy(entry.Mesh)).ToList();
             _scene.UndoStack.PushAndDo("Compute Normals",
                 () =>
-                {
-                    MeshUtil.ShallowCopy(_mesh, _previewMesh);
+                {    
+                    foreach (var entry in _meshesToProcess)
+                    {
+                        MeshUtil.ShallowCopy(entry.Mesh, entry.PreviewMesh);
+                    }
                     _scene.RequestRenderRefresh();
                 },
                 () =>
                 {
-                    MeshUtil.ShallowCopy(_mesh, originalMesh);
+                    _meshesToProcess.ZipAction<ProcessedMesh, Mesh>(originalMeshes,
+                        (entry, origMesh) =>
+                        {
+                            MeshUtil.ShallowCopy(entry.Mesh, origMesh);
+                        });
                     _scene.RequestRenderRefresh();
                 });    
         }
@@ -149,12 +185,13 @@ namespace open3mod
         /// </summary>
         private void Revert()
         {
-            _scene.SetOverrideMesh(_mesh, null);
-            MeshUtil.ClearMesh(_previewMesh);
-            _previewMesh = null;
-            _generator = null;
+            foreach (var entry in _meshesToProcess)
+            {
+                _scene.SetOverrideMesh(entry.Mesh, null);
+                MeshUtil.ClearMesh(entry.PreviewMesh);
+            }
+            _meshesToProcess.Clear();
         }
-
 
         // Event handlers
         private void CheckBoxRealtimePreviewCheckedChanged(object sender, EventArgs e)
@@ -174,7 +211,7 @@ namespace open3mod
         {
             _thresholdAngleInDegrees = trackBarAngle.Value;
             labelAngle.Text = string.Format("{0} Degrees", trackBarAngle.Value.ToString());
-            if (RealtimeUpdateEnabled && _mesh != null)
+            if (RealtimeUpdateEnabled)
             {
                 ScheduleUpdateNormals();
             }
