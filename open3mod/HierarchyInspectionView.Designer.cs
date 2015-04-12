@@ -50,14 +50,15 @@
             this.contextMenuStripMesh = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.detailsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.meshInfoPopup = new open3mod.MeshInfoPopup();
             this.nodeInfoPopup = new open3mod.NodeInfoPopup();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemRename = new System.Windows.Forms.ToolStripMenuItem();
             this.panelHiddenInfo.SuspendLayout();
             this.panel1.SuspendLayout();
             this.contextMenuStripTreeNode.SuspendLayout();
@@ -189,12 +190,13 @@
             this.centerPivotToolStripMenuItem,
             this.hideToolStripMenuItem,
             this.toolStripSeparator1,
+            this.toolStripMenuItemRename,
             this.toolStripMenuItem1,
             this.toolStripMenuItem2,
             this.toolStripSeparator2,
             this.detailsToolStripMenuItem});
             this.contextMenuStripTreeNode.Name = "contextMenuStripTreeNode";
-            this.contextMenuStripTreeNode.Size = new System.Drawing.Size(176, 126);
+            this.contextMenuStripTreeNode.Size = new System.Drawing.Size(176, 170);
             this.contextMenuStripTreeNode.Opening += new System.ComponentModel.CancelEventHandler(this.OpOpenNodeContextMenu);
             // 
             // centerPivotToolStripMenuItem
@@ -255,7 +257,7 @@
             this.toolStripSeparator4,
             this.detailsToolStripMenuItem1});
             this.contextMenuStripMesh.Name = "contextMenuStripMesh";
-            this.contextMenuStripMesh.Size = new System.Drawing.Size(174, 148);
+            this.contextMenuStripMesh.Size = new System.Drawing.Size(174, 126);
             // 
             // deleteToolStripMenuItem
             // 
@@ -269,6 +271,32 @@
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(170, 6);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(173, 22);
+            this.toolStripMenuItem3.Text = "Generate Normals";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.OnGenerateMeshNormals);
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Enabled = false;
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(173, 22);
+            this.toolStripMenuItem4.Text = "Generate Tangents";
+            // 
+            // toolStripMenuItem5
+            // 
+            this.toolStripMenuItem5.Enabled = false;
+            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(173, 22);
+            this.toolStripMenuItem5.Text = "Generate UVs";
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(170, 6);
             // 
             // detailsToolStripMenuItem1
             // 
@@ -294,31 +322,12 @@
             this.nodeInfoPopup.Size = new System.Drawing.Size(88, 90);
             this.nodeInfoPopup.TabIndex = 11;
             // 
-            // toolStripSeparator4
+            // toolStripMenuItemRename
             // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(170, 6);
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(173, 22);
-            this.toolStripMenuItem3.Text = "Generate Normals";
-            this.toolStripMenuItem3.Click += new System.EventHandler(this.OnGenerateMeshNormals);
-            // 
-            // toolStripMenuItem4
-            // 
-            this.toolStripMenuItem4.Enabled = false;
-            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(173, 22);
-            this.toolStripMenuItem4.Text = "Generate Tangents";
-            // 
-            // toolStripMenuItem5
-            // 
-            this.toolStripMenuItem5.Enabled = false;
-            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(173, 22);
-            this.toolStripMenuItem5.Text = "Generate UVs";
+            this.toolStripMenuItemRename.Name = "toolStripMenuItemRename";
+            this.toolStripMenuItemRename.Size = new System.Drawing.Size(175, 22);
+            this.toolStripMenuItemRename.Text = "Rename";
+            this.toolStripMenuItemRename.Click += new System.EventHandler(this.OnRenameNode);
             // 
             // HierarchyInspectionView
             // 
@@ -376,5 +385,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRename;
     }
 }

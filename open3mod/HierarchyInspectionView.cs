@@ -50,12 +50,12 @@ namespace open3mod
     public sealed partial class HierarchyInspectionView : UserControl
     {
         private readonly Scene _scene;
- 
+
         private int _nodeCount;
         private readonly Dictionary<Node, List<Mesh>> _filterByMesh;
 
         private const int AutoExpandLevels = 4;
-        private static new Color DefaultBackColor = Color.White;
+        private new static Color DefaultBackColor = Color.White;
         private static Color PositiveBackColor = Color.GreenYellow;
         private static Color SearchIterateBackColor = Color.Gold;
         private static Color NegativeBackColor = Color.OrangeRed;
@@ -77,7 +77,7 @@ namespace open3mod
         private readonly Dictionary<Node, NodePurpose> _nodePurposes;
 
         private readonly Dictionary<Node, TreeNode> _treeNodesBySceneNode;
-        private readonly Dictionary<KeyValuePair<Node, Mesh>, TreeNode> _treeNodesBySceneNodeMeshPair; 
+        private readonly Dictionary<KeyValuePair<Node, Mesh>, TreeNode> _treeNodesBySceneNodeMeshPair;
 
         // Static because all tabs share them - it is just annoying to have multiple
         // info dialogs open because it is impossible to keep track which belongs
@@ -97,7 +97,7 @@ namespace open3mod
 
         public HierarchyInspectionView(Scene scene, TabPage tabPageHierarchy)
         {
-            _filterByMesh = new Dictionary<Node, List<Mesh>>();                     
+            _filterByMesh = new Dictionary<Node, List<Mesh>>();
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
             Dock = DockStyle.Fill;
 
@@ -139,10 +139,7 @@ namespace open3mod
         /// </summary>
         public int CountVisible
         {
-            get
-            {
-                return _visibleNodes;
-            }
+            get { return _visibleNodes; }
         }
 
 
@@ -275,13 +272,13 @@ namespace open3mod
             else
             {
                 // First check if this node has assimp lights or cameras assigned.
-                for (var i = 0; i < _scene.Raw.CameraCount; ++i )
+                for (var i = 0; i < _scene.Raw.CameraCount; ++i)
                 {
                     if (_scene.Raw.Cameras[i].Name == node.Name)
                     {
                         purpose = NodePurpose.Camera;
                         break;
-                    }   
+                    }
                 }
                 if (purpose == NodePurpose.GenericMeshHolder)
                 {
@@ -336,7 +333,7 @@ namespace open3mod
                 }
             }
 
-            if(isSkeletonNode)
+            if (isSkeletonNode)
             {
                 purpose = NodePurpose.Joint;
             }
@@ -344,7 +341,7 @@ namespace open3mod
             _nodePurposes.Add(node, purpose);
             // TODO(acgessler): Proper icons for lights and cameras.
             var index = (int) purpose;
-            if(purpose == NodePurpose.Light || purpose == NodePurpose.Camera)
+            if (purpose == NodePurpose.Light || purpose == NodePurpose.Camera)
             {
                 index = 1;
             }
@@ -371,12 +368,12 @@ namespace open3mod
 
             var key = new KeyValuePair<Node, Mesh>(owner, mesh);
             var newUiNode = new TreeNode(desc)
-            {
-                Tag = key,
-                ImageIndex = 3,
-                SelectedImageIndex = 3,
-                ContextMenuStrip = contextMenuStripMesh
-            };
+                            {
+                                Tag = key,
+                                ImageIndex = 3,
+                                SelectedImageIndex = 3,
+                                ContextMenuStrip = contextMenuStripMesh
+                            };
 
             uiNode.Nodes.Add(newUiNode);
             _treeNodesBySceneNodeMeshPair[key] = newUiNode;
@@ -425,7 +422,7 @@ namespace open3mod
 
                 if (node != null && GetNodePurpose(itemAsNode) == NodePurpose.Joint)
                 {
-                    overrideSkeleton = true;           
+                    overrideSkeleton = true;
                 }
 
                 if (node != null)
@@ -457,7 +454,7 @@ namespace open3mod
                 _visibleInstancedMeshes = 1;
 
                 PopulateMeshInfoPopup(node);
-                if(_meshDiag != null && node != null)
+                if (_meshDiag != null && node != null)
                 {
                     SetMeshDetailDialogInfo(itemAsMesh.Value, node.Text);
                 }
@@ -468,7 +465,7 @@ namespace open3mod
             }
 
             _scene.SetVisibleNodes(_filterByMesh);
-        
+
             _visibleNodes = _filterByMesh.Count;
             UpdateStatistics();
 
@@ -493,7 +490,7 @@ namespace open3mod
                 meshInfoPopup.Location = nodeInfoPopup.Location;
             }
 
-            if(_tree.Width - node.Bounds.Right < 80)
+            if (_tree.Width - node.Bounds.Right < 80)
             {
                 meshInfoPopup.Visible = false;
                 nodeInfoPopup.Visible = false;
@@ -513,7 +510,7 @@ namespace open3mod
                 meshInfoPopup.Location = loc;
             }
 
-            meshInfoPopup.Populate(((KeyValuePair<Node, Mesh>)node.Tag).Value);
+            meshInfoPopup.Populate(((KeyValuePair<Node, Mesh>) node.Tag).Value);
         }
 
 
@@ -529,16 +526,16 @@ namespace open3mod
                 return;
             }
 
-            if(meshInfoPopup.Visible)
+            if (meshInfoPopup.Visible)
             {
                 nodeInfoPopup.Location = meshInfoPopup.Location;
             }
 
             meshInfoPopup.Visible = false;
             nodeInfoPopup.Visible = true;
-            if(wasVisible)
+            if (wasVisible)
             {
-                AnimatePopup(node.Bounds.Top);            
+                AnimatePopup(node.Bounds.Top);
             }
             else
             {
@@ -547,7 +544,7 @@ namespace open3mod
                 nodeInfoPopup.Location = loc;
             }
 
-            nodeInfoPopup.Populate(_scene.Raw, (Node)node.Tag, GetNodePurpose((Node)node.Tag));
+            nodeInfoPopup.Populate(_scene.Raw, (Node) node.Tag, GetNodePurpose((Node) node.Tag));
         }
 
 
@@ -560,24 +557,29 @@ namespace open3mod
 
             const int frameCount = 5;
             _popupAnimFramesRemaining = frameCount;
-            
-            if(_popupAnimTimer == null)
+
+            if (_popupAnimTimer == null)
             {
                 _popupAnimTimer = new Timer {Interval = 30};
                 _popupAnimTimer.Tick += (sender, args) =>
-                {
-                    var cInner = (nodeInfoPopup.Visible ? (Control) nodeInfoPopup : meshInfoPopup);
-                    --_popupAnimFramesRemaining;
+                                        {
+                                            var cInner = (nodeInfoPopup.Visible
+                                                ? (Control) nodeInfoPopup
+                                                : meshInfoPopup);
+                                            --_popupAnimFramesRemaining;
 
-                    var loc = cInner.Location;
-                    loc.Y = _targetLocY - (int)((_targetLocY - _oldLocY) * ((double)_popupAnimFramesRemaining / frameCount));
-                    cInner.Location = loc;
+                                            var loc = cInner.Location;
+                                            loc.Y = _targetLocY -
+                                                    (int)
+                                                        ((_targetLocY - _oldLocY)*
+                                                         ((double) _popupAnimFramesRemaining/frameCount));
+                                            cInner.Location = loc;
 
-                    if (_popupAnimFramesRemaining == 0)
-                    {
-                        _popupAnimTimer.Stop();
-                    }
-                };
+                                            if (_popupAnimFramesRemaining == 0)
+                                            {
+                                                _popupAnimTimer.Stop();
+                                            }
+                                        };
             }
 
             _popupAnimTimer.Start();
@@ -590,9 +592,9 @@ namespace open3mod
             {
                 _meshDiag = new MeshDetailsDialog(FindForm() as MainWindow, _scene);
                 _meshDiag.FormClosed += (o, args) =>
-                {
-                    _meshDiag = null;
-                };
+                                        {
+                                            _meshDiag = null;
+                                        };
                 _meshDiag.Show();
             }
             else
@@ -610,9 +612,9 @@ namespace open3mod
             {
                 _nodeDiag = new NodeItemsDialog();
                 _nodeDiag.FormClosed += (o, args) =>
-                {
-                    _nodeDiag = null;
-                };
+                                        {
+                                            _nodeDiag = null;
+                                        };
                 _nodeDiag.Show();
             }
             else
@@ -651,7 +653,7 @@ namespace open3mod
                     _hitNodeCursor = -1;
                 }
 
-                labelHitCount.Text = string.Format("{0} hit{1}", nodes.Count.ToString(CultureInfo.InvariantCulture), 
+                labelHitCount.Text = string.Format("{0} hit{1}", nodes.Count.ToString(CultureInfo.InvariantCulture),
                     nodes.Count == 1 ? "" : "s");
             }
             else
@@ -751,12 +753,12 @@ namespace open3mod
 
         private void OnNodeHover(object sender, TreeNodeMouseHoverEventArgs e)
         {
-            UpdateSceneVisibilityFilter(e.Node);           
+            UpdateSceneVisibilityFilter(e.Node);
         }
 
 
         private void AfterSelect(object sender, TreeViewEventArgs e)
-        {            
+        {
         }
 
 
@@ -771,7 +773,7 @@ namespace open3mod
             }
         }
 
-      
+
         private void OnClickSearchBox(object sender, EventArgs e)
         {
             if (_isInSearchMode)
@@ -799,9 +801,9 @@ namespace open3mod
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
-            if(e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Enter)
             {
-                e.SuppressKeyPress = false;  
+                e.SuppressKeyPress = false;
             }
         }
 
@@ -822,7 +824,8 @@ namespace open3mod
                     Debug.Assert(_hitNodes != null);
                     // Fix the last iterated element's background color
                     Debug.Assert(_hitNodes != null, "_hitNodes != null");
-                    _hitNodes[_hitNodeCursor > 0 ? _hitNodeCursor - 1 : _hitNodes.Count-1].BackColor = PositiveBackColor;
+                    _hitNodes[_hitNodeCursor > 0 ? _hitNodeCursor - 1 : _hitNodes.Count - 1].BackColor =
+                        PositiveBackColor;
                     // Select next search item
                     _tree.SelectedNode = _hitNodes[_hitNodeCursor];
                     _tree.SelectedNode.EnsureVisible();
@@ -837,7 +840,7 @@ namespace open3mod
 
         private void AfterNodeDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            ShowDetailsForTreeNode(e.Node);           
+            ShowDetailsForTreeNode(e.Node);
         }
 
 
@@ -846,7 +849,7 @@ namespace open3mod
             Debug.Assert(node != null);
             if (node.Tag is KeyValuePair<Node, Mesh>)
             {
-                var nodeMeshPair = (KeyValuePair<Node, Mesh>)node.Tag;
+                var nodeMeshPair = (KeyValuePair<Node, Mesh>) node.Tag;
                 var mesh = nodeMeshPair.Value;
                 Debug.Assert(mesh != null);
                 SetMeshDetailDialogInfo(mesh, node.Text);
@@ -866,8 +869,8 @@ namespace open3mod
         {
             // get sender TreeNode --
             // http://www.windows-tech.info/3/61534a0f5205ea18.php
-            var cms = sender as ContextMenuStrip ?? (ContextMenuStrip)((ToolStripMenuItem)sender).Owner;
-            var treeView = (TreeView)cms.SourceControl;
+            var cms = sender as ContextMenuStrip ?? (ContextMenuStrip) ((ToolStripMenuItem) sender).Owner;
+            var treeView = (TreeView) cms.SourceControl;
 
             var node = _tree.GetNodeAt(treeView.PointToClient(cms.Location));
             // Debug.Assert(node != null); // This happens for mysterious reasons.
@@ -889,11 +892,11 @@ namespace open3mod
         private void OnContextMenuHideNode(object sender, EventArgs e)
         {
             var node = GetTreeNodeForContextMenuEvent(sender);
-            if (node == null) 
+            if (node == null)
             {
                 return;
             }
-            if (IsNodeHidden((Node)node.Tag))
+            if (IsNodeHidden((Node) node.Tag))
             {
                 UnhideSubhierarchy(node);
             }
@@ -907,13 +910,13 @@ namespace open3mod
         private void OnContextMenuPivotNode(object sender, EventArgs e)
         {
             var node = GetTreeNodeForContextMenuEvent(sender);
-            if (node == null) 
+            if (node == null)
             {
                 return;
             }
 
             SetPivotNode(node);
-        }  
+        }
 
 
         private void SetPivotNode(TreeNode node)
@@ -941,7 +944,7 @@ namespace open3mod
             node.ForeColor = Color.DarkSlateGray;
             node.NodeFont = new Font(node.TreeView.Font, FontStyle.Italic);
 
-            var assimpNode = (Node)node.Tag;
+            var assimpNode = (Node) node.Tag;
             _scene.SetPivot(assimpNode);
         }
 
@@ -980,35 +983,35 @@ namespace open3mod
             }
             panelHiddenInfo.Visible = true;
             labelHiddenCount.Text = _hidden.Count.ToString(CultureInfo.InvariantCulture) +
-                (_hidden.Count > 1 ? " items are hidden" : " item is hidden");
+                                    (_hidden.Count > 1 ? " items are hidden" : " item is hidden");
         }
 
 
         private void UnhideSubhierarchy(TreeNode root)
         {
-            var node = (Node)root.Tag;
+            var node = (Node) root.Tag;
             Debug.Assert(_hidden.ContainsKey(node));
 
             root.ImageIndex = root.SelectedImageIndex = (int) GetNodePurpose(node);
-            _hidden.Remove(node);   
-       
+            _hidden.Remove(node);
+
             UpdateSceneVisibilityFilter();
             UpdateHiddenNodesInfoPanel();
         }
 
         private void OnMouseClick(object sender, MouseEventArgs e)
-        {            
-            if(e.Button != MouseButtons.Right)
+        {
+            if (e.Button != MouseButtons.Right)
             {
-                if(e.Button == MouseButtons.Left)
+                if (e.Button == MouseButtons.Left)
                 {
                     // http://stackoverflow.com/questions/1249312/disable-expanding-after-doubleclick
-                    int delta = (int)DateTime.Now.Subtract(_lastMouseDown).TotalMilliseconds;
+                    int delta = (int) DateTime.Now.Subtract(_lastMouseDown).TotalMilliseconds;
                     _preventExpand = (delta < SystemInformation.DoubleClickTime);
                     _lastMouseDown = DateTime.Now;
                 }
                 return;
-            }      
+            }
 
             // http://stackoverflow.com/questions/3166643/windows-forms-treeview-node-context-menu-problem
             // Select a node on which the user invokes the context menu - this
@@ -1039,7 +1042,7 @@ namespace open3mod
             linkLabel1.LinkVisited = false;
             foreach (var kv in _hidden)
             {
-                kv.Value.ImageIndex = kv.Value.SelectedImageIndex = (int)GetNodePurpose(kv.Key);
+                kv.Value.ImageIndex = kv.Value.SelectedImageIndex = (int) GetNodePurpose(kv.Key);
             }
 
             _hidden.Clear();
@@ -1053,7 +1056,7 @@ namespace open3mod
         {
             var cm = (ContextMenuStrip) sender;
             var root = GetTreeNodeForContextMenuEvent(sender);
-            if(root == null)
+            if (root == null)
             {
                 return;
             }
@@ -1068,7 +1071,7 @@ namespace open3mod
             cm.Items[1].Text = IsNodeHidden(node) ? "Unhide" : "Hide from View";
         }
 
-      
+
         private void OnDeleteNodePermanently(object sender, EventArgs e)
         {
             var node = GetTreeNodeForContextMenuEvent(sender);
@@ -1095,7 +1098,7 @@ namespace open3mod
             var parentChildIndex = node.Index;
             _scene.UndoStack.PushAndDo("Delete Node",
                 () =>
-                {                  
+                {
                     // Refresh node and parent. If we went back in history and rebuild the tree,
                     // it is possible that they no longer are valid TreeNodes. The assimp node
                     // however always stays a valid reference.
@@ -1105,7 +1108,7 @@ namespace open3mod
 
                     sceneNode.Remove();
                     node.Remove();
-                    FinishUpdatingTree();                  
+                    FinishUpdatingTree();
                 },
                 () =>
                 {
@@ -1155,7 +1158,7 @@ namespace open3mod
             {
                 return;
             }
-            var nodeMeshPair = (KeyValuePair<Node, Mesh>)node.Tag;
+            var nodeMeshPair = (KeyValuePair<Node, Mesh>) node.Tag;
             var mesh = nodeMeshPair.Value;
             var i = _scene.Raw.Meshes.TakeWhile(m => m != mesh).Count();
 
@@ -1197,7 +1200,7 @@ namespace open3mod
             {
                 return;
             }
-            var nodeMeshPair = (KeyValuePair<Node, Mesh>)node.Tag;
+            var nodeMeshPair = (KeyValuePair<Node, Mesh>) node.Tag;
             var mesh = nodeMeshPair.Value;
 
             if (_normalsDialog != null)
@@ -1208,6 +1211,46 @@ namespace open3mod
             }
             _normalsDialog = new NormalVectorGeneratorDialog(_scene, mesh, node.Text);
             _normalsDialog.Show(this);
+        }
+
+      
+
+        private void OnRenameNode(object sender, EventArgs e)
+        {
+            var node = GetTreeNodeForContextMenuEvent(sender);
+            if (node == null)
+            {
+                return;
+            }
+            var sceneNode = node.Tag as Node;
+            if (sceneNode == null)
+            {
+                return;
+            }
+
+            SafeRenamer renamer = new SafeRenamer(_scene);
+
+            HashSet<string> greylist = renamer.GetAllMeshNames();
+            greylist.UnionWith(renamer.GetAllMaterialNames());
+            greylist.UnionWith(renamer.GetAllAnimationNames());
+            RenameDialog dialog = new RenameDialog(sceneNode.Name, renamer.GetAllNodeNames(), greylist);
+            
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                string newName = dialog.NewName;
+                string oldName = sceneNode.Name;
+                _scene.UndoStack.PushAndDo("Rename Node",
+                    () =>
+                    {
+                        renamer.RenameNode(sceneNode, newName);
+                        node.Text = newName;
+                    },
+                    () =>
+                    {
+                        renamer.RenameNode(sceneNode, oldName);
+                        node.Text = oldName;
+                    });
+            }
         }
     }
 }
