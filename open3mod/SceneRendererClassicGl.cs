@@ -429,7 +429,7 @@ namespace open3mod
                         Vector3 normal;
                         if (skinning)
                         {
-                            Skinner.GetTransformedVertexNormal(node, index, (uint)indice, out normal);
+                            Skinner.GetTransformedVertexNormal(node, mesh, (uint)indice, out normal);
                         }
                         else
                         {
@@ -447,7 +447,7 @@ namespace open3mod
                     Vector3 pos;
                     if (skinning)
                     {
-                        Skinner.GetTransformedVertexPosition(node, index, (uint)indice, out pos);
+                        Skinner.GetTransformedVertexPosition(node, mesh, (uint)indice, out pos);
                     }
                     else
                     {

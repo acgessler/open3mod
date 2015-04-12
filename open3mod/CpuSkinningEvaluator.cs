@@ -18,6 +18,7 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///////////////////////////////////////////////////////////////////////////////////
 
+using System.Collections.Generic;
 using System.Diagnostics;
 using Assimp;
 using OpenTK;
@@ -32,7 +33,7 @@ namespace open3mod
     public class CpuSkinningEvaluator
     {
         private readonly Scene _owner;
-        private readonly CachedMeshData[] _cache;
+        private readonly Dictionary<Mesh, CachedMeshData> _cache;
         
         private sealed class CachedMeshData
         {
@@ -166,6 +167,21 @@ namespace open3mod
 
                 transformedPosOut = transformedPos;
             }
+
+            /// <summary>
+            /// Checks if the cache entry is compatible with the given mesh.
+            /// 
+            /// If the size of the mesh data changes, the cache no longer works for it
+            /// and should be re-generated.
+            /// 
+            /// TODO(acgessler): Devise a clean way of notifying dependents of scene changes.
+            /// </summary>
+            /// <param name="mesh"></param>
+            /// <returns></returns>
+            public bool CompatibleWith(Mesh mesh)
+            {
+                return _cachedPositions.Length == mesh.Vertices.Count;
+            }
         }
 
 
@@ -176,14 +192,15 @@ namespace open3mod
         public CpuSkinningEvaluator(Scene owner)
         {
             _owner = owner;
-            _cache = new CachedMeshData[owner.Raw.MeshCount];
-            for (var i = 0; i < _cache.Length; ++i)
+            _cache = new Dictionary<Mesh, CachedMeshData>();
+            for (var i = 0; i < owner.Raw.Meshes.Count; ++i)
             {
-                if (!owner.Raw.Meshes[i].HasBones)
+                var mesh = owner.Raw.Meshes[i];
+                if (!mesh.HasBones)
                 {
                     continue;
                 }
-                _cache[i] = new CachedMeshData(owner, owner.Raw.Meshes[i]);
+                _cache[mesh] = new CachedMeshData(owner, mesh);
             }
         }
 
@@ -196,12 +213,26 @@ namespace open3mod
         {
             foreach(var v in _cache)
             {
-                if (v == null)
-                {
-                    continue;
-                }
-                v.Update();
+                v.Value.Update();
             }
+        }
+
+
+        /// <summary>
+        /// Get the cache entry corresponding to a mesh.
+        /// 
+        /// Creates an entry if it does not exist yet.
+        /// </summary>
+        /// <param name="mesh"></param>
+        /// <returns></returns>
+        private CachedMeshData GetEntry(Mesh mesh)
+        {
+            CachedMeshData entry;
+            if (_cache.TryGetValue(mesh, out entry) && entry.CompatibleWith(mesh))
+            {
+                return entry;
+            }
+            return _cache[mesh] = new CachedMeshData(_owner, mesh);
         }
 
 
@@ -213,12 +244,12 @@ namespace open3mod
         /// <param name="meshIndex"></param>
         /// <param name="vertexIndex"></param>
         /// <param name="pos"></param>
-        public void GetTransformedVertexPosition(Node node, int meshIndex, uint vertexIndex, out Vector3 pos)
+        public void GetTransformedVertexPosition(Node node, Mesh mesh, uint vertexIndex, out Vector3 pos)
         {
-            _cache[meshIndex].GetTransformedVertexPosition(node, vertexIndex, out pos);
+            GetEntry(mesh).GetTransformedVertexPosition(node, vertexIndex, out pos);
         }
 
-
+     
         /// <summary>
         /// Get a transformed vertex normal for a given mesh + vertex index. The
         /// results of this method are cached between calls in the same frame.
@@ -227,9 +258,9 @@ namespace open3mod
         /// <param name="meshIndex"></param>
         /// <param name="vertexIndex"></param>
         /// <param name="nor"></param>
-        public void GetTransformedVertexNormal(Node node, int meshIndex, uint vertexIndex, out Vector3 nor)
+        public void GetTransformedVertexNormal(Node node, Mesh mesh, uint vertexIndex, out Vector3 nor)
         {
-            _cache[meshIndex].GetTransformedVertexNormal(node, vertexIndex, out nor);
+            GetEntry(mesh).GetTransformedVertexNormal(node, vertexIndex, out nor);
         }    
     }
 }

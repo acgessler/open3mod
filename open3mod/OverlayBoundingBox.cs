@@ -43,7 +43,7 @@ namespace open3mod
                 Vector3 tmp;
                 if (skinner != null && mesh.HasBones)
                 {
-                    skinner.GetTransformedVertexPosition(node, meshIndex, i, out tmp);
+                    skinner.GetTransformedVertexPosition(node, mesh, i, out tmp);
                 }
                 else
                 {

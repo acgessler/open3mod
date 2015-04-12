@@ -57,7 +57,7 @@ namespace open3mod
                 Vector3 v;
                 if (skinner != null && mesh.HasBones)
                 {
-                    skinner.GetTransformedVertexPosition(node, meshIndex, i, out v);
+                    skinner.GetTransformedVertexPosition(node, mesh, i, out v);
                 }
                 else
                 {
@@ -68,7 +68,7 @@ namespace open3mod
                 Vector3 n;
                 if (skinner != null)
                 {
-                    skinner.GetTransformedVertexNormal(node, meshIndex, i, out n);
+                    skinner.GetTransformedVertexNormal(node, mesh, i, out n);
                 }
                 else
                 {
