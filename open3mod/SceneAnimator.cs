@@ -425,6 +425,17 @@ namespace open3mod
 
             return outNode;
         }
+
+        /// <summary>
+        /// For use by SafeRenamer. This updates internal string keys to point to an updated node name.
+        /// </summary>
+        /// <param name="oldName"></param>
+        /// <param name="newName"></param>
+        public void RenameNode(string oldName, string newName)
+        {
+            _nodeStateByName[newName] = _nodeStateByName[oldName];
+            _nodeStateByName.Remove(oldName);
+        }
     }
 }
 

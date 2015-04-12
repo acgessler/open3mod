@@ -93,6 +93,9 @@ namespace open3mod
                     }
                 }
             }
+
+            // SceneAnimator is - unfortunately - name based.
+            _scene.SceneAnimator.RenameNode(oldName, newName);
         }
     }
 }
