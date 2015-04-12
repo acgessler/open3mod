@@ -42,7 +42,7 @@ namespace open3mod
         {
             buttonOk.Enabled = true;
             
-            if (textBoxNewName.Text == "")
+            if (textBoxNewName.Text.Trim() == "")
             {
                 labelStatus.ForeColor = Color.Red;
                 labelStatus.Text = "Name can not be empty.";
