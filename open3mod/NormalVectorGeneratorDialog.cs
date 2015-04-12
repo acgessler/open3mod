@@ -18,7 +18,6 @@ namespace open3mod
         private const float DefaultThresholdAngle = 45.0f;
 
         private readonly Scene _scene;
-        private readonly String _baseText;
 
         private class ProcessedMesh
         {
@@ -66,10 +65,9 @@ namespace open3mod
             _meshesToProcess = mesh.Select(m => new ProcessedMesh {Mesh = m}).ToList();
 
             InitializeComponent();
-            _baseText = Text;
             buttonApply.Enabled = !checkBoxRealtimePreview.Checked;
 
-            Text = string.Format("{0} - {1}", description, _baseText);
+            Text = string.Format("{0} - {1}", description, Text);
             // This kicks of the update thread if real time updates are enabled
             trackBarAngle.Value = (int)_thresholdAngleInDegrees;
         }
