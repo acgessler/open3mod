@@ -97,5 +97,17 @@ namespace open3mod
             // SceneAnimator is - unfortunately - name based.
             _scene.SceneAnimator.RenameNode(oldName, newName);
         }
+
+        /// <summary>
+        /// Rename a mesh to the given new name.
+        /// 
+        /// Does not create UndoStack entries itself, caller must do this.
+        /// </summary>
+        /// <param name="mesh"></param>
+        /// <param name="newName"></param>
+        public void RenameMesh(Mesh mesh, string newName)
+        {
+            mesh.Name = newName;
+        }
     }
 }

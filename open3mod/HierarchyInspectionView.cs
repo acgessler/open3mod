@@ -355,16 +355,13 @@ namespace open3mod
             return isSkeletonNode;
         }
 
-
         private void AddMeshNode(Node owner, Mesh mesh, int id, TreeNode uiNode)
         {
             Debug.Assert(uiNode != null);
             Debug.Assert(mesh != null);
 
             // Meshes need not be named, in this case we number them
-            var desc = "Mesh " + (!string.IsNullOrEmpty(mesh.Name)
-                ? ("\"" + mesh.Name + "\"")
-                : id.ToString(CultureInfo.InvariantCulture));
+            var desc = GetMeshDisplayName(mesh, id);
 
             var key = new KeyValuePair<Node, Mesh>(owner, mesh);
             var newUiNode = new TreeNode(desc)
@@ -377,6 +374,33 @@ namespace open3mod
 
             uiNode.Nodes.Add(newUiNode);
             _treeNodesBySceneNodeMeshPair[key] = newUiNode;
+        }
+
+        /// <summary>
+        /// Gets the display name for a given mesh.
+        /// 
+        /// Since meshes often are unnamed, this substitutes appropriate defaults
+        /// and also adds a general "Mesh" prefix to visually separate them from nodes.
+        /// </summary>
+        /// <param name="mesh">Mesh</param>
+        /// <param name="id">Mesh index</param>
+        /// <returns></returns>
+        private static string GetMeshDisplayName(Mesh mesh, int id)
+        {
+            return "Mesh " + (!string.IsNullOrEmpty(mesh.Name)
+                            ? ("\"" + mesh.Name + "\"")
+                            : id.ToString(CultureInfo.InvariantCulture));
+        }
+
+        /// <summary>
+        /// Finds the index of a mesh object. 
+        /// </summary>
+        /// <param name="mesh"></param>
+        /// <returns>Returns -1 if the mesh is not in the scene list of meshes.</returns>
+        private int GetIndexForMesh(Mesh mesh)
+        {
+            int idx = _scene.Raw.Meshes.SkipWhile(m => m != mesh).Count();
+            return idx >= _scene.Raw.Meshes.Count ? -1 : idx;
         }
 
 
@@ -1075,16 +1099,11 @@ namespace open3mod
         private void OnDeleteNodePermanently(object sender, EventArgs e)
         {
             var node = GetTreeNodeForContextMenuEvent(sender);
-
-            if (node == null)
+            if (node == null || (node.Tag as Node) == null)
             {
                 return;
             }
-            var sceneNode = node.Tag as Node;
-            if (sceneNode == null)
-            {
-                return;
-            }
+            var sceneNode = (Node)node.Tag;
             if (sceneNode.Parent == null)
             {
                 MessageBox.Show("The scene root node cannot be deleted", "Error",
@@ -1123,15 +1142,11 @@ namespace open3mod
         private void DeleteAllButThisNode(object sender, EventArgs e)
         {
             var node = GetTreeNodeForContextMenuEvent(sender);
-            if (node == null)
+            if (node == null || (node.Tag as Node) == null)
             {
                 return;
             }
-            var sceneNode = node.Tag as Node;
-            if (sceneNode == null)
-            {
-                return;
-            }
+            var sceneNode = (Node)node.Tag;
 
             var oldRootNode = _scene.Raw.RootNode;
             var oldParent = sceneNode.Parent;
@@ -1213,23 +1228,16 @@ namespace open3mod
             _normalsDialog.Show(this);
         }
 
-      
-
         private void OnRenameNode(object sender, EventArgs e)
         {
             var node = GetTreeNodeForContextMenuEvent(sender);
-            if (node == null)
+            if (node == null || (node.Tag as Node) == null)
             {
                 return;
             }
-            var sceneNode = node.Tag as Node;
-            if (sceneNode == null)
-            {
-                return;
-            }
+            var sceneNode = (Node)node.Tag;
 
             SafeRenamer renamer = new SafeRenamer(_scene);
-
             HashSet<string> greylist = renamer.GetAllMeshNames();
             greylist.UnionWith(renamer.GetAllMaterialNames());
             greylist.UnionWith(renamer.GetAllAnimationNames());
@@ -1249,6 +1257,43 @@ namespace open3mod
                     {
                         renamer.RenameNode(sceneNode, oldName);
                         node.Text = oldName;
+                    });
+            }
+        }
+
+        private void OnRenameMesh(object sender, EventArgs e)
+        {
+            var node = GetTreeNodeForContextMenuEvent(sender);
+            if (node == null || !(node.Tag as KeyValuePair<Node, Mesh>?).HasValue)
+            {
+                return;
+            }
+            var nodeMeshPair = (KeyValuePair<Node, Mesh>)node.Tag;
+            var mesh = nodeMeshPair.Value;
+
+            SafeRenamer renamer = new SafeRenamer(_scene);
+            HashSet<string> greylist = renamer.GetAllNodeNames();
+            greylist.UnionWith(renamer.GetAllMaterialNames());
+            greylist.UnionWith(renamer.GetAllAnimationNames());
+            // Mesh names need not be unique, but it's good if they are.
+            // Don't put in blacklist though.
+            greylist.UnionWith(renamer.GetAllMeshNames());
+            RenameDialog dialog = new RenameDialog(mesh.Name, new HashSet<string>(), greylist);
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                string newName = dialog.NewName;
+                string oldName = mesh.Name;
+                _scene.UndoStack.PushAndDo("Rename Mesh",
+                    () =>
+                    {
+                        renamer.RenameMesh(mesh, newName);
+                        node.Text = GetMeshDisplayName(mesh, GetIndexForMesh(mesh));
+                    },
+                    () =>
+                    {
+                        renamer.RenameMesh(mesh, oldName);
+                        node.Text = GetMeshDisplayName(mesh, GetIndexForMesh(mesh));
                     });
             }
         }

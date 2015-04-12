@@ -43,6 +43,7 @@
             this.centerPivotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItemRename = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -58,7 +59,7 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.meshInfoPopup = new open3mod.MeshInfoPopup();
             this.nodeInfoPopup = new open3mod.NodeInfoPopup();
-            this.toolStripMenuItemRename = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemRenameMesh = new System.Windows.Forms.ToolStripMenuItem();
             this.panelHiddenInfo.SuspendLayout();
             this.panel1.SuspendLayout();
             this.contextMenuStripTreeNode.SuspendLayout();
@@ -196,7 +197,7 @@
             this.toolStripSeparator2,
             this.detailsToolStripMenuItem});
             this.contextMenuStripTreeNode.Name = "contextMenuStripTreeNode";
-            this.contextMenuStripTreeNode.Size = new System.Drawing.Size(176, 170);
+            this.contextMenuStripTreeNode.Size = new System.Drawing.Size(176, 148);
             this.contextMenuStripTreeNode.Opening += new System.ComponentModel.CancelEventHandler(this.OpOpenNodeContextMenu);
             // 
             // centerPivotToolStripMenuItem
@@ -217,6 +218,13 @@
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(172, 6);
+            // 
+            // toolStripMenuItemRename
+            // 
+            this.toolStripMenuItemRename.Name = "toolStripMenuItemRename";
+            this.toolStripMenuItemRename.Size = new System.Drawing.Size(175, 22);
+            this.toolStripMenuItemRename.Text = "Rename";
+            this.toolStripMenuItemRename.Click += new System.EventHandler(this.OnRenameNode);
             // 
             // toolStripMenuItem1
             // 
@@ -249,6 +257,7 @@
             // contextMenuStripMesh
             // 
             this.contextMenuStripMesh.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemRenameMesh,
             this.deleteToolStripMenuItem,
             this.toolStripSeparator3,
             this.toolStripMenuItem3,
@@ -257,7 +266,7 @@
             this.toolStripSeparator4,
             this.detailsToolStripMenuItem1});
             this.contextMenuStripMesh.Name = "contextMenuStripMesh";
-            this.contextMenuStripMesh.Size = new System.Drawing.Size(174, 126);
+            this.contextMenuStripMesh.Size = new System.Drawing.Size(174, 170);
             // 
             // deleteToolStripMenuItem
             // 
@@ -322,12 +331,12 @@
             this.nodeInfoPopup.Size = new System.Drawing.Size(88, 90);
             this.nodeInfoPopup.TabIndex = 11;
             // 
-            // toolStripMenuItemRename
+            // toolStripMenuItemRenameMesh
             // 
-            this.toolStripMenuItemRename.Name = "toolStripMenuItemRename";
-            this.toolStripMenuItemRename.Size = new System.Drawing.Size(175, 22);
-            this.toolStripMenuItemRename.Text = "Rename";
-            this.toolStripMenuItemRename.Click += new System.EventHandler(this.OnRenameNode);
+            this.toolStripMenuItemRenameMesh.Name = "toolStripMenuItemRenameMesh";
+            this.toolStripMenuItemRenameMesh.Size = new System.Drawing.Size(173, 22);
+            this.toolStripMenuItemRenameMesh.Text = "Rename";
+            this.toolStripMenuItemRenameMesh.Click += new System.EventHandler(this.OnRenameMesh);
             // 
             // HierarchyInspectionView
             // 
@@ -386,5 +395,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRename;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRenameMesh;
     }
 }

@@ -63,8 +63,7 @@ namespace open3mod
             else if (_greylist.Contains(textBoxNewName.Text))
             {
                 labelStatus.ForeColor = Color.Orange;
-                labelStatus.Text = "Name is already used. It can be used again, but should be avoided.";
-                buttonOk.Enabled = false;
+                labelStatus.Text = "Name is already used. It can be used again,\nbut should be avoided.";
             }
             else if (textBoxNewName.Text.Contains(" ") || textBoxNewName.Text.Contains("\t"))
             {
