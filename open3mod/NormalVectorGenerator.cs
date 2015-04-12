@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Amib.Threading;
 using Assimp;
 
 namespace open3mod
@@ -29,6 +30,10 @@ namespace open3mod
     {
         private readonly Mesh _mesh;
         private readonly EditMesh _editMesh;
+
+        private static SmartThreadPool _threadPool = null;
+        private static readonly object ThreadPoolMutex = new object();
+        private const int ParallelizationChunkSize = 1000;
 
         /// <summary>
         /// This is an expensive operation due to EditMesh construction, avoid.
@@ -41,6 +46,18 @@ namespace open3mod
             lock (_mesh)
             {
                 _editMesh = new EditMesh(_mesh);
+            }
+
+            lock (ThreadPoolMutex)
+            {
+                if (_threadPool != null)
+                    return;
+                int cpuCount = Environment.ProcessorCount;
+                // One thread is busy rendering, so many extra threads that do not block on IO
+                // (which our computation-heavy jobs don't) easily starve the GUI. Thus,
+                // always reserve 25% and at least one core.
+                int jobCount = Math.Max(1, (cpuCount * 3) / 4);
+                _threadPool = new SmartThreadPool(1000, jobCount, jobCount);
             }
         }
 
@@ -85,7 +102,7 @@ namespace open3mod
                         vert.Normal = faceNormal;
                     }
                     face.Normal = faceNormal;
-                });
+                }, ParallelizationChunkSize, _threadPool);
         }
 
         private void SmoothNormals(float thresholdAngleInDegrees)
@@ -116,7 +133,7 @@ namespace open3mod
                         v.Normalize();
                         vert.Normal = v;
                     }
-                });
+                }, ParallelizationChunkSize, _threadPool);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace open3mod
             public NormalVectorGenerator Generator { get; set; }
         };
 
-        private List<ProcessedMesh> _meshesToProcess; 
+        private readonly List<ProcessedMesh> _meshesToProcess; 
         private float _thresholdAngleInDegrees = DefaultThresholdAngle;
         private Thread _updateThread;
         private readonly AutoResetEvent _syncEvent = new AutoResetEvent(false);
