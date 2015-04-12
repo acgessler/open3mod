@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Amib.Threading;
 using Assimp;
 using Action = System.Action;
+using Timer = System.Windows.Forms.Timer;
 
 namespace open3mod
 {
@@ -28,6 +29,8 @@ namespace open3mod
 
         private readonly List<ProcessedMesh> _meshesToProcess; 
         private float _thresholdAngleInDegrees = DefaultThresholdAngle;
+        private volatile float _lastCompletedUpdateAngle = -1.0f;
+        private volatile bool _isInitialUpdate = true;
         private Thread _updateThread;
         private readonly AutoResetEvent _syncEvent = new AutoResetEvent(false);
 
@@ -68,6 +71,14 @@ namespace open3mod
             buttonApply.Enabled = !checkBoxRealtimePreview.Checked;
 
             Text = string.Format("{0} - {1}", description, Text);
+            // Keep UX disabled until initial update is done.
+            foreach (Control control in Controls)
+            {
+                if (control != labelStatusText)
+                {
+                    control.Enabled = false;
+                }
+            }
             // This kicks of the update thread if real time updates are enabled
             trackBarAngle.Value = (int)_thresholdAngleInDegrees;
         }
@@ -85,8 +96,9 @@ namespace open3mod
         /// <summary>
         /// Update normals in the current mesh and refresh the 3D view.
         /// </summary>
-        private void UpdateNormals()
+        private void UpdateNormals(float angle)
         {
+            BeginInvoke(new Action(() => labelStatusText.Text = _isInitialUpdate ? "Preparing ..." : "Updating ..."));
             _meshesToProcess.ParallelDo(
                 entry =>
                 {
@@ -98,7 +110,7 @@ namespace open3mod
                     {
                         entry.Generator = new NormalVectorGenerator(entry.PreviewMesh);
                     }
-                    entry.Generator.Compute(_thresholdAngleInDegrees);
+                    entry.Generator.Compute(angle);
 
                     // Use BeginInvoke() to dispatch the mesh override change to the GUI/Render thread.
                     if (InvokeRequired)
@@ -109,7 +121,38 @@ namespace open3mod
                     {
                         _scene.SetOverrideMesh(entry.Mesh, entry.PreviewMesh);
                     }
-                }, 1 /* granularity per-mesh */, CoarseThreadPool);       
+                }, 1 /* granularity per-mesh */, CoarseThreadPool);
+            Action closeAction = null;
+            closeAction = new Action(
+                () =>
+                {
+                    if (!trackBarAngle.Capture)
+                    {
+                        labelStatusText.Text = "";
+                    }
+                    else
+                    {
+                        // If the mouse is currently captured, do not reset text to avoid flickering.
+                        // Instead, check again in 150ms.
+                        var timer = new Timer { Interval = 150 };
+                        timer.Tick += (sender, args) =>
+                        {
+                            timer.Enabled = false;
+                            closeAction();
+                        }
+                    ;
+                        timer.Start();
+                    }
+                    if (_isInitialUpdate)
+                    {
+                        foreach (Control control in Controls)
+                        {
+                            control.Enabled = true;
+                        }
+                        _isInitialUpdate = false;
+                    }
+                });
+            BeginInvoke(closeAction);
         }
 
         /// <summary>
@@ -126,7 +169,9 @@ namespace open3mod
                         {
                             try
                             {
-                                UpdateNormals();
+                                float angle = _thresholdAngleInDegrees;
+                                UpdateNormals(angle);
+                                _lastCompletedUpdateAngle = angle;
                                 _syncEvent.WaitOne();
                             }
                             catch (ThreadAbortException)
@@ -154,6 +199,7 @@ namespace open3mod
             {
                 return;
             }
+            labelStatusText.Text = "";
             _updateThread.Abort();
             _updateThread.Join();
             _updateThread = null;
@@ -164,7 +210,11 @@ namespace open3mod
         /// </summary>
         private void Commit()
         {
-            UpdateNormals();        
+            StopUpdateThread();
+            if (Math.Abs(_lastCompletedUpdateAngle - _thresholdAngleInDegrees) > 0.001f)
+            {
+                UpdateNormals(_thresholdAngleInDegrees);
+            }
             var meshesToProcess = _meshesToProcess.Select(_ => _).ToList();
             var originalMeshes = _meshesToProcess.Select(entry => MeshUtil.ShallowCopy(entry.Mesh)).ToList();
             _scene.UndoStack.PushAndDo("Compute Normals",
@@ -200,6 +250,7 @@ namespace open3mod
         /// </summary>
         private void Revert()
         {
+            StopUpdateThread();
             foreach (var entry in _meshesToProcess)
             {
                 _scene.SetOverrideMesh(entry.Mesh, null);
@@ -216,10 +267,6 @@ namespace open3mod
             {
                 ScheduleUpdateNormals();
             }
-            else
-            {
-                StopUpdateThread();
-            }
         }
 
         private void OnChangeSmoothness(object sender, EventArgs e)
@@ -234,15 +281,11 @@ namespace open3mod
 
         private void OnManualApply(object sender, EventArgs e)
         {
-            if (_updateThread == null)
-            {
-                UpdateNormals();
-            }
+            ScheduleUpdateNormals();
         }
 
         private void OnOk(object sender, EventArgs e)
         {
-            StopUpdateThread();
             Commit();
             // Do not Close() as this would dispose the dialog object.
             // MeshDetailsDialog keeps it and re-uses it.
@@ -251,7 +294,6 @@ namespace open3mod
 
         private void OnCancel(object sender, EventArgs e)
         {
-            StopUpdateThread();
             Revert();
             // See note on OnOk().
             Hide();

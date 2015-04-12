@@ -35,13 +35,14 @@
             this.label1 = new System.Windows.Forms.Label();
             this.labelAngle = new System.Windows.Forms.Label();
             this.checkBoxRealtimePreview = new System.Windows.Forms.CheckBox();
+            this.labelStatusText = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarAngle)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonOk
             // 
             this.buttonOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOk.Location = new System.Drawing.Point(314, 114);
+            this.buttonOk.Location = new System.Drawing.Point(339, 134);
             this.buttonOk.Name = "buttonOk";
             this.buttonOk.Size = new System.Drawing.Size(128, 23);
             this.buttonOk.TabIndex = 0;
@@ -52,7 +53,7 @@
             // buttonApply
             // 
             this.buttonApply.Enabled = false;
-            this.buttonApply.Location = new System.Drawing.Point(24, 114);
+            this.buttonApply.Location = new System.Drawing.Point(138, 134);
             this.buttonApply.Name = "buttonApply";
             this.buttonApply.Size = new System.Drawing.Size(65, 23);
             this.buttonApply.TabIndex = 1;
@@ -63,7 +64,7 @@
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(233, 114);
+            this.buttonCancel.Location = new System.Drawing.Point(258, 134);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 2;
@@ -77,7 +78,7 @@
             this.trackBarAngle.Location = new System.Drawing.Point(24, 39);
             this.trackBarAngle.Maximum = 180;
             this.trackBarAngle.Name = "trackBarAngle";
-            this.trackBarAngle.Size = new System.Drawing.Size(408, 45);
+            this.trackBarAngle.Size = new System.Drawing.Size(455, 45);
             this.trackBarAngle.TabIndex = 4;
             this.trackBarAngle.TickFrequency = 5;
             this.trackBarAngle.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
@@ -95,7 +96,7 @@
             // labelAngle
             // 
             this.labelAngle.AutoSize = true;
-            this.labelAngle.Location = new System.Drawing.Point(192, 71);
+            this.labelAngle.Location = new System.Drawing.Point(230, 71);
             this.labelAngle.Name = "labelAngle";
             this.labelAngle.Size = new System.Drawing.Size(46, 13);
             this.labelAngle.TabIndex = 6;
@@ -107,7 +108,7 @@
             this.checkBoxRealtimePreview.Checked = global::CoreSettings.CoreSettings.Default.NormalVectorGeneratorRealtimePreview;
             this.checkBoxRealtimePreview.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxRealtimePreview.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::CoreSettings.CoreSettings.Default, "NormalVectorGeneratorRealtimePreview", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxRealtimePreview.Location = new System.Drawing.Point(95, 117);
+            this.checkBoxRealtimePreview.Location = new System.Drawing.Point(24, 138);
             this.checkBoxRealtimePreview.Name = "checkBoxRealtimePreview";
             this.checkBoxRealtimePreview.Size = new System.Drawing.Size(108, 17);
             this.checkBoxRealtimePreview.TabIndex = 3;
@@ -115,13 +116,25 @@
             this.checkBoxRealtimePreview.UseVisualStyleBackColor = true;
             this.checkBoxRealtimePreview.CheckedChanged += new System.EventHandler(this.CheckBoxRealtimePreviewCheckedChanged);
             // 
+            // labelStatusText
+            // 
+            this.labelStatusText.AutoSize = true;
+            this.labelStatusText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelStatusText.ForeColor = System.Drawing.Color.Green;
+            this.labelStatusText.Location = new System.Drawing.Point(21, 111);
+            this.labelStatusText.Name = "labelStatusText";
+            this.labelStatusText.Size = new System.Drawing.Size(57, 13);
+            this.labelStatusText.TabIndex = 7;
+            this.labelStatusText.Text = "<Status>";
+            // 
             // NormalVectorGeneratorDialog
             // 
             this.AcceptButton = this.buttonOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(454, 146);
+            this.ClientSize = new System.Drawing.Size(491, 169);
+            this.Controls.Add(this.labelStatusText);
             this.Controls.Add(this.labelAngle);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.trackBarAngle);
@@ -134,7 +147,7 @@
             this.MinimizeBox = false;
             this.Name = "NormalVectorGeneratorDialog";
             this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Generate Normal Vectors";
             this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnClose);
@@ -153,5 +166,6 @@
         private System.Windows.Forms.TrackBar trackBarAngle;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label labelAngle;
+        private System.Windows.Forms.Label labelStatusText;
     }
 }
