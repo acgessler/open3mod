@@ -39,7 +39,4 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 The following external license files apply to cover third party
 components:
 
-LICENSE_Assimp
-LICENSE_AssimpNet
-LICENSE_DevilNet
-LICENSE_OpenTK
+licenses/LICENSE_*
