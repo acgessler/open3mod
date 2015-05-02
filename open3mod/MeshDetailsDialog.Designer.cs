@@ -28,11 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.checkedListBoxPerVertex = new System.Windows.Forms.CheckedListBox();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MeshDetailsDialog));
             this.labelVertexCount = new System.Windows.Forms.Label();
             this.labelFaceCount = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.checkedListBoxPerFace = new System.Windows.Forms.CheckedListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.labelMaterialName = new System.Windows.Forms.Label();
             this.pictureBoxMaterial = new System.Windows.Forms.PictureBox();
@@ -52,6 +51,12 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.listBoxVertexData = new System.Windows.Forms.ListBox();
+            this.buttonDeleteVertexData = new System.Windows.Forms.Button();
+            this.listBoxFaceData = new System.Windows.Forms.ListBox();
+            this.buttonDeleteFaceData = new System.Windows.Forms.Button();
+            this.button7 = new System.Windows.Forms.Button();
+            this.button8 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMaterial)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -60,30 +65,6 @@
             this.panel1.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // checkedListBoxPerVertex
-            // 
-            this.checkedListBoxPerVertex.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.checkedListBoxPerVertex.Enabled = false;
-            this.checkedListBoxPerVertex.FormattingEnabled = true;
-            this.checkedListBoxPerVertex.Items.AddRange(new object[] {
-            "Xyz Positions",
-            "Normals",
-            "Tangent Space Basis",
-            "Texture Coordinates #1",
-            "Texture Coordinates #2",
-            "Texture Coordinates #3",
-            "Texture Coordinates #4",
-            "Vertex Colors #1",
-            "Vertex Colors #2",
-            "Vertex Colors #3",
-            "Vertex Colors #4",
-            "Bone Weights"});
-            this.checkedListBoxPerVertex.Location = new System.Drawing.Point(16, 28);
-            this.checkedListBoxPerVertex.Name = "checkedListBoxPerVertex";
-            this.checkedListBoxPerVertex.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.checkedListBoxPerVertex.Size = new System.Drawing.Size(154, 107);
-            this.checkedListBoxPerVertex.TabIndex = 5;
             // 
             // labelVertexCount
             // 
@@ -113,26 +94,13 @@
             this.label4.Size = new System.Drawing.Size(0, 13);
             this.label4.TabIndex = 9;
             // 
-            // checkedListBoxPerFace
-            // 
-            this.checkedListBoxPerFace.Enabled = false;
-            this.checkedListBoxPerFace.FormattingEnabled = true;
-            this.checkedListBoxPerFace.Items.AddRange(new object[] {
-            "Triangles",
-            "Lines",
-            "Points"});
-            this.checkedListBoxPerFace.Location = new System.Drawing.Point(13, 28);
-            this.checkedListBoxPerFace.Name = "checkedListBoxPerFace";
-            this.checkedListBoxPerFace.Size = new System.Drawing.Size(136, 49);
-            this.checkedListBoxPerFace.TabIndex = 10;
-            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.labelMaterialName);
             this.groupBox1.Controls.Add(this.pictureBoxMaterial);
             this.groupBox1.Controls.Add(this.linkLabel1);
             this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Location = new System.Drawing.Point(407, 12);
+            this.groupBox1.Location = new System.Drawing.Point(460, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(196, 272);
             this.groupBox1.TabIndex = 12;
@@ -179,14 +147,15 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.buttonDeleteVertexData);
+            this.groupBox2.Controls.Add(this.listBoxVertexData);
             this.groupBox2.Controls.Add(this.button5);
             this.groupBox2.Controls.Add(this.button4);
             this.groupBox2.Controls.Add(this.button3);
             this.groupBox2.Controls.Add(this.button2);
-            this.groupBox2.Controls.Add(this.checkedListBoxPerVertex);
             this.groupBox2.Location = new System.Drawing.Point(211, 12);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(190, 272);
+            this.groupBox2.Size = new System.Drawing.Size(243, 272);
             this.groupBox2.TabIndex = 13;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Vertex Data";
@@ -285,7 +254,10 @@
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.checkedListBoxPerFace);
+            this.groupBox4.Controls.Add(this.button8);
+            this.groupBox4.Controls.Add(this.button7);
+            this.groupBox4.Controls.Add(this.buttonDeleteFaceData);
+            this.groupBox4.Controls.Add(this.listBoxFaceData);
             this.groupBox4.Location = new System.Drawing.Point(15, 85);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(190, 199);
@@ -299,7 +271,7 @@
             this.panel1.Controls.Add(this.label5);
             this.panel1.Location = new System.Drawing.Point(16, 19);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(556, 42);
+            this.panel1.Size = new System.Drawing.Size(609, 42);
             this.panel1.TabIndex = 16;
             // 
             // label5
@@ -318,16 +290,89 @@
             this.groupBox5.Controls.Add(this.panel1);
             this.groupBox5.Location = new System.Drawing.Point(15, 304);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(588, 71);
+            this.groupBox5.Size = new System.Drawing.Size(641, 71);
             this.groupBox5.TabIndex = 17;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Issues";
+            // 
+            // listBoxVertexData
+            // 
+            this.listBoxVertexData.FormattingEnabled = true;
+            this.listBoxVertexData.Items.AddRange(new object[] {
+            "Xyz Positions",
+            "Normals",
+            "Tangent Space Basis",
+            "Texture Coordinates #1",
+            "Texture Coordinates #2",
+            "Texture Coordinates #3",
+            "Texture Coordinates #4",
+            "Vertex Colors #1",
+            "Vertex Colors #2",
+            "Vertex Colors #3",
+            "Vertex Colors #4",
+            "Bone Weights"});
+            this.listBoxVertexData.Location = new System.Drawing.Point(16, 26);
+            this.listBoxVertexData.Name = "listBoxVertexData";
+            this.listBoxVertexData.Size = new System.Drawing.Size(180, 108);
+            this.listBoxVertexData.TabIndex = 4;
+            // 
+            // buttonDeleteVertexData
+            // 
+            this.buttonDeleteVertexData.Enabled = false;
+            this.buttonDeleteVertexData.Image = ((System.Drawing.Image)(resources.GetObject("buttonDeleteVertexData.Image")));
+            this.buttonDeleteVertexData.Location = new System.Drawing.Point(202, 26);
+            this.buttonDeleteVertexData.Name = "buttonDeleteVertexData";
+            this.buttonDeleteVertexData.Size = new System.Drawing.Size(26, 29);
+            this.buttonDeleteVertexData.TabIndex = 10;
+            this.buttonDeleteVertexData.UseVisualStyleBackColor = true;
+            // 
+            // listBoxFaceData
+            // 
+            this.listBoxFaceData.FormattingEnabled = true;
+            this.listBoxFaceData.Items.AddRange(new object[] {
+            "Points",
+            "Lines",
+            "Triangles"});
+            this.listBoxFaceData.Location = new System.Drawing.Point(16, 23);
+            this.listBoxFaceData.Name = "listBoxFaceData";
+            this.listBoxFaceData.Size = new System.Drawing.Size(133, 56);
+            this.listBoxFaceData.TabIndex = 5;
+            // 
+            // buttonDeleteFaceData
+            // 
+            this.buttonDeleteFaceData.Enabled = false;
+            this.buttonDeleteFaceData.Image = ((System.Drawing.Image)(resources.GetObject("buttonDeleteFaceData.Image")));
+            this.buttonDeleteFaceData.Location = new System.Drawing.Point(155, 23);
+            this.buttonDeleteFaceData.Name = "buttonDeleteFaceData";
+            this.buttonDeleteFaceData.Size = new System.Drawing.Size(26, 29);
+            this.buttonDeleteFaceData.TabIndex = 11;
+            this.buttonDeleteFaceData.UseVisualStyleBackColor = true;
+            // 
+            // button7
+            // 
+            this.button7.Enabled = false;
+            this.button7.Location = new System.Drawing.Point(16, 135);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(154, 23);
+            this.button7.TabIndex = 11;
+            this.button7.Text = "To Point Cloud";
+            this.button7.UseVisualStyleBackColor = true;
+            // 
+            // button8
+            // 
+            this.button8.Enabled = false;
+            this.button8.Location = new System.Drawing.Point(17, 106);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(154, 23);
+            this.button8.TabIndex = 12;
+            this.button8.Text = "To Wire Frame";
+            this.button8.UseVisualStyleBackColor = true;
             // 
             // MeshDetailsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(626, 387);
+            this.ClientSize = new System.Drawing.Size(668, 387);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
@@ -357,11 +402,9 @@
 
         #endregion
 
-        private System.Windows.Forms.CheckedListBox checkedListBoxPerVertex;
         private System.Windows.Forms.Label labelVertexCount;
         private System.Windows.Forms.Label labelFaceCount;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.CheckedListBox checkedListBoxPerFace;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button button1;
@@ -381,6 +424,12 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.PictureBox pictureBoxMaterial;
         private System.Windows.Forms.Label labelMaterialName;
+        private System.Windows.Forms.Button buttonDeleteVertexData;
+        private System.Windows.Forms.ListBox listBoxVertexData;
+        private System.Windows.Forms.ListBox listBoxFaceData;
+        private System.Windows.Forms.Button buttonDeleteFaceData;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Button button7;
 
 
 

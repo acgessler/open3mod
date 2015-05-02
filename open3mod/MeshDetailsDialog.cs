@@ -20,6 +20,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 using Assimp;
 
@@ -73,52 +74,71 @@ namespace open3mod
             labelBoneCount.Text = mesh.BoneCount.ToString();
             Text = string.Format("{0} - Details", meshName);
 
-            checkedListBoxPerFace.CheckOnClick = false;
-            checkedListBoxPerFace.SetItemCheckState(0,
-                mesh.PrimitiveType.HasFlag(PrimitiveType.Triangle)
-                ? CheckState.Checked
-                : CheckState.Unchecked);
-
-            checkedListBoxPerFace.SetItemCheckState(1,
-                mesh.PrimitiveType.HasFlag(PrimitiveType.Line)
-                ? CheckState.Checked
-                : CheckState.Unchecked);
-
-            checkedListBoxPerFace.SetItemCheckState(2,
-                mesh.PrimitiveType.HasFlag(PrimitiveType.Point)
-                ? CheckState.Checked
-                : CheckState.Unchecked);
-
-            checkedListBoxPerVertex.CheckOnClick = false;
-            checkedListBoxPerVertex.SetItemCheckState(0, CheckState.Checked);
-            checkedListBoxPerVertex.SetItemCheckState(1, mesh.HasNormals
-                ? CheckState.Checked
-                : CheckState.Unchecked);
-            checkedListBoxPerVertex.SetItemCheckState(2, mesh.HasTangentBasis
-                ? CheckState.Checked
-                : CheckState.Unchecked);
-
-            Debug.Assert(mesh.TextureCoordinateChannels.Length >= 4);
-            for (var i = 0; i < 4; ++i)
-            {
-                checkedListBoxPerVertex.SetItemCheckState(3 + i, mesh.HasTextureCoords(i)
-                    ? CheckState.Checked
-                    : CheckState.Unchecked);
-            }
-
-            Debug.Assert(mesh.VertexColorChannels.Length >= 4);
-            for (var i = 0; i < 4; ++i)
-            {
-                checkedListBoxPerVertex.SetItemCheckState(7 + i, mesh.HasVertexColors(i)
-                    ? CheckState.Checked
-                    : CheckState.Unchecked);
-            }
-            checkedListBoxPerVertex.SetItemCheckState(11, mesh.HasBones
-                ? CheckState.Checked
-                : CheckState.Unchecked);
+            UpdateFaceItems();
+            UpdateVertexItems();
 
             // Immediate material update to avoid poll delay.
             UpdateMaterialPreview();
+        }
+
+
+        private void UpdateFaceItems()
+        {
+            listBoxFaceData.Items.Clear();
+            if (_mesh.PrimitiveType.HasFlag(PrimitiveType.Triangle))
+            {
+                listBoxFaceData.Items.Add("Triangles");
+            }
+            if (_mesh.PrimitiveType.HasFlag(PrimitiveType.Line))
+            {
+                listBoxFaceData.Items.Add("Single Lines");
+            }
+            if (_mesh.PrimitiveType.HasFlag(PrimitiveType.Point))
+            {
+                listBoxFaceData.Items.Add("Single Points");
+            }
+        }
+
+
+        private void UpdateVertexItems()
+        {
+            object selectedItem = listBoxVertexData.SelectedItem;
+            listBoxVertexData.Items.Clear();
+            listBoxVertexData.Items.Add("XYZ Position");
+            if (_mesh.HasNormals)
+            {
+                listBoxVertexData.Items.Add("Normals");
+            }
+            if (_mesh.HasTangentBasis)
+            {
+                listBoxVertexData.Items.Add("Tangents");
+            }
+
+            for (var i = 0; i < _mesh.TextureCoordinateChannelCount; ++i)
+            {
+                listBoxVertexData.Items.Add(string.Format("UV Coordinates (#{0})", i));
+            }
+            for (var i = 0; i < _mesh.VertexColorChannelCount; ++i)
+            {
+                listBoxVertexData.Items.Add(string.Format("Vertex Color Set (#{0})", i));
+            }
+            if (_mesh.HasBones)
+            {
+                listBoxVertexData.Items.Add("Bone Weights");
+            }
+            if (_mesh.HasMeshAnimationAttachments)
+            {
+                listBoxVertexData.Items.Add("Vertex Animation");
+            }
+
+            // Restore previous selected item.
+            foreach (var item in listBoxVertexData.Items)
+            {
+                if (item.Equals(selectedItem))
+                {
+                    listBoxVertexData.SelectedItem = item;
+                }
+            }         
         }
 
 
