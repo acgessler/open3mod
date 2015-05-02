@@ -23,6 +23,10 @@ namespace open3mod
             OldName = oldName;
             InitializeComponent();
             textBoxNewName.Text = OldName;
+            if (OldName == "")
+            {
+                OnValidate(null, null);
+            }
             Text = string.Format("{0} {1}", Text, oldName);
         }
 
