@@ -102,6 +102,11 @@ namespace open3mod
                    Color.Zip(other.Color, AreNullableColorsApproxEqual).All(_ => _);
         }
 
+        public bool IsApproximatelySamePosition(EditVertex other)
+        {
+            return (Position - other.Position).LengthSquared() < MergeVectorEpsilon;
+        }
+
         private static bool AreNullableVectorsApproxEqual(Vector3D? a, Vector3D? b)
         {
             return a.HasValue == b.HasValue && (!a.HasValue ||
@@ -332,30 +337,58 @@ namespace open3mod
         private void ComputeAdjacentVertices()
         {
             // Put all vertices into a KDTree.
-            KDTree<EditVertex> tree = new KDTree<EditVertex>(3);
-            foreach (var face in Faces)
+            try
             {
-                foreach (var vert in face.Vertices)
+                KDTree<EditVertex> tree = new KDTree<EditVertex>(3);
+                foreach (var face in Faces)
                 {
-                    var pos = vert.Position;
-                    tree.AddPoint(new double[] {pos.X, pos.Y, pos.Z}, vert);
-                }
-            }
-            // For each vertices, retrieve adjacent/identical vertices by looking
-            // up neighbors within a very small (epsilon'ish) radius.
-            Faces.ParallelDo(face => {
-                foreach (var vert in face.Vertices)
-                {
-                    var pos = vert.Position;
-                    var neighbors = tree.NearestNeighbors(new double[] { pos.X, pos.Y, pos.Z },
-                        new SquareEuclideanDistanceFunction(),
-                        int.MaxValue, 1e-5f);
-                    foreach (var neighbor in neighbors)
+                    foreach (var vert in face.Vertices)
                     {
-                        vert.AdjacentVertices.Add(neighbor);
+                        var pos = vert.Position;
+                        tree.AddPoint(new double[] {pos.X, pos.Y, pos.Z}, vert);
                     }
                 }
-            });
+                // For each vertices, retrieve adjacent/identical vertices by looking
+                // up neighbors within a very small (epsilon'ish) radius.
+                Faces.ParallelDo(
+                    face =>
+                    {
+                        foreach (var vert in face.Vertices)
+                        {
+                            var pos = vert.Position;
+                            var neighbors = tree.NearestNeighbors(new double[] { pos.X, pos.Y, pos.Z },
+                                new SquareEuclideanDistanceFunction(),
+                                int.MaxValue, 1e-5f);
+                            foreach (var neighbor in neighbors)
+                            {
+                                vert.AdjacentVertices.Add(neighbor);
+                            }
+                        }
+                    });
+            }
+            catch (Exception ex)
+            {
+                // TODO: Log.
+                // Unfortunately, KDTree rarely crashes.
+                // Long-term: fix KDTree.
+                // Short-term: O(n^2) brute force workaround.
+                Faces.ParallelDo(
+                    face =>
+                    {
+                        foreach (var vert in face.Vertices)
+                        {
+                            var pos = vert.Position;
+                            foreach (var otherVert in Vertices)
+                            {
+                                if (vert.IsApproximatelySamePosition(otherVert))
+                                {
+                                    vert.AdjacentVertices.Add(otherVert);
+                                }
+                            }
+                        }
+                    });
+
+            }
             // Vertices being adjacent should be a transitive relation, yet this is
             // not guaranteed if implemented through a search radius.
             HashSet<EditVertex> seen = new HashSet<EditVertex>();

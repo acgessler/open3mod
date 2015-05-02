@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -98,7 +99,7 @@ namespace open3mod
         /// </summary>
         private void UpdateNormals(float angle)
         {
-            BeginInvoke(new Action(() => labelStatusText.Text = _isInitialUpdate ? "Preparing ..." : "Updating ..."));
+            SafeInvoke(new Action(() => labelStatusText.Text = _isInitialUpdate ? "Preparing ..." : "Updating ..."));
             _meshesToProcess.ParallelDo(
                 entry =>
                 {
@@ -152,7 +153,20 @@ namespace open3mod
                         _isInitialUpdate = false;
                     }
                 });
-            BeginInvoke(closeAction);
+            SafeInvoke(closeAction);
+        }
+
+        private void SafeInvoke(Action action)
+        {
+            try
+            {
+                BeginInvoke(action);
+            }
+            catch (InvalidOperationException)
+            {
+                // Ignore. This happens if this is scheduled before the dialog constructor returns.
+                return;
+            }
         }
 
         /// <summary>
