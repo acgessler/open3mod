@@ -70,7 +70,7 @@ namespace open3mod
             mat.Transpose();
             trafoMatrixViewControlGlobal.SetMatrix(ref mat);
 
-            Text = node.Name + " - Details";
+            Text = node.Name + " - Node Details";
 
             // populate statistics
             labelMeshesDirect.Text = node.MeshCount.ToString(CultureInfo.InvariantCulture);
