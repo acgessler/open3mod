@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -34,6 +35,7 @@ namespace open3mod
         private volatile bool _isInitialUpdate = true;
         private Thread _updateThread;
         private readonly AutoResetEvent _syncEvent = new AutoResetEvent(false);
+        private bool _committed = false;
 
         /// <summary>
         /// Real-time updates means that normals are updated upon moving the
@@ -257,6 +259,7 @@ namespace open3mod
                         });
                     _scene.RequestRenderRefresh();
                 });
+            _committed = true;
         }
 
         /// <summary>
@@ -313,7 +316,7 @@ namespace open3mod
         private void OnClose(object sender, FormClosingEventArgs e)
         {
             StopUpdateThread();
-            if (e.CloseReason == CloseReason.UserClosing)
+            if (!_committed)
             {
                 Revert();
             }
