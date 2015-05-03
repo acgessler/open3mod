@@ -453,7 +453,7 @@ namespace open3mod
                 {
                     PopulateNodeInfoPopup(node);
 
-                    if (_nodeDiag != null)
+                    if (_nodeDiag != null && _nodeDiag != null && _nodeDiag.HoverUpdateEnabled)
                     {
                         SetNodeDetailDialogInfo(itemAsNode);
                     }
@@ -478,7 +478,7 @@ namespace open3mod
                 _visibleInstancedMeshes = 1;
 
                 PopulateMeshInfoPopup(node);
-                if (_meshDiag != null && node != null)
+                if (_meshDiag != null && node != null && _meshDiag != null && _meshDiag.HoverUpdateEnabled)
                 {
                     SetMeshDetailDialogInfo(itemAsMesh.Value, node.Text);
                 }

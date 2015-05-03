@@ -118,6 +118,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>GraphicsSettings.settings</DependentUpon>
     </Compile>
+    <Compile Include="IHoverUpdateDialog.cs" />
     <Compile Include="LeapListener.cs">
       <SubType>Code</SubType>
     </Compile>

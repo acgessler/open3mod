@@ -27,7 +27,7 @@ using OpenTK;
 
 namespace open3mod
 {
-    public partial class NodeItemsDialog : Form
+    public partial class NodeItemsDialog : Form, IHoverUpdateDialog
     {
         private Node _node;
         private readonly Timer _timer;
@@ -169,6 +169,12 @@ namespace open3mod
                 }
                 trafoMatrixViewControlGlobal.Visible = true;
             }
+        }
+
+        public bool HoverUpdateEnabled
+        {
+            // Currently, we do not have any sub dialogs so Hover Update is permanently on.
+            get { return true; }
         }
     }
 }

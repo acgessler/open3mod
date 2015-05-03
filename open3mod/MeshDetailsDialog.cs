@@ -29,7 +29,7 @@ using Assimp;
 
 namespace open3mod
 {
-    public partial class MeshDetailsDialog : Form
+    public partial class MeshDetailsDialog : Form, IHoverUpdateDialog
     {
         private const string XyzPosition = "XYZ Position";
         private const string Normals = "Normals";
@@ -352,6 +352,7 @@ namespace open3mod
 
         // Version for T[] (TextureCoordChannels, VertexColorChannels). Passing in an indexed expression
         // directly yields a LINQ expression tree rooted at a BinaryExpression instead of MemberExpression.
+        // TODO(acgessler): Check for a way to express this with less duplication.
         private void DeleteVertexComponent<T>(string name, Expression<Func<Mesh, T[]>> property, int index) where T : new()
         {
             var expr = (MemberExpression)property.Body;
@@ -384,6 +385,12 @@ namespace open3mod
         private void OnSelectedVertexComponentChanged(object sender, EventArgs e)
         {
             buttonDeleteVertexData.Enabled = !listBoxVertexData.SelectedItem.Equals(XyzPosition);
+        }
+
+        public bool HoverUpdateEnabled
+        {
+            // Disallow Hover Update while any child dialogs are open.
+            get { return _normalsDialog == null; }
         }
     }
 }
