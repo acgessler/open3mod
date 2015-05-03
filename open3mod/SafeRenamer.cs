@@ -99,7 +99,7 @@ namespace open3mod
         }
 
         /// <summary>
-        /// Rename a mesh to the given new name.
+        /// Rename a mesh.
         /// 
         /// Does not create UndoStack entries itself, caller must do this.
         /// </summary>
@@ -108,6 +108,18 @@ namespace open3mod
         public void RenameMesh(Mesh mesh, string newName)
         {
             mesh.Name = newName;
+        }
+
+        /// <summary>
+        /// Rename an animation.
+        /// 
+        /// Does not create UndoStack entries itself, caller must do this.
+        /// </summary>
+        /// <param name="animation"></param>
+        /// <param name="newName"></param>
+        public void RenameAnimation(Animation animation, string newName)
+        {
+            animation.Name = newName;
         }
     }
 }

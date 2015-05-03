@@ -108,6 +108,10 @@ namespace open3mod
                 }
 
                 _activeAnim = value;
+                if (_activeAnim < -1)
+                {
+                    _activeAnim = -1;
+                }
                 _tree = CreateNodeTree(_raw.RootNode, null);
 
                 if (_activeAnim != -1)

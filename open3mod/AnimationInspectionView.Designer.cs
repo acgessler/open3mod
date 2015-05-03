@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AnimationInspectionView));
             this.textBoxGoto = new System.Windows.Forms.TextBox();
             this.labelGoto = new System.Windows.Forms.Label();
             this.buttonFaster = new System.Windows.Forms.Button();
@@ -37,13 +39,17 @@
             this.label3 = new System.Windows.Forms.Label();
             this.listBoxAnimations = new System.Windows.Forms.ListBox();
             this.panelAnimTools = new System.Windows.Forms.Panel();
-            this.labelSpeed = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.labelSpeedValue = new System.Windows.Forms.Label();
             this.labelGotoError = new System.Windows.Forms.Label();
+            this.labelSpeedValue = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.labelSpeed = new System.Windows.Forms.Label();
             this.timeSlideControl = new open3mod.TimeSlideControl();
+            this.contextMenuStripAnims = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelAnimTools.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.contextMenuStripAnims.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBoxGoto
@@ -136,6 +142,7 @@
             this.listBoxAnimations.Size = new System.Drawing.Size(335, 186);
             this.listBoxAnimations.TabIndex = 9;
             this.listBoxAnimations.SelectedIndexChanged += new System.EventHandler(this.OnChangeSelectedAnimation);
+            this.listBoxAnimations.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OnAnimationContextMenu);
             // 
             // panelAnimTools
             // 
@@ -155,15 +162,22 @@
             this.panelAnimTools.Size = new System.Drawing.Size(332, 458);
             this.panelAnimTools.TabIndex = 18;
             // 
-            // labelSpeed
+            // labelGotoError
             // 
-            this.labelSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelSpeed.AutoSize = true;
-            this.labelSpeed.Location = new System.Drawing.Point(251, 2);
-            this.labelSpeed.Name = "labelSpeed";
-            this.labelSpeed.Size = new System.Drawing.Size(41, 13);
-            this.labelSpeed.TabIndex = 18;
-            this.labelSpeed.Text = "Speed:";
+            this.labelGotoError.AutoSize = true;
+            this.labelGotoError.Location = new System.Drawing.Point(125, 196);
+            this.labelGotoError.Name = "labelGotoError";
+            this.labelGotoError.Size = new System.Drawing.Size(0, 13);
+            this.labelGotoError.TabIndex = 21;
+            // 
+            // labelSpeedValue
+            // 
+            this.labelSpeedValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelSpeedValue.AutoSize = true;
+            this.labelSpeedValue.Location = new System.Drawing.Point(291, 2);
+            this.labelSpeedValue.Name = "labelSpeedValue";
+            this.labelSpeedValue.Size = new System.Drawing.Size(0, 13);
+            this.labelSpeedValue.TabIndex = 20;
             // 
             // panel1
             // 
@@ -176,22 +190,15 @@
             this.panel1.Size = new System.Drawing.Size(242, 77);
             this.panel1.TabIndex = 19;
             // 
-            // labelSpeedValue
+            // labelSpeed
             // 
-            this.labelSpeedValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelSpeedValue.AutoSize = true;
-            this.labelSpeedValue.Location = new System.Drawing.Point(291, 2);
-            this.labelSpeedValue.Name = "labelSpeedValue";
-            this.labelSpeedValue.Size = new System.Drawing.Size(0, 13);
-            this.labelSpeedValue.TabIndex = 20;
-            // 
-            // labelGotoError
-            // 
-            this.labelGotoError.AutoSize = true;
-            this.labelGotoError.Location = new System.Drawing.Point(125, 196);
-            this.labelGotoError.Name = "labelGotoError";
-            this.labelGotoError.Size = new System.Drawing.Size(0, 13);
-            this.labelGotoError.TabIndex = 21;
+            this.labelSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelSpeed.AutoSize = true;
+            this.labelSpeed.Location = new System.Drawing.Point(251, 2);
+            this.labelSpeed.Name = "labelSpeed";
+            this.labelSpeed.Size = new System.Drawing.Size(41, 13);
+            this.labelSpeed.TabIndex = 18;
+            this.labelSpeed.Text = "Speed:";
             // 
             // timeSlideControl
             // 
@@ -206,6 +213,29 @@
             this.timeSlideControl.Size = new System.Drawing.Size(332, 67);
             this.timeSlideControl.TabIndex = 17;
             // 
+            // contextMenuStripAnims
+            // 
+            this.contextMenuStripAnims.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.deleteToolStripMenuItem,
+            this.renameToolStripMenuItem});
+            this.contextMenuStripAnims.Name = "contextMenuStripAnims";
+            this.contextMenuStripAnims.Size = new System.Drawing.Size(118, 48);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("deleteToolStripMenuItem.Image")));
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.OnDeleteAnimation);
+            // 
+            // renameToolStripMenuItem
+            // 
+            this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.renameToolStripMenuItem.Text = "Rename";
+            this.renameToolStripMenuItem.Click += new System.EventHandler(this.OnRenameAnimation);
+            // 
             // AnimationInspectionView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -218,6 +248,7 @@
             this.panelAnimTools.ResumeLayout(false);
             this.panelAnimTools.PerformLayout();
             this.panel1.ResumeLayout(false);
+            this.contextMenuStripAnims.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -239,6 +270,9 @@
         private System.Windows.Forms.Label labelSpeed;
         private System.Windows.Forms.Label labelSpeedValue;
         private System.Windows.Forms.Label labelGotoError;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripAnims;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem renameToolStripMenuItem;
 
     }
 }

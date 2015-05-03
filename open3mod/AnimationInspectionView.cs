@@ -19,9 +19,11 @@
 ///////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using Assimp;
 
 namespace open3mod
 {
@@ -51,24 +53,14 @@ namespace open3mod
             InitializeComponent();
 
             tabPageAnimations.Controls.Add(this);
-
             listBoxAnimations.Items.Add("None (Bind Pose)");
 
             if (scene.Raw.Animations != null)
             {
                 foreach (var anim in scene.Raw.Animations)
                 {
-                    var dur = anim.DurationInTicks;
-                    if (anim.TicksPerSecond > 1e-10)
-                    {
-                        dur /= anim.TicksPerSecond;
-                    }
-                    else
-                    {
-                        dur /= SceneAnimator.DefaultTicksPerSecond;
-                    }
-                    listBoxAnimations.Items.Add(string.Format("{0} ({1}s)", anim.Name, dur.ToString("0.000")));
-                }                
+                    listBoxAnimations.Items.Add(FormatAnimationName(anim));
+                }
             }
             listBoxAnimations.SelectedIndex = 0;
 
@@ -88,6 +80,21 @@ namespace open3mod
                     _scene.SceneAnimator.AnimationCursor = args.NewPosition;
                 }
             };
+        }
+
+        private static string FormatAnimationName(Animation anim)
+        {
+            var dur = anim.DurationInTicks;
+            if (anim.TicksPerSecond > 1e-10)
+            {
+                dur /= anim.TicksPerSecond;
+            }
+            else
+            {
+                dur /= SceneAnimator.DefaultTicksPerSecond;
+            }
+            string text = string.Format("{0} ({1}s)", anim.Name, dur.ToString("0.000"));
+            return text;
         }
 
 
@@ -141,7 +148,7 @@ namespace open3mod
 
                 BeginInvoke(new MethodInvoker(() =>
                 {
-                    labelSpeedValue.Text = _animPlaybackSpeed.ToString("0.00") + "x";
+                    labelSpeedValue.Text = string.Format("{0}x", _animPlaybackSpeed.ToString("0.00"));
                 }));
             }
         }
@@ -183,7 +190,7 @@ namespace open3mod
             _scene.SceneAnimator.ActiveAnimation = listBoxAnimations.SelectedIndex - 1;
             if (_scene.SceneAnimator.ActiveAnimation >= 0)
             {
-                var anim = _scene.Raw.Animations[_scene.SceneAnimator.ActiveAnimation];
+                var anim = ActiveRawAnimation;
                 foreach (var control in panelAnimTools.Controls)
                 {
                     if (control == buttonSlower && _speedAdjust == -MaxSpeedAdjustLevels ||
@@ -212,6 +219,11 @@ namespace open3mod
 
                 StopPlayingTimer();
             }
+        }
+
+        private Animation ActiveRawAnimation
+        {
+            get { return _scene.Raw.Animations[listBoxAnimations.SelectedIndex - 1]; }
         }
 
 
@@ -277,6 +289,68 @@ namespace open3mod
             }
             Debug.Assert(pos >= 0);
             _scene.SceneAnimator.AnimationCursor = pos;
+        }
+
+        private void OnDeleteAnimation(object sender, EventArgs e)
+        {
+            // TODO
+        }
+
+        private void OnRenameAnimation(object sender, EventArgs e)
+        {
+            if (ActiveRawAnimation == null)
+            {
+                return;
+            }
+            Animation animation = ActiveRawAnimation;
+
+            SafeRenamer renamer = new SafeRenamer(_scene);
+            // Animations names need not be unique even amongst themselves, but it's good if they are.
+            // Put all names in the entire scene into the greylist.           
+            RenameDialog dialog = new RenameDialog(animation.Name, new HashSet<string>(),
+                renamer.GetAllAnimationNames());
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                string newName = dialog.NewName;
+                string oldName = animation.Name;
+                _scene.UndoStack.PushAndDo("Rename Animation",
+                    () =>
+                    {
+                        renamer.RenameAnimation(animation, newName);
+                        listBoxAnimations.Items[FindAnimationIndex(animation) + 1] = FormatAnimationName(animation);
+                    },
+                    () =>
+                    {
+                        renamer.RenameAnimation(animation, oldName);
+                        listBoxAnimations.Items[FindAnimationIndex(animation) + 1] = FormatAnimationName(animation);
+                    });
+            }
+        }
+
+        private int FindAnimationIndex(Animation animation)
+        {
+            int i = 0;
+            foreach (Animation anim in _scene.Raw.Animations)
+            {
+                if (anim == animation)
+                {
+                    return i;
+                }
+                ++i;
+            }
+            return -1;
+        }
+
+        private void OnAnimationContextMenu(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right) return;
+            var item = listBoxAnimations.IndexFromPoint(e.Location);
+            if (item >= 0)
+            {
+                listBoxAnimations.SelectedIndex = item;
+                contextMenuStripAnims.Show(listBoxAnimations, e.Location);
+            }
         }
     }
 }
