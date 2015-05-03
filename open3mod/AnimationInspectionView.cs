@@ -154,6 +154,16 @@ namespace open3mod
         }
 
 
+        private Animation ActiveRawAnimation
+        {
+            get {
+                return listBoxAnimations.SelectedIndex == 0
+                    ? null
+                    : _scene.Raw.Animations[listBoxAnimations.SelectedIndex - 1];
+            }
+        }
+
+
         private void StopPlayingTimer()
         {
             if (_timer != null)
@@ -221,12 +231,6 @@ namespace open3mod
             }
         }
 
-        private Animation ActiveRawAnimation
-        {
-            get { return _scene.Raw.Animations[listBoxAnimations.SelectedIndex - 1]; }
-        }
-
-
         private void OnPlay(object sender, EventArgs e)
         {
             Playing = !Playing;
@@ -293,7 +297,27 @@ namespace open3mod
 
         private void OnDeleteAnimation(object sender, EventArgs e)
         {
-            // TODO
+            Animation animation = ActiveRawAnimation;
+            if (animation == null)
+            {
+                return;
+            }
+            int oldIndex = FindAnimationIndex(animation);
+            _scene.UndoStack.PushAndDo("Delete Animation " + animation.Name,
+                // Do
+                () =>
+                {
+                    _scene.Raw.Animations.Remove(animation);
+                    listBoxAnimations.Items.RemoveAt(oldIndex + 1);
+                    _scene.SceneAnimator.ActiveAnimation = -1;
+                },
+                // Undo
+                () =>
+                {
+                    _scene.Raw.Animations.Insert(oldIndex, animation);
+                    listBoxAnimations.Items.Insert(oldIndex + 1, FormatAnimationName(animation));
+                    listBoxAnimations.SelectedIndex = oldIndex + 1;
+                });
         }
 
         private void OnRenameAnimation(object sender, EventArgs e)
@@ -316,20 +340,11 @@ namespace open3mod
                 string oldName = animation.Name;
                 _scene.UndoStack.PushAndDo("Rename Animation",
                     // Do
-                    () =>
-                    {
-                        renamer.RenameAnimation(animation, newName);                       
-                    },
+                    () => renamer.RenameAnimation(animation, newName),
                     // Undo
-                    () =>
-                    {
-                        renamer.RenameAnimation(animation, oldName);
-                    },
+                    () => renamer.RenameAnimation(animation, oldName),
                     // Update
-                    () =>
-                    {
-                        listBoxAnimations.Items[FindAnimationIndex(animation) + 1] = FormatAnimationName(animation);
-                    });
+                    () => listBoxAnimations.Items[FindAnimationIndex(animation) + 1] = FormatAnimationName(animation));
             }
         }
 
@@ -351,7 +366,7 @@ namespace open3mod
         {
             if (e.Button != MouseButtons.Right) return;
             var item = listBoxAnimations.IndexFromPoint(e.Location);
-            if (item >= 0)
+            if (item > 0) // Exclude 0 (Bind Pose)
             {
                 listBoxAnimations.SelectedIndex = item;
                 contextMenuStripAnims.Show(listBoxAnimations, e.Location);
