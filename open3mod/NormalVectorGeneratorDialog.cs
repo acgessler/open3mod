@@ -235,16 +235,19 @@ namespace open3mod
             var originalMeshes = _meshesToProcess.Select(entry => MeshUtil.ShallowCopy(entry.Mesh)).ToList();
             _scene.UndoStack.PushAndDo("Compute Normals",
                 () =>
-                {
-                    foreach (var entry in meshesToProcess)
-                    {
-                        _scene.SetOverrideMesh(entry.Mesh, null);
-                    }
+                {                   
                     foreach (var entry in meshesToProcess)
                     {
                         MeshUtil.ShallowCopy(entry.Mesh, entry.PreviewMesh);
                     }
-                    _scene.RequestRenderRefresh();
+                },
+                () =>
+                {
+                    meshesToProcess.ZipAction(originalMeshes,
+                        (entry, origMesh) =>
+                        {
+                            MeshUtil.ShallowCopy(entry.Mesh, origMesh);
+                        });
                 },
                 () =>
                 {
@@ -252,11 +255,6 @@ namespace open3mod
                     {
                         _scene.SetOverrideMesh(entry.Mesh, null);
                     }
-                    meshesToProcess.ZipAction(originalMeshes,
-                        (entry, origMesh) =>
-                        {
-                            MeshUtil.ShallowCopy(entry.Mesh, origMesh);
-                        });
                     _scene.RequestRenderRefresh();
                 });
             _committed = true;

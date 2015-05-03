@@ -330,20 +330,12 @@ namespace open3mod
             T oldValue = (T)prop.GetValue(_mesh, null);
             var mesh = _mesh;
             _scene.UndoStack.PushAndDo(String.Format("Mesh \"{0}\": delete {1}", _meshName, name),
+                () => prop.SetValue(mesh, new T(), null),
+                () => prop.SetValue(mesh, oldValue, null),
                 () =>
                 {
-                    prop.SetValue(mesh, new T(), null);
                     _scene.RequestRenderRefresh();
                     if (mesh == _mesh) // Only update UI if the dialog instance still displays the mesh.
-                    {
-                        UpdateVertexItems();
-                    }
-                },
-                () =>
-                {
-                    prop.SetValue(mesh, oldValue, null);
-                    _scene.RequestRenderRefresh();
-                    if (mesh == _mesh)
                     {
                         UpdateVertexItems();
                     }
@@ -362,18 +354,10 @@ namespace open3mod
             T oldValue = ((T[])prop.GetValue(_mesh, null))[index];
             var mesh = _mesh;
             _scene.UndoStack.PushAndDo(String.Format("Mesh \"{0}\": delete {1}", _meshName, name),
+                () => ((T[])prop.GetValue(_mesh, null))[index] = new T(),
+                () => ((T[])prop.GetValue(_mesh, null))[index] = oldValue,
                 () =>
                 {
-                    ((T[])prop.GetValue(_mesh, null))[index] = new T();
-                    _scene.RequestRenderRefresh();
-                    if (mesh == _mesh)
-                    {
-                        UpdateVertexItems();
-                    }
-                },
-                () =>
-                {
-                    ((T[])prop.GetValue(_mesh, null))[index] = oldValue;
                     _scene.RequestRenderRefresh();
                     if (mesh == _mesh)
                     {

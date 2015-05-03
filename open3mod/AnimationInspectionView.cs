@@ -315,14 +315,19 @@ namespace open3mod
                 string newName = dialog.NewName;
                 string oldName = animation.Name;
                 _scene.UndoStack.PushAndDo("Rename Animation",
+                    // Do
                     () =>
                     {
-                        renamer.RenameAnimation(animation, newName);
-                        listBoxAnimations.Items[FindAnimationIndex(animation) + 1] = FormatAnimationName(animation);
+                        renamer.RenameAnimation(animation, newName);                       
                     },
+                    // Undo
                     () =>
                     {
                         renamer.RenameAnimation(animation, oldName);
+                    },
+                    // Update
+                    () =>
+                    {
                         listBoxAnimations.Items[FindAnimationIndex(animation) + 1] = FormatAnimationName(animation);
                     });
             }

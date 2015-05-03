@@ -28,6 +28,7 @@ namespace open3mod
 {
     public delegate void UndoDelegate();
     public delegate void RedoDelegate();
+    public delegate void UpdateDelegate();
 
     public class UndoStackEntry
     {
@@ -63,6 +64,31 @@ namespace open3mod
             redo();
 
             ++_cursor;
+        }
+
+        /// <summary>
+        /// Same as PushAndDo(desc, redo, undo) but also calls the specified UpdateDelegate after
+        /// both the undo and redo operation.
+        /// 
+        /// This is to avoid code duplication if some UI elements needs to be updated in either case.
+        /// </summary>
+        /// <param name="description"></param>
+        /// <param name="redo"></param>
+        /// <param name="undo"></param>
+        /// <param name="update"></param>
+        public void PushAndDo(String description, RedoDelegate redo, UndoDelegate undo, UpdateDelegate update)
+        {
+            PushAndDo(description,
+                () =>
+                {
+                    redo();
+                    update();
+                },
+                () =>
+                {
+                    undo();
+                    update();
+                });
         }
 
         public bool CanUndo()

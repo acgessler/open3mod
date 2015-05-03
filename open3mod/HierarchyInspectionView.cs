@@ -1127,7 +1127,6 @@ namespace open3mod
 
                     sceneNode.Remove();
                     node.Remove();
-                    FinishUpdatingTree();
                 },
                 () =>
                 {
@@ -1135,8 +1134,8 @@ namespace open3mod
                     oldSceneParent.Children.Insert(oldSceneParentChildPosition, sceneNode);
                     sceneNode.Parent = oldSceneParent;
                     parent.Nodes.Insert(parentChildIndex, node);
-                    FinishUpdatingTree();
-                });
+                },
+                FinishUpdatingTree);
         }
 
         private void DeleteAllButThisNode(object sender, EventArgs e)
@@ -1155,15 +1154,13 @@ namespace open3mod
                 {
                     _scene.Raw.RootNode = sceneNode;
                     sceneNode.Parent = null;
-                    // Re-build the tree from scratch.
-                    RebuildTree();
                 },
                 () =>
                 {
                     _scene.Raw.RootNode = oldRootNode;
                     sceneNode.Parent = oldParent;
-                    RebuildTree();
-                });
+                },
+                RebuildTree);
         }
 
         private void OnDeleteMesh(object sender, EventArgs e)
@@ -1197,15 +1194,14 @@ namespace open3mod
 
                     nodeMeshPair.Key.MeshIndices = newList;
                     node.Remove();
-                    FinishUpdatingTree();
                 },
                 () =>
                 {
                     node = _treeNodesBySceneNodeMeshPair[nodeMeshPair];
                     nodeMeshPair.Key.MeshIndices = oldList;
                     parent.Nodes.Insert(parentChildIndex, node);
-                    FinishUpdatingTree();
-                });
+                },
+                FinishUpdatingTree);
         }
 
         private void OnGenerateMeshNormals(object sender, EventArgs e)
@@ -1287,12 +1283,14 @@ namespace open3mod
                 _scene.UndoStack.PushAndDo("Rename Mesh",
                     () =>
                     {
-                        renamer.RenameMesh(mesh, newName);
-                        node.Text = GetMeshDisplayName(mesh, GetIndexForMesh(mesh));
+                        renamer.RenameMesh(mesh, newName);                       
                     },
                     () =>
                     {
                         renamer.RenameMesh(mesh, oldName);
+                    },
+                    () =>
+                    {
                         node.Text = GetMeshDisplayName(mesh, GetIndexForMesh(mesh));
                     });
             }
