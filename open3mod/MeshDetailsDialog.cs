@@ -19,15 +19,23 @@
 ///////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Windows.Forms;
 using Assimp;
 
 namespace open3mod
 {
     public partial class MeshDetailsDialog : Form
-    {     
+    {
+        private const string XyzPosition = "XYZ Position";
+        private const string Normals = "Normals";
+        private const string Tangents = "Tangents";
+        private const string BoneWeights = "Bone Weights";
+        private const string VertexAnimation = "Vertex Animation";
         private readonly MainWindow _host;
         private readonly Scene _scene;
         private NormalVectorGeneratorDialog _normalsDialog;
@@ -104,31 +112,31 @@ namespace open3mod
         {
             object selectedItem = listBoxVertexData.SelectedItem;
             listBoxVertexData.Items.Clear();
-            listBoxVertexData.Items.Add("XYZ Position");
+            listBoxVertexData.Items.Add(XyzPosition);
             if (_mesh.HasNormals)
             {
-                listBoxVertexData.Items.Add("Normals");
+                listBoxVertexData.Items.Add(Normals);
             }
             if (_mesh.HasTangentBasis)
             {
-                listBoxVertexData.Items.Add("Tangents");
+                listBoxVertexData.Items.Add(Tangents);
             }
 
             for (var i = 0; i < _mesh.TextureCoordinateChannelCount; ++i)
             {
-                listBoxVertexData.Items.Add(string.Format("UV Coordinates (#{0})", i));
+                listBoxVertexData.Items.Add(UVCoordinates(i));
             }
             for (var i = 0; i < _mesh.VertexColorChannelCount; ++i)
             {
-                listBoxVertexData.Items.Add(string.Format("Vertex Color Set (#{0})", i));
+                listBoxVertexData.Items.Add(VertexColors(i));
             }
             if (_mesh.HasBones)
             {
-                listBoxVertexData.Items.Add("Bone Weights");
+                listBoxVertexData.Items.Add(BoneWeights);
             }
             if (_mesh.HasMeshAnimationAttachments)
             {
-                listBoxVertexData.Items.Add("Vertex Animation");
+                listBoxVertexData.Items.Add(VertexAnimation);
             }
 
             // Restore previous selected item.
@@ -139,6 +147,16 @@ namespace open3mod
                     listBoxVertexData.SelectedItem = item;
                 }
             }         
+        }
+
+        private static string VertexColors(int i)
+        {
+            return string.Format("Vertex Color Set (#{0})", i);
+        }
+
+        private static string UVCoordinates(int i)
+        {
+            return string.Format("UV Coordinates (#{0})", i);
         }
 
 
@@ -235,6 +253,137 @@ namespace open3mod
             }
             _normalsDialog = new NormalVectorGeneratorDialog(_scene, _mesh, _meshName);
             _normalsDialog.Show(this);
+
+            // Disable this dialog for the duration of the NormalsVectorGeneratorDialog.
+            // The latter replaces the mesh being displayed with a temporary preview
+            // mesh, so changes made to the source mesh would not be visible. This is
+            // very confusing, so disallow it.
+            EnableDialogControls(false);
+            _normalsDialog.FormClosed +=
+                (o, args) =>
+                {
+                    if (IsDisposed)
+                    {
+                        return;
+                    }
+                    _normalsDialog = null;
+                    EnableDialogControls(true);
+                    // Unless the user canceled the operation, Normals were added.
+                    UpdateVertexItems();
+                };
+        }
+
+        private void EnableDialogControls(bool enabled)
+        {
+            // Only update children. If the form itself is disabled, it acts like a
+            // blocked dialog and can no longer be moved.
+            foreach (Control c in Controls)
+            {
+                c.Enabled = enabled;
+            }
+        }
+
+        private void OnDeleteSelectedVertexComponent(object sender, EventArgs e)
+        {
+            string item = (string) listBoxVertexData.SelectedItem;
+            if (item == null || item == XyzPosition)
+            {
+                return;
+            }
+            switch (item)
+            {
+                case Normals:
+                    DeleteVertexComponent(Normals, m => m.Normals);
+                    break;
+                case Tangents:
+                    DeleteVertexComponent(Tangents, m => m.Tangents);
+                    // TODO(acgessler): We should also delete bitangents.
+                    break;
+                case VertexAnimation:
+                    DeleteVertexComponent(VertexAnimation, m => m.MeshAnimationAttachments);
+                    break;
+                case BoneWeights:
+                    DeleteVertexComponent(BoneWeights, m => m.Bones);
+                    break;
+                default:
+                    for (var i = 0; i < _mesh.TextureCoordinateChannelCount; ++i)
+                    {
+                        if (item != UVCoordinates(i)) continue;
+                        DeleteVertexComponent(UVCoordinates(i), m => m.TextureCoordinateChannels, i);
+                        break;
+                    }
+                    for (var i = 0; i < _mesh.VertexColorChannelCount; ++i)
+                    {
+                        if (item != VertexColors(i)) continue;
+                        DeleteVertexComponent(VertexColors(i), m => m.VertexColorChannels, i);
+                        break;
+                    }
+                    break;
+            }
+        }
+
+        private void DeleteVertexComponent<T>(string name, Expression<Func<Mesh, T>> property) where T : new()
+        {
+            var expr = (MemberExpression)property.Body;
+            var prop = (PropertyInfo)expr.Member;
+
+            T oldValue = (T)prop.GetValue(_mesh, null);
+            var mesh = _mesh;
+            _scene.UndoStack.PushAndDo(String.Format("Mesh \"{0}\": delete {1}", _meshName, name),
+                () =>
+                {
+                    prop.SetValue(mesh, new T(), null);
+                    _scene.RequestRenderRefresh();
+                    if (mesh == _mesh) // Only update UI if the dialog instance still displays the mesh.
+                    {
+                        UpdateVertexItems();
+                    }
+                },
+                () =>
+                {
+                    prop.SetValue(mesh, oldValue, null);
+                    _scene.RequestRenderRefresh();
+                    if (mesh == _mesh)
+                    {
+                        UpdateVertexItems();
+                    }
+                });
+        }
+
+        // Version for T[] (TextureCoordChannels, VertexColorChannels). Passing in an indexed expression
+        // directly yields a LINQ expression tree rooted at a BinaryExpression instead of MemberExpression.
+        private void DeleteVertexComponent<T>(string name, Expression<Func<Mesh, T[]>> property, int index) where T : new()
+        {
+            var expr = (MemberExpression)property.Body;
+            var prop = (PropertyInfo)expr.Member;
+            var indexes = new object[] { index };
+
+            T oldValue = ((T[])prop.GetValue(_mesh, null))[index];
+            var mesh = _mesh;
+            _scene.UndoStack.PushAndDo(String.Format("Mesh \"{0}\": delete {1}", _meshName, name),
+                () =>
+                {
+                    ((T[])prop.GetValue(_mesh, null))[index] = new T();
+                    _scene.RequestRenderRefresh();
+                    if (mesh == _mesh)
+                    {
+                        UpdateVertexItems();
+                    }
+                },
+                () =>
+                {
+                    ((T[])prop.GetValue(_mesh, null))[index] = oldValue;
+                    _scene.RequestRenderRefresh();
+                    if (mesh == _mesh)
+                    {
+                        UpdateVertexItems();
+                    }
+                });
+        }
+
+        private void OnSelectedVertexComponentChanged(object sender, EventArgs e)
+        {
+            buttonDeleteVertexData.Enabled = !listBoxVertexData.SelectedItem.Equals(XyzPosition);
         }
     }
 }

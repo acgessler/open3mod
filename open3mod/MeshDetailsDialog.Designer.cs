@@ -315,6 +315,7 @@
             this.listBoxVertexData.Name = "listBoxVertexData";
             this.listBoxVertexData.Size = new System.Drawing.Size(180, 108);
             this.listBoxVertexData.TabIndex = 4;
+            this.listBoxVertexData.SelectedValueChanged += new System.EventHandler(this.OnSelectedVertexComponentChanged);
             // 
             // buttonDeleteVertexData
             // 
@@ -325,6 +326,7 @@
             this.buttonDeleteVertexData.Size = new System.Drawing.Size(26, 29);
             this.buttonDeleteVertexData.TabIndex = 10;
             this.buttonDeleteVertexData.UseVisualStyleBackColor = true;
+            this.buttonDeleteVertexData.Click += new System.EventHandler(this.OnDeleteSelectedVertexComponent);
             // 
             // listBoxFaceData
             // 

@@ -301,16 +301,13 @@ namespace open3mod
         private void OnOk(object sender, EventArgs e)
         {
             Commit();
-            // Do not Close() as this would dispose the dialog object.
-            // MeshDetailsDialog keeps it and re-uses it.
-            Hide();
+            Close();
         }    
 
         private void OnCancel(object sender, EventArgs e)
         {
             Revert();
-            // See note on OnOk().
-            Hide();
+            Close();
         }
 
         private void OnClose(object sender, FormClosingEventArgs e)
