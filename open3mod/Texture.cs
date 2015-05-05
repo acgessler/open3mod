@@ -49,10 +49,10 @@ namespace open3mod
     /// </summary>
     public sealed class Texture : IDisposable
     {
-        private readonly string _file;
+        private readonly string _originalFile;
         private readonly TextureQueue.CompletionCallback _callback;
         private Image _image;
-        private int _gl;
+        private int _gl;      
 
         private string _actualLocation;
 
@@ -94,14 +94,14 @@ namespace open3mod
         /// <summary>
         /// Start loading a texture from a given file path
         /// </summary>
-        /// <param name="file">File to load from</param>
+        /// <param name="originalFile">File to load from</param>
         /// <param name="baseDir">Scene root folder </param>
         /// <param name="callback">Optional callback to be invoked
         ///   when loading to memory is either complete or is definitely
         ///   failed.)</param>
-        public Texture(string file, string baseDir, CompletionCallback callback)
+        public Texture(string originalFile, string baseDir, CompletionCallback callback)
         {
-            _file = file;
+            _originalFile = originalFile;
             _baseDir = baseDir;
             _callback = (s, image, actualLocation, status) => callback(this);
 
@@ -127,7 +127,7 @@ namespace open3mod
         ///   failed.)</param>
         public Texture(Assimp.EmbeddedTexture dataSource, string refName, CompletionCallback callback)
         {
-            _file = refName;
+            _originalFile = refName;
             _dataSource = dataSource;
             _callback = (s, image, actualLocation, status) => callback(this);
 
@@ -203,9 +203,14 @@ namespace open3mod
         }
 
 
-        public string FileName
+        /// <summary>
+        /// File name, may contain a path suffix or even a full path.
+        /// 
+        /// Typically contains a file extension.
+        /// </summary>
+        public string OriginalFileName
         {
-            get { return _file; }
+            get { return _originalFile; }
         }
 
 
@@ -579,14 +584,14 @@ namespace open3mod
         {
             TextureQueue.CompletionCallback callback = (file, image, actualLocation, result) =>
             {
-                Debug.Assert(_file == file);
+                Debug.Assert(_originalFile == file);
                 SetImage(image, result);
 
                 _actualLocation = actualLocation;
 
                 if (_callback != null)
                 {
-                    _callback(_file, _image, actualLocation, result);
+                    _callback(_originalFile, _image, actualLocation, result);
                 }
             };
 
@@ -595,11 +600,11 @@ namespace open3mod
                 State = TextureState.LoadingPending;
                 if (_dataSource != null)
                 {
-                    TextureQueue.Enqueue(_dataSource, _file, callback);
+                    TextureQueue.Enqueue(_dataSource, _originalFile, callback);
                     return;
                 }
 
-                TextureQueue.Enqueue(_file, _baseDir, callback);
+                TextureQueue.Enqueue(_originalFile, _baseDir, callback);
             }
         }
 
