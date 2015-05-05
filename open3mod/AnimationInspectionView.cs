@@ -198,7 +198,7 @@ namespace open3mod
         private void OnChangeSelectedAnimation(object sender, EventArgs e)
         {
             _scene.SceneAnimator.ActiveAnimation = listBoxAnimations.SelectedIndex - 1;
-            if (_scene.SceneAnimator.ActiveAnimation >= 0)
+            if (_scene.SceneAnimator.ActiveAnimation >= 0 && ActiveRawAnimation.DurationInTicks > 0.0)
             {
                 var anim = ActiveRawAnimation;
                 foreach (var control in panelAnimTools.Controls)
