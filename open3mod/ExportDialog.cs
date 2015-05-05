@@ -91,7 +91,6 @@ namespace open3mod
             UpdateCaption();
         }
 
-
         private void UpdateCaption()
         {
             string str = "Export ";
@@ -110,7 +109,6 @@ namespace open3mod
             Text = str;
         }
 
-
         private void UpdateFileName(bool extensionOnly = false)
         {
             string str = textBoxFileName.Text;
@@ -126,13 +124,11 @@ namespace open3mod
             textBoxFileName.Text = Path.ChangeExtension(str, SelectedFormat.FileExtension);
         }
 
-
         private void buttonSelectFolder_Click(object sender, EventArgs e)
         {
             folderBrowserDialog.ShowDialog(this);
             textBoxPath.Text = folderBrowserDialog.SelectedPath;
         }
-
 
         private void buttonExport(object sender, EventArgs e)
         {
@@ -189,16 +185,17 @@ namespace open3mod
             progressBarExport.Style = ProgressBarStyle.Marquee;
             progressBarExport.MarqueeAnimationSpeed = 5;
 
-            // Create a shallow copy of the original scene that replaces
-            // all the texture paths with their corresponding output paths,
-            // and omits animations if requested.
-            var sourceScene = new Assimp.Scene();
-            sourceScene.Textures = scene.Raw.Textures;
-            sourceScene.SceneFlags = scene.Raw.SceneFlags;
-            sourceScene.RootNode = scene.Raw.RootNode;
-            sourceScene.Meshes = scene.Raw.Meshes;
-            sourceScene.Lights = scene.Raw.Lights;
-            sourceScene.Cameras = scene.Raw.Cameras;
+            // Create a shallow copy of the original scene that replaces all the texture paths with their
+            // corresponding output paths, and omits animations if requested.
+            var sourceScene = new Assimp.Scene
+                              {
+                                  Textures = scene.Raw.Textures,
+                                  SceneFlags = scene.Raw.SceneFlags,
+                                  RootNode = scene.Raw.RootNode,
+                                  Meshes = scene.Raw.Meshes,
+                                  Lights = scene.Raw.Lights,
+                                  Cameras = scene.Raw.Cameras
+                              };
 
             if (includeAnimations)
             {
@@ -211,6 +208,7 @@ namespace open3mod
             PushLog("Locating all textures");
             foreach (var texId in scene.TextureSet.GetTextureIds())
             {
+                // TODO(acgessler): Verify if this handles texture replacements and GUID-IDs correctly.
                 var destName = texId;
 
                 // Broadly skip over embedded (in-memory) textures
@@ -230,23 +228,10 @@ namespace open3mod
                     PushLog("Failed to locate texture " + texId);
                     continue;
                 }
-
+             
                 if (copyTextures)
                 {
-                    var count = 1;
-                    // Enforce unique output names
-                    do
-                    {
-                        destName = Path.Combine(path, Path.Combine(textureDestinationFolder,
-                                                Path.GetFileNameWithoutExtension(diskLocation) +
-                                                (count == 1
-                                                     ? ""
-                                                     : (count.ToString(CultureInfo.InvariantCulture) + "_")) +
-                                                Path.GetExtension(diskLocation)
-                            ));
-                        ++count;
-                    } while (uniques.Contains(destName));
-                    uniques.Add(destName);
+                    destName = GeUniqueTextureExportPath(path, textureDestinationFolder, diskLocation, uniques);
                 }
 
                 if (relativeTexturePaths)
@@ -332,6 +317,30 @@ namespace open3mod
             });
 
             t.Start();
+        }
+
+        private static string GeUniqueTextureExportPath(string exportBasePath,
+            string textureDestinationFolder,
+            string diskLocation,
+            HashSet<string> uniques)
+        {
+            string baseFileName = Path.GetFileNameWithoutExtension(diskLocation);     
+            string destName;
+            var count = 1;
+            // Enforce unique output names
+            do
+            {
+                destName = Path.Combine(exportBasePath, Path.Combine(textureDestinationFolder,
+                    baseFileName +
+                    (count == 1
+                        ? ""
+                        : (count.ToString(CultureInfo.InvariantCulture) + "_")) +
+                    Path.GetExtension(diskLocation)
+                    ));
+                ++count;
+            } while (uniques.Contains(destName));
+            uniques.Add(destName);
+            return destName;
         }
 
         private void PushLog(string message)
