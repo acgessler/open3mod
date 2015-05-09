@@ -149,15 +149,15 @@ namespace open3mod
             var exporter = new TextureExporter(_texture); 
             
             var saver = new SaveFileDialog();
-            saver.Title = "Specify file to export " + Path.GetFileName(_texture.FileName) + " to";
+            saver.Title = "Specify file to export " + Path.GetFileName(_texture.OriginalFileName) + " to";
 
-            if (_texture.FileName.Length > 0 && _texture.FileName[0] == '*')
+            if (_texture.OriginalFileName.Length > 0 && _texture.OriginalFileName[0] == '*')
             {
-                saver.FileName = "EmbeddedTexture_" + _texture.FileName.Substring(1) + ".png";
+                saver.FileName = "EmbeddedTexture_" + _texture.OriginalFileName.Substring(1) + ".png";
             }
             else
             {
-                saver.FileName = Path.GetFileName(_texture.FileName);
+                saver.FileName = Path.GetFileName(_texture.OriginalFileName);
             }
 
             var extensions = string.Join(";", exporter.GetExtensionList().Select(s => "*." + s).ToArray());
@@ -315,7 +315,7 @@ namespace open3mod
         {
             Debug.Assert(CanChangeTextureSource());
 
-            if (Texture.FileName == newFile)
+            if (Texture.OriginalFileName == newFile)
             {
                 return;
             }
@@ -323,7 +323,7 @@ namespace open3mod
             // note: it is important to keep _newFileId as a field just in case the
             // users drags and drops another texture onto the control while this
             // texture is still being loaded.
-            _newFileId = _owner.Scene.TextureSet.Replace(Texture.FileName, newFile);
+            _newFileId = _owner.Scene.TextureSet.Replace(Texture.OriginalFileName, newFile);
 
             // SetLoadingState() needs to be run on the GUI thread - AddCallback()
             // need not, but it needs to be sequenced after SetLoadingState().

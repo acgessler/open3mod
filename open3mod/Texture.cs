@@ -298,7 +298,7 @@ namespace open3mod
                     int tex;
                     GL.GenTextures(1, out tex);
 
-                    GL.ActiveTexture(TextureUnit.Texture0);
+                    GL.Arb.ActiveTexture(TextureUnit.Texture0);
                     GL.BindTexture(TextureTarget.Texture2D, tex);
 
                     ConfigureFilters();                    
