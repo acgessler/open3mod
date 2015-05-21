@@ -1,4 +1,4 @@
-1.0 Released! Download at http://www.open3mod.com
+1.1 Released! Download at http://www.open3mod.com
 
 _Skim down for info on how to contribute._
 
