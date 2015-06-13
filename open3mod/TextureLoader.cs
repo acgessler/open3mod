@@ -166,17 +166,20 @@ namespace open3mod
                     }
                     catch (IOException)
                     {
-                        foreach(var folder in CoreSettings.CoreSettings.Default.AdditionalTextureFolders)
+                        if (CoreSettings.CoreSettings.Default.AdditionalTextureFolders != null)
                         {
-                            try
+                            foreach (var folder in CoreSettings.CoreSettings.Default.AdditionalTextureFolders)
                             {
-                                path = Path.Combine(folder, fileName);
-                                s = new FileStream(path, FileMode.Open, FileAccess.Read);
-                                break;
-                            }
-                            catch(IOException)
-                            {
-                                continue;
+                                try
+                                {
+                                    path = Path.Combine(folder, fileName);
+                                    s = new FileStream(path, FileMode.Open, FileAccess.Read);
+                                    break;
+                                }
+                                catch (IOException)
+                                {
+                                    continue;
+                                }
                             }
                         }
                         if (s == null)
