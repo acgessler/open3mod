@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Assimp;
@@ -120,6 +121,51 @@ namespace open3mod
         public void RenameAnimation(Animation animation, string newName)
         {
             animation.Name = newName;
+        }
+
+
+        /// <summary>
+        /// Rename a texture on disk, preserving the file extension.
+        /// 
+        /// Does not create UndoStack entries itself, caller must do this.
+        /// </summary>
+        /// <param name="texture"></param>
+        /// <param name="newName"></param>
+        public void RenameTexture(Texture texture, string newName)
+        {
+            string oldId = texture.OriginalTextureId;
+            string oldLocation = texture.ActualLocation;
+            string oldExt = Path.GetExtension(oldLocation);
+            string newExt = Path.GetExtension(newName);
+
+            if (oldExt != newExt)
+            {
+                newName = newName + oldExt;
+            }
+
+            if (string.IsNullOrEmpty(Path.GetDirectoryName(newName)))
+            {
+                newName = Path.GetDirectoryName(oldLocation) + Path.DirectorySeparatorChar +
+                          Path.GetFileName(newName);
+            }
+
+            if (Path.GetFullPath(newName) == Path.GetFullPath(oldLocation))
+            {
+                return;
+            }
+            texture.Move(newName);
+            string newId = texture.OriginalTextureId;
+            _scene.TextureSet.Replace(oldId, newId);
+            foreach (var mat in _scene.Raw.Materials)
+            {
+                foreach (var prop in mat.GetAllProperties())
+                {
+                    if (prop.GetStringValue() == oldId)
+                    {
+                        prop.SetStringValue(newId);
+                    }
+                }
+            }
         }
     }
 }
