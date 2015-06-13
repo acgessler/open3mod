@@ -240,7 +240,6 @@ namespace open3mod
         public void Move(string newPath)
         {
             Debug.Assert(!string.IsNullOrEmpty(ActualLocation));
-            // TODO: handle error cases.
             File.Move(ActualLocation, newPath);
             ActualLocation = newPath;
             OriginalTextureId = newPath;

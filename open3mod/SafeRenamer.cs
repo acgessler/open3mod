@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -153,7 +154,19 @@ namespace open3mod
             {
                 return;
             }
-            texture.Move(newName);
+            try
+            {
+                texture.Move(newName);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                throw ex;
+            }
+            catch (IOException ex)
+            {
+                // Just don't rename the texture. Likeliest case is the destination file already exists.
+                // TODO(acgessler): Figure out how to best propagate this error.
+            }
             string newId = texture.OriginalTextureId;
             _scene.TextureSet.Replace(oldId, newId);
             foreach (var mat in _scene.Raw.Materials)
