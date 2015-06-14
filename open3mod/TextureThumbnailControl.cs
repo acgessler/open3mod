@@ -51,6 +51,17 @@ namespace open3mod
         private Image _imageWithoutAlpha;
 
 
+        public string FilePath
+        {
+            get { return _filePath; }
+        }
+
+        public Texture Texture
+        {
+            get { return _texture; }
+        }
+
+
         public TextureThumbnailControl(TextureInspectionView owner, Scene scene, string filePath)
             : base(owner, GetBackgroundImage(), Path.GetFileName(filePath))
         {
@@ -206,8 +217,26 @@ namespace open3mod
         private void OnContextMenuDelete(object sender, EventArgs eventArgs)
         {
             // This does *not* delete the texture file on disk.
-            _scene.TextureSet.Delete(Texture.OriginalTextureId);
-            //_owner.RemoveEntry(this);
+           
+            int oldIndex = -1;
+            _scene.UndoStack.PushAndDo("Delete Texture",
+                // Do
+                () =>
+                {
+                    _scene.TextureSet.Delete(Texture.OriginalTextureId);
+                    oldIndex = _owner.RemoveEntry(this);
+                },
+                // Undo
+                () =>
+                {
+                    _scene.TextureSet.Add(Texture.OriginalTextureId);
+                    _owner.AddEntry(this, oldIndex);
+                },
+                // Update
+                () =>
+                {
+                    UpdateDependentMaterialPreviews();
+                });
         }
 
 
@@ -240,7 +269,7 @@ namespace open3mod
                 {
                     string newName = dialog.NewName;
                     string oldName = Texture.OriginalTextureId;
-                    _scene.UndoStack.PushAndDo("Rename Texture on disk",
+                    _scene.UndoStack.PushAndDo("Rename Texture File",
                         // Do
                         () => renamer.RenameTexture(Texture, newName),
                         // Undo
@@ -255,18 +284,6 @@ namespace open3mod
         private void OnContextMenuToggleAlpha(object sender, EventArgs eventArgs)
         {
             SetPictureBoxImage();
-        }
-
-
-
-        public string FilePath
-        {
-            get { return _filePath; }
-        }
-
-        public Texture Texture
-        {
-            get { return _texture; }
         }
 
 
@@ -431,6 +448,7 @@ namespace open3mod
                         }));
 
                         SetTexture(tex);
+                        UpdateDependentMaterialPreviews();
                         return false;
                     }
                     return true;
@@ -438,6 +456,11 @@ namespace open3mod
             }));
 
             Invalidate();
+        }
+
+        private void UpdateDependentMaterialPreviews()
+        {
+            // TODO
         }
 
 
