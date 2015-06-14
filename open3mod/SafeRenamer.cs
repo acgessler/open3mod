@@ -144,11 +144,7 @@ namespace open3mod
                 newName = newName + oldExt;
             }
 
-            if (string.IsNullOrEmpty(Path.GetDirectoryName(newName)))
-            {
-                newName = Path.GetDirectoryName(oldLocation) + Path.DirectorySeparatorChar +
-                          Path.GetFileName(newName);
-            }
+            newName = Path.GetDirectoryName(oldLocation) + Path.DirectorySeparatorChar + Path.GetFileName(newName);
 
             if (Path.GetFullPath(newName) == Path.GetFullPath(oldLocation))
             {
