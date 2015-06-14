@@ -73,19 +73,6 @@ namespace open3mod
             s.CheckOnClick = true;
             s.Checked = true;
 
-          
-            ContextMenuStrip.Items.Add(new ToolStripSeparator());
-
-            s = new ToolStripMenuItem("Delete", null, OnContextMenuDelete);
-            ContextMenuStrip.Items.Add(s);
-            s.CheckOnClick = false;
-            s.Enabled = true;
-
-            s = new ToolStripMenuItem("Rename", null, OnContextMenuRename);
-            ContextMenuStrip.Items.Add(s);
-            s.CheckOnClick = true;
-            s.Enabled = true;
-
             s = new ToolStripMenuItem("Mirror along X (U) axis", null, OnContextMenuMirrorX);
             ContextMenuStrip.Items.Add(s);
             s.CheckOnClick = true;
@@ -97,14 +84,31 @@ namespace open3mod
             s.CheckOnClick = true;
             s.Checked = false;
             s.Enabled = true;
+          
+            ContextMenuStrip.Items.Add(new ToolStripSeparator());
+
+            s = new ToolStripMenuItem("Delete", null, OnContextMenuDelete);
+            ContextMenuStrip.Items.Add(s);
+            s.Enabled = true;
+
+            s = new ToolStripMenuItem("Rename", null, OnContextMenuRename);
+            ContextMenuStrip.Items.Add(s);
+            s.Enabled = true;
+    
 
             ContextMenuStrip.Items.Add(new ToolStripSeparator());
 
-            s = new ToolStripMenuItem("Details", null, OnContextMenuDetails);
+            s = new ToolStripMenuItem("Texture Viewer", null, OnContextMenuDetails);
             ContextMenuStrip.Items.Add(s);
+            s.Font = new System.Drawing.Font(
+                DefaultFont.FontFamily,
+                DefaultFont.Size,
+                FontStyle.Bold,
+                GraphicsUnit.Point
+            );
             s.Enabled = false;
 
-            s = new ToolStripMenuItem("Export", null, OnContextMenuExport);
+            s = new ToolStripMenuItem("Save", null, OnContextMenuExport);
             ContextMenuStrip.Items.Add(s);
             s.Enabled = false;
           
@@ -135,9 +139,18 @@ namespace open3mod
             {
                 return;
             }
+
             _texture.Image.RotateFlip(RotateFlipType.RotateNoneFlipX);
             _texture.ReleaseUpload();
             _texture.Upload();
+            if (pictureBox.Image != _texture.Image)
+            {
+                pictureBox.Image.RotateFlip(RotateFlipType.RotateNoneFlipX);
+            }
+            else
+            {
+                pictureBox.Invalidate();
+            }            
         }
 
 
@@ -150,6 +163,14 @@ namespace open3mod
             _texture.Image.RotateFlip(RotateFlipType.RotateNoneFlipY);
             _texture.ReleaseUpload();
             _texture.Upload();
+            if (pictureBox.Image != _texture.Image)
+            {
+                pictureBox.Image.RotateFlip(RotateFlipType.RotateNoneFlipY);
+            }
+            else
+            {
+                pictureBox.Invalidate();
+            }           
         }
 
 
@@ -184,7 +205,9 @@ namespace open3mod
 
         private void OnContextMenuDelete(object sender, EventArgs eventArgs)
         {
-            // TODO
+            // This does *not* delete the texture file on disk.
+            _scene.TextureSet.Delete(Texture.OriginalTextureId);
+            //_owner.RemoveEntry(this);
         }
 
 
