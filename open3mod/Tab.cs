@@ -87,7 +87,8 @@ namespace open3mod
             // values pertain to CoreSettings:DefaultViewMode!
             Single = 0,
             Two = 1,
-            Four = 2
+            Four = 2,
+            TwoHorizontal = 3,
         }
 
 
@@ -162,6 +163,15 @@ namespace open3mod
                             new Viewport(new Vector4(0.0f, 0.5f, 1.0f, 1.0f), CameraMode.X), 
                             null
                         };            
+                        break;
+                    case ViewMode.TwoHorizontal:
+                        ActiveViews = new[]
+                        {
+                            new Viewport(new Vector4(0.0f, 0.0f, 0.5f, 1.0f), CameraMode.Orbit), 
+                            new Viewport(new Vector4(0.5f, 0.0f, 1.0f, 1.0f), CameraMode.X),
+                            null, 
+                            null
+                        };
                         break;
                     case ViewMode.Four:
                         ActiveViews = new []
@@ -437,7 +447,7 @@ namespace open3mod
                 }
                 return ViewSeparator.Vertical;
             }
-            if (Math.Abs(y - vp.Bounds.W) < threshold)
+            if (Math.Abs(y - vp.Bounds.W) < threshold && _activeViewMode != ViewMode.TwoHorizontal)
             {
                 return ViewSeparator.Horizontal;
             }
@@ -456,7 +466,7 @@ namespace open3mod
         ///   [MinimumViewportSplit,1-MinimumViewportSplit] are clamped.</param>
         public void SetViewportSplitH(float f)
         {
-            if (ActiveViewMode != ViewMode.Four)
+            if (ActiveViewMode != ViewMode.TwoHorizontal && ActiveViewMode != ViewMode.Four)
             {
                 return;
             }

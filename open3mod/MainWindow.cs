@@ -516,6 +516,10 @@ namespace open3mod
                 vm == Tab.ViewMode.Two 
                 ? CheckState.Checked 
                 : CheckState.Unchecked;
+            twoViewsHorToolStripMenuItem.CheckState = toolStripButtonTwoViewsHor.CheckState =
+                vm == Tab.ViewMode.TwoHorizontal
+                ? CheckState.Checked
+                : CheckState.Unchecked;
             fourViewsToolStripMenuItem.CheckState = toolStripButtonFourViews.CheckState = 
                 vm == Tab.ViewMode.Four 
                 ? CheckState.Checked 
@@ -772,6 +776,20 @@ namespace open3mod
         }
 
 
+        private void UncheckViewMode()
+        {
+            toolStripButtonFullView.CheckState = CheckState.Unchecked;
+            toolStripButtonTwoViews.CheckState = CheckState.Unchecked;
+            toolStripButtonTwoViewsHor.CheckState = CheckState.Unchecked;
+            toolStripButtonFourViews.CheckState = CheckState.Unchecked;
+
+            fullViewToolStripMenuItem.CheckState = CheckState.Unchecked;
+            twoViewsToolStripMenuItem.CheckState = CheckState.Unchecked;
+            twoViewsHorToolStripMenuItem.CheckState = CheckState.Unchecked;
+            fourViewsToolStripMenuItem.CheckState = CheckState.Unchecked;
+        }
+
+
         private void ToggleFullView(object sender, EventArgs e)
         {
             if (UiState.ActiveTab.ActiveViewMode == Tab.ViewMode.Single)
@@ -780,13 +798,23 @@ namespace open3mod
             }
             UiState.ActiveTab.ActiveViewMode = Tab.ViewMode.Single;
 
-            toolStripButtonFullView.CheckState = CheckState.Checked;
-            toolStripButtonTwoViews.CheckState = CheckState.Unchecked;
-            toolStripButtonFourViews.CheckState = CheckState.Unchecked;
-
+            UncheckViewMode();
+            toolStripButtonFullView.CheckState = CheckState.Checked;     
             fullViewToolStripMenuItem.CheckState = CheckState.Checked;
-            twoViewsToolStripMenuItem.CheckState = CheckState.Unchecked;
-            fourViewsToolStripMenuItem.CheckState = CheckState.Unchecked;
+        }
+
+
+        private void ToggleTwoViewsHorizontal(object sender, EventArgs e)
+        {
+            if (UiState.ActiveTab.ActiveViewMode == Tab.ViewMode.TwoHorizontal)
+            {
+                return;
+            }
+            UiState.ActiveTab.ActiveViewMode = Tab.ViewMode.TwoHorizontal;
+
+            UncheckViewMode();
+            toolStripButtonTwoViewsHor.CheckState = CheckState.Checked;
+            twoViewsHorToolStripMenuItem.CheckState = CheckState.Checked;
         }
 
 
@@ -798,13 +826,9 @@ namespace open3mod
             }
             UiState.ActiveTab.ActiveViewMode = Tab.ViewMode.Two;
 
-            toolStripButtonFullView.CheckState = CheckState.Unchecked;
+            UncheckViewMode();
             toolStripButtonTwoViews.CheckState = CheckState.Checked;
-            toolStripButtonFourViews.CheckState = CheckState.Unchecked;
-
-            fullViewToolStripMenuItem.CheckState = CheckState.Unchecked;
             twoViewsToolStripMenuItem.CheckState = CheckState.Checked;
-            fourViewsToolStripMenuItem.CheckState = CheckState.Unchecked;
         }
 
 
@@ -816,12 +840,8 @@ namespace open3mod
             }
             UiState.ActiveTab.ActiveViewMode = Tab.ViewMode.Four;
 
-            toolStripButtonFullView.CheckState = CheckState.Unchecked;
-            toolStripButtonTwoViews.CheckState = CheckState.Unchecked;
+            UncheckViewMode();
             toolStripButtonFourViews.CheckState = CheckState.Checked;
-
-            fullViewToolStripMenuItem.CheckState = CheckState.Unchecked;
-            twoViewsToolStripMenuItem.CheckState = CheckState.Unchecked;
             fourViewsToolStripMenuItem.CheckState = CheckState.Checked;
         }
 
