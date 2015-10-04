@@ -1297,6 +1297,21 @@ namespace open3mod
             _normalsDialog = new NormalVectorGeneratorDialog(scene, scene.Raw.Meshes, TabPageForTab(activeTab).Text + " (all meshes)");
             _normalsDialog.Show(this);
         }
+
+        private void OnChangeBackgroundColor(object sender, EventArgs e)
+        {
+            ColorDialog colorPicker = new ColorDialog();
+            colorPicker.FullOpen = true;
+            colorPicker.Color = CoreSettings.CoreSettings.Default.BackgroundColor;
+            colorPicker.ShowDialog();
+            CoreSettings.CoreSettings.Default.BackgroundColor = colorPicker.Color;
+        }
+
+        private void OnResetBackground(object sender, EventArgs e)
+        {
+            // Keep in sync with CoreSettings.settings.
+            CoreSettings.CoreSettings.Default.BackgroundColor = Color.DarkGray;
+        }
     }
 }
 

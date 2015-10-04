@@ -59,6 +59,7 @@ namespace open3mod
             this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.scaleOffsetSceneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateNormalsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemView = new System.Windows.Forms.ToolStripMenuItem();
             this.fullViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.twoViewsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -72,6 +73,8 @@ namespace open3mod
             this.showBoundingBoxesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showNormalVectorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showAnimationSkeletonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
+            this.backgroundColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
@@ -121,7 +124,7 @@ namespace open3mod
             this.linkLabelWebsite = new System.Windows.Forms.LinkLabel();
             this.trackBarBrightness = new System.Windows.Forms.TrackBar();
             this.glControl1 = new open3mod.RenderControl();
-            this.generateNormalsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetBackgroundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStripSelectRenderer.SuspendLayout();
             this.tabContextMenuStrip.SuspendLayout();
@@ -289,6 +292,13 @@ namespace open3mod
             this.scaleOffsetSceneToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.scaleOffsetSceneToolStripMenuItem.Text = "Scale to Fit";
             // 
+            // generateNormalsToolStripMenuItem
+            // 
+            this.generateNormalsToolStripMenuItem.Name = "generateNormalsToolStripMenuItem";
+            this.generateNormalsToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.generateNormalsToolStripMenuItem.Text = "Generate Normals";
+            this.generateNormalsToolStripMenuItem.Click += new System.EventHandler(this.OnGenerateNormals);
+            // 
             // toolStripMenuItemView
             // 
             this.toolStripMenuItemView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -303,7 +313,10 @@ namespace open3mod
             this.toolStripSeparator7,
             this.showBoundingBoxesToolStripMenuItem,
             this.showNormalVectorsToolStripMenuItem,
-            this.showAnimationSkeletonToolStripMenuItem});
+            this.showAnimationSkeletonToolStripMenuItem,
+            this.toolStripSeparator14,
+            this.backgroundColorToolStripMenuItem,
+            this.resetBackgroundToolStripMenuItem});
             this.toolStripMenuItemView.Name = "toolStripMenuItemView";
             this.toolStripMenuItemView.Size = new System.Drawing.Size(44, 20);
             this.toolStripMenuItemView.Text = "View";
@@ -395,6 +408,18 @@ namespace open3mod
             this.showAnimationSkeletonToolStripMenuItem.Text = "Animation Skeleton";
             this.showAnimationSkeletonToolStripMenuItem.Click += new System.EventHandler(this.ToggleShowSkeleton);
             // 
+            // toolStripSeparator14
+            // 
+            this.toolStripSeparator14.Name = "toolStripSeparator14";
+            this.toolStripSeparator14.Size = new System.Drawing.Size(175, 6);
+            // 
+            // backgroundColorToolStripMenuItem
+            // 
+            this.backgroundColorToolStripMenuItem.Name = "backgroundColorToolStripMenuItem";
+            this.backgroundColorToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.backgroundColorToolStripMenuItem.Text = "Background Color";
+            this.backgroundColorToolStripMenuItem.Click += new System.EventHandler(this.OnChangeBackgroundColor);
+            // 
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -406,7 +431,7 @@ namespace open3mod
             this.toolStripSeparator8,
             this.optionsToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
             this.toolsToolStripMenuItem.Click += new System.EventHandler(this.ToolsToolStripMenuItemClick);
             // 
@@ -858,12 +883,12 @@ namespace open3mod
             this.glControl1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.OnPreviewKeyDown);
             this.glControl1.Resize += new System.EventHandler(this.OnGlResize);
             // 
-            // generateNormalsToolStripMenuItem
+            // resetBackgroundToolStripMenuItem
             // 
-            this.generateNormalsToolStripMenuItem.Name = "generateNormalsToolStripMenuItem";
-            this.generateNormalsToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
-            this.generateNormalsToolStripMenuItem.Text = "Generate Normals";
-            this.generateNormalsToolStripMenuItem.Click += new System.EventHandler(this.OnGenerateNormals);
+            this.resetBackgroundToolStripMenuItem.Name = "resetBackgroundToolStripMenuItem";
+            this.resetBackgroundToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.resetBackgroundToolStripMenuItem.Text = "Reset Background";
+            this.resetBackgroundToolStripMenuItem.Click += new System.EventHandler(this.OnResetBackground);
             // 
             // MainWindow
             // 
@@ -990,6 +1015,9 @@ namespace open3mod
         private ToolStripSeparator toolStripSeparator13;
         private ToolStripMenuItem scaleOffsetSceneToolStripMenuItem;
         private ToolStripMenuItem generateNormalsToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator14;
+        private ToolStripMenuItem backgroundColorToolStripMenuItem;
+        private ToolStripMenuItem resetBackgroundToolStripMenuItem;
     }
 }
 
