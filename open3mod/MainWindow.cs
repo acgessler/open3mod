@@ -1051,7 +1051,10 @@ namespace open3mod
                 var size = CoreSettings.CoreSettings.Default.Size;
                 if (size.Width != 0) // first-time run
                 {
-                    Location = CoreSettings.CoreSettings.Default.Location;
+                    var location = CoreSettings.CoreSettings.Default.Location;
+                    // If the saved location is off-screen, show the window at 0|0. This happens in multi-monitor environments
+                    // where the monitor holding open3mod is subsequently removed.
+                    Location = Screen.AllScreens.FirstOrDefault(scr => scr.Bounds.Contains(location)) != null ? location : Point.Empty;         
                     Size = size;
                 }
             }
