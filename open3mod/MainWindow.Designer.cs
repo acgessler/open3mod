@@ -327,6 +327,7 @@ namespace open3mod
             // fullViewToolStripMenuItem
             // 
             this.fullViewToolStripMenuItem.CheckOnClick = true;
+            this.fullViewToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("fullViewToolStripMenuItem.Image")));
             this.fullViewToolStripMenuItem.Name = "fullViewToolStripMenuItem";
             this.fullViewToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.fullViewToolStripMenuItem.Text = "Single 3D View";
@@ -335,6 +336,7 @@ namespace open3mod
             // twoViewsToolStripMenuItem
             // 
             this.twoViewsToolStripMenuItem.CheckOnClick = true;
+            this.twoViewsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("twoViewsToolStripMenuItem.Image")));
             this.twoViewsToolStripMenuItem.Name = "twoViewsToolStripMenuItem";
             this.twoViewsToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.twoViewsToolStripMenuItem.Text = "Two 3D Views (Vertical)";
@@ -343,6 +345,7 @@ namespace open3mod
             // twoViewsHorToolStripMenuItem
             // 
             this.twoViewsHorToolStripMenuItem.CheckOnClick = true;
+            this.twoViewsHorToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("twoViewsHorToolStripMenuItem.Image")));
             this.twoViewsHorToolStripMenuItem.Name = "twoViewsHorToolStripMenuItem";
             this.twoViewsHorToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.twoViewsHorToolStripMenuItem.Text = "Two 3D Views (Horizontal)";
@@ -351,6 +354,7 @@ namespace open3mod
             // fourViewsToolStripMenuItem
             // 
             this.fourViewsToolStripMenuItem.CheckOnClick = true;
+            this.fourViewsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("fourViewsToolStripMenuItem.Image")));
             this.fourViewsToolStripMenuItem.Name = "fourViewsToolStripMenuItem";
             this.fourViewsToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.fourViewsToolStripMenuItem.Text = "Four 3D Views (Quads)";
@@ -364,6 +368,7 @@ namespace open3mod
             // wireframeToolStripMenuItem
             // 
             this.wireframeToolStripMenuItem.CheckOnClick = true;
+            this.wireframeToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("wireframeToolStripMenuItem.Image")));
             this.wireframeToolStripMenuItem.Name = "wireframeToolStripMenuItem";
             this.wireframeToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.wireframeToolStripMenuItem.Text = "Wireframe";
@@ -372,6 +377,7 @@ namespace open3mod
             // texturedToolStripMenuItem
             // 
             this.texturedToolStripMenuItem.CheckOnClick = true;
+            this.texturedToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("texturedToolStripMenuItem.Image")));
             this.texturedToolStripMenuItem.Name = "texturedToolStripMenuItem";
             this.texturedToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.texturedToolStripMenuItem.Text = "Textures";
@@ -380,6 +386,7 @@ namespace open3mod
             // lightingToolStripMenuItem
             // 
             this.lightingToolStripMenuItem.CheckOnClick = true;
+            this.lightingToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("lightingToolStripMenuItem.Image")));
             this.lightingToolStripMenuItem.Name = "lightingToolStripMenuItem";
             this.lightingToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.lightingToolStripMenuItem.Text = "Lighting";
@@ -388,6 +395,7 @@ namespace open3mod
             // framerateToolStripMenuItem
             // 
             this.framerateToolStripMenuItem.CheckOnClick = true;
+            this.framerateToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("framerateToolStripMenuItem.Image")));
             this.framerateToolStripMenuItem.Name = "framerateToolStripMenuItem";
             this.framerateToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.framerateToolStripMenuItem.Text = "Framerate";
@@ -400,6 +408,7 @@ namespace open3mod
             // 
             // showBoundingBoxesToolStripMenuItem
             // 
+            this.showBoundingBoxesToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("showBoundingBoxesToolStripMenuItem.Image")));
             this.showBoundingBoxesToolStripMenuItem.Name = "showBoundingBoxesToolStripMenuItem";
             this.showBoundingBoxesToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.showBoundingBoxesToolStripMenuItem.Text = "Bounding Boxes";
@@ -407,6 +416,7 @@ namespace open3mod
             // 
             // showNormalVectorsToolStripMenuItem
             // 
+            this.showNormalVectorsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("showNormalVectorsToolStripMenuItem.Image")));
             this.showNormalVectorsToolStripMenuItem.Name = "showNormalVectorsToolStripMenuItem";
             this.showNormalVectorsToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.showNormalVectorsToolStripMenuItem.Text = "Normal Vectors";
@@ -414,6 +424,7 @@ namespace open3mod
             // 
             // showAnimationSkeletonToolStripMenuItem
             // 
+            this.showAnimationSkeletonToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("showAnimationSkeletonToolStripMenuItem.Image")));
             this.showAnimationSkeletonToolStripMenuItem.Name = "showAnimationSkeletonToolStripMenuItem";
             this.showAnimationSkeletonToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.showAnimationSkeletonToolStripMenuItem.Text = "Animation Skeleton";
