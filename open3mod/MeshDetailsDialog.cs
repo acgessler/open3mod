@@ -80,7 +80,7 @@ namespace open3mod
             labelVertexCount.Text = mesh.VertexCount.ToString();
             labelFaceCount.Text = mesh.FaceCount.ToString();
             labelBoneCount.Text = mesh.BoneCount.ToString();
-            Text = string.Format("{0} - Mesh Details", meshName);
+            Text = string.Format("{0} - Mesh Editor", meshName);
 
             UpdateFaceItems();
             UpdateVertexItems();
