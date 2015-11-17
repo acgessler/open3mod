@@ -26,6 +26,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -49,7 +50,7 @@ namespace open3mod
     /// </summary>
     public sealed class Texture : IDisposable
     {
-        private readonly string _originalFile;
+        private string _originalFile;
         private readonly TextureQueue.CompletionCallback _callback;
         private Image _image;
         private int _gl;      
@@ -94,7 +95,7 @@ namespace open3mod
         /// <summary>
         /// Start loading a texture from a given file path
         /// </summary>
-        /// <param name="originalFile">File to load from</param>
+        /// <param name="originalFile">File to load from, this is the unique id of the texture.</param>
         /// <param name="baseDir">Scene root folder </param>
         /// <param name="callback">Optional callback to be invoked
         ///   when loading to memory is either complete or is definitely
@@ -170,6 +171,7 @@ namespace open3mod
                 Debug.Assert(_image != null && (State == TextureState.WinFormsImageCreated || State == TextureState.GlTextureCreated));
                 return _actualLocation;
             }
+            private set { _actualLocation = value; }
         }
 
 
@@ -208,9 +210,10 @@ namespace open3mod
         /// 
         /// Typically contains a file extension.
         /// </summary>
-        public string OriginalFileName
+        public string OriginalTextureId
         {
             get { return _originalFile; }
+            private set { _originalFile = value; }
         }
 
 
@@ -227,6 +230,19 @@ namespace open3mod
         {
             get { return _reconfigure; }
             set { _reconfigure = value; }
+        }
+
+
+        /// <summary>
+        /// Move the source file to a new location on disk.
+        /// </summary>
+        /// <param name="newPath"></param>
+        public void Move(string newPath)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(ActualLocation));
+            File.Move(ActualLocation, newPath);
+            ActualLocation = newPath;
+            OriginalTextureId = newPath;
         }
 
 

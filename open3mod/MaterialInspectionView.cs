@@ -83,7 +83,7 @@ namespace open3mod
                 if (dependencies.Contains(name))
                 {
                     entry.UpdatePreview();
-                    dependencies.Add(tex.OriginalFileName);
+                    dependencies.Add(tex.OriginalTextureId);
                 }
 
                 return true;

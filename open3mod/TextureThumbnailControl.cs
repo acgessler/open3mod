@@ -51,6 +51,17 @@ namespace open3mod
         private Image _imageWithoutAlpha;
 
 
+        public string FilePath
+        {
+            get { return _filePath; }
+        }
+
+        public Texture Texture
+        {
+            get { return _texture; }
+        }
+
+
         public TextureThumbnailControl(TextureInspectionView owner, Scene scene, string filePath)
             : base(owner, GetBackgroundImage(), Path.GetFileName(filePath))
         {
@@ -61,7 +72,7 @@ namespace open3mod
             SetLoadingState();
 
             ContextMenuStrip = new ContextMenuStrip();
-
+          
             
             var s = new ToolStripMenuItem("Zoom", null, OnContextMenuZoom);
             ContextMenuStrip.Items.Add(s);
@@ -73,9 +84,6 @@ namespace open3mod
             s.CheckOnClick = true;
             s.Checked = true;
 
-          
-            ContextMenuStrip.Items.Add(new ToolStripSeparator());
-         
             s = new ToolStripMenuItem("Mirror along X (U) axis", null, OnContextMenuMirrorX);
             ContextMenuStrip.Items.Add(s);
             s.CheckOnClick = true;
@@ -87,14 +95,31 @@ namespace open3mod
             s.CheckOnClick = true;
             s.Checked = false;
             s.Enabled = true;
+          
+            ContextMenuStrip.Items.Add(new ToolStripSeparator());
+
+            s = new ToolStripMenuItem("Delete", null, OnContextMenuDelete);
+            ContextMenuStrip.Items.Add(s);
+            s.Enabled = true;
+
+            s = new ToolStripMenuItem("Rename", null, OnContextMenuRename);
+            ContextMenuStrip.Items.Add(s);
+            s.Enabled = true;
+    
 
             ContextMenuStrip.Items.Add(new ToolStripSeparator());
 
-            s = new ToolStripMenuItem("Details", null, OnContextMenuDetails);
+            s = new ToolStripMenuItem("Texture Viewer", null, OnContextMenuDetails);
             ContextMenuStrip.Items.Add(s);
+            s.Font = new System.Drawing.Font(
+                DefaultFont.FontFamily,
+                DefaultFont.Size,
+                FontStyle.Bold,
+                GraphicsUnit.Point
+            );
             s.Enabled = false;
 
-            s = new ToolStripMenuItem("Export", null, OnContextMenuExport);
+            s = new ToolStripMenuItem("Save", null, OnContextMenuExport);
             ContextMenuStrip.Items.Add(s);
             s.Enabled = false;
           
@@ -125,9 +150,18 @@ namespace open3mod
             {
                 return;
             }
+
             _texture.Image.RotateFlip(RotateFlipType.RotateNoneFlipX);
             _texture.ReleaseUpload();
             _texture.Upload();
+            if (pictureBox.Image != _texture.Image)
+            {
+                pictureBox.Image.RotateFlip(RotateFlipType.RotateNoneFlipX);
+            }
+            else
+            {
+                pictureBox.Invalidate();
+            }            
         }
 
 
@@ -140,6 +174,14 @@ namespace open3mod
             _texture.Image.RotateFlip(RotateFlipType.RotateNoneFlipY);
             _texture.ReleaseUpload();
             _texture.Upload();
+            if (pictureBox.Image != _texture.Image)
+            {
+                pictureBox.Image.RotateFlip(RotateFlipType.RotateNoneFlipY);
+            }
+            else
+            {
+                pictureBox.Invalidate();
+            }           
         }
 
 
@@ -149,15 +191,15 @@ namespace open3mod
             var exporter = new TextureExporter(_texture); 
             
             var saver = new SaveFileDialog();
-            saver.Title = "Specify file to export " + Path.GetFileName(_texture.OriginalFileName) + " to";
+            saver.Title = "Specify file to export " + Path.GetFileName(_texture.OriginalTextureId) + " to";
 
-            if (_texture.OriginalFileName.Length > 0 && _texture.OriginalFileName[0] == '*')
+            if (_texture.OriginalTextureId.Length > 0 && _texture.OriginalTextureId[0] == '*')
             {
-                saver.FileName = "EmbeddedTexture_" + _texture.OriginalFileName.Substring(1) + ".png";
+                saver.FileName = "EmbeddedTexture_" + _texture.OriginalTextureId.Substring(1) + ".png";
             }
             else
             {
-                saver.FileName = Path.GetFileName(_texture.OriginalFileName);
+                saver.FileName = Path.GetFileName(_texture.OriginalTextureId);
             }
 
             var extensions = string.Join(";", exporter.GetExtensionList().Select(s => "*." + s).ToArray());
@@ -172,21 +214,76 @@ namespace open3mod
         }
 
 
+        private void OnContextMenuDelete(object sender, EventArgs eventArgs)
+        {
+            // This does *not* delete the texture file on disk.
+           
+            int oldIndex = -1;
+            _scene.UndoStack.PushAndDo("Delete Texture",
+                // Do
+                () =>
+                {
+                    _scene.TextureSet.Delete(Texture.OriginalTextureId);
+                    oldIndex = _owner.RemoveEntry(this);
+                },
+                // Undo
+                () =>
+                {
+                    _scene.TextureSet.Add(Texture.OriginalTextureId);
+                    _owner.AddEntry(this, oldIndex);
+                },
+                // Update
+                () =>
+                {
+                    UpdateDependentMaterialPreviews();
+                });
+        }
+
+
+        private void OnContextMenuRename(object sender, EventArgs eventArgs)
+        {
+            // This renames the texture file on disk. The rename only affects the file name, not the path
+            // prefix or file extension.
+            //
+            // Editing folders is complicated because the texture might be outside of the
+            // base folder from which the scene is loaded. Also, when exporting we generally
+            // prefer to copy all scene textures to a single folder anyway.
+            if (Texture == null)
+            {
+                return;
+            }
+
+            if (Texture.ActualLocation == null)
+            {
+                MessageBox.Show("This is an embedded texture that cannot be renamed.");
+                return;
+            }
+
+            SafeRenamer renamer = new SafeRenamer(_scene);      
+            RenameDialog dialog = new RenameDialog("", new HashSet<string>(), new HashSet<string>());
+            
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                if (MessageBox.Show("This will rename the actual image file on disk.", "Rename texture",
+                    MessageBoxButtons.OKCancel) == DialogResult.OK)
+                {
+                    string newName = dialog.NewName;
+                    string oldName = Texture.OriginalTextureId;
+                    _scene.UndoStack.PushAndDo("Rename Texture File",
+                        // Do
+                        () => renamer.RenameTexture(Texture, newName),
+                        // Undo
+                        () => renamer.RenameTexture(Texture, oldName),
+                        // Update
+                        () => { texCaptionLabel.Text = Path.GetFileName(Texture.OriginalTextureId); });
+                }
+            }
+        }
+
+
         private void OnContextMenuToggleAlpha(object sender, EventArgs eventArgs)
         {
             SetPictureBoxImage();
-        }
-
-
-
-        public string FilePath
-        {
-            get { return _filePath; }
-        }
-
-        public Texture Texture
-        {
-            get { return _texture; }
         }
 
 
@@ -315,7 +412,7 @@ namespace open3mod
         {
             Debug.Assert(CanChangeTextureSource());
 
-            if (Texture.OriginalFileName == newFile)
+            if (Texture.OriginalTextureId == newFile)
             {
                 return;
             }
@@ -323,7 +420,7 @@ namespace open3mod
             // note: it is important to keep _newFileId as a field just in case the
             // users drags and drops another texture onto the control while this
             // texture is still being loaded.
-            _newFileId = _owner.Scene.TextureSet.Replace(Texture.OriginalFileName, newFile);
+            _newFileId = _owner.Scene.TextureSet.Replace(Texture.OriginalTextureId, newFile);
 
             // SetLoadingState() needs to be run on the GUI thread - AddCallback()
             // need not, but it needs to be sequenced after SetLoadingState().
@@ -351,6 +448,7 @@ namespace open3mod
                         }));
 
                         SetTexture(tex);
+                        UpdateDependentMaterialPreviews();
                         return false;
                     }
                     return true;
@@ -358,6 +456,11 @@ namespace open3mod
             }));
 
             Invalidate();
+        }
+
+        private void UpdateDependentMaterialPreviews()
+        {
+            // TODO
         }
 
 

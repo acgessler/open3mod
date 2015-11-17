@@ -49,6 +49,7 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.detailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripMesh = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemRenameMesh = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,7 +60,6 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.meshInfoPopup = new open3mod.MeshInfoPopup();
             this.nodeInfoPopup = new open3mod.NodeInfoPopup();
-            this.toolStripMenuItemRenameMesh = new System.Windows.Forms.ToolStripMenuItem();
             this.panelHiddenInfo.SuspendLayout();
             this.panel1.SuspendLayout();
             this.contextMenuStripTreeNode.SuspendLayout();
@@ -268,6 +268,13 @@
             this.contextMenuStripMesh.Name = "contextMenuStripMesh";
             this.contextMenuStripMesh.Size = new System.Drawing.Size(174, 170);
             // 
+            // toolStripMenuItemRenameMesh
+            // 
+            this.toolStripMenuItemRenameMesh.Name = "toolStripMenuItemRenameMesh";
+            this.toolStripMenuItemRenameMesh.Size = new System.Drawing.Size(173, 22);
+            this.toolStripMenuItemRenameMesh.Text = "Rename";
+            this.toolStripMenuItemRenameMesh.Click += new System.EventHandler(this.OnRenameMesh);
+            // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Image = global::open3mod.Properties.Resources.FailedToLoad;
@@ -312,7 +319,7 @@
             this.detailsToolStripMenuItem1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.detailsToolStripMenuItem1.Name = "detailsToolStripMenuItem1";
             this.detailsToolStripMenuItem1.Size = new System.Drawing.Size(173, 22);
-            this.detailsToolStripMenuItem1.Text = "Details";
+            this.detailsToolStripMenuItem1.Text = "Mesh Editor";
             this.detailsToolStripMenuItem1.Click += new System.EventHandler(this.OnContextMenuShowDetails);
             // 
             // meshInfoPopup
@@ -330,13 +337,6 @@
             this.nodeInfoPopup.Name = "nodeInfoPopup";
             this.nodeInfoPopup.Size = new System.Drawing.Size(88, 90);
             this.nodeInfoPopup.TabIndex = 11;
-            // 
-            // toolStripMenuItemRenameMesh
-            // 
-            this.toolStripMenuItemRenameMesh.Name = "toolStripMenuItemRenameMesh";
-            this.toolStripMenuItemRenameMesh.Size = new System.Drawing.Size(173, 22);
-            this.toolStripMenuItemRenameMesh.Text = "Rename";
-            this.toolStripMenuItemRenameMesh.Click += new System.EventHandler(this.OnRenameMesh);
             // 
             // HierarchyInspectionView
             // 

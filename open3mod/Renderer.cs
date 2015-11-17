@@ -99,13 +99,19 @@ namespace open3mod
 
         protected Color BackgroundColor
         {
-            get { return Color.FromArgb(255, 165, 166, 165); }
+            get { return CoreSettings.CoreSettings.Default.BackgroundColor; }
         }
 
 
         protected Color ActiveViewColor
         {
-            get { return Color.FromArgb(255, 175, 175, 175); }
+            // Make ActiveView slightly brighter than the default background color.
+            get
+            {
+                var color = CoreSettings.CoreSettings.Default.BackgroundColor;
+                var offset = 10;
+                return Color.FromArgb(0xff, Math.Min(color.R + offset, 0xff), Math.Min(color.G + offset, 0xff), Math.Min(color.B + offset, 0xff));
+            }
         }
 
 

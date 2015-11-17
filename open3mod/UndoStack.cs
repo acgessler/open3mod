@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 
 namespace open3mod
 {
@@ -121,7 +122,15 @@ namespace open3mod
         public void Undo()
         {
             Debug.Assert(CanUndo());
-            _stack[--_cursor].Undo();
+            var item = _stack[--_cursor];
+            try
+            {
+                item.Undo();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(String.Format("Failed to undo operation [{0}], error: [{1}]", item.Description, ex));
+            }
         }
 
         /// <summary>
@@ -130,7 +139,15 @@ namespace open3mod
         public void Redo()
         {
             Debug.Assert(CanRedo());
-            _stack[_cursor++].Redo();
+            var item = _stack[_cursor++];
+            try
+            {
+                item.Redo();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(String.Format("Failed to perform operation [{0}], error: [{1}]", item.Description, ex));
+            }
         }
     }
 }

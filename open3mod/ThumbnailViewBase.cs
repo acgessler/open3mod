@@ -35,6 +35,7 @@ namespace open3mod
     public abstract class ThumbnailViewBase<TThumbnailType> where TThumbnailType : ThumbnailControlBase<TThumbnailType>
     {
         protected readonly FlowLayoutPanel Flow;
+        // Not ordered - Flow is authoritative of order.
         protected readonly List<TThumbnailType> Entries;
         private TThumbnailType _selectedEntry;
 
@@ -62,6 +63,20 @@ namespace open3mod
         public TThumbnailType SelectedEntry
         {
             get { return _selectedEntry; }
+        }
+
+
+        /// <summary>
+        /// Remove the given thumbnail entry from the view.
+        /// </summary>
+        /// <param name="thumb"></param>
+        /// <returns>Previous index of the entry for re-insertion/undo purposes.</returns>
+        public int RemoveEntry(TThumbnailType thumb)
+        {
+            var index = Flow.Controls.GetChildIndex(thumb);
+            Entries.Remove(thumb);
+            Flow.Controls.Remove(thumb);
+            return index;
         }
 
 
@@ -104,7 +119,8 @@ namespace open3mod
         /// </summary>
         /// <param name="control">Entry to be added, it may not be contained in the
         /// thumbnail view yet</param>
-        protected TThumbnailType AddEntry(TThumbnailType control)
+        /// <param name="index">Index at which to add the entry, -1 to add to end.</param>
+        public TThumbnailType AddEntry(TThumbnailType control, int index = -1)
         {
             Debug.Assert(!Entries.Contains(control));
 
@@ -119,6 +135,10 @@ namespace open3mod
 
             Entries.Add(control);
             Flow.Controls.Add(control);
+            if (index != -1)
+            {
+                Flow.Controls.SetChildIndex(control, index);
+            }
 
             control.OnSetTooltips(_toolTip);
             return control;

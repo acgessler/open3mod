@@ -1,6 +1,8 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Assimp;
@@ -120,6 +122,59 @@ namespace open3mod
         public void RenameAnimation(Animation animation, string newName)
         {
             animation.Name = newName;
+        }
+
+
+        /// <summary>
+        /// Rename a texture on disk, preserving the file extension.
+        /// 
+        /// Does not create UndoStack entries itself, caller must do this.
+        /// </summary>
+        /// <param name="texture"></param>
+        /// <param name="newName"></param>
+        public void RenameTexture(Texture texture, string newName)
+        {
+            string oldId = texture.OriginalTextureId;
+            string oldLocation = texture.ActualLocation;
+            string oldExt = Path.GetExtension(oldLocation);
+            string newExt = Path.GetExtension(newName);
+
+            if (oldExt != newExt)
+            {
+                newName = newName + oldExt;
+            }
+
+            newName = Path.GetDirectoryName(oldLocation) + Path.DirectorySeparatorChar + Path.GetFileName(newName);
+
+            if (Path.GetFullPath(newName) == Path.GetFullPath(oldLocation))
+            {
+                return;
+            }
+            try
+            {
+                texture.Move(newName);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                throw ex;
+            }
+            catch (IOException ex)
+            {
+                // Just don't rename the texture. Likeliest case is the destination file already exists.
+                // TODO(acgessler): Figure out how to best propagate this error.
+            }
+            string newId = texture.OriginalTextureId;
+            _scene.TextureSet.Replace(oldId, newId);
+            foreach (var mat in _scene.Raw.Materials)
+            {
+                foreach (var prop in mat.GetAllProperties())
+                {
+                    if (prop.GetStringValue() == oldId)
+                    {
+                        prop.SetStringValue(newId);
+                    }
+                }
+            }
         }
     }
 }

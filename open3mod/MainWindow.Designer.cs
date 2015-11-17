@@ -59,9 +59,11 @@ namespace open3mod
             this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.scaleOffsetSceneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateNormalsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemView = new System.Windows.Forms.ToolStripMenuItem();
             this.fullViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.twoViewsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.twoViewsHorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fourViewsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.wireframeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -72,6 +74,9 @@ namespace open3mod
             this.showBoundingBoxesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showNormalVectorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showAnimationSkeletonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
+            this.backgroundColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetBackgroundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
@@ -92,6 +97,7 @@ namespace open3mod
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonFullView = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonTwoViews = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonTwoViewsHor = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonFourViews = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonWireframe = new System.Windows.Forms.ToolStripButton();
@@ -121,7 +127,6 @@ namespace open3mod
             this.linkLabelWebsite = new System.Windows.Forms.LinkLabel();
             this.trackBarBrightness = new System.Windows.Forms.TrackBar();
             this.glControl1 = new open3mod.RenderControl();
-            this.generateNormalsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStripSelectRenderer.SuspendLayout();
             this.tabContextMenuStrip.SuspendLayout();
@@ -289,11 +294,19 @@ namespace open3mod
             this.scaleOffsetSceneToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.scaleOffsetSceneToolStripMenuItem.Text = "Scale to Fit";
             // 
+            // generateNormalsToolStripMenuItem
+            // 
+            this.generateNormalsToolStripMenuItem.Name = "generateNormalsToolStripMenuItem";
+            this.generateNormalsToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.generateNormalsToolStripMenuItem.Text = "Generate Normals";
+            this.generateNormalsToolStripMenuItem.Click += new System.EventHandler(this.OnGenerateNormals);
+            // 
             // toolStripMenuItemView
             // 
             this.toolStripMenuItemView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fullViewToolStripMenuItem,
             this.twoViewsToolStripMenuItem,
+            this.twoViewsHorToolStripMenuItem,
             this.fourViewsToolStripMenuItem,
             this.toolStripSeparator6,
             this.wireframeToolStripMenuItem,
@@ -303,7 +316,10 @@ namespace open3mod
             this.toolStripSeparator7,
             this.showBoundingBoxesToolStripMenuItem,
             this.showNormalVectorsToolStripMenuItem,
-            this.showAnimationSkeletonToolStripMenuItem});
+            this.showAnimationSkeletonToolStripMenuItem,
+            this.toolStripSeparator14,
+            this.backgroundColorToolStripMenuItem,
+            this.resetBackgroundToolStripMenuItem});
             this.toolStripMenuItemView.Name = "toolStripMenuItemView";
             this.toolStripMenuItemView.Size = new System.Drawing.Size(44, 20);
             this.toolStripMenuItemView.Text = "View";
@@ -312,36 +328,44 @@ namespace open3mod
             // 
             this.fullViewToolStripMenuItem.CheckOnClick = true;
             this.fullViewToolStripMenuItem.Name = "fullViewToolStripMenuItem";
-            this.fullViewToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.fullViewToolStripMenuItem.Text = "Full 3D View";
+            this.fullViewToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.fullViewToolStripMenuItem.Text = "Single 3D View";
             this.fullViewToolStripMenuItem.Click += new System.EventHandler(this.ToggleFullView);
             // 
             // twoViewsToolStripMenuItem
             // 
             this.twoViewsToolStripMenuItem.CheckOnClick = true;
             this.twoViewsToolStripMenuItem.Name = "twoViewsToolStripMenuItem";
-            this.twoViewsToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.twoViewsToolStripMenuItem.Text = "Two 3D Views";
+            this.twoViewsToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.twoViewsToolStripMenuItem.Text = "Two 3D Views (Vertical)";
             this.twoViewsToolStripMenuItem.Click += new System.EventHandler(this.ToggleTwoViews);
+            // 
+            // twoViewsHorToolStripMenuItem
+            // 
+            this.twoViewsHorToolStripMenuItem.CheckOnClick = true;
+            this.twoViewsHorToolStripMenuItem.Name = "twoViewsHorToolStripMenuItem";
+            this.twoViewsHorToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.twoViewsHorToolStripMenuItem.Text = "Two 3D Views (Horizontal)";
+            this.twoViewsHorToolStripMenuItem.Click += new System.EventHandler(this.ToggleTwoViewsHorizontal);
             // 
             // fourViewsToolStripMenuItem
             // 
             this.fourViewsToolStripMenuItem.CheckOnClick = true;
             this.fourViewsToolStripMenuItem.Name = "fourViewsToolStripMenuItem";
-            this.fourViewsToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.fourViewsToolStripMenuItem.Text = "Four 3D Views";
+            this.fourViewsToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.fourViewsToolStripMenuItem.Text = "Four 3D Views (Quads)";
             this.fourViewsToolStripMenuItem.Click += new System.EventHandler(this.ToggleFourViews);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(175, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(209, 6);
             // 
             // wireframeToolStripMenuItem
             // 
             this.wireframeToolStripMenuItem.CheckOnClick = true;
             this.wireframeToolStripMenuItem.Name = "wireframeToolStripMenuItem";
-            this.wireframeToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.wireframeToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.wireframeToolStripMenuItem.Text = "Wireframe";
             this.wireframeToolStripMenuItem.Click += new System.EventHandler(this.ToggleWireframe);
             // 
@@ -349,7 +373,7 @@ namespace open3mod
             // 
             this.texturedToolStripMenuItem.CheckOnClick = true;
             this.texturedToolStripMenuItem.Name = "texturedToolStripMenuItem";
-            this.texturedToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.texturedToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.texturedToolStripMenuItem.Text = "Textures";
             this.texturedToolStripMenuItem.Click += new System.EventHandler(this.ToggleTextures);
             // 
@@ -357,7 +381,7 @@ namespace open3mod
             // 
             this.lightingToolStripMenuItem.CheckOnClick = true;
             this.lightingToolStripMenuItem.Name = "lightingToolStripMenuItem";
-            this.lightingToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.lightingToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.lightingToolStripMenuItem.Text = "Lighting";
             this.lightingToolStripMenuItem.Click += new System.EventHandler(this.ToggleShading);
             // 
@@ -365,35 +389,54 @@ namespace open3mod
             // 
             this.framerateToolStripMenuItem.CheckOnClick = true;
             this.framerateToolStripMenuItem.Name = "framerateToolStripMenuItem";
-            this.framerateToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.framerateToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.framerateToolStripMenuItem.Text = "Framerate";
             this.framerateToolStripMenuItem.Click += new System.EventHandler(this.ToggleFps);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(175, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(209, 6);
             // 
             // showBoundingBoxesToolStripMenuItem
             // 
             this.showBoundingBoxesToolStripMenuItem.Name = "showBoundingBoxesToolStripMenuItem";
-            this.showBoundingBoxesToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.showBoundingBoxesToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.showBoundingBoxesToolStripMenuItem.Text = "Bounding Boxes";
             this.showBoundingBoxesToolStripMenuItem.Click += new System.EventHandler(this.ToggleShowBb);
             // 
             // showNormalVectorsToolStripMenuItem
             // 
             this.showNormalVectorsToolStripMenuItem.Name = "showNormalVectorsToolStripMenuItem";
-            this.showNormalVectorsToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.showNormalVectorsToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.showNormalVectorsToolStripMenuItem.Text = "Normal Vectors";
             this.showNormalVectorsToolStripMenuItem.Click += new System.EventHandler(this.ToggleShowNormals);
             // 
             // showAnimationSkeletonToolStripMenuItem
             // 
             this.showAnimationSkeletonToolStripMenuItem.Name = "showAnimationSkeletonToolStripMenuItem";
-            this.showAnimationSkeletonToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.showAnimationSkeletonToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.showAnimationSkeletonToolStripMenuItem.Text = "Animation Skeleton";
             this.showAnimationSkeletonToolStripMenuItem.Click += new System.EventHandler(this.ToggleShowSkeleton);
+            // 
+            // toolStripSeparator14
+            // 
+            this.toolStripSeparator14.Name = "toolStripSeparator14";
+            this.toolStripSeparator14.Size = new System.Drawing.Size(209, 6);
+            // 
+            // backgroundColorToolStripMenuItem
+            // 
+            this.backgroundColorToolStripMenuItem.Name = "backgroundColorToolStripMenuItem";
+            this.backgroundColorToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.backgroundColorToolStripMenuItem.Text = "Background Color";
+            this.backgroundColorToolStripMenuItem.Click += new System.EventHandler(this.OnChangeBackgroundColor);
+            // 
+            // resetBackgroundToolStripMenuItem
+            // 
+            this.resetBackgroundToolStripMenuItem.Name = "resetBackgroundToolStripMenuItem";
+            this.resetBackgroundToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.resetBackgroundToolStripMenuItem.Text = "Reset Background";
+            this.resetBackgroundToolStripMenuItem.Click += new System.EventHandler(this.OnResetBackground);
             // 
             // toolsToolStripMenuItem
             // 
@@ -406,7 +449,7 @@ namespace open3mod
             this.toolStripSeparator8,
             this.optionsToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
             this.toolsToolStripMenuItem.Click += new System.EventHandler(this.ToolsToolStripMenuItemClick);
             // 
@@ -494,6 +537,7 @@ namespace open3mod
             this.toolStripSeparator4,
             this.toolStripButtonFullView,
             this.toolStripButtonTwoViews,
+            this.toolStripButtonTwoViewsHor,
             this.toolStripButtonFourViews,
             this.toolStripSeparator,
             this.toolStripButtonWireframe,
@@ -575,6 +619,17 @@ namespace open3mod
             this.toolStripButtonTwoViews.Text = "Two Views";
             this.toolStripButtonTwoViews.ToolTipText = "Split into two 3D views stacked on top of each other";
             this.toolStripButtonTwoViews.Click += new System.EventHandler(this.ToggleTwoViews);
+            // 
+            // toolStripButtonTwoViewsHor
+            // 
+            this.toolStripButtonTwoViewsHor.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonTwoViewsHor.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonTwoViewsHor.Image")));
+            this.toolStripButtonTwoViewsHor.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonTwoViewsHor.Name = "toolStripButtonTwoViewsHor";
+            this.toolStripButtonTwoViewsHor.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonTwoViewsHor.Text = "Two Views (Horizontal)";
+            this.toolStripButtonTwoViewsHor.ToolTipText = "Split into two 3D views stacked on top of each other";
+            this.toolStripButtonTwoViewsHor.Click += new System.EventHandler(this.ToggleTwoViewsHorizontal);
             // 
             // toolStripButtonFourViews
             // 
@@ -858,13 +913,6 @@ namespace open3mod
             this.glControl1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.OnPreviewKeyDown);
             this.glControl1.Resize += new System.EventHandler(this.OnGlResize);
             // 
-            // generateNormalsToolStripMenuItem
-            // 
-            this.generateNormalsToolStripMenuItem.Name = "generateNormalsToolStripMenuItem";
-            this.generateNormalsToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
-            this.generateNormalsToolStripMenuItem.Text = "Generate Normals";
-            this.generateNormalsToolStripMenuItem.Click += new System.EventHandler(this.OnGenerateNormals);
-            // 
             // MainWindow
             // 
             this.AllowDrop = true;
@@ -930,7 +978,7 @@ namespace open3mod
         private System.Windows.Forms.ToolStripButton toolStripButtonShowFPS;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripButton toolStripButtonFullView;
-        private System.Windows.Forms.ToolStripButton toolStripButtonTwoViews;
+        private System.Windows.Forms.ToolStripButton toolStripButtonTwoViewsHor;
         private System.Windows.Forms.ToolStripButton toolStripButtonFourViews;
         private System.Windows.Forms.ToolStripMenuItem logViewerToolStripMenuItem;
         private RenderControl glControl1;
@@ -949,7 +997,7 @@ namespace open3mod
         private ToolStripMenuItem exportAllToolStripMenuItem;
         private ToolStripStatusLabel toolStripStatistics;
         private StatusStrip statusStrip;
-        private ToolStripMenuItem twoViewsToolStripMenuItem;
+        private ToolStripMenuItem twoViewsHorToolStripMenuItem;
         private ToolStripMenuItem fourViewsToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator6;
         private ToolStripMenuItem wireframeToolStripMenuItem;
@@ -990,6 +1038,11 @@ namespace open3mod
         private ToolStripSeparator toolStripSeparator13;
         private ToolStripMenuItem scaleOffsetSceneToolStripMenuItem;
         private ToolStripMenuItem generateNormalsToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator14;
+        private ToolStripMenuItem backgroundColorToolStripMenuItem;
+        private ToolStripMenuItem resetBackgroundToolStripMenuItem;
+        private ToolStripButton toolStripButtonTwoViews;
+        private ToolStripMenuItem twoViewsToolStripMenuItem;
     }
 }
 
