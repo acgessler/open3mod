@@ -38,6 +38,16 @@ namespace open3mod
             Lighting = 0x10
         };
 
+        private readonly Dictionary<GenFlags, Shader> shaders_ = new Dictionary<GenFlags, Shader>();
+
+        public Shader GenerateOrGetFromCache(GenFlags flags)
+        {
+            if (!shaders_.ContainsKey(flags))
+            {
+                shaders_[flags] = Generate(flags);
+            }
+            return shaders_[flags];
+        }
 
         public Shader Generate( GenFlags flags ) 
         {
@@ -68,7 +78,7 @@ namespace open3mod
                 pp += "#define HAS_LIGHTING\n";
             }
 
-            return new Shader("open3mod.Shader.UberVertexShader.glsl", "open3mod.Shader.UberFragmentShader.glsl", pp);
+            return Shader.FromResource("open3mod.Shader.UberVertexShader.glsl", "open3mod.Shader.UberFragmentShader.glsl", pp);
         }
 
     }
