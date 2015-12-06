@@ -807,7 +807,7 @@ namespace open3mod
             this.buttonTabClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightGray;
             this.buttonTabClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonTabClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonTabClose.Location = new System.Drawing.Point(1011, 35);
+            this.buttonTabClose.Location = new System.Drawing.Point(1008, 32);
             this.buttonTabClose.Name = "buttonTabClose";
             this.buttonTabClose.Size = new System.Drawing.Size(28, 24);
             this.buttonTabClose.TabIndex = 4;
@@ -853,9 +853,11 @@ namespace open3mod
             // 
             this.linkLabelDonate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.linkLabelDonate.AutoSize = true;
-            this.linkLabelDonate.Location = new System.Drawing.Point(847, 11);
+            this.linkLabelDonate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkLabelDonate.LinkColor = System.Drawing.Color.Red;
+            this.linkLabelDonate.Location = new System.Drawing.Point(991, 9);
             this.linkLabelDonate.Name = "linkLabelDonate";
-            this.linkLabelDonate.Size = new System.Drawing.Size(42, 13);
+            this.linkLabelDonate.Size = new System.Drawing.Size(48, 13);
             this.linkLabelDonate.TabIndex = 5;
             this.linkLabelDonate.TabStop = true;
             this.linkLabelDonate.Text = "Donate";
@@ -877,12 +879,12 @@ namespace open3mod
             // 
             this.linkLabelWebsite.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.linkLabelWebsite.AutoSize = true;
-            this.linkLabelWebsite.Location = new System.Drawing.Point(895, 11);
+            this.linkLabelWebsite.Location = new System.Drawing.Point(888, 9);
             this.linkLabelWebsite.Name = "linkLabelWebsite";
-            this.linkLabelWebsite.Size = new System.Drawing.Size(144, 13);
+            this.linkLabelWebsite.Size = new System.Drawing.Size(97, 13);
             this.linkLabelWebsite.TabIndex = 8;
             this.linkLabelWebsite.TabStop = true;
-            this.linkLabelWebsite.Text = "Website - Check for Updates";
+            this.linkLabelWebsite.Text = "Website / Updates";
             this.linkLabelWebsite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelWebsite_LinkClicked);
             // 
             // trackBarBrightness

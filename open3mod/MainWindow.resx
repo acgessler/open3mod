@@ -490,12 +490,12 @@
   </data>
   <data name="framerateToolStripMenuItem.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfdBBsWDQMk4CM6AAAAxUlEQVQ4T2MYBVQAkn5+
-        MtKBgR+AeA8IS/n7V0PF3gPxDiA+CRSLELGxYQay5wDxXiDeDWIjG3AEzIECZDFJHx8hIPs50JBQID0T
-        rAAIgOL8EAYBA0AAyL4ONCAeSB8D0nq8GhqMUCm4YphzdwAVuKK4wM9PAch+BNIElMsDsk8B8TMguwjZ
-        AGwugBm6E6jYASoFBkB5caD4IyAtj88AdDEpCQ8PThBb1MGBBSh/nSQDgK6wAYodAuJdQAwKizKo1AgH
-        DAwAuGhY+tL8+b8AAAAASUVORK5CYII=
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
+        EwAACxMBAJqcGAAAAAd0SU1FB90EGxYNAyTgIzoAAADFSURBVDhPYxgFVACSfn4y0oGBH4B4DwhL+ftX
+        Q8XeA/EOID4JFIsQsbFhBrLnAPFeIN4NYiMbcATMgQJkMUkfHyEg+znQkFAgPROsAAiA4vwQBgEDQADI
+        vg40IB5IHwPSerwaGoxQKbhimHN3ABW4orjAz08ByH4E0gSUywOyTwHxMyC7CNkAbC6AGboTqNgBKgUG
+        QHlxoPgjIC2PzwB0MSkJDw9OEFvUwYEFKH+dJAOArrABih0C4l1ADAqLMqjUCAcMDAC4aFj60vz5vwAA
+        AABJRU5ErkJggg==
 </value>
   </data>
   <data name="showBoundingBoxesToolStripMenuItem.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
