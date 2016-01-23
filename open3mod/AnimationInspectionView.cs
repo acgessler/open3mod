@@ -180,18 +180,22 @@ namespace open3mod
             {
                 return;
             }
-
-            _timer = new Timer { Interval = (TimerInterval) };
-            _timer.Tick += (o, args) =>
+            // we can get called by change animation without stopping, in which case only create a timer if there
+            // isn't one there already - MAN.
+            if (_timer == null)
             {
-                var d = _scene.SceneAnimator.AnimationCursor;
-                if (!_scene.SceneAnimator.IsInEndPosition)
+                _timer = new Timer { Interval = (TimerInterval) };
+                _timer.Tick += (o, args) =>
                 {
-                    d %= _duration;
-                }
-                timeSlideControl.Position = d;
-            };
-            _timer.Start();
+                    var d = _scene.SceneAnimator.AnimationCursor;
+                    if (!_scene.SceneAnimator.IsInEndPosition)
+                    {
+                        d %= _duration;
+                    }
+                    timeSlideControl.Position = d;
+                };
+                _timer.Start();
+            }
         }
 
 
