@@ -22,33 +22,33 @@
 uniform mat4x4 WorldViewProjection;
 uniform mat4x4 WorldView;
 
-varying vec3 position;
-varying vec3 normal; 
-
+out vec3 position;
+out vec3 normal; 
 
 // use custom varyings to pass to the fragment shader to simplify porting to HLSL
 #ifdef HAS_COLOR_MAP
-varying vec2 texCoord; 
+out vec2 texCoord; 
 #endif
  
 #ifdef HAS_VERTEX_COLOR
-varying vec3 vertexColor; 
+out vec3 vertexColor; 
 #endif
 
  
 void main(void) 
 {
-  gl_Position		= WorldViewProjection * gl_Vertex;
+  gl_Position = WorldViewProjection * gl_Vertex;
  
 #ifdef HAS_VERTEX_COLOR
-  vertexColor = gl_Color;
+  vertexColor = gl_Color.rgb;
 #endif
 
 #ifdef HAS_COLOR_MAP
-  texCoord = gl_MultiTexCoord0; 
+  texCoord = gl_MultiTexCoord0.xy; 
 #endif
 
-  normal		= normalize(((mat3x4)WorldView) * gl_Normal);
-  position		= vec3(WorldView * gl_Vertex);
+  position = vec3(WorldView * gl_Vertex);
+  // Scale is always uniform so the 3x3 part of WorldView is the same as the WorldViewTranspose.
+  normal = normalize(vec3(WorldView * vec4(gl_Normal, 0.0)));
 }
 

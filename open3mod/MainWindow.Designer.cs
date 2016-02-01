@@ -327,6 +327,7 @@ namespace open3mod
             // fullViewToolStripMenuItem
             // 
             this.fullViewToolStripMenuItem.CheckOnClick = true;
+            this.fullViewToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("fullViewToolStripMenuItem.Image")));
             this.fullViewToolStripMenuItem.Name = "fullViewToolStripMenuItem";
             this.fullViewToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.fullViewToolStripMenuItem.Text = "Single 3D View";
@@ -335,6 +336,7 @@ namespace open3mod
             // twoViewsToolStripMenuItem
             // 
             this.twoViewsToolStripMenuItem.CheckOnClick = true;
+            this.twoViewsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("twoViewsToolStripMenuItem.Image")));
             this.twoViewsToolStripMenuItem.Name = "twoViewsToolStripMenuItem";
             this.twoViewsToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.twoViewsToolStripMenuItem.Text = "Two 3D Views (Vertical)";
@@ -343,6 +345,7 @@ namespace open3mod
             // twoViewsHorToolStripMenuItem
             // 
             this.twoViewsHorToolStripMenuItem.CheckOnClick = true;
+            this.twoViewsHorToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("twoViewsHorToolStripMenuItem.Image")));
             this.twoViewsHorToolStripMenuItem.Name = "twoViewsHorToolStripMenuItem";
             this.twoViewsHorToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.twoViewsHorToolStripMenuItem.Text = "Two 3D Views (Horizontal)";
@@ -351,6 +354,7 @@ namespace open3mod
             // fourViewsToolStripMenuItem
             // 
             this.fourViewsToolStripMenuItem.CheckOnClick = true;
+            this.fourViewsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("fourViewsToolStripMenuItem.Image")));
             this.fourViewsToolStripMenuItem.Name = "fourViewsToolStripMenuItem";
             this.fourViewsToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.fourViewsToolStripMenuItem.Text = "Four 3D Views (Quads)";
@@ -364,6 +368,7 @@ namespace open3mod
             // wireframeToolStripMenuItem
             // 
             this.wireframeToolStripMenuItem.CheckOnClick = true;
+            this.wireframeToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("wireframeToolStripMenuItem.Image")));
             this.wireframeToolStripMenuItem.Name = "wireframeToolStripMenuItem";
             this.wireframeToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.wireframeToolStripMenuItem.Text = "Wireframe";
@@ -372,6 +377,7 @@ namespace open3mod
             // texturedToolStripMenuItem
             // 
             this.texturedToolStripMenuItem.CheckOnClick = true;
+            this.texturedToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("texturedToolStripMenuItem.Image")));
             this.texturedToolStripMenuItem.Name = "texturedToolStripMenuItem";
             this.texturedToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.texturedToolStripMenuItem.Text = "Textures";
@@ -380,6 +386,7 @@ namespace open3mod
             // lightingToolStripMenuItem
             // 
             this.lightingToolStripMenuItem.CheckOnClick = true;
+            this.lightingToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("lightingToolStripMenuItem.Image")));
             this.lightingToolStripMenuItem.Name = "lightingToolStripMenuItem";
             this.lightingToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.lightingToolStripMenuItem.Text = "Lighting";
@@ -388,6 +395,7 @@ namespace open3mod
             // framerateToolStripMenuItem
             // 
             this.framerateToolStripMenuItem.CheckOnClick = true;
+            this.framerateToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("framerateToolStripMenuItem.Image")));
             this.framerateToolStripMenuItem.Name = "framerateToolStripMenuItem";
             this.framerateToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.framerateToolStripMenuItem.Text = "Framerate";
@@ -400,6 +408,7 @@ namespace open3mod
             // 
             // showBoundingBoxesToolStripMenuItem
             // 
+            this.showBoundingBoxesToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("showBoundingBoxesToolStripMenuItem.Image")));
             this.showBoundingBoxesToolStripMenuItem.Name = "showBoundingBoxesToolStripMenuItem";
             this.showBoundingBoxesToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.showBoundingBoxesToolStripMenuItem.Text = "Bounding Boxes";
@@ -407,6 +416,7 @@ namespace open3mod
             // 
             // showNormalVectorsToolStripMenuItem
             // 
+            this.showNormalVectorsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("showNormalVectorsToolStripMenuItem.Image")));
             this.showNormalVectorsToolStripMenuItem.Name = "showNormalVectorsToolStripMenuItem";
             this.showNormalVectorsToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.showNormalVectorsToolStripMenuItem.Text = "Normal Vectors";
@@ -414,6 +424,7 @@ namespace open3mod
             // 
             // showAnimationSkeletonToolStripMenuItem
             // 
+            this.showAnimationSkeletonToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("showAnimationSkeletonToolStripMenuItem.Image")));
             this.showAnimationSkeletonToolStripMenuItem.Name = "showAnimationSkeletonToolStripMenuItem";
             this.showAnimationSkeletonToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.showAnimationSkeletonToolStripMenuItem.Text = "Animation Skeleton";
@@ -796,7 +807,7 @@ namespace open3mod
             this.buttonTabClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightGray;
             this.buttonTabClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonTabClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonTabClose.Location = new System.Drawing.Point(1011, 35);
+            this.buttonTabClose.Location = new System.Drawing.Point(1008, 32);
             this.buttonTabClose.Name = "buttonTabClose";
             this.buttonTabClose.Size = new System.Drawing.Size(28, 24);
             this.buttonTabClose.TabIndex = 4;
@@ -842,9 +853,11 @@ namespace open3mod
             // 
             this.linkLabelDonate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.linkLabelDonate.AutoSize = true;
-            this.linkLabelDonate.Location = new System.Drawing.Point(847, 11);
+            this.linkLabelDonate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkLabelDonate.LinkColor = System.Drawing.Color.Red;
+            this.linkLabelDonate.Location = new System.Drawing.Point(991, 9);
             this.linkLabelDonate.Name = "linkLabelDonate";
-            this.linkLabelDonate.Size = new System.Drawing.Size(42, 13);
+            this.linkLabelDonate.Size = new System.Drawing.Size(48, 13);
             this.linkLabelDonate.TabIndex = 5;
             this.linkLabelDonate.TabStop = true;
             this.linkLabelDonate.Text = "Donate";
@@ -866,12 +879,12 @@ namespace open3mod
             // 
             this.linkLabelWebsite.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.linkLabelWebsite.AutoSize = true;
-            this.linkLabelWebsite.Location = new System.Drawing.Point(895, 11);
+            this.linkLabelWebsite.Location = new System.Drawing.Point(888, 9);
             this.linkLabelWebsite.Name = "linkLabelWebsite";
-            this.linkLabelWebsite.Size = new System.Drawing.Size(144, 13);
+            this.linkLabelWebsite.Size = new System.Drawing.Size(97, 13);
             this.linkLabelWebsite.TabIndex = 8;
             this.linkLabelWebsite.TabStop = true;
-            this.linkLabelWebsite.Text = "Website - Check for Updates";
+            this.linkLabelWebsite.Text = "Website / Updates";
             this.linkLabelWebsite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelWebsite_LinkClicked);
             // 
             // trackBarBrightness

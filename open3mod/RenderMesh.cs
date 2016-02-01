@@ -45,9 +45,10 @@ namespace open3mod
             public int TexCoordBufferId;
             public int NormalBufferId;
             public int TangentBufferId;
-            public int ElementBufferID;
-            public int NumElements;
+            public int ElementBufferId;
+            public int NumIndices;
             public int BitangentBufferId;
+            public bool Is32BitIndices; 
         }
 
         private readonly Vbo _vbo;
@@ -79,7 +80,7 @@ namespace open3mod
             GL.PushClientAttrib(ClientAttribMask.ClientVertexArrayBit);
 
             Debug.Assert(_vbo.VertexBufferId != 0);
-            Debug.Assert(_vbo.ElementBufferID != 0);
+            Debug.Assert(_vbo.ElementBufferId != 0);
 
             // normals
             if (flags.HasFlag(RenderFlags.Shaded))
@@ -119,9 +120,9 @@ namespace open3mod
 
 
             // primitives
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _vbo.ElementBufferID);
-            GL.DrawElements(BeginMode.Triangles, _vbo.NumElements,
-                DrawElementsType.UnsignedInt,
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _vbo.ElementBufferId);
+            GL.DrawElements(BeginMode.Triangles, _vbo.NumIndices /* actually, count(indices) */,
+                _vbo.Is32BitIndices ? DrawElementsType.UnsignedInt : DrawElementsType.UnsignedShort,
                 IntPtr.Zero);
 
             // Restore the state
@@ -159,8 +160,7 @@ namespace open3mod
                 UploadTangentsAndBitangents(out vboToFill.TangentBufferId, out vboToFill.BitangentBufferId);
             }
 
-            vboToFill.NumElements = UploadPrimitives(out vboToFill.ElementBufferID);
-
+            UploadPrimitives(out vboToFill.ElementBufferId, out vboToFill.NumIndices, out vboToFill.Is32BitIndices);
             // TODO: upload bone weights
         }
 
@@ -211,7 +211,7 @@ namespace open3mod
         /// <summary>
         /// Uploads vertex indices to a newly generated Gl vertex array
         /// </summary>
-        private int UploadPrimitives(out int elementBufferId)
+        private void UploadPrimitives(out int elementBufferId, out int indicesCount, out bool is32Bit)
         {
             Debug.Assert(_mesh.HasTextureCoords(0));
 
@@ -223,7 +223,7 @@ namespace open3mod
             // TODO account for other primitives than triangles
             var triCount = 0;
             int byteCount;
-            var need32Bit = false;
+            is32Bit = false;
             foreach(var face in faces)
             {
                 if (face.IndexCount != 3)
@@ -233,12 +233,12 @@ namespace open3mod
                 ++triCount;
                 if (face.Indices.Any(idx => idx > 0xffff))
                 {
-                    need32Bit = true;
+                    is32Bit = true;
                 }
             }
 
             var intCount = triCount * 3;
-            if (need32Bit)
+            if (is32Bit)
             {
                 var temp = new uint[intCount];
                 byteCount = intCount * sizeof(uint);
@@ -274,7 +274,7 @@ namespace open3mod
             }
 
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
-            return triCount * 3;
+            indicesCount = triCount * 3;
         }
 
 
@@ -308,10 +308,9 @@ namespace open3mod
         /// <summary>
         /// Uploads vertex positions to a newly generated Gl vertex array.
         /// </summary>
-        private void UploadVertices(out int normalBufferId)
+        private void UploadVertices(out int verticesBufferId)
         {
-            Debug.Assert(_mesh.HasNormals);
-            GenAndFillBuffer(out normalBufferId, _mesh.Normals);
+            GenAndFillBuffer(out verticesBufferId, _mesh.Vertices);
         }
 
 

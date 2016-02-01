@@ -21,7 +21,7 @@
 // note: all lighting calculations done in modelview space
 uniform sampler2D Texture0;
 
-uniform vec3 LightDiffuse_SceneBrightness;
+uniform vec4 LightDiffuse_SceneBrightness;
 uniform vec3 LightSpecular;
 uniform vec3 LightDirection; // modelview space, norm.
 
@@ -30,33 +30,34 @@ uniform vec4 MaterialSpecular_Shininess;
 uniform vec3 MaterialAmbient;
 uniform vec3 MaterialEmissive;
 
-varying vec3 position;
-varying vec3 normal; 
+in vec3 position;
+in vec3 normal; 
 
 #ifdef HAS_COLOR_MAP
-varying vec2 texCoord; 
+in vec2 texCoord; 
 #endif
  
 #ifdef HAS_VERTEX_COLOR
-varying vec3 vertexColor; 
+in vec3 vertexColor; 
 #endif
 
 
 void main(void) 
 {
-  vec3 diffuse = MaterialDiffuse_Alpha.xyz;
+  vec4 diffuseAndAlpha = MaterialDiffuse_Alpha.rgba;
 
 #ifdef HAS_COLOR_MAP
-  diffuse *= texture2D(Texture0, texCoord.xy);
+  diffuseAndAlpha *= texture2D(Texture0, texCoord.xy);
 #endif
 
 #ifdef HAS_VERTEX_COLOR
-  diffuse *= vertexColor;
+  diffuseAndAlpha.rgb *= vertexColor;
 #endif
 
-  diffuse = (dot(normal, LightDirection) * diffuse + MaterialAmbient) * LightDiffuse_SceneBrightness.xyz;
+  float li = dot(normal, LightDirection);
+  diffuseAndAlpha.rgb = li * diffuseAndAlpha.rgb + MaterialAmbient;
 
-  vec3 specular = vec3(0,0,0);
+  vec3 specular = vec3(0.0, 0.0, 0.0);
 
 #ifdef HAS_PHONG_SPECULAR_SHADING
   vec3 eyeDir = normalize(-position);
@@ -64,6 +65,7 @@ void main(void)
   specular = LightSpecular * pow(max(dot(r, eyeDir), 0.0), MaterialSpecular_Shininess.w);	
 #endif
 
-  gl_FragColor = (diffuse + specular + MaterialEmissive) * LightDiffuse_SceneBrightness.w;
+  vec3 totalColor = (diffuseAndAlpha.rgb + specular + MaterialEmissive) * LightDiffuse_SceneBrightness.w;
+  gl_FragColor = vec4(totalColor.rgb, diffuseAndAlpha.a);
 }
 
