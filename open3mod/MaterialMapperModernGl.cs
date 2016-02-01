@@ -20,6 +20,7 @@
 
 using System;
 using Assimp;
+using System.Diagnostics;
 
 namespace open3mod
 {

@@ -6,3 +6,4 @@ bin/
 *.user
 *.pyc
 releases/
+*.pdb
