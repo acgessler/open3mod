@@ -112,6 +112,7 @@ namespace open3mod
             // sync global UI with UIState
             framerateToolStripMenuItem.Checked = toolStripButtonShowFPS.Checked = _ui.ShowFps;
             lightingToolStripMenuItem.Checked = toolStripButtonShowShaded.Checked = _ui.RenderLit;
+            cullingToolStripMenuItem.Checked = toolStripButtonCulling.Checked = GraphicsSettings.Default.BackFaceCulling;
             texturedToolStripMenuItem.Checked = toolStripButtonShowTextures.Checked = _ui.RenderTextured;
             wireframeToolStripMenuItem.Checked = toolStripButtonWireframe.Checked = _ui.RenderWireframe;
             showNormalVectorsToolStripMenuItem.Checked = toolStripButtonShowNormals.Checked = _ui.ShowNormals;
@@ -773,6 +774,15 @@ namespace open3mod
         {
             _ui.ShowSkeleton = !_ui.ShowSkeleton;
             showAnimationSkeletonToolStripMenuItem.Checked = toolStripButtonShowSkeleton.Checked = _ui.ShowSkeleton;
+        }
+
+
+        private void ToggleCulling(object sender, EventArgs e)
+        {
+            GraphicsSettings.Default.BackFaceCulling = !GraphicsSettings.Default.BackFaceCulling;
+            cullingToolStripMenuItem.Checked = toolStripButtonCulling.Checked = GraphicsSettings.Default.BackFaceCulling;
+            if (UiState.ActiveTab.ActiveScene != null)
+                UiState.ActiveTab.ActiveScene.RecreateRenderingBackend();
         }
 
 
