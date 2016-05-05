@@ -97,13 +97,6 @@ namespace open3mod
             GL.Disable(EnableCap.Texture2D);
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
             GL.Enable(EnableCap.DepthTest);
-
-            // set fixed-function lighting parameters
-            GL.ShadeModel(ShadingModel.Smooth);
-            GL.LightModel(LightModelParameter.LightModelAmbient, new[] { 0.3f, 0.3f, 0.3f, 1 });
-            GL.Enable(EnableCap.Lighting);
-            GL.Enable(EnableCap.Light0);
-
            
             if (flags.HasFlag(RenderFlags.Wireframe))
             {
@@ -125,22 +118,14 @@ namespace open3mod
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadMatrix(ref view);
 
-            // light direction
-            var dir = new Vector3(1, 1, 0);
-            var mat = renderer.LightRotation;
-            Vector3.TransformNormal(ref dir, ref mat, out dir);
-            GL.Light(LightName.Light0, LightParameter.Position, new float[] { dir.X, dir.Y, dir.Z, 0 });
-
-            // light color
-            var col = new Vector3(1, 1, 1);
-            col *= (0.25f + 1.5f * GraphicsSettings.Default.OutputBrightness / 100.0f) * 1.5f;
-
-            GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { col.X, col.Y, col.Z, 1 });
-            GL.Light(LightName.Light0, LightParameter.Specular, new float[] { col.X, col.Y, col.Z, 1 });
+            Owner.MaterialMapper.BeginScene(renderer);
 
             if (flags.HasFlag(RenderFlags.Shaded))
             {
-                OverlayLightSource.DrawLightSource(dir);
+                var dir = new Vector3(1, 1, 0);
+                var mat = renderer.LightRotation;
+                Vector3.TransformNormal(ref dir, ref mat, out dir);
+                    OverlayLightSource.DrawLightSource(dir);
             }
 
            
@@ -251,9 +236,9 @@ namespace open3mod
             GL.Color3(0.0f, 1.0f, 0.0f);
             GL.End();
 #endif
-
+            Owner.MaterialMapper.EndScene(renderer);
             GL.Disable(EnableCap.Texture2D);
-            GL.Disable(EnableCap.Lighting);
+            
         }
 
 

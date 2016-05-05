@@ -129,6 +129,9 @@ namespace open3mod
         /// <param name="mat">Material to be applied, must be non-null</param>
         public abstract void ApplyMaterial(Mesh mesh, Material mat, bool textured, bool shaded);
         public abstract void ApplyGhostMaterial(Mesh mesh, Material material, bool shaded);
+
+        public abstract void BeginScene(Renderer renderer);
+        public abstract void EndScene(Renderer renderer);
       
 
         /// <summary>

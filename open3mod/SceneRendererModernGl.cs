@@ -79,8 +79,10 @@ namespace open3mod
             }
 
             GL.MatrixMode(MatrixMode.Modelview);
-            var lookat = cam == null ? Matrix4.LookAt(0, 10, 5, 0, 0, 0, 0, 1, 0) : cam.GetView();
-         
+            var view = cam == null ? Matrix4.LookAt(0, 10, 5, 0, 0, 0, 0, 1, 0) : cam.GetView();
+
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadMatrix(ref view);
 
             var tmp = InitposeMax.X - InitposeMin.X;
             tmp = Math.Max(InitposeMax.Y - InitposeMin.Y, tmp);
@@ -121,6 +123,7 @@ namespace open3mod
         /// <param name="visibleMeshesByNode"> </param>
         /// <param name="flags">Rendering flags</param>
         /// <param name="animated">Play animation?</param>
+        /// <param name="world">Parent world transform</param>
         /// <returns>whether there is any need to do a second render pass with alpha blending enabled</returns>
         private bool RecursiveRender(Node node,
             Dictionary<Node, List<Mesh>> visibleMeshesByNode,
@@ -139,19 +142,12 @@ namespace open3mod
             {
                 m = AssimpToOpenTk.FromMatrix(node.Transform);
             }
-            // TODO for some reason, all OpenTk matrices need a ^T - we should clarify our conventions somewhere
             m.Transpose();
-
             var newWorld = world * m;
-
-            // the following permutations could be compacted into one big loop with lots of
-            // condition magic, but at the cost of readability and also performance.
-            // we therefore keep it redundant and stupid.
             if (node.HasMeshes)
             {
                 needAlpha = DrawOpaqueMeshes(node, visibleMeshesByNode, flags, animated);
             }
-
 
             for (var i = 0; i < node.ChildCount; i++)
             {
@@ -212,8 +208,30 @@ namespace open3mod
                 _meshes[index] = new RenderMesh(mesh);
             }
 
-            _meshes[index].Render(flags);
+            if (showGhost)
+            {
+                Owner.MaterialMapper.ApplyGhostMaterial(mesh, Owner.Raw.Materials[mesh.MaterialIndex],
+                    flags.HasFlag(RenderFlags.Shaded));
+            }
+            else
+            {
+                Owner.MaterialMapper.ApplyMaterial(mesh, Owner.Raw.Materials[mesh.MaterialIndex],
+                    flags.HasFlag(RenderFlags.Textured),
+                    flags.HasFlag(RenderFlags.Shaded));
+            }
 
+            if (GraphicsSettings.Default.BackFaceCulling)
+            {
+                GL.FrontFace(FrontFaceDirection.Ccw);
+                GL.CullFace(CullFaceMode.Back);
+                GL.Enable(EnableCap.CullFace);
+            }
+            else
+            {
+                GL.Disable(EnableCap.CullFace);
+            }
+
+            _meshes[index].Render(flags);
             return true;
         }
 

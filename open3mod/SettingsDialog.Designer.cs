@@ -228,7 +228,8 @@
             this.comboBoxSetBackend.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSetBackend.FormattingEnabled = true;
             this.comboBoxSetBackend.Items.AddRange(new object[] {
-            "OpenGl Legacy / Fixed Function Pipeline"});
+            "OpenGL Legacy",
+            "OpenGL Modern"});
             this.comboBoxSetBackend.Location = new System.Drawing.Point(186, 35);
             this.comboBoxSetBackend.Name = "comboBoxSetBackend";
             this.comboBoxSetBackend.Size = new System.Drawing.Size(248, 21);

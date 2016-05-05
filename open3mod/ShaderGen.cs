@@ -26,7 +26,7 @@ using System.Text;
 
 namespace open3mod
 {
-    public class ShaderGen
+    public class ShaderGen : IDisposable
     {
         [Flags]
         public enum GenFlags
@@ -47,6 +47,15 @@ namespace open3mod
                 shaders_[flags] = Generate(flags);
             }
             return shaders_[flags];
+        }
+
+        public void Dispose()
+        {
+            foreach (var v in shaders_)
+            {
+                v.Value.Dispose();
+            }
+            GC.SuppressFinalize(this);
         }
 
         public Shader Generate( GenFlags flags ) 

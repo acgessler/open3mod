@@ -373,7 +373,7 @@ namespace open3mod
             }
             else
             {
-                _mapper = new MaterialMapperModernGl(this); 
+                _mapper = new MaterialMapperModernGl(this);
                 _renderer = new SceneRendererModernGl(this, _sceneMin, _sceneMax);
             }
         }

@@ -46,9 +46,10 @@ namespace open3mod
         private readonly int _vs;
         private readonly int _fs;
         private bool _disposed;
+        private readonly Dictionary<string, int> _variables = new Dictionary<string, int>(); 
 
-        private static readonly Dictionary<string, string> _textCache = new Dictionary<string, string>(); 
-
+        private static readonly Dictionary<string, string> _textCache = new Dictionary<string, string>();
+        private static int _programBound = 0;
 
         /// <summary>
         /// Constructs a shader program given the source code for the single stages.
@@ -118,7 +119,7 @@ namespace open3mod
             int result;
 
             _vs = GL.CreateShader(ShaderType.VertexShader);
-            GL.ShaderSource(_vs, string.Format("{0}\n{1}", defines, vertexShader));
+            GL.ShaderSource(_vs, string.Format("#version 130\n{0}\n{1}", defines, vertexShader));
             GL.CompileShader(_vs);
             GL.GetShader(_vs, ShaderParameter.CompileStatus, out result);
             if (result == 0)
@@ -130,7 +131,7 @@ namespace open3mod
             }
 
             _fs = GL.CreateShader(ShaderType.FragmentShader);
-            GL.ShaderSource(_fs, string.Format("{0}\n{1}", defines, fragmentShader));
+            GL.ShaderSource(_fs, string.Format("#version 130\n{0}\n{1}", defines, fragmentShader));
             GL.CompileShader(_fs);
             GL.GetShader(_fs, ShaderParameter.CompileStatus, out result);
             if (result == 0)
@@ -191,6 +192,54 @@ namespace open3mod
                 GL.DeleteShader(_fs);
             }
             GC.SuppressFinalize(this);
+        }
+
+        public void SetVec3(string name, Vector3 v)
+        {
+            BindIfNecessary();
+            GL.Uniform3(GetVariableLocation(name), v);
+        }
+
+        public void SetVec4(string name, Vector4 v)
+        {
+            BindIfNecessary();
+            GL.Uniform4(GetVariableLocation(name), v);
+        }
+
+        public void SetMat4(string name, Matrix4 v)
+        {
+            BindIfNecessary();
+            GL.UniformMatrix4(GetVariableLocation(name), false, ref v);
+        }
+
+        public void BindIfNecessary()
+        {
+            if (_programBound == _program)
+            {
+                return;
+            }
+            GL.UseProgram(_program);
+            _programBound = _program;
+        }
+
+        public static void Unbind()
+        {
+            GL.UseProgram(0);
+            _programBound = 0;
+        }
+
+        private int GetVariableLocation(string name)
+        {
+            if (!_variables.ContainsKey(name))
+            {
+                int location = GL.GetUniformLocation(_program, name);
+                if (location == -1)
+                {
+                    throw new Exception("Failed to lookup variable: " + name);
+                }
+                _variables[name] = location;
+            }
+            return _variables[name];
         }
     }
 }

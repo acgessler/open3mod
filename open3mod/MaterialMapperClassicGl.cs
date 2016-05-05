@@ -19,6 +19,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 
 using Assimp;
+using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
@@ -49,6 +50,33 @@ namespace open3mod
         public override void ApplyGhostMaterial(Mesh mesh, Material material, bool shaded)
         {
             ApplyFixedFunctionGhostMaterial(mesh, material, shaded);
+        }
+
+        public override void BeginScene(Renderer renderer)
+        {
+            // set fixed-function lighting parameters
+            GL.ShadeModel(ShadingModel.Smooth);
+            GL.LightModel(LightModelParameter.LightModelAmbient, new[] { 0.3f, 0.3f, 0.3f, 1 });
+            GL.Enable(EnableCap.Lighting);
+            GL.Enable(EnableCap.Light0);
+
+            // light direction
+            var dir = new Vector3(1, 1, 0);
+            var mat = renderer.LightRotation;
+            Vector3.TransformNormal(ref dir, ref mat, out dir);
+            GL.Light(LightName.Light0, LightParameter.Position, new float[] { dir.X, dir.Y, dir.Z, 0 });
+
+            // light color
+            var col = new Vector3(1, 1, 1);
+            col *= (0.25f + 1.5f * GraphicsSettings.Default.OutputBrightness / 100.0f) * 1.5f;
+
+            GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { col.X, col.Y, col.Z, 1 });
+            GL.Light(LightName.Light0, LightParameter.Specular, new float[] { col.X, col.Y, col.Z, 1 });
+        }
+
+        public override void EndScene(Renderer renderer)
+        {
+            GL.Disable(EnableCap.Lighting);
         }
 
 
