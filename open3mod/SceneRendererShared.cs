@@ -88,6 +88,93 @@ namespace open3mod
         }
 
 
+        /// <summary>
+        /// Recursive rendering function
+        /// </summary>
+        /// <param name="node">Current node</param>
+        /// <param name="visibleMeshesByNode"> </param>
+        /// <param name="flags">Rendering flags</param>
+        /// <param name="animated">Play animation?</param>
+        /// <returns>whether there is any need to do a second render pass with alpha blending enabled</returns>
+        protected bool RecursiveRender(Node node,
+            Dictionary<Node, List<Mesh>> visibleMeshesByNode,
+            RenderFlags flags, bool animated)
+        {
+            var needAlpha = false;
+
+            Matrix4 m;
+            if (animated)
+            {
+                Owner.SceneAnimator.GetLocalTransform(node, out m);
+            }
+            else
+            {
+                m = AssimpToOpenTk.FromMatrix(node.Transform);
+            }
+            // TODO for some reason, all OpenTk matrices need a ^T - we should clarify our conventions somewhere
+            m.Transpose();
+            PushWorld(ref m);
+            if (node.HasMeshes)
+            {
+                needAlpha = DrawOpaqueMeshes(node, visibleMeshesByNode, flags, animated);
+            }
+
+            for (var i = 0; i < node.ChildCount; i++)
+            {
+                needAlpha = RecursiveRender(node.Children[i], visibleMeshesByNode, flags, animated) || needAlpha;
+            }
+            PopWorld();
+            return needAlpha;
+        }
+
+
+        /// <summary>
+        /// Recursive rendering function for semi-transparent (i.e. alpha-blended) meshes.
+        /// 
+        /// Alpha blending is not globally on, meshes need to do that on their own. 
+        /// 
+        /// This render function is called _after_ solid geometry has been drawn, so the 
+        /// relative order between transparent and opaque geometry is maintained. There
+        /// is no further ordering within the alpha rendering pass.
+        /// </summary>
+        /// <param name="node">Current node</param>
+        /// <param name="visibleNodes">Set of visible meshes</param>
+        /// <param name="flags">Rendering flags</param>
+        /// <param name="animated">Play animation?</param>
+        protected void RecursiveRenderWithAlpha(Node node, Dictionary<Node, List<Mesh>> visibleNodes,
+            RenderFlags flags,
+            bool animated)
+        {
+            Matrix4 m;
+            if (animated)
+            {
+                Owner.SceneAnimator.GetLocalTransform(node, out m);
+            }
+            else
+            {
+                m = AssimpToOpenTk.FromMatrix(node.Transform);
+            }
+            // TODO for some reason, all OpenTk matrices need a ^T - we should clarify our conventions somewhere
+            m.Transpose();
+            PushWorld(ref m);
+
+            // the following permutations could be compacted into one big loop with lots of
+            // condition magic, but at the cost of readability and also performance.
+            // we therefore keep it redundant and stupid.
+            if (node.HasMeshes)
+            {
+                DrawAlphaMeshes(node, visibleNodes, flags, animated);
+            }
+
+
+            for (var i = 0; i < node.ChildCount; i++)
+            {
+                RecursiveRenderWithAlpha(node.Children[i], visibleNodes, flags, animated);
+            }
+
+            PopWorld();
+        }
+
 
         /// <summary>
         /// Draw the opaque (i.e. not semi-transparent) meshes pertaining to a node
@@ -229,6 +316,9 @@ namespace open3mod
                 }
             }
         }
+
+        protected abstract void PushWorld(ref Matrix4 world);
+        protected abstract void PopWorld();
 
         /// <summary>
         /// Abstract method to draw a mesh attached to a node. This is to be implemented

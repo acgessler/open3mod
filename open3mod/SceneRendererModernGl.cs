@@ -91,9 +91,10 @@ namespace open3mod
 
             var world = Matrix4.Scale(tmp);
             world *= Matrix4.CreateTranslation(-(InitposeMin + InitposeMax) * 0.5f);
+            PushWorld(ref world);
             //
             var animated = Owner.SceneAnimator.IsAnimationActive;
-            var needAlpha = RecursiveRender(Owner.Raw.RootNode, visibleMeshesByNode, flags, animated, ref world);
+            var needAlpha = RecursiveRender(Owner.Raw.RootNode, visibleMeshesByNode, flags, animated);
             if (flags.HasFlag(RenderFlags.ShowSkeleton) || flags.HasFlag(RenderFlags.ShowNormals))
             {
                 //RecursiveRenderNoScale(Owner.Raw.RootNode, visibleMeshesByNode, flags, 1.0f / tmp, animated);
@@ -104,7 +105,7 @@ namespace open3mod
                 // handle semi-transparent geometry              
                 RecursiveRenderWithAlpha(Owner.Raw.RootNode, visibleMeshesByNode, flags, animated);
             }
-
+            PopWorld();
 
             // always switch back to FILL
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
@@ -115,90 +116,15 @@ namespace open3mod
         }
 
 
-        /// <summary>
-        /// Recursive rendering function for opaque meshes that also checks whether there
-        /// is any need for a second rendering pass to draw semi-transparent meshes.
-        /// </summary>
-        /// <param name="node">Current node</param>
-        /// <param name="visibleMeshesByNode"> </param>
-        /// <param name="flags">Rendering flags</param>
-        /// <param name="animated">Play animation?</param>
-        /// <param name="world">Parent world transform</param>
-        /// <returns>whether there is any need to do a second render pass with alpha blending enabled</returns>
-        private bool RecursiveRender(Node node,
-            Dictionary<Node, List<Mesh>> visibleMeshesByNode,
-            RenderFlags flags, 
-            bool animated,
-            ref Matrix4 world)
+        private Stack<Matrix4> worlds = new Stack<Matrix4>();
+        protected override void PushWorld(ref Matrix4 world)
         {
-            var needAlpha = false;
-
-            Matrix4 m;
-            if (animated)
-            {
-                Owner.SceneAnimator.GetLocalTransform(node, out m);
-            }
-            else
-            {
-                m = AssimpToOpenTk.FromMatrix(node.Transform);
-            }
-            m.Transpose();
-            var newWorld = world * m;
-            if (node.HasMeshes)
-            {
-                needAlpha = DrawOpaqueMeshes(node, visibleMeshesByNode, flags, animated);
-            }
-
-            for (var i = 0; i < node.ChildCount; i++)
-            {
-                needAlpha = RecursiveRender(node.Children[i], visibleMeshesByNode, flags, animated, ref newWorld) || needAlpha;
-            }
-            return needAlpha;
+            worlds.Push((worlds.Count > 0 ? worlds.Peek() : Matrix4.Identity) * world);
         }
 
-
-        /// <summary>
-        /// Recursive rendering function for semi-transparent (i.e. alpha-blended) meshes.
-        /// 
-        /// Alpha blending is not globally on, meshes need to do that on their own. 
-        /// 
-        /// This render function is called _after_ solid geometry has been drawn, so the 
-        /// relative order between transparent and opaque geometry is maintained. There
-        /// is no further ordering within the alpha rendering pass.
-        /// </summary>
-        /// <param name="node">Current node</param>
-        /// <param name="visibleNodes">Set of visible meshes</param>
-        /// <param name="flags">Rendering flags</param>
-        /// <param name="animated">Play animation?</param>
-        private void RecursiveRenderWithAlpha(Node node, Dictionary<Node, List<Mesh>> visibleNodes,
-            RenderFlags flags,
-            bool animated)
+        protected override void PopWorld()
         {
-            Matrix4 m;
-            if (animated)
-            {
-                Owner.SceneAnimator.GetLocalTransform(node, out m);
-            }
-            else
-            {
-                m = AssimpToOpenTk.FromMatrix(node.Transform);
-            }
-            // TODO for some reason, all OpenTk matrices need a ^T - clarify our conventions somewhere
-            m.Transpose();
-
-            // the following permutations could be compacted into one big loop with lots of
-            // condition magic, but at the cost of readability and also performance.
-            // we therefore keep it redundant and stupid.
-            if (node.HasMeshes)
-            {
-                DrawAlphaMeshes(node, visibleNodes, flags, animated);
-            }
-
-
-            for (var i = 0; i < node.ChildCount; i++)
-            {
-                RecursiveRenderWithAlpha(node.Children[i], visibleNodes, flags, animated);
-            }
+            worlds.Pop();
         }
 
 

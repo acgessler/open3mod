@@ -60,7 +60,6 @@ namespace open3mod
             {
                 flags |= ShaderGen.GenFlags.Lighting;
             }
-            //if (mat.)
             Shader shader = _shaderGen.GenerateOrGetFromCache(flags);
             shader.BindIfNecessary();
         }
