@@ -1,17 +1,11 @@
-1.1 Released! Download at http://www.open3mod.com
-
-_Skim down for info on how to contribute._
-
-Open 3D Model Viewer 
-========
+# Open 3D Model Viewer 
 
 A general-purpose 3D model viewer. Based on 
-[Open Asset Import Library] (https://github.com/assimp/assimp), it supports 
+[Open Asset Import Library](https://github.com/assimp/assimp), it supports 
 reading about __fourty 3D file formats__, including __FBX, DXF, Collada, Obj, X, PLY, 3DS, LWO, LWS, STL__ 
-and  __IFC__ ([full list] (http://assimp.sourceforge.net/main_features_formats.html)).
+and  __IFC__ ([full list](http://assimp.sourceforge.net/main_features_formats.html)).
 
 ![Screenshot of open3mod (09-05-2013)](http://s1.directupload.net/images/130509/44lqi4p9.png)
-
 
 __Some key features:__
 
@@ -27,14 +21,11 @@ __Some key features:__
  - Export of scenes (or parts of scenes) is supported. Output formats include Collada, PLY, STL, OBJ 
    (as of now).
 
-
-License
-----------------------
+## License
 
 3-clause BSD license. Read `LICENSE` for the details, but it boils down to "use as you like but reproduce the copyright notice".
 
-Contribute
-----------------------
+## Contribute
 
 Contributions to the projects are highly appreciated. Simply fork the project on Github, hack, and send me a PR.
 
